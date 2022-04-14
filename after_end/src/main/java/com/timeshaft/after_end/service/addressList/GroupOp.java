@@ -57,6 +57,9 @@ public class GroupOp {
     public boolean quitGroup(int group_id, int quit_user_id) {
         GroupUser groupUser = new GroupUser(null, group_id, quit_user_id, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
+        for(GroupUser tmp : groupUsers) {
+            groupUserService.deleteById(tmp.getGroupId());
+        }
         return true;
     }
 }
