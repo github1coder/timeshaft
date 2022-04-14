@@ -10,14 +10,14 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class RegisterController {
 
-    @RequestMapping("")
-    public String register(@RequestParam(value = "account") String account,
-                           @RequestParam(value = "password") String password,
-                           @RequestParam(value = "username") String username,
-                           Model model,
-                           HttpSession session
-    ) {
-
-        return "";
-    }
+//    @RequestMapping("")
+//    public String register(@RequestParam(value = "account") String account,
+//                           @RequestParam(value = "password") String password,
+//                           @RequestParam(value = "username") String username,
+//                           Model model,
+//                           HttpSession session
+//    ) {
+//
+//        return "";
+//    }
 }
