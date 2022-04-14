@@ -28,37 +28,16 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## structure
 
 * Home 
-
     * Teams
         * avatars
         * tools
-        
     * Channels
-    
     * DirectMessage
-    
     * ChatRoom
-    
         * 
-    
     * Tools
-    
         * Timeline
         * Pin
-    
     * Search
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
+* Login
+* Register
