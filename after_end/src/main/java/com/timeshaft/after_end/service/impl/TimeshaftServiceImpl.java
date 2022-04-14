@@ -14,7 +14,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:24:48
  */
-@Service("timeshaftService")
+@Service("TimeshaftService")
 public class TimeshaftServiceImpl implements TimeshaftService {
     @Resource
     private TimeshaftMapper timeshaftMapper;

@@ -14,7 +14,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:24:48
  */
-@Service("groupMessageStateService")
+@Service("GroupMessageStateService")
 public class GroupMessageStateServiceImpl implements GroupMessageStateService {
     @Resource
     private GroupMessageStateMapper groupMessageStateMapper;

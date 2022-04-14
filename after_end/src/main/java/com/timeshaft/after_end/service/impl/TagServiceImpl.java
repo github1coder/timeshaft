@@ -14,7 +14,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:24:48
  */
-@Service("tagService")
+@Service("TagService")
 public class TagServiceImpl implements TagService {
     @Resource
     private TagMapper tagMapper;
