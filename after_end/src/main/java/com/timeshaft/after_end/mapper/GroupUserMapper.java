@@ -62,4 +62,5 @@ public interface GroupUserMapper {
      */
     int deleteById(Integer id);
 
+    int count();
 }

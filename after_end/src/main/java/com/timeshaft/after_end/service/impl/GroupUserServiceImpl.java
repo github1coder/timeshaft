@@ -76,4 +76,14 @@ public class GroupUserServiceImpl implements GroupUserService {
     public boolean deleteById(Integer id) {
         return this.groupUserMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public List<GroupUser> queryAll(GroupUser groupUser) {
+        return groupUserMapper.queryAll(groupUser);
+    }
+
+    @Override
+    public int count() {
+        return groupUserMapper.count();
+    }
 }

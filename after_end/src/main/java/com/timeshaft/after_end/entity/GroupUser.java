@@ -21,6 +21,13 @@ public class GroupUser implements Serializable {
     
     private String identity;
 
+    public GroupUser(Integer id, Integer groupId, Integer userId, String userNickname, String identity) {
+        this.id = id;
+        this.groupId = groupId;
+        this.userId = userId;
+        this.userNickname = userNickname;
+        this.identity = identity;
+    }
 
     public Integer getId() {
         return id;

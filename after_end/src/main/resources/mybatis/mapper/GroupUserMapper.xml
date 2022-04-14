@@ -82,4 +82,9 @@
         delete from timeshaft.group_user where id = #{id}
     </delete>
 
+    <select id="count" resultMap="BaseResultMap">
+        select
+            count(*)
+        from timeshaft.group_user
+    </select>
 </mapper>

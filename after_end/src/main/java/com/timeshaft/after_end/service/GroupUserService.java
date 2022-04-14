@@ -53,4 +53,7 @@ public interface GroupUserService {
      */
     boolean deleteById(Integer id);
 
+    List<GroupUser> queryAll(GroupUser groupUser);
+
+    int count();
 }

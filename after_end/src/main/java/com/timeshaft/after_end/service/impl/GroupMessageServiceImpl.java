@@ -1,8 +1,8 @@
 package com.timeshaft.after_end.service.impl;
 
-import .entity.GroupMessage;
-import .dao.GroupMessageDao;
-import .service.GroupMessageService;
+import com.timeshaft.after_end.entity.GroupMessage;
+import com.timeshaft.after_end.mapper.GroupMessageMapper;
+import com.timeshaft.after_end.service.GroupMessageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +17,7 @@ import java.util.List;
 @Service("groupMessageService")
 public class GroupMessageServiceImpl implements GroupMessageService {
     @Resource
-    private GroupMessageDao groupMessageDao;
+    private GroupMessageMapper groupMessageMapper;
 
     /**
      * 通过ID查询单条数据
@@ -27,7 +27,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      */
     @Override
     public GroupMessage queryById(Integer id) {
-        return this.groupMessageDao.queryById(id);
+        return this.groupMessageMapper.queryById(id);
     }
 
     /**
@@ -39,7 +39,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      */
     @Override
     public List<GroupMessage> queryAllByLimit(int offset, int limit) {
-        return this.groupMessageDao.queryAllByLimit(offset, limit);
+        return this.groupMessageMapper.queryAllByLimit(offset, limit);
     }
 
     /**
@@ -50,7 +50,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      */
     @Override
     public GroupMessage insert(GroupMessage groupMessage) {
-        this.groupMessageDao.insert(groupMessage);
+        this.groupMessageMapper.insert(groupMessage);
         return groupMessage;
     }
 
@@ -62,7 +62,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      */
     @Override
     public GroupMessage update(GroupMessage groupMessage) {
-        this.groupMessageDao.update(groupMessage);
+        this.groupMessageMapper.update(groupMessage);
         return this.queryById(groupMessage.getId());
     }
 
@@ -74,6 +74,6 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      */
     @Override
     public boolean deleteById(Integer id) {
-        return this.groupMessageDao.deleteById(id) > 0;
+        return this.groupMessageMapper.deleteById(id) > 0;
     }
 }
