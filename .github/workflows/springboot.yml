@@ -36,9 +36,9 @@ name: Deploy with docker
 on:
   push:
     # 分支
-    branches: [ dev ]
+    branches: [ after_dev ]
   pull_request:
-    branches: [ dev ]
+    branches: [ after_dev ]
 
 jobs:
   compile:
