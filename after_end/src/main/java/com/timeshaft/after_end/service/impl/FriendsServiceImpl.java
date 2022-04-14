@@ -14,7 +14,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:19:24
  */
-@Service("friendsService")
+@Service("FriendsService")
 public class FriendsServiceImpl implements FriendsService {
     @Resource
     private FriendsMapper friendsDao;

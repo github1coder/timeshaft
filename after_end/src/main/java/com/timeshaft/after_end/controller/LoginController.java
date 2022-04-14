@@ -12,26 +12,26 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
-//    @Autowired
-//    UserService userService;
+    @Autowired
+    UserService userService;
+
+    @GetMapping("")
+    public Object login(@RequestParam(value = "email") String email,
+                        @RequestParam(value = "password") String password,
+                        Model model,
+                        HttpSession session
+    ) {
+//        if (userService.login()) {
 //
-//    @GetMapping("")
-//    public Object login(@RequestParam(value = "email") String email,
-//                        @RequestParam(value = "password") String password,
-//                        Model model,
-//                        HttpSession session
-//    ) {
-////        if (userService.login()) {
-////
-////        }
-////        return "";
-//    }
-//
-//    @GetMapping("")
-//    public Object logout(Model model,
-//                         HttpSession session
-//    ) {
-//
+//        }
 //        return "";
-//    }
+    }
+
+    @GetMapping("")
+    public Object logout(Model model,
+                         HttpSession session
+    ) {
+
+        return "";
+    }
 }

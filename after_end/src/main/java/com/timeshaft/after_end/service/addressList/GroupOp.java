@@ -13,10 +13,10 @@ import java.util.List;
 
 @Service
 public class GroupOp {
-    @Resource(name = "groupService")
+    @Resource(name = "GroupService")
     private GroupService groupService;
 
-    @Resource(name = "groupUserService")
+    @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
     public boolean createGroup(int id, String name, String photo,
