@@ -80,12 +80,12 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/feishu:latest
       # push后，用ssh连接服务器执行脚本
       - name: SSH
-        uses: fifsky/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
-          command: |
+          script: |
             sh start.sh
           host: ${{ secrets.HOST }}
-          user: ${{ secrets.USER }}
+          username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           #key: ${{ secrets.PRIVATE_KEY}}
-          port: 22
+          port: ${{ secrets.PORT }}
