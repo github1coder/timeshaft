@@ -21,7 +21,7 @@ public class AfterEndApplication {
     @RequestMapping("/test")
     @ResponseBody
     public String test() {
-        return "Hello";
+        return "Hello World";
     }
 
 }
