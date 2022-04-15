@@ -2,7 +2,7 @@
 FROM fabric8/java-alpine-openjdk8-jre
 # 调整时区
 RUN rm -f /etc/localtime \
-&& ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+&& ln -sv /usr/share/zoneinfo/Asia/Beijing /etc/localtime \
 && echo "Asia/Beijing" > /etc/timezone
 # 将当前目录下的jar包复制到docker容器的/目录下
 ADD target/after_end-0.0.1.jar after_end.jar
