@@ -1,5 +1,5 @@
 # 该镜像需要依赖的基础镜像
-FROM fabric8/java-alpine-openjdk11-jre
+FROM fabric8/java-alpine-openjdk8-jre
 # 调整时区
 RUN rm -f /etc/localtime \
 && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
