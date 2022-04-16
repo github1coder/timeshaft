@@ -19,9 +19,9 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
-    public boolean createGroup(int id, String name, String photo,
+    public boolean createGroup(String name, String photo,
                                String notice, int master_id) {
-        Group group = new Group(id, name, master_id, notice, photo, new Date());
+        Group group = new Group(name, master_id, notice, photo, new Date());
         return groupService.insert(group) != null;
     }
 

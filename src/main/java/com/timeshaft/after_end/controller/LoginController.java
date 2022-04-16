@@ -4,20 +4,18 @@ import com.timeshaft.after_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 
-@Controller
+//@Controller
+@RestController //等价于@Controller+@ResponseBody的结合，里面的方法都以json格式输出
 public class LoginController {
-//    @Autowired
-//    UserService userService;
+    @Autowired
+    private UserService userService;
 //
-//    @GetMapping("")
+//    @RequestMapping("")
 //    public Object login(@RequestParam(value = "email") String email,
 //                        @RequestParam(value = "password") String password,
 //                        Model model,
@@ -29,7 +27,7 @@ public class LoginController {
 ////        return "";
 //    }
 
-//    @GetMapping("")
+//    @RequestMapping("")
 //    public Object logout(Model model,
 //                         HttpSession session
 //    ) {

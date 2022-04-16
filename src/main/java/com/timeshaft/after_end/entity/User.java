@@ -21,6 +21,12 @@ public class User implements Serializable {
     
     private String photo;
 
+    public User(String username, String email, String password, String photo) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.photo = photo;
+    }
 
     public Integer getId() {
         return id;
