@@ -53,4 +53,7 @@ public interface FriendsService {
      */
     boolean deleteById(Integer id);
 
+    List<Friends> queryAll(Friends friends);
+
+    int count();
 }
