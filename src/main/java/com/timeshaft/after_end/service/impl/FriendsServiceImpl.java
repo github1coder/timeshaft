@@ -76,4 +76,14 @@ public class FriendsServiceImpl implements FriendsService {
     public boolean deleteById(Integer id) {
         return this.friendsDao.deleteById(id) > 0;
     }
+
+    @Override
+    public List<Friends> queryAll(Friends friends) {
+        return friendsDao.queryAll(friends);
+    }
+
+    @Override
+    public int count() {
+        return friendsDao.count();
+    }
 }

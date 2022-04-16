@@ -62,4 +62,5 @@ public interface FriendsMapper {
      */
     int deleteById(Integer id);
 
+    int count();
 }

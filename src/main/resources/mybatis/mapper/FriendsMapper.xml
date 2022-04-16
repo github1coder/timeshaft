@@ -82,4 +82,10 @@
         delete from timeshaft.friends where id = #{id}
     </delete>
 
+    <select id="count" resultMap="BaseResultMap">
+        select
+            count(*)
+        from timeshaft.friends
+    </select>
+
 </mapper>

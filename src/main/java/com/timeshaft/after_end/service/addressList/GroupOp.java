@@ -22,6 +22,7 @@ public class GroupOp {
     public boolean createGroup(int id, String name, String photo,
                                String notice, int master_id) {
         Group group = new Group(id, name, master_id, notice, photo, new Date());
+        GroupUser groupUser = new GroupUser(groupUserService.count() + 1, id, master_id, null, "master");
         return groupService.insert(group) != null;
     }
 
@@ -59,6 +60,26 @@ public class GroupOp {
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             groupUserService.deleteById(tmp.getGroupId());
+        }
+        return true;
+    }
+
+    public boolean addManager(int group_id, int user_id) {
+        GroupUser groupUser = new GroupUser(null, group_id, user_id, null, null);
+        List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
+        for(GroupUser tmp : groupUsers) {
+            tmp.setIdentity("manager");
+            groupUserService.update(tmp);
+        }
+        return true;
+    }
+
+    public boolean delManager(int group_id, int user_id) {
+        GroupUser groupUser = new GroupUser(null, group_id, user_id, null, "manager");
+        List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
+        for (GroupUser tmp : groupUsers) {
+            tmp.setIdentity("member");
+            groupUserService.update(tmp);
         }
         return true;
     }
