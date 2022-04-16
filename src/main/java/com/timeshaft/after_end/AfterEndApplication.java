@@ -29,7 +29,6 @@ public class AfterEndApplication {
     @ResponseBody
     public String test() {
         User user = new User("test","test","test","test");
-
         userService.insert(user);
         return "Hello World";
     }

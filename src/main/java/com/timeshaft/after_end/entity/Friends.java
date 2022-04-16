@@ -21,6 +21,13 @@ public class Friends implements Serializable {
     
     private String nickname2;
 
+    public Friends(Integer id, Integer userId1, Integer userId2, String nickname1, String nickname2) {
+        this.id = id;
+        this.userId1 = userId1;
+        this.userId2 = userId2;
+        this.nickname1 = nickname1;
+        this.nickname2 = nickname2;
+    }
 
     public Integer getId() {
         return id;
