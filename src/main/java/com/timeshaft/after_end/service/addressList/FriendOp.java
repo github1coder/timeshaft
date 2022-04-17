@@ -14,20 +14,20 @@ public class FriendOp {
     FriendsService friendsService;
 
     public List<Friends> getFriends(int id) {
-        Friends friend1 = new Friends(null, id, null, null, null);
-        Friends friend2 = new Friends(null, null, id, null, null);
+        Friends friend1 = new Friends(id, null, null, null);
+        Friends friend2 = new Friends(null, id, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
         friends.addAll(friendsService.queryAll(friend2));
         return friends;
     }
 
     public boolean addFriends(int friend1, int friend2) {
-        Friends friend = new Friends(friendsService.count() + 1, friend1, friend2, null, null);
+        Friends friend = new Friends(friend1, friend2, null, null);
         return friendsService.insert(friend) != null;
     }
 
     public boolean delFriends(int friend1, int friend2) {
-        Friends friend = new Friends(null, friend1, friend2, null, null);
+        Friends friend = new Friends(friend1, friend2, null, null);
         List<Friends> friends = friendsService.queryAll(friend);
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
@@ -36,13 +36,13 @@ public class FriendOp {
     }
 
     public boolean changeNickname(int self_id, int friend_id, String name) {
-        Friends friend1 = new Friends(null, self_id, friend_id, null, null);
+        Friends friend1 = new Friends(self_id, friend_id, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
         for(Friends tmp : friends){
             tmp.setNickname2(name);
             return true;
         }
-        Friends friend2 = new Friends(null, friend_id, self_id, null, null);
+        Friends friend2 = new Friends(friend_id, self_id, null, null);
         friends.addAll(friendsService.queryAll(friend2));
         for(Friends tmp : friends){
             tmp.setNickname1(name);
