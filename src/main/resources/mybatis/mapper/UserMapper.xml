@@ -52,6 +52,7 @@
     </select>
 
     <!--新增所有列-->
+<!--    keyProperty="id" useGeneratedKeys="true"-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into timeshaft.user(username, email, password, photo)
         values (#{username}, #{email}, #{password}, #{photo})

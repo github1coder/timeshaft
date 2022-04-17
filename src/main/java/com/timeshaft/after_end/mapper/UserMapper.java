@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.timeshaft.after_end.entity.User;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:24:48
  */
+
 public interface UserMapper {
 
     /**
