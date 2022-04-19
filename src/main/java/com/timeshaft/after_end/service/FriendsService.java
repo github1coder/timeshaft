@@ -1,6 +1,8 @@
 package com.timeshaft.after_end.service;
 
 import com.timeshaft.after_end.entity.Friends;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:19:23
  */
+
 public interface FriendsService {
 
     /**

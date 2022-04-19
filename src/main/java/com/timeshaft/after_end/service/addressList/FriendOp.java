@@ -2,8 +2,11 @@ package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.service.FriendsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -11,7 +14,15 @@ import java.util.List;
 public class FriendOp {
 
     @Resource(name = "FriendsService")
-    FriendsService friendsService;
+    private FriendsService friendsService;
+
+//    public static FriendOp friendOp;
+//
+//    @PostConstruct
+//    private void init() {
+//        friendOp = this;
+//        friendOp.friendsService = this.friendsService;
+//    }
 
     public List<Friends> getFriends(int id) {
         Friends friend1 = new Friends(id, null, null, null);
@@ -21,12 +32,12 @@ public class FriendOp {
         return friends;
     }
 
-    public boolean addFriends(int friend1, int friend2) {
+    public boolean addFriend(int friend1, int friend2) {
         Friends friend = new Friends(friend1, friend2, null, null);
         return friendsService.insert(friend) != null;
     }
 
-    public boolean delFriends(int friend1, int friend2) {
+    public boolean delFriend(int friend1, int friend2) {
         Friends friend = new Friends(friend1, friend2, null, null);
         List<Friends> friends = friendsService.queryAll(friend);
         for(Friends tmp : friends){

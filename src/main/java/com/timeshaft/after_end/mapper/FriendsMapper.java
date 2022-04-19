@@ -10,6 +10,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:19:19
  */
+
 public interface FriendsMapper {
 
     /**

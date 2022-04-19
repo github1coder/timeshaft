@@ -3,6 +3,7 @@ package com.timeshaft.after_end.service.impl;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.mapper.FriendsMapper;
 import com.timeshaft.after_end.service.FriendsService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-12 14:19:24
  */
-@Service("FriendsService")
+@Component("FriendsService")
 public class FriendsServiceImpl implements FriendsService {
     @Resource
     private FriendsMapper friendsDao;
