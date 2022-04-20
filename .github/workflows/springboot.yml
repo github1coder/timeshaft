@@ -80,13 +80,13 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/feishu:latest
       # push后，用ssh连接服务器执行脚本
       - name: SSH
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master # 使用ssh链接服务器
         with:
-          script: |
-            touch test.txt
-            sh start.sh
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           #key: ${{ secrets.PRIVATE_KEY}}
           port: ${{ secrets.PORT }}
+          script: |
+            touch /root/test.txt
+            sh /root/start.sh
