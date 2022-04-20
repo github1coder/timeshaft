@@ -83,7 +83,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           script: |
-            echo "abcd"
+            touch test.txt
             sh start.sh
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
