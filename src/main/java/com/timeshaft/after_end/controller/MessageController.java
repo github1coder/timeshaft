@@ -5,6 +5,7 @@ import com.timeshaft.after_end.entity.PersonalMessage;
 import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,11 @@ public class MessageController {
      *
      * @param personalMessage 前端传来的私信
      */
+    @MessageMapping("/personalMessage")
     public void receivePersonalMessage(@Payload PersonalMessage personalMessage) {
-
+        personalMessageService.insert(personalMessage);
+        int friendId = personalMessage.getFriendsId();
+        messagingTemplate.convertAndSend("/user/" + friendId, personalMessage);
     }
 
     /**
@@ -39,8 +43,11 @@ public class MessageController {
      *
      * @param groupMessage 前端传来的群组消息
      */
+    @MessageMapping("/groupMessage")
     public void receiveGroupMessage(@Payload GroupMessage groupMessage) {
-
+        groupMessageService.insert(groupMessage);
+        int groupId = groupMessage.getGroupId();
+        messagingTemplate.convertAndSend("/group/" + groupId, groupMessage);
     }
 }
 
