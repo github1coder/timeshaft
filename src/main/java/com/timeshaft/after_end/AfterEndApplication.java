@@ -1,9 +1,7 @@
 package com.timeshaft.after_end;
 
-import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.UserService;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;

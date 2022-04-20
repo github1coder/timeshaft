@@ -1,6 +1,8 @@
 package com.timeshaft.after_end.service;
 
 import java.util.List;
+
+import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.User;
 
 /**
@@ -52,4 +54,5 @@ public interface UserService {
      */
     boolean deleteById(Integer id);
 
+    List<User> queryAll(User user);
 }

@@ -21,11 +21,20 @@ public class User implements Serializable {
     
     private String photo;
 
-    public User(String username, String email, String password, String photo) {
+    public User(String email, String password, String username, String photo) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.photo = photo;
+    }
+    public User(String email, String password, String username) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.photo="";
+    }
+    public User(String email) {
+        this.email = email;
     }
 
     public Integer getId() {

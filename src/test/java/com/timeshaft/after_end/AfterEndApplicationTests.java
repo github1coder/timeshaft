@@ -2,6 +2,7 @@ package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.service.addressList.FriendOp;
+import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +15,8 @@ import java.util.List;
 class AfterEndApplicationTests {
     @Autowired
     private FriendOp friendOp;
-
+    @Autowired
+    private UserOp userOp;
     @Test
     void contextLoads() {
         List<Friends> friends = friendOp.getFriends(125);

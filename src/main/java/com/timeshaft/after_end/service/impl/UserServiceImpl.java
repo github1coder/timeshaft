@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.service.impl;
 
+import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.mapper.UserMapper;
 import com.timeshaft.after_end.service.UserService;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteById(Integer id) {
         return this.userDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<User> queryAll(User user) {
+        return userDao.queryAll(user);
     }
 }
