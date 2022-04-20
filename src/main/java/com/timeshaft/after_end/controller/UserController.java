@@ -45,18 +45,20 @@ public class UserController {
     }
 
     @RequestMapping(value = "/loginn")
-    public User login(@RequestBody Map<String, String> map, Model model, @SessionAttribute("user_id") Integer user_id) {
+    public User login(@RequestBody Map<String, String> map, Model model) {
         User user = userOp.login(map.get("email"), map.get("password"));
         model.addAttribute("user_id", user.getId());
         return user;
     }
 
+    @RequestMapping("/logout")
+    public boolean logout(Model model) {
+        model.addAttribute("user_id", null);
+        return true;
+    }
 
-//    @RequestMapping("")
-//    public Object logout(Model model,
-//                         HttpSession session
-//    ) {
-//
-//        return "";
-//    }
+    @RequestMapping(value = "/changePwd")
+    public boolean changePwd(@RequestBody Map<String, String> map, @SessionAttribute("user_id") Integer user_id) {
+        return userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"));
+    }
 }

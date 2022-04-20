@@ -34,4 +34,15 @@ public class UserOp {
         if (log) return user;
         else return null;
     }
+
+    public boolean changePwd(Integer user_id, String oldPassword, String newPassword) {
+        User user = userService.queryById(user_id);
+        boolean flag = myPasswordEncoder.matches(oldPassword, user.getPassword());
+        if (flag) {
+            user.setPassword(myPasswordEncoder.encode(newPassword));
+            userService.update(user);
+            return true;
+        }
+        return false;
+    }
 }
