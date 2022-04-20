@@ -83,6 +83,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           script: |
+            echo "abcd"
             sh start.sh
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}

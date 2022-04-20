@@ -28,8 +28,8 @@ public class AfterEndApplication {
     @RequestMapping("/test")
     @ResponseBody
     public String test() {
-        User user = new User("test","test","test","test");
-        userService.insert(user);
+//        User user = new User("test","test","test","test");
+//        userService.insert(user);
         return "Hello World";
     }
 
