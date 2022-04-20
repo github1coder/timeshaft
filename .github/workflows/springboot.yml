@@ -88,5 +88,4 @@ jobs:
           #key: ${{ secrets.PRIVATE_KEY}}
           port: ${{ secrets.PORT }}
           script: |
-            touch /root/test.txt
             sh /root/start.sh
