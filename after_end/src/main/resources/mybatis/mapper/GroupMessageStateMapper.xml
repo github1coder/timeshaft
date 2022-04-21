@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeshaft.after_end.mapper.GroupMessageStateMapper">
+
+    <resultMap id="BaseResultMap" type="GroupMessageState">
+        <!--@Table group_message_state-->
+        <result property="messageId" column="message_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          message_id, user_id, state
+        from timeshaft.group_message_state
+        where message_id = #{messageId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          message_id, user_id, state
+        from timeshaft.group_message_state
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          message_id, user_id, state
+        from timeshaft.group_message_state
+        <where>
+            <if test="messageId != null">
+                and message_id = #{messageId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="messageId" useGeneratedKeys="true">
+        insert into timeshaft.group_message_state(user_id, state)
+        values (#{userId}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeshaft.group_message_state
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where message_id = #{messageId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeshaft.group_message_state where message_id = #{messageId}
+    </delete>
+
+</mapper>
