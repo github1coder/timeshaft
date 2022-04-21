@@ -1,19 +1,15 @@
 <template>
   <v-app>
-    <router-view />
-    <WelcomeOverlay />
+    <router-view/>
   </v-app>
 </template>
 
 <script>
-// import WelcomeOverlay from "./components/WelcomeOverlay";
-
 //console.say = console.log;
 console.say = function(){}
 
 export default {
   components: {
-    // WelcomeOverlay,
   },
 };
 </script>
