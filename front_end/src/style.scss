@@ -1,0 +1,29 @@
+.welcome-card {
+    width: 500px;
+    padding: 20px;
+    margin: auto;
+
+
+    .text-field {
+        margin: auto 30px;
+    }
+    .join-btn {
+        margin: auto;
+        width: 95%;
+    }
+
+    @media screen and (max-width: 530px) {
+        width: 100%;
+        padding: 20px 15px;
+
+        .text-field {
+            margin: auto 20px;
+        }
+    }
+}
+
+.welcome-overlay {
+    .v-overlay__content {
+        width: 90%;
+    }
+}

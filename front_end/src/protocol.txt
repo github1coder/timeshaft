@@ -1,0 +1,17 @@
+client -> server
+    login
+        アカウントが存在する
+            loggedIn (socket id)
+            memberJoin -> all client
+
+        アカウントがない
+            loginErr
+
+    chat
+        chat (socketid, msg) -> all client
+        
+    join
+        新規ユーザー
+            join (id, userdata, token)
+            memberJoin -> all client
+
