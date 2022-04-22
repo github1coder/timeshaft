@@ -52,6 +52,7 @@ body {
 
   .icon {
     color: #43b581 !important;
+
     &:hover {
       color: #fff !important;
     }
@@ -68,8 +69,7 @@ body {
 
 .tips {
   position: relative;
-  background: url(https://discordapp.com/assets/8fdb69b7684b8e1ecb3fdde909daca41.svg)
-    no-repeat center 35px;
+  background: url(https://discordapp.com/assets/8fdb69b7684b8e1ecb3fdde909daca41.svg) no-repeat center 35px;
   padding: 100px 20px 20px;
   font-size: 14px;
 }
@@ -134,15 +134,18 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
   border-top: 1px solid #363636 !important;
+
   &::-webkit-scrollbar {
     width: 5px;
   }
+
   &::-webkit-scrollbar-track {
     background: rgb(75, 75, 75);
     border: none;
     border-radius: 10px;
     box-shadow: inset 0 0 2px #777;
   }
+
   &::-webkit-scrollbar-thumb {
     background: rgb(116, 116, 116);
     border-radius: 10px;
@@ -232,12 +235,27 @@ body {
     flex: 1 1 auto;
     width: calc(100% - 240px);
     position: relative;
+
+    .chat-tool-close {
+      display: flex;
+      flex: 1 1 auto;
+      width: 0;
+    }
+
+    .chat-tool-open {
+      display: flex;
+      flex: 1 1 auto;
+      height: 600px;
+      width: 300px;
+    }
   }
+
 
   .members {
     display: flex;
     flex: 0 0 auto;
-    width: 240px;
+    width: 30px;
+    background-color: #1e1e1e;
   }
 
   .channel-title {
@@ -255,15 +273,18 @@ body {
     align-items: stretch;
     overflow-x: hidden;
     overflow-y: scroll;
+
     &::-webkit-scrollbar {
       width: 5px;
     }
+
     &::-webkit-scrollbar-track {
       background: rgb(31, 31, 31);
       border: none;
       border-radius: 10px;
       box-shadow: inset 0 0 2px #777;
     }
+
     &::-webkit-scrollbar-thumb {
       background: rgb(90, 90, 90);
       border-radius: 10px;
@@ -274,8 +295,12 @@ body {
       display: block !important;
     }
 
-    .message-container {
+    .message-container-close {
       width: 100%;
+    }
+
+    .message-container-open {
+      width: calc(100% - 120px);
     }
   }
 
@@ -286,6 +311,13 @@ body {
     bottom: 0;
     height: 68px;
     width: 100%;
+    .chat-form-open {
+      width: calc(100% - 240px);
+    }
+    .chat-form-close {
+      width: 100%;
+    }
+
     align-items: stretch;
     background: #1e1e1e !important;
 
@@ -297,6 +329,7 @@ body {
       background: #4d4d4d !important;
       border-radius: 10px;
     }
+
     label {
       color: rgb(211, 211, 211);
     }

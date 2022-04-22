@@ -101,37 +101,51 @@
             <div class="chat-screen">
               <div class="chat-content">
                 <div class="messages">
-                  <div class="message-container">
+                  <div :class="draw ? 'message-container-open' : 'message-container-close'">
                     <Chat></Chat>
                   </div>
                 </div>
                 <div class="chat-form">
-                  <v-text-field
-                    class="mx-5 my-3 chat-form-tf"
-                    label="メッセージを送信"
-                    solo
-                    flat
-                    v-model="msginform"
-                    autocomplete="off"
-                    @keyup.enter="sendChat"
-                    @keypress="setCanMessageSubmit"
-                  >
-                  </v-text-field>
+                  <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
+                    <v-text-field
+                        class="mx-5 my-3 chat-form-tf"
+                        label="メッセージを送信"
+                        solo
+                        flat
+                        v-model="msginform"
+                        autocomplete="off"
+                        @keyup.enter="sendChat"
+                        @keypress="setCanMessageSubmit"
+                    >
+                    </v-text-field>
+                  </div>
+                </div>
+
+                <div class="chat-tool-open" v-if="draw">
+                    <v-timeline>
+                      <v-timeline-item>timeline item</v-timeline-item>
+                      <v-timeline-item>
+                        timeline item
+                      </v-timeline-item>
+                      <v-timeline-item>timeline item</v-timeline-item>
+                    </v-timeline>
                 </div>
               </div>
-              <div class="members hidden-sm-and-down">
-                <Members></Members>
+              <div  class="members hidden-sm-and-down">
+                <v-card dark>
+                  <v-list
+                      dark
+                      v-for="(item, i) in items"
+                      :key="i">
+                      <v-list-item-icon>
+                        <v-icon v-text="item.icon" @click="draw = !draw"></v-icon>
+                      </v-list-item-icon>
+                  </v-list>
+                </v-card>
+<!--                  <v-icon class="pr-16" style="float: left;flex-direction:column" v-text="'mdi-wifi'" @click="draw = !draw"></v-icon>-->
+<!--                  <v-icon style="float: left;flex-direction:column" v-text="'mdi-bluetooth'" @click="draw = !draw"></v-icon>-->
+
               </div>
-              <v-navigation-drawer
-                class="hidden-md-and-up"
-                v-model="drawer"
-                color="#1E1E1E"
-                right
-                dark
-                absolute
-              >
-                <Members></Members>
-              </v-navigation-drawer>
             </div>
           </div>
         </div>
@@ -145,8 +159,9 @@
 // @ is an alias to /src
 import Chat from "@/components/Chat.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import Members from "@/components/Members.vue";
+// import Members from "@/components/Members.vue";
 import AvatarChanger from "@/components/AvatarChanger";
+// import ChatTools from "@/components/ChatTools";
 
 import socket from "../socket";
 
@@ -155,7 +170,8 @@ export default {
   components: {
     Chat,
     Sidebar,
-    Members,
+    // Members,
+    // ChatTools,
     AvatarChanger
   },
   data() {
@@ -165,7 +181,23 @@ export default {
       drawer: false,
       leftDrawer: false,
       canMessageSubmit: false,
-      msginform: ""
+      msginform: "",
+      draw: null,
+      items: [
+        {
+          icon: 'mdi-wifi',
+          text: '',
+        },
+        {
+          icon: 'mdi-bluetooth',
+          text: '',
+        },
+        {
+          icon: 'mdi-chart-donut',
+          text: '',
+        },
+      ],
+      model: 1
     };
   },
 
