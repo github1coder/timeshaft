@@ -6,11 +6,11 @@
           <v-avatar class="round-icon" @click="clickIcon">
             <v-icon size="30">mdi-check</v-icon>
           </v-avatar>
-          <v-avatar class="round-icon" @click="clickIcon">
+          <v-avatar class="round-icon" @click="$store.commit('changeSiderState', 0)">
             <v-img src="https://media.discordapp.net/attachments/603940670914297867/677452451070214154/3_0-00-00-00.png?width=513&height=513"></v-img>
             <!-- <v-icon size="30">mdi-check</v-icon> -->
           </v-avatar>
-          <v-avatar class="round-icon" @click="clickIcon">
+          <v-avatar class="round-icon" @click="$store.commit('changeSiderState', 1)">
             <v-img src="https://media.discordapp.net/attachments/603940670914297867/628063294485430284/unlimit.jpg?width=513&height=513"></v-img>
           </v-avatar>
           <v-avatar class="round-tools-icon" @click="clickIcon">
@@ -28,17 +28,8 @@
       <div class="base">
         <div class="base-content">
           <!-- here side -->
-          <Sidebar class="hidden-sm-and-down"></Sidebar>
-          <v-navigation-drawer
-            class="hidden-md-and-up sidebar-in-drawer"
-            v-model="leftDrawer"
-            color="#1E1E1E"
-            left
-            dark
-            absolute
-          >
-            <Sidebar></Sidebar>
-          </v-navigation-drawer>
+          <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
+          <ListSider v-else-if="$store.state.siderState === 1"></ListSider>
 
           <div class="chat">
             <v-card class="chat-header" tile>
@@ -85,16 +76,7 @@
                   </div>
                 </div>
 
-                <v-text-field
-                  dark
-                  flat
-                  solo-inverted
-                  hide-details
-                  prepend-inner-icon="mdi-magnify"
-                  label="Search"
-                  class="hidden-sm-and-down mx-2 head-search"
-                  autocomplete="off"
-                ></v-text-field>
+
               </div>
             </v-card>
 
@@ -151,28 +133,31 @@
         </div>
       </div>
     </div>
-    <AvatarChanger></AvatarChanger>
   </v-content>
 </template>
 
 <script>
 // @ is an alias to /src
 import Chat from "@/components/Chat.vue";
-import Sidebar from "@/components/Sidebar.vue";
+// import Sidebar from "@/components/Sidebar.vue";
 // import Members from "@/components/Members.vue";
-import AvatarChanger from "@/components/AvatarChanger";
+// import AvatarChanger from "@/components/AvatarChanger";
 // import ChatTools from "@/components/ChatTools";
 
 import socket from "../socket";
+import ListSider from "@/components/ListSider";
+import ChatSider from "@/components/ChatSider";
 
 export default {
   name: "Home",
   components: {
+    ListSider,
     Chat,
-    Sidebar,
+    ChatSider,
+    // Sidebar,
     // Members,
     // ChatTools,
-    AvatarChanger
+    // AvatarChanger
   },
   data() {
     return {

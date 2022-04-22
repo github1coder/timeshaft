@@ -17,8 +17,14 @@ export default new Vuex.Store({
         showAC: false,
         chats: [],
         loggedIn: false,
+        siderState: 0,
     },
     mutations: {
+        changeSiderState(store, s) {
+            console.log(s)
+            store.siderState = s
+            console.log(s)
+        },
         updateChannels(store, list) {
             store.channels = list;
         },
