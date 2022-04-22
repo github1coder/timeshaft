@@ -9,7 +9,7 @@ export default {
             callback(true);
             this.sid = sid;
         });
-        
+
         socket.on("loginErr", data => {
             console.say("login err", data);
             callback(false);

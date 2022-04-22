@@ -127,6 +127,7 @@ body {
 }
 
 .channels {
+
   position: relative;
   display: flex;
   height: calc(100% - 48px - 235px);
@@ -176,8 +177,33 @@ body {
   top: 0;
   /* left: 240px; */
   bottom: 0;
-  width: calc(100% - 240px);
-  /* width: 100%; */
+  width: 100%;
+
+  .chat-tool-close {
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .chat-tool-open {
+    display: flex;
+    flex: 1 1 auto;
+    background-color: #ffffff;
+    height:  calc(100% - 60px);
+    width: calc(100% - 360px);
+  }
+}
+
+
+.members {
+  display: flex;
+  flex: 0 0 auto;
+  width: 30px;
+  height: calc(100% - 100px);
+}
+
+.channel-title {
+  font-size: 16px !important;
 }
 
 .chat-header {
@@ -211,10 +237,9 @@ body {
     margin: auto 20px;
   }
 
-  .head-search {
-    margin: 7px auto !important;
-  }
+
 }
+
 
 .chat-screen {
   top: 48px;
@@ -230,32 +255,26 @@ body {
   max-width: 100%;
   width: 100%;
 
+  .chat-form-open {
+    width: calc(100% - 360px);
+  }
+
+  .chat-form-close {
+    width: 100%;
+  }
+
+  align-items: stretch;
+  background: #1e1e1e !important;
+
+  input {
+    color: white !important;
+  }
+
   .chat-content {
     display: flex;
     flex: 1 1 auto;
-    width: calc(100% - 240px);
+    width: calc(100% - 360px);
     position: relative;
-
-    .chat-tool-close {
-      display: flex;
-      flex: 1 1 auto;
-      width: 0;
-    }
-
-    .chat-tool-open {
-      display: flex;
-      flex: 1 1 auto;
-      height: 600px;
-      width: 300px;
-    }
-  }
-
-
-  .members {
-    display: flex;
-    flex: 0 0 auto;
-    width: 30px;
-    background-color: #1e1e1e;
   }
 
   .channel-title {
@@ -300,7 +319,7 @@ body {
     }
 
     .message-container-open {
-      width: calc(100% - 120px);
+      width: calc(100% - 360px);
     }
   }
 
@@ -311,13 +330,6 @@ body {
     bottom: 0;
     height: 68px;
     width: 100%;
-    .chat-form-open {
-      width: calc(100% - 240px);
-    }
-    .chat-form-close {
-      width: 100%;
-    }
-
     align-items: stretch;
     background: #1e1e1e !important;
 
