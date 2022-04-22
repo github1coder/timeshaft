@@ -33,7 +33,7 @@ public class AfterEndApplication {
         temp.put("test", 0);
         Map<String, Map<String, Integer>> res = new HashMap<>();
         res.put("res", temp);
-        return new ResponseService<>(res);
+        return new ResponseService<>(ResponseService.Code.SUCCESS, res, "成功");
     }
 
 }
