@@ -118,8 +118,10 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
-            console(res)
-            //执行登录
+            this.$router.push({
+              path: '/home',
+              res
+            })
           })
       }
     }

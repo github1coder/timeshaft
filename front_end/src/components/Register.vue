@@ -169,8 +169,10 @@ export default {
       {
         this.loading = true;
         register(param).then(res => {
-            console(res)
-            //执行登录
+            this.$router.push({
+              path: '/home',
+              res
+            })
           })
       }
     },
@@ -186,7 +188,7 @@ export default {
             email: this.email
           }
           getCheckCode(param).then(res => {
-            this.checkCode = res.data.checkCode
+            this.checkCode = res.checkCode
             console.log(this.checkCode)
           })
         }

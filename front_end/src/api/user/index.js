@@ -4,15 +4,15 @@ import request from "../request"
 
 export function register(param) {
     return request({
-        url: '/register',
-        method: 'get',
+        url: '/user/register',
+        method: 'post',
         param
     })
 }
 
 export function getCheckCode(param) {
     return request({
-        url: '/getCheckCode',
+        url: '/user/getCheckCode',
         method: 'get',
         param
     })
@@ -20,7 +20,7 @@ export function getCheckCode(param) {
 
 export function login(param) {
     return request({
-        url: '/login',
+        url: '/user/login',
         method: 'post',
         param
     })
