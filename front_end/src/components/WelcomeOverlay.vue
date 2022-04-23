@@ -60,6 +60,7 @@
 
 <script>
 import { login } from '../api/user/index'
+import socket from "../socket";
 
 export default {
   data() {

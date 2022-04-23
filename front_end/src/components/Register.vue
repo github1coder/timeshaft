@@ -95,6 +95,7 @@
 
 <script>
 import { getCheckCode, register } from '../api/user/index'
+import socket from "../socket";
 export default {
   data() {
     return {
@@ -197,7 +198,7 @@ export default {
             if (this.count > 0 && this.count <= 60) {
               this.count--
             } else {
-              this.loadingCheckCode = flase
+              this.loadingCheckCode = false
               clearInterval(this.timer)
               this.timer = null
             }
