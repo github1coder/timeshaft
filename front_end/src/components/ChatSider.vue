@@ -59,6 +59,7 @@
 <!--              </v-expansion-panel-content>-->
 <!--            </v-expansion-panel>-->
 <!--          </v-expansion-panels>-->
+          <!-- TODO expansion needed! -->
           <v-list width="100%" rounded dense>
             <v-subheader>今天</v-subheader>
             <v-list-item-group color="primary">
@@ -71,6 +72,10 @@
                       class="channel-title"
                       v-text="item.text"
                   ></v-list-item-title>
+                  <v-list-item-subtitle
+                      class="channel-title"
+                      v-text="item.message">
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -85,6 +90,10 @@
                       class="channel-title"
                       v-text="item.text"
                   ></v-list-item-title>
+                  <v-list-item-subtitle
+                      class="channel-title"
+                      v-text="item.message">
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
