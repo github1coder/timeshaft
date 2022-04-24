@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import { login } from '../api/user/index'
 import socket from "../socket";
 
 export default {
@@ -108,16 +109,19 @@ export default {
     },
 
     login() {
-      this.loading = true;
       this.$refs.registerForm.validate();
       if (this.valid)
       {
-        this.$axios.get('/user/register', {
-            'email': this.email,
-            'password': this.password
-          }).then(function (res) {
-            console(res)
-            //执行登录
+        this.loading = true;
+        const param = {
+          'email': this.email,
+          'password': this.password
+        }
+        login(param).then(res => {
+            this.$router.push({
+              path: '/home',
+              res
+            })
           })
       }
     }

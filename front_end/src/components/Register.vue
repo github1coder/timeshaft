@@ -94,18 +94,19 @@
 
 
 <script>
+import { getCheckCode, register } from '../api/user/index'
 import socket from "../socket";
 export default {
   data() {
     return {
       overlay: false,
       valid: true,
-      username: "",
-      email: "",
       loadingCheckCode: false,
       loadingRegister: false,
-      inputCheckCode: "",
       checkCode: "",
+      username: "",
+      email: "",
+      inputCheckCode: "",
       password: "",
       rePassword: "",
       type: "password",
@@ -149,19 +150,6 @@ export default {
   },
 
   methods: {
-    join() {
-    //   console.say("Nick:", this.nickname);
-    //   this.loading = true;
-    //   this.$refs.registerForm.validate();
-    //   if (this.valid)
-    //     socket.join(this.nickname, (token) => {
-    //       this.overlay = false;
-    //       window.localStorage.setItem("accToken", token);
-    //     });
-    //   else {
-    //     this.loading = false;
-    //   }
-    },
     changeShowText() {
       this.type = "text";
     },
@@ -171,17 +159,20 @@ export default {
     },
 
     register(){
-      this.loading = true;
       this.$refs.registerForm.validate();
+      const param =  {
+        'username': this.username,
+        'password': this.password,
+        'email': this.email
+      }
       if (this.valid)
       {
-        this.$axios.get('/user/register', {
-            'username': this.username,
-            'password': this.password,
-            'email': this.email
-          }).then(function (res) {
-            console(res)
-            //执行登录
+        this.loading = true;
+        register(param).then(res => {
+            this.$router.push({
+              path: '/home',
+              res
+            })
           })
       }
     },
@@ -191,24 +182,25 @@ export default {
         this.$message.error('请先输入邮箱再点击获取验证码')
       } else {
         if (!(this.email && (/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(this.email))) {
-          this.$message({showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error'})
+        this.$message({showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error'})
         } else {
-          this.$axios.get('/user/getCheckCode', {
-            'email': this.email
-          }).then(function (res) {
-            this.checkCode = res.data.checkCode
+          const param = {
+            email: this.email
+          }
+          getCheckCode(param).then(res => {
+            this.checkCode = res.checkCode
             console.log(this.checkCode)
           })
         }
         // 验证码倒计时
         if (!this.timer) {
           this.count = 60
-          this.loadingCheckCode = false
+          this.loadingCheckCode = true
           this.timer = setInterval(() => {
             if (this.count > 0 && this.count <= 60) {
               this.count--
             } else {
-              this.loadingCheckCode = true
+              this.loadingCheckCode = false
               clearInterval(this.timer)
               this.timer = null
             }
