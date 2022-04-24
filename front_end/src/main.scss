@@ -69,9 +69,9 @@ body {
 
 .tips {
   position: relative;
-  background: url(https://discordapp.com/assets/8fdb69b7684b8e1ecb3fdde909daca41.svg) no-repeat center 35px;
   padding: 100px 20px 20px;
   font-size: 14px;
+  height: auto;
 }
 
 .dc-container {
@@ -131,7 +131,7 @@ body {
 
   position: relative;
   display: flex;
-  height: calc(100% - 48px - 235px);
+  height: calc(100% - 48px - 40px);
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: scroll;

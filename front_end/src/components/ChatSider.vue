@@ -23,24 +23,60 @@
                 ></v-text-field>
               </template>
               <v-list v-if="items.length > 0" class="border-list" dense>
-                <v-list-item v-for="(item, index) in items" :key="index" @click="itemClick(item)">
+                <v-list-item v-for="(item, index) in items1" :key="index" @click="itemClick(item)">
                   <v-list-item-title>{{ item.name }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
           </div>
         </v-card>
-        <v-card height="235" class="tips" tile>
-          ChatSider
-          <br />
-          <v-btn color="indigo" class="ma-4">Ayo GG!!</v-btn>
-        </v-card>
-
         <v-card tile class="channels">
+<!--          <v-expansion-panels flat>-->
+<!--            <v-expansion-panel-->
+<!--                class="pa-0"-->
+<!--                v-for="(item,i) in items"-->
+<!--                :key="i"-->
+<!--            >-->
+<!--              <v-expansion-panel-header class="pa-0" >-->
+<!--                {{item}}-->
+<!--              </v-expansion-panel-header>-->
+<!--              <v-expansion-panel-content class="pa-0">-->
+<!--                <v-list width="100%" rounded dense>-->
+<!--                  <v-list-item-group color="primary">-->
+<!--                    <v-list-item v-for="(item, i) in chat1" :key="i">-->
+<!--                      <v-list-item-icon>-->
+<!--                        <v-icon v-text="item.icon"></v-icon>-->
+<!--                      </v-list-item-icon>-->
+<!--                      <v-list-item-content>-->
+<!--                        <v-list-item-title-->
+<!--                            class="channel-title"-->
+<!--                            v-text="item.text"-->
+<!--                        ></v-list-item-title>-->
+<!--                      </v-list-item-content>-->
+<!--                    </v-list-item>-->
+<!--                  </v-list-item-group>-->
+<!--                  </v-list>-->
+<!--              </v-expansion-panel-content>-->
+<!--            </v-expansion-panel>-->
+<!--          </v-expansion-panels>-->
           <v-list width="100%" rounded dense>
-            <v-subheader>SERVER</v-subheader>
-            <v-list-item-group v-model="item" color="primary">
-              <v-list-item v-for="(item, i) in items" :key="i">
+            <v-subheader>今天</v-subheader>
+            <v-list-item-group color="primary">
+              <v-list-item v-for="(item, i) in chat1" :key="i">
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title
+                      class="channel-title"
+                      v-text="item.text"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+            <v-subheader>更早</v-subheader>
+            <v-list-item-group  color="primary">
+              <v-list-item v-for="(item, i) in chat2" :key="i">
                 <v-list-item-icon>
                   <v-icon v-text="item.icon"></v-icon>
                 </v-list-item-icon>
@@ -85,11 +121,19 @@ export default {
     return {
       text: '',
       showSelect: true,
-      items: [
-        { text: "Announcements", icon: "mdi-bell-alert" },
-        { text: "Rules", icon: "mdi-file-check" },
-        { text: "Welcome", icon: "mdi-emoticon" }
+      chat1: [
+        { text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~" },
+        { text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！" },
+        { text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl" }
       ],
+      chat2: [
+        { text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂" },
+        { text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol" },
+        { text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!" }
+      ],
+      items: [
+        '今天', '更早'
+      ]
     }
   },
   watch: {

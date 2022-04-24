@@ -2,26 +2,34 @@
   <v-content>
     <div class="dc-container">
       <nav class="guilds">
+
+
+
         <v-card dark flat tile width="100%" height="100%">
           <v-avatar class="round-icon" @click="clickIcon">
-            <v-icon size="30">mdi-check</v-icon>
+            <v-icon size="30">mdi-emoticon-devil-outline</v-icon>
           </v-avatar>
-          <v-avatar class="round-icon" @click="$store.commit('changeSiderState', 0)">
-            <v-img src="https://media.discordapp.net/attachments/603940670914297867/677452451070214154/3_0-00-00-00.png?width=513&height=513"></v-img>
-            <!-- <v-icon size="30">mdi-check</v-icon> -->
-          </v-avatar>
-          <v-avatar class="round-icon" @click="$store.commit('changeSiderState', 1)">
-            <v-img src="https://media.discordapp.net/attachments/603940670914297867/628063294485430284/unlimit.jpg?width=513&height=513"></v-img>
-          </v-avatar>
-          <v-avatar class="round-tools-icon" @click="clickIcon">
-            <v-icon size="30" class="icon">mdi-plus</v-icon>
-          </v-avatar>
-          <v-avatar class="round-tools-icon" @click="clickIcon">
-            <v-icon size="30" class="icon">mdi-magnify</v-icon>
-          </v-avatar>
-          <v-avatar class="round-tools-icon" @click="clickIcon">
-            <v-icon size="30" class="icon">mdi-download</v-icon>
-          </v-avatar>
+          <v-list>
+            <v-list-item-group
+                v-model="model"
+                mandatory
+                color="indigo"
+            >
+              <v-list-item
+                  v-for="(item, i) in items"
+                  :key="i"
+                  @click="$store.commit('changeSiderState', i)"
+              >
+                <v-list-item-icon >
+                  <v-icon v-text="item.icon"></v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
         </v-card>
       </nav>
 
@@ -170,15 +178,19 @@ export default {
       draw: null,
       items: [
         {
-          icon: 'mdi-wifi',
+          icon: 'mdi-message-text',
           text: '',
         },
         {
-          icon: 'mdi-bluetooth',
+          icon: 'mdi-account-box-multiple-outline',
           text: '',
         },
         {
-          icon: 'mdi-chart-donut',
+          icon: 'mdi-file-document-multiple-outline',
+          text: '',
+        },
+        {
+          icon: 'mdi-calendar-check',
           text: '',
         },
       ],
