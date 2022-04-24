@@ -16,7 +16,7 @@
                 color="indigo"
             >
               <v-list-item
-                  v-for="(item, i) in items"
+                  v-for="(item, i) in navs"
                   :key="i"
                   @click="$store.commit('changeSiderState', i)"
               >
@@ -125,7 +125,7 @@
                 <v-card dark>
                   <v-list
                       dark
-                      v-for="(item, i) in items"
+                      v-for="(item, i) in tools"
                       :key="i">
                       <v-list-item-icon>
                         <v-icon v-text="item.icon" @click="draw = !draw"></v-icon>
@@ -176,7 +176,21 @@ export default {
       canMessageSubmit: false,
       msginform: "",
       draw: null,
-      items: [
+      tools: [
+        {
+          icon: 'mdi-timeline',
+          text: '',
+        },
+        {
+          icon: 'mdi-cloud-search-outline',
+          text: '',
+        },
+        {
+          icon: 'mdi-cog-outline',
+          text: '',
+        },
+      ],
+      navs: [
         {
           icon: 'mdi-message-text',
           text: '',
