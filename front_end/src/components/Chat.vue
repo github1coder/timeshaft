@@ -26,7 +26,7 @@ export default {
   },
 
   mounted() {
-    console.say("Chat.vue mount");
+    console.log("Chat.vue mount");
     socket.getChat(data => {
       // all messages
       console.say("all msgs:", data);

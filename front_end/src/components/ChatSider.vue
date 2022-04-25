@@ -31,39 +31,46 @@
           </div>
         </v-card>
         <v-card tile class="channels">
-<!--          <v-expansion-panels flat>-->
-<!--            <v-expansion-panel-->
-<!--                class="pa-0"-->
-<!--                v-for="(item,i) in items"-->
-<!--                :key="i"-->
-<!--            >-->
-<!--              <v-expansion-panel-header class="pa-0" >-->
-<!--                {{item}}-->
-<!--              </v-expansion-panel-header>-->
-<!--              <v-expansion-panel-content class="pa-0">-->
-<!--                <v-list width="100%" rounded dense>-->
-<!--                  <v-list-item-group color="primary">-->
-<!--                    <v-list-item v-for="(item, i) in chat1" :key="i">-->
-<!--                      <v-list-item-icon>-->
-<!--                        <v-icon v-text="item.icon"></v-icon>-->
-<!--                      </v-list-item-icon>-->
-<!--                      <v-list-item-content>-->
-<!--                        <v-list-item-title-->
-<!--                            class="channel-title"-->
-<!--                            v-text="item.text"-->
-<!--                        ></v-list-item-title>-->
-<!--                      </v-list-item-content>-->
-<!--                    </v-list-item>-->
-<!--                  </v-list-item-group>-->
-<!--                  </v-list>-->
-<!--              </v-expansion-panel-content>-->
-<!--            </v-expansion-panel>-->
-<!--          </v-expansion-panels>-->
+          <!--          <v-expansion-panels flat>-->
+          <!--            <v-expansion-panel-->
+          <!--                class="pa-0"-->
+          <!--                v-for="(item,i) in items"-->
+          <!--                :key="i"-->
+          <!--            >-->
+          <!--              <v-expansion-panel-header class="pa-0" >-->
+          <!--                {{item}}-->
+          <!--              </v-expansion-panel-header>-->
+          <!--              <v-expansion-panel-content class="pa-0">-->
+          <!--                <v-list width="100%" rounded dense>-->
+          <!--                  <v-list-item-group color="primary">-->
+          <!--                    <v-list-item v-for="(item, i) in chat1" :key="i">-->
+          <!--                      <v-list-item-icon>-->
+          <!--                        <v-icon v-text="item.icon"></v-icon>-->
+          <!--                      </v-list-item-icon>-->
+          <!--                      <v-list-item-content>-->
+          <!--                        <v-list-item-title-->
+          <!--                            class="channel-title"-->
+          <!--                            v-text="item.text"-->
+          <!--                        ></v-list-item-title>-->
+          <!--                      </v-list-item-content>-->
+          <!--                    </v-list-item>-->
+          <!--                  </v-list-item-group>-->
+          <!--                  </v-list>-->
+          <!--              </v-expansion-panel-content>-->
+          <!--            </v-expansion-panel>-->
+          <!--          </v-expansion-panels>-->
           <!-- TODO expansion needed! -->
           <v-list width="100%" rounded dense>
-            <v-subheader>今天</v-subheader>
-            <v-list-item-group color="primary">
-              <v-list-item v-for="(item, i) in chat1" :key="i">
+            <!--            <v-subheader>今天</v-subheader>-->
+            <v-list-item-group
+                v-model="channelNum"
+                color="primary">
+              <v-list-item
+                  v-for="(item, i) in chat1"
+                  @click="selectMessage(i)"
+                  :key="i"
+
+              >
                 <v-list-item-icon>
                   <v-icon v-text="item.icon"></v-icon>
                 </v-list-item-icon>
@@ -79,24 +86,27 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
-            <v-subheader>更早</v-subheader>
-            <v-list-item-group  color="primary">
-              <v-list-item v-for="(item, i) in chat2" :key="i">
-                <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title
-                      class="channel-title"
-                      v-text="item.text"
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                      class="channel-title"
-                      v-text="item.message">
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
+            <!--            <v-subheader>更早</v-subheader>-->
+            <!--            <v-list-item-group  color="primary">-->
+            <!--              <v-list-item-->
+            <!--                  v-for="(item, i) in chat2"-->
+            <!--                  @click="selectMessage(i)"-->
+            <!--                  :key="i">-->
+            <!--                <v-list-item-icon>-->
+            <!--                  <v-icon v-text="item.icon"></v-icon>-->
+            <!--                </v-list-item-icon>-->
+            <!--                <v-list-item-content>-->
+            <!--                  <v-list-item-title-->
+            <!--                      class="channel-title"-->
+            <!--                      v-text="item.text"-->
+            <!--                  ></v-list-item-title>-->
+            <!--                  <v-list-item-subtitle-->
+            <!--                      class="channel-title"-->
+            <!--                      v-text="item.message">-->
+            <!--                  </v-list-item-subtitle>-->
+            <!--                </v-list-item-content>-->
+            <!--              </v-list-item>-->
+            <!--            </v-list-item-group>-->
           </v-list>
         </v-card>
       </v-card>
@@ -131,30 +141,34 @@ export default {
       text: '',
       showSelect: true,
       chat1: [
-        { text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~" },
-        { text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！" },
-        { text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl" }
+        {text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~"},
+        {text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！"},
+        {text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl"},
+        {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
+        {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
+        {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
       ],
       chat2: [
-        { text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂" },
-        { text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol" },
-        { text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!" }
+        {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
+        {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
+        {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
       ],
       items: [
-        '今天', '更早'
-      ]
+
+      ],
+      channelNum: null,
     }
   },
   watch: {
     text: 'inputHandle'
   },
   methods: {
-    itemClick (item) {
+    itemClick(item) {
       this.text = item.name
       this.$refs.search.blur()
       // this.$router.push()
     },
-    inputHandle (text) {
+    inputHandle(text) {
       if (text.trim() !== '') {
         this.showSelect = true
         setTimeout(() => {
@@ -162,7 +176,7 @@ export default {
         }, 300)
       }
     },
-    getEntity () {
+    getEntity() {
       // 请求接口更新 items 数据
       this.items = [
         {
@@ -191,20 +205,24 @@ export default {
         }
       ]
     },
-    search () {
+    search() {
       this.$refs.search.blur()
       console.log(this.text)
       // this.$router.push()
     },
     toggleAC() {
       this.$store.commit("toggleAC");
+    },
+    selectMessage() {
+
     }
   },
   updated() {
-    this.$store.commit("changeChannel", this.item);
+    console.log(this.channelNum)
+    this.$store.commit("changeChannel", this.channelNum);
   },
   mounted() {
-    this.$store.commit("updateChannels", this.items);
+    this.$store.commit("updateChannels", this.chat1);
   }
 }
 </script>

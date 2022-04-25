@@ -99,7 +99,7 @@
                   <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
                     <v-text-field
                         class="mx-5 my-3 chat-form-tf"
-                        label="メッセージを送信"
+                        label="这边输入消息捏~"
                         solo
                         flat
                         v-model="msginform"
@@ -208,7 +208,7 @@ export default {
           text: '',
         },
       ],
-      model: 1
+      model: 0
     };
   },
 
@@ -233,7 +233,8 @@ export default {
       console.say("form-msg:", this.msginform);
       socket.sendChat(this.msginform);
       this.msginform = "";
-    }
+    },
+
   },
 
   mounted() {
