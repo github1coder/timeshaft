@@ -1,95 +1,102 @@
 <template>
-    <v-overlay class="welcome-overlay" :value="overlay" opacity="0.8">
-      <v-card color="#474b63" class="welcome-card">
-        <div>
-          <v-avatar width="100" height="0" class="mt-5">
-            <v-img
-              :src="$store.state.ownerIcon"
-            ></v-img>
-          </v-avatar>
-        </div>
-        <h2 class="mt-4 text-center">欢迎使用Time Shaft</h2>
-        <v-card-text>首先，通过邮箱注册您的账户</v-card-text>
-        <v-card-text class="mt-n4 mb-n6">
-          <v-form ref="registerForm" v-model="valid">
-            <v-text-field
-              class="text-field"
-              v-model="username"
-              label="昵称"
-              required
-              :counter="30"
-              :rules="rules.username"
-            ></v-text-field>
-            <v-text-field
-              class="text-field"
-              v-model="email"
-              label="邮箱"
-              required
-              :counter="30"
-              :rules="rules.email"
-            ></v-text-field>
-            <v-text-field
-              class="text-field"
-              v-model="password"
-              label="密码"
-              required
-              :counter="16"
-              :rules="rules.password"
-              :type="type"
-              @mouseover="changeShowText"
-              @mouseleave="changeShowPassword"
-            ></v-text-field>
-            <v-text-field
-              class="text-field"
-              v-model="rePassword"
-              label="重复密码"
-              required
-              :counter="16"
-              :rules="rules.rePassword"
-              :type="type"
-              @mouseover="changeShowText"
-              @mouseleave="changeShowPassword"
-            ></v-text-field>
-            <v-text-field
-              class="text-field"
-              v-model="inputCheckCode"
-              label="验证码"
-              required
-              :counter="6"
-              :rules="rules.inputCheckCode"
-            ></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-text>
-          <v-card-actions>
-            <v-btn
-              class="join-btn"
-              large
-              color="info"
-              @click="sendCheckCode"
-              :loading="loadingCheckCode"
-              :disabled="loadingCheckCode"
-              >发送验证码</v-btn
-            >
-            <v-btn
-              class="join-btn"
-              large
-              color="info"
-              @click="register"
-              :loading="loadingRegister"
-              :disabled="loadingRegister"
-              >注册</v-btn
-            >
-          </v-card-actions>
-        </v-card-text>
-        <router-link
-          to="/login">
-          <v-card-text
-            to="/login"
-          >已有账号，返回登录</v-card-text>
-        </router-link>
-      </v-card>
-    </v-overlay>
+  <v-overlay
+    class="welcome-overlay"
+    :value="overlay"
+    opacity="0.8"
+  >
+    <v-card
+      color="#474b63"
+      class="welcome-card"
+    >
+      <div>
+        <v-avatar
+          width="100"
+          height="0"
+          class="mt-5"
+        >
+          <v-img :src="$store.state.ownerIcon"></v-img>
+        </v-avatar>
+      </div>
+      <h2 class="mt-4 text-center">欢迎使用Time Shaft</h2>
+      <v-card-text>首先，通过邮箱注册您的账户</v-card-text>
+      <v-card-text class="mt-n4 mb-n6">
+        <v-form
+          ref="registerForm"
+          v-model="valid"
+        >
+          <v-text-field
+            class="text-field"
+            v-model="username"
+            label="昵称"
+            required
+            :counter="30"
+            :rules="rules.username"
+          ></v-text-field>
+          <v-text-field
+            class="text-field"
+            v-model="email"
+            label="邮箱"
+            required
+            :counter="30"
+            :rules="rules.email"
+          ></v-text-field>
+          <v-text-field
+            class="text-field"
+            v-model="password"
+            label="密码"
+            required
+            :counter="16"
+            :rules="rules.password"
+            :type="type"
+            @mouseover="changeShowText"
+            @mouseleave="changeShowPassword"
+          ></v-text-field>
+          <v-text-field
+            class="text-field"
+            v-model="rePassword"
+            label="重复密码"
+            required
+            :counter="16"
+            :rules="rules.rePassword"
+            :type="type"
+            @mouseover="changeShowText"
+            @mouseleave="changeShowPassword"
+          ></v-text-field>
+          <v-text-field
+            class="text-field"
+            v-model="inputCheckCode"
+            label="验证码"
+            required
+            :counter="6"
+            :rules="rules.inputCheckCode"
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-text>
+        <v-card-actions>
+          <v-btn
+            class="join-btn"
+            large
+            color="info"
+            @click="sendCheckCode"
+            :loading="loadingCheckCode"
+            :disabled="loadingCheckCode"
+          >发送验证码</v-btn>
+          <v-btn
+            class="join-btn"
+            large
+            color="info"
+            @click="register"
+            :loading="loadingRegister"
+            :disabled="loadingRegister"
+          >注册</v-btn>
+        </v-card-actions>
+      </v-card-text>
+      <router-link to="/login">
+        <v-card-text to="/login">已有账号，返回登录</v-card-text>
+      </router-link>
+    </v-card>
+  </v-overlay>
 </template>
 
 
@@ -97,7 +104,7 @@
 import { getCheckCode, register } from '../api/user/index'
 import socket from "../socket";
 export default {
-  data() {
+  data () {
     return {
       overlay: false,
       valid: true,
@@ -134,7 +141,7 @@ export default {
     };
   },
 
-  mounted() {
+  mounted () {
     console.say("app.vue mount");
     if (!this.$store.state.loggedIn) {
       const acc = window.localStorage.getItem("accToken");
@@ -150,39 +157,41 @@ export default {
   },
 
   methods: {
-    changeShowText() {
+    changeShowText () {
       this.type = "text";
     },
 
-    changeShowPassword() {
+    changeShowPassword () {
       this.type = "password";
     },
 
-    register(){
+    register () {
       this.$refs.registerForm.validate();
-      const param =  {
+      const param = {
         'username': this.username,
         'password': this.password,
         'email': this.email
       }
-      if (this.valid)
-      {
+      if (this.valid) {
         this.loading = true;
         register(param).then(res => {
-            this.$router.push({
-              path: '/home',
-              res
-            })
+          this.$router.push({
+            path: '/home',
           })
+          this.$store.commit("userId", res.user_id)
+          this.$store.commit("myIcon", res.photo_url)
+          this.$store.commit("myNick", res.username)
+          this.$store.commit("loggedIn", true)
+        })
       }
     },
 
-    sendCheckCode() {
+    sendCheckCode () {
       if (this.email === '') {
         this.$message.error('请先输入邮箱再点击获取验证码')
       } else {
         if (!(this.email && (/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(this.email))) {
-        this.$message({showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error'})
+          this.$message({ showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error' })
         } else {
           const param = {
             email: this.email

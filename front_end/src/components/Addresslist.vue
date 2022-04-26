@@ -48,7 +48,10 @@
                 <v-img :src="subItem.avatar"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title v-text="subItem.title"></v-list-item-title>
+                <v-list-item-title
+                  v-text="subItem.title"
+                  style="text-align: left"
+                ></v-list-item-title>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -87,6 +90,8 @@
 
 <script>
 import socket from "../socket";
+import '../api/addresslist/index'
+import { getGroups } from '../api/addresslist/index';
 export default {
   components: {},
 
@@ -125,8 +130,10 @@ export default {
         },],
       },],
       member: 0,
+      //备注、删除好友、解散群聊，绑定方法
+      //问题，如何添加管理员
       btns: [{
-        title: 'Click Me'
+        title: '备注'
       }, {
         title: 'Click Me'
       }, {
@@ -152,6 +159,14 @@ export default {
   },
 
   mounted () {
+    getGroups({
+      ACCESS_TOKEN: this.$store.accessToken
+    }).then(res => {
+      this.$store.commit("channels", res.data.groupsList)
+      this.items.items = res.data.groupsList
+    });
+
+
     this.$store.commit("updateChannels", this.itemss);
     if (this.$store.state.membersComponentMounted) return;
     this.$store.commit("membersMounted");
