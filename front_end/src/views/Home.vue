@@ -37,7 +37,8 @@
         <div class="base-content">
           <!-- here side -->
           <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
-          <ListSider v-else-if="$store.state.siderState === 1"></ListSider>
+          <!-- <ListSider v-else-if="$store.state.siderState === 1"></ListSider> -->
+          <Contract v-else-if="$store.state.siderState === 1"></Contract>
 
           <div class="chat">
             <v-card class="chat-header" tile>
@@ -145,102 +146,94 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Chat from "@/components/Chat.vue";
-// import Sidebar from "@/components/Sidebar.vue";
-// import Members from "@/components/Members.vue";
-// import AvatarChanger from "@/components/AvatarChanger";
-// import ChatTools from "@/components/ChatTools";
+    // @ is an alias to /src
+    import Chat from "@/components/Chat.vue";
+    // import Sidebar from "@/components/Sidebar.vue";
+    // import Members from "@/components/Members.vue";
+    // import AvatarChanger from "@/components/AvatarChanger";
+    // import ChatTools from "@/components/ChatTools";
 
-import socket from "../socket";
-import ListSider from "@/components/ListSider";
-import ChatSider from "@/components/ChatSider";
+    import socket from "../socket";
+    // import ListSider from "@/components/ListSider";
+    import ChatSider from "@/components/ChatSider";
+    import Contract from "@/components/Contract";
 
-export default {
-  name: "Home",
-  components: {
-    ListSider,
-    Chat,
-    ChatSider,
-    // Sidebar,
-    // Members,
-    // ChatTools,
-    // AvatarChanger
-  },
-  data() {
-    return {
-      cache: 0,
-      mini: true,
-      drawer: false,
-      leftDrawer: false,
-      canMessageSubmit: false,
-      msginform: "",
-      draw: null,
-      tools: [
-        {
-          icon: 'mdi-timeline',
-          text: '',
+    export default {
+        name: "Home",
+        components: {
+            Contract,
+            Chat,
+            ChatSider,
+            // Sidebar,
+            // Members,
+            // ChatTools,
+            // AvatarChanger
         },
-        {
-          icon: 'mdi-cloud-search-outline',
-          text: '',
+        data() {
+            return {
+                cache: 0,
+                mini: true,
+                drawer: false,
+                leftDrawer: false,
+                canMessageSubmit: false,
+                msginform: "",
+                draw: null,
+                tools: [{
+                    icon: 'mdi-timeline',
+                    text: '',
+                }, {
+                    icon: 'mdi-cloud-search-outline',
+                    text: '',
+                }, {
+                    icon: 'mdi-cog-outline',
+                    text: '',
+                }, ],
+                navs: [{
+                    icon: 'mdi-message-text',
+                    text: '',
+                }, {
+                    icon: 'mdi-account-box-multiple-outline',
+                    text: '',
+                }, {
+                    icon: 'mdi-file-document-multiple-outline',
+                    text: '',
+                }, {
+                    icon: 'mdi-calendar-check',
+                    text: '',
+                }, ],
+                model: 0
+            };
         },
-        {
-          icon: 'mdi-cog-outline',
-          text: '',
+
+        methods: {
+            clickIcon() {
+                console.log(this.item);
+            },
+
+            getCh() {
+                return (this.cache =
+                    this.$store.state.currentChannel === undefined ?
+                    this.cache :
+                    this.$store.state.currentChannel);
+            },
+
+            setCanMessageSubmit() {
+                this.canMessageSubmit = true;
+            },
+
+            sendChat() {
+                if (this.msginform == "") return;
+                console.say("form-msg:", this.msginform);
+                socket.sendChat(this.msginform);
+                this.msginform = "";
+            },
+
         },
-      ],
-      navs: [
-        {
-          icon: 'mdi-message-text',
-          text: '',
-        },
-        {
-          icon: 'mdi-account-box-multiple-outline',
-          text: '',
-        },
-        {
-          icon: 'mdi-file-document-multiple-outline',
-          text: '',
-        },
-        {
-          icon: 'mdi-calendar-check',
-          text: '',
-        },
-      ],
-      model: 0
+
+        mounted() {
+            console.say("home.vue mount");
+        }
     };
-  },
-
-  methods: {
-    clickIcon() {
-      console.log(this.item);
-    },
-
-    getCh() {
-      return (this.cache =
-        this.$store.state.currentChannel === undefined
-          ? this.cache
-          : this.$store.state.currentChannel);
-    },
-
-    setCanMessageSubmit() {
-      this.canMessageSubmit = true;
-    },
-
-    sendChat() {
-      if (this.msginform == "") return;
-      console.say("form-msg:", this.msginform);
-      socket.sendChat(this.msginform);
-      this.msginform = "";
-    },
-
-  },
-
-  mounted() {
-    console.say("home.vue mount");
-  }
-};
 </script>
 
 <style lang="scss"></style>
