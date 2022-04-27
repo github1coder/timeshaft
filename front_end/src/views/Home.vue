@@ -129,7 +129,7 @@
                   </div>
                 </div>
                 <div class="chat-tool-open" v-if="draw">
-                  <v-card class="overflow-y-auto">
+                  <v-card dark class="overflow-y-auto">
                     <v-timeline  >
                       <v-timeline-item
                           color="purple lighten-2"
