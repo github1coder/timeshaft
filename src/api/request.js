@@ -12,7 +12,8 @@ axios.defaults.timeout = 10000 // 超时时间
     // tools地址
     // axios.defaults.baseURL = 'http://127.0.0.1:8088'
     // 微服务地址
-axios.defaults.baseURL = 'http://182.92.163.68:8080'
+// axios.defaults.baseURL = 'http://182.92.163.68:8080'
+axios.defaults.baseURL = 'http://localhost:8080'
 
 // 整理数据
 axios.defaults.transformRequest = function(data) {

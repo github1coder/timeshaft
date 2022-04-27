@@ -1,7 +1,6 @@
 import request from "../request"
 
 
-
 export function register(param) {
     return request({
         url: '/user/register',
@@ -20,7 +19,7 @@ export function getCheckCode(param) {
 
 export function login(param) {
     return request({
-        url: '/user/login',
+        url: '/user/loginn',
         method: 'post',
         param
     })
