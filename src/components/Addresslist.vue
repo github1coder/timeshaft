@@ -8,24 +8,19 @@
         tile
         class="server-info"
       >
-        <v-card
-          height="48"
-          tile
-          class="server-title"
-        >
-          <!--          <div style="line-height:48px">Discord Clone</div>-->
-          <v-text-field
-            dark
-            flat
-            solo-inverted
-            hide-details
-            dense
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            class="hidden-sm-and-down mx-2 head-search"
-            autocomplete="off"
-          ></v-text-field>
-        </v-card>
+        <v-text-field
+          clearable
+          outlined
+          dense
+          dark
+          hide-details
+          label="请输入关键词"
+          v-model="text"
+          class="input-search mt-3"
+          autocomplete="off"
+          v-on="on"
+          ref="search"
+        ></v-text-field>
         <v-list>
           <v-list-group :prepend-icon="channelLabels[0].action">
             <!-- no-action -->
@@ -35,19 +30,26 @@
               </v-list-item-content>
             </template>
             <v-list-item
-              v-for="subItem in groups"
-              :key="subItem.title"
+              v-for="(subItem, j) in groups"
+              :key="subItem.group_name"
               @click="method1"
             >
               <v-list-item-avatar>
-                <v-img :src="subItem.avatar"></v-img>
+                <v-img :src="subItem.group_photo"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title
-                  v-text="subItem.title"
+                  v-text="subItem.group_name"
+                  v-show="!subItem.show && !subItem.quit"
                   style="text-align: left"
                 ></v-list-item-title>
-                <v-text-field v-show="false"></v-text-field>
+                <v-text-field
+                  v-show="subItem.show"
+                  v-model="name"
+                  @keydown.esc="showGroupTextField(j)"
+                  @keydown.enter="changeGroupName(j)"
+                  clearable
+                ></v-text-field>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -69,7 +71,7 @@
                     <v-list-item
                       v-for="(btnn, i) in groupsBtns"
                       :key="i"
-                      @click="method1"
+                      @click="getMethod(btnn.method, j)"
                     >
                       <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                     </v-list-item>
@@ -88,16 +90,16 @@
             </template>
             <v-list-item
               v-for="(subItem, j) in friends"
-              :key="subItem.title"
+              :key="subItem.friend_name"
               @click="method1"
             >
               <v-list-item-avatar>
-                <v-img :src="subItem.avatar"></v-img>
+                <v-img :src="subItem.friend_photo"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title
-                  v-show="!subItem.show"
-                  v-text="subItem.title"
+                  v-show="!subItem.show && !subItem.quit"
+                  v-text="subItem.friend_name"
                   style="text-align: left"
                 ></v-list-item-title>
                 <v-text-field
@@ -108,6 +110,24 @@
                   clearable
                 >
                 </v-text-field>
+                <v-card v-show="subItem.quit">
+                  <v-btn
+                    class="ma-2"
+                    tile
+                    outlined
+                    color="success"
+                  >
+                    确定
+                  </v-btn>
+                  <v-btn
+                    class="ma-2"
+                    tile
+                    outlined
+                    color="success"
+                  >
+                    取消
+                  </v-btn>
+                </v-card>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -176,7 +196,7 @@
 <script>
 import socket from "../socket";
 import '../api/addresslist/index'
-import { getGroups, changeNickname } from '../api/addresslist/index';
+import { getGroups, changeNickname, getFriends, changeGroupNickname } from '../api/addresslist/index';
 export default {
   components: {},
 
@@ -184,6 +204,7 @@ export default {
     return {
       name: "",
       friendsIndex: null,
+      groupsIndex: null,
       itemss: [{
         text: "Announcements",
         icon: "mdi-bell-alert"
@@ -205,22 +226,31 @@ export default {
         },
       ],
       groups: [{
-        title: 'List Item',
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        group_id: 1,
+        group_name: 'List Item',
+        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
+        quit: false,
+      }, {
+        group_id: 1,
+        group_name: 'List Item',
+        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+        quit: false,
       },],
+
       friends: [{
-        title: 'Breakfast & brunch',
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        firend_id: 1,
+        friend_name: 'Breakfast & brunch',
+        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
+        quit: false,
       }, {
-        title: 'New American',
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        firend_id: 1,
+        friend_name: 'Breakfast & brunch',
+        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
-      }, {
-        title: 'Su',
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
+        quit: false,
       },],
       member: 0,
       //备注、删除好友、解散群聊，绑定方法
@@ -230,16 +260,18 @@ export default {
         method: 'showTextField'
       }, {
         title: '删除好友',
-        method: 'showTextField'
+        method: 'showQuitField'
       }, {
         title: 'Click Me'
       }, {
         title: 'Click Me 2'
       },],
       groupsBtns: [{
-        title: '备注'
+        title: '备注',
+        method: 'showGroupTextField'
       }, {
-        title: '退出群聊'
+        title: '退出群聊',
+        method: 'showGroupQuitField'
       }, {
         title: '解散群聊'
       }, {
@@ -279,10 +311,69 @@ export default {
       this.name = "";
     },
 
+    showQuitField (j) {
+      if (this.firendsIndex != null) {
+        if (this.firendsIndex != j) {
+          this.friends[this.groupsIndex].quit = false;
+        }
+        this.firends[j].quit = !this.firends[j].quit;
+      }
+      else {
+        this.firends[j].quit = !this.firends[j].quit;
+      }
+      this.firendsIndex = j;
+      this.name = "";
+    },
+
+    showGroupTextField (j) {
+      if (this.groupsIndex != null) {
+        if (this.groupsIndex != j) {
+          this.groups[this.groupsIndex].show = false;
+        }
+        this.groups[j].show = !this.groups[j].show;
+      }
+      else {
+        this.groups[j].show = !this.groups[j].show;
+      }
+      this.groupsIndex = j;
+      this.name = "";
+    },
+
+    showGroupQuitField (j) {
+      if (this.groupsIndex != null) {
+        if (this.groupsIndex != j) {
+          this.groups[this.groupsIndex].show = false;
+        }
+        this.groups[j].quit = !this.groups[j].quit;
+      }
+      else {
+        this.groups[j].quit = !this.groups[j].quit;
+      }
+      this.groupsIndex = j;
+      this.name = "";
+    },
+
     changeFriendName (j) {
       if (this.name != "") {
-        this.friends[j].title = this.name;
-        changeNickname();
+        this.friends[j].friend_name = this.name;
+        changeNickname({
+          "ACCESS_TOKEN": this.$store.accessToken,
+          "friend_id": this.friends[j].friend_id,
+          "friend_nickname": this.name
+        });
+      }
+      this.friendsIndex = null;
+      this.friends[j].show = false;
+    },
+
+    changeGroupName (j) {
+      if (this.name != "") {
+        this.friends[j].friend_name = this.name;
+        changeGroupNickname({
+          "ACCESS_TOKEN": this.$store.accessToken,
+          "group_id": this.friends[j].friend_id,
+          "group_nickname": this.name
+        });
       }
       this.friendsIndex = null;
       this.friends[j].show = false;
@@ -291,10 +382,22 @@ export default {
 
   mounted () {
     getGroups({
-      ACCESS_TOKEN: this.$store.accessToken
+      "ACCESS_TOKEN": this.$store.accessToken
     }).then(res => {
-      this.$store.commit("channels", res.data.groupsList)
-      this.items.items = res.data.groupsList
+      this.$store.commit("channels", res.groupsList)
+      this.groups = res.groupsList.array.forEach(element => {
+        element['show'] = false
+        element['quit'] = false
+      });
+    });
+    getFriends({
+      "ACCESS_TOKEN": this.$store.accessToken
+    }).then(res => {
+      this.$store.commit("channels", res.friendsList)
+      this.groups = res.friends.array.forEach(element => {
+        element['show'] = false
+        element['quit'] = false
+      });
     });
 
 
