@@ -197,7 +197,7 @@ export default {
             'email': this.email
           }
           getCheckCode(param).then(res => {
-            this.checkCode = res.checkCode
+            this.checkCode = res.data.checkCode
             console.log(this.checkCode)
           })
         }
