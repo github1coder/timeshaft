@@ -13,7 +13,7 @@ export function getCheckCode(param) {
     return request({
         url: '/user/getCheckCode',
         method: 'get',
-        param
+        params: param
     })
 }
 

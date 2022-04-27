@@ -4,36 +4,26 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
-// axios默认配置
-axios.defaults.timeout = 10000 // 超时时间
-    // axios.defaults.baseURL 请求地址前缀
-    // User地址
-    // axios.defaults.baseURL = 'http://127.0.0.1:8001'
-    // tools地址
-    // axios.defaults.baseURL = 'http://127.0.0.1:8088'
-    // 微服务地址
-// axios.defaults.baseURL = 'http://182.92.163.68:8080'
-axios.defaults.baseURL = 'http://localhost:8080'
+axios.defaults.withCredentials = true
 
-// 整理数据
-axios.defaults.transformRequest = function(data) {
-    data = JSON.stringify(data)
-    return data
-}
+const service = axios.create({
+    baseURL: 'http://localhost:8080',
+    timeout: 2000,
+})
 
-// 路由请求拦截
-axios.interceptors.request.use(
+service.interceptors.request.use(
+
     config => {
-        config.headers['Content-Type'] = 'application/json;charset=UTF-8'
-
+        config.headers["Content-Type"] = 'application/json'
         return config
     },
     error => {
-        return Promise.reject(error.response)
-    })
+        return Promise.reject(error)
+    }
+)
 
 // 路由响应拦截
-axios.interceptors.response.use(
+service.interceptors.response.use(
     response => {
         if (response.code === 0) {
             return response.data
@@ -68,4 +58,5 @@ axios.interceptors.response.use(
     error => {
         return Promise.reject(error.response) // 返回接口返回的错误信息
     })
-export default axios
+
+export default service
