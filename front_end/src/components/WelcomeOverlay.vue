@@ -1,17 +1,29 @@
 <template>
-  <v-overlay class="welcome-overlay" :value="overlay" opacity="0.8">
-    <v-card color="#474b63" class="welcome-card">
+  <v-overlay
+    class="welcome-overlay"
+    :value="overlay"
+    opacity="0.8"
+  >
+    <v-card
+      color="#474b63"
+      class="welcome-card"
+    >
       <div>
-        <v-avatar width="100" height="0" class="mt-5">
-          <v-img
-            :src="$store.state.ownerIcon"
-          ></v-img>
+        <v-avatar
+          width="100"
+          height="0"
+          class="mt-5"
+        >
+          <v-img :src="$store.state.ownerIcon"></v-img>
         </v-avatar>
       </div>
       <h2 class="mt-4 text-center">欢迎使用Time Shaft</h2>
       <v-card-text>请登录</v-card-text>
       <v-card-text class="mt-n4 mb-n6">
-        <v-form ref="welcomeform" v-model="valid">
+        <v-form
+          ref="welcomeform"
+          v-model="valid"
+        >
           <v-text-field
             class="text-field"
             v-model="email"
@@ -33,7 +45,7 @@
           ></v-text-field>
         </v-form>
       </v-card-text>
-      
+
       <v-card-text>
         <v-card-actions>
           <v-btn
@@ -43,15 +55,13 @@
             @click="login"
             :loading="loading"
             :disabled="loading"
-            >登录</v-btn
-          >
+          >登录</v-btn>
           <v-btn
             class="join-btn"
             large
             color="info"
             to="/register"
-            >注册</v-btn
-          >
+          >注册</v-btn>
         </v-card-actions>
       </v-card-text>
     </v-card>
@@ -63,7 +73,7 @@ import { login } from '../api/user/index'
 import socket from "../socket";
 
 export default {
-  data() {
+  data () {
     return {
       overlay: false,
       valid: true,
@@ -84,7 +94,7 @@ export default {
     };
   },
 
-  mounted() {
+  mounted () {
     console.say("app.vue mount");
     if (!this.$store.state.loggedIn) {
       const acc = window.localStorage.getItem("accToken");
@@ -100,29 +110,31 @@ export default {
   },
 
   methods: {
-    changeShowText() {
+    changeShowText () {
       this.type = "text";
     },
 
-    changeShowPassword() {
+    changeShowPassword () {
       this.type = "password";
     },
 
-    login() {
+    login () {
       this.$refs.registerForm.validate();
-      if (this.valid)
-      {
+      if (this.valid) {
         this.loading = true;
         const param = {
           'email': this.email,
           'password': this.password
         }
         login(param).then(res => {
-            this.$router.push({
-              path: '/home',
-              res
-            })
+          this.$router.push({
+            path: '/home',
           })
+          this.$store.commit("userId", res.user_id)
+          this.$store.commit("myIcon", res.photo_url)
+          this.$store.commit("myNick", res.username)
+          this.$store.commit("loggedIn", true)
+        })
       }
     }
   },

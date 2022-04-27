@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        userId: -1,
+        accessToken: null,
         channels: [],
         currentChannel: 0,
         myIcon: "guest.png",
