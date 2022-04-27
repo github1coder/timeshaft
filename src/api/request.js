@@ -25,6 +25,7 @@ service.interceptors.request.use(
 // 路由响应拦截
 service.interceptors.response.use(
     response => {
+        console.log(response)
         if (response.data.code === 0) {
             return response.data.data
         } else if (response.data.code === 40000) {
