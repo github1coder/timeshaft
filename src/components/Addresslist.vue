@@ -22,7 +22,10 @@
           ref="search"
         ></v-text-field>
         <v-list>
-          <v-list-group :prepend-icon="channelLabels[0].action">
+          <v-list-group
+            :prepend-icon="channelLabels[0].action"
+            @click="initBtns"
+          >
             <!-- no-action -->
             <template v-slot:activator>
               <v-list-item-content>
@@ -31,7 +34,7 @@
             </template>
             <v-list-item
               v-for="(subItem, j) in groups"
-              :key="subItem.group_name"
+              :key="j"
               @click="method1"
             >
               <v-list-item-avatar>
@@ -39,8 +42,8 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title
-                  v-text="subItem.group_name"
                   v-show="!subItem.show && !subItem.quit"
+                  v-text="subItem.group_name"
                   style="text-align: left"
                 ></v-list-item-title>
                 <v-text-field
@@ -49,7 +52,30 @@
                   @keydown.esc="showGroupTextField(j)"
                   @keydown.enter="changeGroupName(j)"
                   clearable
-                ></v-text-field>
+                >
+
+                </v-text-field>
+                <div
+                  class="text-center"
+                  v-show="subItem.quit"
+                >
+                  <v-btn
+                    class="mx-2"
+                    color="error"
+                    fab
+                    x-small
+                  >
+                    确定
+                  </v-btn>
+                  <v-btn
+                    class="mx-2"
+                    color="success"
+                    fab
+                    x-small
+                  >
+                    取消
+                  </v-btn>
+                </div>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -80,7 +106,11 @@
               </v-list-item-action>
             </v-list-item>
           </v-list-group>
-          <v-list-group :prepend-icon="channelLabels[1].action">
+
+          <v-list-group
+            :prepend-icon="channelLabels[1].action"
+            @click="initBtns"
+          >
             <!-- no-action -->
             <template v-slot:activator>
               <v-list-item-content>
@@ -90,7 +120,7 @@
             </template>
             <v-list-item
               v-for="(subItem, j) in friends"
-              :key="subItem.friend_name"
+              :key="j"
               @click="method1"
             >
               <v-list-item-avatar>
@@ -109,25 +139,29 @@
                   @keydown.enter="changeFriendName(j)"
                   clearable
                 >
+                  <!-- 确定删除好友 -->
                 </v-text-field>
-                <v-card v-show="subItem.quit">
+                <div
+                  class="text-center"
+                  v-show="subItem.quit"
+                >
                   <v-btn
-                    class="ma-2"
-                    tile
-                    outlined
-                    color="success"
+                    class="mx-2"
+                    color="error"
+                    fab
+                    x-small
                   >
                     确定
                   </v-btn>
                   <v-btn
-                    class="ma-2"
-                    tile
-                    outlined
+                    class="mx-2"
                     color="success"
+                    fab
+                    x-small
                   >
                     取消
                   </v-btn>
-                </v-card>
+                </div>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -203,8 +237,10 @@ export default {
   data () {
     return {
       name: "",
-      friendsIndex: null,
       groupsIndex: null,
+      friendsIndex: null,
+      groupUnfolder: true,
+      friendUnfolder: true,
       itemss: [{
         text: "Announcements",
         icon: "mdi-bell-alert"
@@ -227,12 +263,12 @@ export default {
       ],
       groups: [{
         group_id: 1,
-        group_name: 'List Item',
+        group_name: 'Breakfast & brunch',
         group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
         quit: false,
       }, {
-        group_id: 1,
+        group_id: 2,
         group_name: 'List Item',
         group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
@@ -240,13 +276,13 @@ export default {
       },],
 
       friends: [{
-        firend_id: 1,
+        friend_id: 1,
         friend_name: 'Breakfast & brunch',
         friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
         quit: false,
       }, {
-        firend_id: 1,
+        friend_id: 2,
         friend_name: 'Breakfast & brunch',
         friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
@@ -293,6 +329,17 @@ export default {
       console.assert(1)
     },
 
+    initBtns () {
+      if (this.groupsIndex != null) {
+        this.groups[this.groupsIndex].show = false;
+        this.groups[this.groupsIndex].quit = false;
+      }
+      if (this.friendsIndex != null) {
+        this.friends[this.friendsIndex].show = false;
+        this.friends[this.friendsIndex].quit = false;
+      }
+    },
+
     getMethod: function (methodName, index) {
       this[methodName](index);
     },
@@ -301,27 +348,33 @@ export default {
       if (this.friendsIndex != null) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].show = false;
+          this.friends[this.friendsIndex].quit = false;
         }
         this.friends[j].show = !this.friends[j].show;
+        this.friends[j].quit = false;
       }
       else {
         this.friends[j].show = !this.friends[j].show;
+        this.friends[j].quit = false;
       }
       this.friendsIndex = j;
       this.name = "";
     },
 
     showQuitField (j) {
-      if (this.firendsIndex != null) {
-        if (this.firendsIndex != j) {
-          this.friends[this.groupsIndex].quit = false;
+      if (this.friendsIndex != null) {
+        if (this.friendsIndex != j) {
+          this.friends[this.friendsIndex].quit = false;
+          this.friends[this.friendsIndex].show = false;
         }
-        this.firends[j].quit = !this.firends[j].quit;
+        this.friends[j].quit = !this.friends[j].quit;
+        this.friends[j].show = !this.friends[j].quit;
       }
       else {
-        this.firends[j].quit = !this.firends[j].quit;
+        this.friends[j].quit = !this.friends[j].quit;
+        this.friends[j].show = !this.friends[j].quit;
       }
-      this.firendsIndex = j;
+      this.friendsIndex = j;
       this.name = "";
     },
 
@@ -329,11 +382,14 @@ export default {
       if (this.groupsIndex != null) {
         if (this.groupsIndex != j) {
           this.groups[this.groupsIndex].show = false;
+          this.groups[this.groupsIndex].quit = false;
         }
         this.groups[j].show = !this.groups[j].show;
+        this.groups[j].quit = false;
       }
       else {
         this.groups[j].show = !this.groups[j].show;
+        this.groups[j].quit = false;
       }
       this.groupsIndex = j;
       this.name = "";
@@ -342,12 +398,15 @@ export default {
     showGroupQuitField (j) {
       if (this.groupsIndex != null) {
         if (this.groupsIndex != j) {
+          this.groups[this.groupsIndex].quit = false;
           this.groups[this.groupsIndex].show = false;
         }
         this.groups[j].quit = !this.groups[j].quit;
+        this.groups[j].show = false;
       }
       else {
         this.groups[j].quit = !this.groups[j].quit;
+        this.groups[j].show = false;
       }
       this.groupsIndex = j;
       this.name = "";
@@ -368,15 +427,15 @@ export default {
 
     changeGroupName (j) {
       if (this.name != "") {
-        this.friends[j].friend_name = this.name;
+        this.groups[j].group_name = this.name;
         changeGroupNickname({
           "ACCESS_TOKEN": this.$store.accessToken,
-          "group_id": this.friends[j].friend_id,
+          "group_id": this.groups[j].group_id,
           "group_nickname": this.name
         });
       }
-      this.friendsIndex = null;
-      this.friends[j].show = false;
+      this.groupsIndex = null;
+      this.groups[j].show = false;
     }
   },
 
@@ -394,7 +453,7 @@ export default {
       "ACCESS_TOKEN": this.$store.accessToken
     }).then(res => {
       this.$store.commit("channels", res.friendsList)
-      this.groups = res.friends.array.forEach(element => {
+      this.friends = res.friends.array.forEach(element => {
         element['show'] = false
         element['quit'] = false
       });
