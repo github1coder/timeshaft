@@ -20,6 +20,11 @@ const router = new VueRouter({
             component: WelcomeOverlay
         },
         {
+            path: '/login',
+            name: 'login',
+            component: WelcomeOverlay
+        },
+        {
             path: '/register',
             name: 'Register',
             component: Register

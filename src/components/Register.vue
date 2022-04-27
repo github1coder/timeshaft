@@ -79,9 +79,8 @@
             large
             color="info"
             @click="sendCheckCode"
-            :loading="loadingCheckCode"
             :disabled="loadingCheckCode"
-          >发送验证码</v-btn>
+          >{{hint}}</v-btn>
           <v-btn
             class="join-btn"
             large
@@ -106,7 +105,7 @@ import socket from "../socket";
 export default {
   data () {
     return {
-      overlay: false,
+      overlay: true,
       valid: true,
       loadingCheckCode: false,
       loadingRegister: false,
@@ -117,6 +116,7 @@ export default {
       password: "",
       rePassword: "",
       type: "password",
+      hint: "发送验证码",
       rules: {
         username: [
           (username) => !!username || "昵称不能为空",
@@ -175,13 +175,13 @@ export default {
       if (this.valid) {
         this.loading = true;
         register(param).then(res => {
-          this.$router.push({
-            path: '/home',
-          })
           this.$store.commit("userId", res.user_id)
           this.$store.commit("myIcon", res.photo_url)
           this.$store.commit("myNick", res.username)
           this.$store.commit("loggedIn", true)
+          this.$router.push({
+            path: '/home',
+          })
         })
       }
     },
@@ -194,24 +194,27 @@ export default {
           this.$message({ showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error' })
         } else {
           const param = {
-            email: this.email
+            'email': this.email
           }
           getCheckCode(param).then(res => {
             this.checkCode = res.checkCode
             console.log(this.checkCode)
           })
         }
-        // 验证码倒计时
+        // 验证码倒计时, 60s后重新发送，并且验证码为空
         if (!this.timer) {
           this.count = 60
           this.loadingCheckCode = true
           this.timer = setInterval(() => {
             if (this.count > 0 && this.count <= 60) {
               this.count--
+              this.hint = this.count
             } else {
               this.loadingCheckCode = false
               clearInterval(this.timer)
               this.timer = null
+              this.hint = "发送验证码"
+              this.checkCode = ""
             }
           }, 1000)
         }

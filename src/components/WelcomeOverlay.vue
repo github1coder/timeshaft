@@ -75,7 +75,7 @@ import socket from "../socket";
 export default {
   data () {
     return {
-      overlay: false,
+      overlay: true,
       valid: true,
       email: "",
       password: "",
@@ -127,13 +127,13 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
-          this.$router.push({
-            path: '/home',
-          })
           this.$store.commit("userId", res.user_id)
           this.$store.commit("myIcon", res.photo_url)
           this.$store.commit("myNick", res.username)
           this.$store.commit("loggedIn", true)
+          this.$router.push({
+            path: '/home',
+          })
         })
       }
     }
