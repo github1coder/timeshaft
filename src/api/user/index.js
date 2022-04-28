@@ -5,7 +5,7 @@ export function register(param) {
     return request({
         url: '/user/register',
         method: 'post',
-        param
+        data: param
     })
 }
 

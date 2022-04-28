@@ -175,8 +175,8 @@ export default {
       if (this.valid) {
         this.loading = true;
         register(param).then(res => {
-          this.$store.commit("userId", res.user_id)
-          this.$store.commit("myIcon", res.photo_url)
+          this.$store.commit("userId", res.id)
+          this.$store.commit("myIcon", res.photo)
           this.$store.commit("myNick", res.username)
           this.$store.commit("loggedIn", true)
           this.$router.push({
@@ -186,18 +186,18 @@ export default {
       }
     },
 
-    sendCheckCode () {
+    async sendCheckCode() {
       if (this.email === '') {
         this.$message.error('请先输入邮箱再点击获取验证码')
       } else {
         if (!(this.email && (/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(this.email))) {
-          this.$message({ showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error' })
+          this.$message({showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error'})
         } else {
           const param = {
             'email': this.email
           }
           getCheckCode(param).then(res => {
-            this.checkCode = res.data.checkCode
+            this.checkCode = res.checkCode
             console.log(this.checkCode)
           })
         }

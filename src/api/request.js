@@ -4,12 +4,12 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
-axios.defaults.withCredentials = true
-
 const service = axios.create({
     baseURL: 'http://localhost:8080',
-    timeout: 2000,
+    timeout: 20000,
 })
+
+//service.defaults.withCredentials = true  是否携带cookie
 
 service.interceptors.request.use(
 
@@ -25,9 +25,10 @@ service.interceptors.request.use(
 // 路由响应拦截
 service.interceptors.response.use(
     response => {
+        console.log("响应")
         console.log(response)
         if (response.data.code === 0) {
-            return response.data
+            return response.data.data
         } else if (response.data.code === 40000) {
             return Message.error("请求错误")
         } else if (response.data.code === 40001) {
