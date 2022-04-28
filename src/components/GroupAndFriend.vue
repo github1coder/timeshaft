@@ -202,7 +202,6 @@
 </template>
 
 <script>
-import socket from "../socket";
 import '../api/addresslist/index'
 import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup } from '../api/addresslist/index';
 export default {
@@ -466,38 +465,6 @@ export default {
         element['show'] = false
         element['quit'] = false
       });
-    });
-
-
-    this.$store.commit("updateChannels", this.itemss);
-    if (this.$store.state.membersComponentMounted) return;
-    this.$store.commit("membersMounted");
-    console.say("members mount");
-    socket.getMembers((data) => {
-      console.say("getMem", data);
-      this.$store.commit("pushMembers", data);
-    });
-    socket.addEvent("memberJoin", (data) => {
-      console.say("memberJoin", data);
-      if (data.id == socket.sid) {
-        //isMe
-        this.member = this.$store.state.members.length;
-        this.$store.commit("updateAvatar", data.user.img || "guest.png");
-        this.$store.commit("setNick", data.user.nick);
-      }
-      this.$store.commit("pushMembers", data);
-
-      this.$store.commit("pushChat", {
-        user: {
-          nick: "SERVER",
-          img: this.$store.state.ownerIcon,
-        },
-        msg: data.user.nick + " has joined the chat.",
-      });
-    });
-
-    socket.addEvent("memberLeave", (sid) => {
-      this.$store.commit("removeMember", sid);
     });
   }
 };

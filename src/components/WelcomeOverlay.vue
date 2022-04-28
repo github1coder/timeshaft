@@ -127,8 +127,8 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
-          this.$store.commit("userId", res.id)
-          this.$store.commit("myIcon", res.photo)
+          this.$store.commit("userId", res.user_id)
+          this.$store.commit("myIcon", res.photo_url)
           this.$store.commit("myNick", res.username)
           this.$store.commit("loggedIn", true)
           this.$router.push({
