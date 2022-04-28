@@ -17,20 +17,27 @@ public class UserOp {
     private MyPasswordEncoder myPasswordEncoder;
 
 
-    public User register(String email, String password, String username) {
+    public User register(String email, String password, String username) throws Exception {
+        User u = new User(email, null, null, null);
+        List<User> users = userService.queryAll(u);
+        if (users.size() > 0) {
+            throw new Exception("邮箱已被注册");
+        }
         String savePassword = myPasswordEncoder.encode(password);
         User user = new User(email, savePassword, username, null);
         userService.insert(user);
         return user;
     }
 
-    public User login(String email, String password) {
+    public User login(String email, String password) throws Exception {
         User u = new User(email, null, null, null);
         List<User> users = userService.queryAll(u);
         User user = users.get(0);
         boolean log = myPasswordEncoder.matches(password, user.getPassword());
-        if (log) return user;
-        else return null;
+        if (!log) {
+            throw new Exception("密码错误");
+        }
+        return user;
     }
 
     public void changePwd(Integer user_id, String oldPassword, String newPassword) throws Exception {
@@ -41,7 +48,7 @@ public class UserOp {
             userService.update(user);
         }
         else {
-            throw new Exception();
+            throw new Exception("密码错误");
         }
     }
 }

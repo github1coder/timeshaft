@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @RequestMapping("/register")
-    public ResponseService register(@RequestBody Map<String, String> requestMap, HttpSession session) {
+    public ResponseService register(@RequestBody Map<String, String> requestMap, HttpSession session) throws Exception {
         log.info("注册开始");
         String email = requestMap.get("email");
         String password = requestMap.get("password");
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/loginn")
-    public ResponseService login(@RequestBody Map<String, String> map, HttpSession session) {
+    public ResponseService login(@RequestBody Map<String, String> map, HttpSession session) throws Exception {
         log.info("开始登录");
         User user = userOp.login(map.get("email"), map.get("password"));
         session.setAttribute("user_id", user.getId());
