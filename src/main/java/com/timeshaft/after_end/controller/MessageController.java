@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.GroupMessage;
+import com.timeshaft.after_end.entity.GroupMessageState;
 import com.timeshaft.after_end.entity.PersonalMessage;
 import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
@@ -46,7 +47,7 @@ public class MessageController {
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
-        messagingTemplate.convertAndSend("/user/" + friendId + "-" + senderId, payload);
+        messagingTemplate.convertAndSend("/user/" + senderId + "-" + friendId, payload);
     }
 
     /**
@@ -58,6 +59,7 @@ public class MessageController {
     public void receiveGroupMessage(@Payload Map<String, Object> payload) {
         Date date = new Date(System.currentTimeMillis());
         GroupMessage groupMessage = new GroupMessage();
+        GroupMessageState groupMessageState = new GroupMessageState();
         payload.put("time", date);
         groupMessage.setMessage((String) payload.get("message"));
         groupMessage.setGroupId(Integer.valueOf((String) payload.get("targetId")));
