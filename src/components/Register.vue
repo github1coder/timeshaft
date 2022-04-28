@@ -196,6 +196,7 @@ export default {
           const param = {
             'email': this.email
           }
+          console.say(param)
           getCheckCode(param).then(res => {
             this.checkCode = res.checkCode
             console.log(this.checkCode)
