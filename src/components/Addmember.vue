@@ -51,7 +51,10 @@ export default {
   data () {
     return {
       text: "",
-      ans: [{
+      friendAns: [{
+
+      }],
+      groupAns: [{
 
       }],
     };

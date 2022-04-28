@@ -21,6 +21,6 @@ export function login(param) {
     return request({
         url: '/user/loginn',
         method: 'post',
-        param
+        data: param
     })
 }

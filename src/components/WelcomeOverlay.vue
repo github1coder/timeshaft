@@ -114,10 +114,12 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
-          this.$store.commit("userId", res.user_id)
-          this.$store.commit("myIcon", res.photo_url)
-          this.$store.commit("myNick", res.username)
-          this.$store.commit("loggedIn", true)
+          this.$store.commit("setUserId", res.id)
+          // console.log(this.$store.getters.getUserId)
+          this.$store.commit("setMyIcon", res.photo)
+          this.$store.commit("setMyNick", res.username)
+          this.$store.commit("setEmail", res.email)
+          this.$store.commit("setLogin", true)
           this.$router.push({
             path: '/home',
           })

@@ -162,10 +162,11 @@ export default {
       if (this.valid) {
         this.loading = true;
         register(param).then(res => {
-          this.$store.commit("userId", res.user_id)
-          this.$store.commit("myIcon", res.photo_url)
-          this.$store.commit("myNick", res.username)
-          this.$store.commit("loggedIn", true)
+          this.$store.commit("setUserId", res.id)
+          this.$store.commit("setMyIcon", res.photo)
+          this.$store.commit("setMyNick", res.username)
+          this.$store.commit("setEmail", res.email)
+          this.$store.commit("setLogin", true)
           this.$router.push({
             path: '/home',
           })
@@ -189,6 +190,7 @@ export default {
             console.log(this.checkCode)
           })
         }
+        // console.log(this.checkCode)
         // 验证码倒计时, 60s后重新发送，并且验证码为空
         if (!this.timer) {
           this.count = 60
