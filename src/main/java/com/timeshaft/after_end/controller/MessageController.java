@@ -44,6 +44,7 @@ public class MessageController {
         personalMessage.setMessage((String) payload.get("message"));
         personalMessage.setFriendsId(Integer.valueOf((String) payload.get("targetId")));
         personalMessage.setSenderId(Integer.valueOf((String) payload.get("senderId")));
+        personalMessage.setState("notRead");
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
