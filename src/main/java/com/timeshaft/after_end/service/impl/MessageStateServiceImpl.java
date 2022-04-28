@@ -2,6 +2,7 @@ package com.timeshaft.after_end.service.impl;
 
 import com.timeshaft.after_end.entity.MessageStateType;
 import com.timeshaft.after_end.service.MessageStateService;
+import org.springframework.stereotype.Service;
 
 /**
  * feishu
@@ -10,6 +11,7 @@ import com.timeshaft.after_end.service.MessageStateService;
  * @author : dxt
  * @since : 2022-04-28 23:25
  **/
+@Service("MessageStateService")
 public class MessageStateServiceImpl implements MessageStateService {
 
     @Override
