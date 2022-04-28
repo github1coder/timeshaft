@@ -20,7 +20,7 @@ public class UserOp {
 
     public User register(String email, String password, String username) {
         String savePassword = myPasswordEncoder.encode(password);
-        User user = new User(email, savePassword, username);
+        User user = new User(email, savePassword, username, null);
         userService.insert(user);
         return user;
     }
@@ -35,14 +35,15 @@ public class UserOp {
         else return null;
     }
 
-    public boolean changePwd(Integer user_id, String oldPassword, String newPassword) {
+    public void changePwd(Integer user_id, String oldPassword, String newPassword) throws Exception {
         User user = userService.queryById(user_id);
         boolean flag = myPasswordEncoder.matches(oldPassword, user.getPassword());
         if (flag) {
             user.setPassword(myPasswordEncoder.encode(newPassword));
             userService.update(user);
-            return true;
         }
-        return false;
+        else {
+            throw new Exception();
+        }
     }
 }

@@ -8,13 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
 @MapperScan("com.timeshaft.after_end.mapper")
-@Controller
+@RestController
 @CrossOrigin
 public class AfterEndApplication {
 
@@ -23,15 +25,17 @@ public class AfterEndApplication {
     }
 
     @RequestMapping("/test")
-    @ResponseBody
-    public ResponseService test() {
-//        User user = new User("test","test","test","test");
-//        userService.insert(user);
-        Map<String, Integer> temp = new HashMap<>();
-        temp.put("test", 0);
-        Map<String, Map<String, Integer>> res = new HashMap<>();
-        res.put("res", temp);
-        return new ResponseService<>(ResponseService.Code.SUCCESS, res, "成功");
+    public ArrayList<HashMap<String,String>> test() {
+        System.out.println("----------------------------------");
+        ArrayList<HashMap<String,String>> res= new ArrayList<>();
+        HashMap<String,String> resMap= new HashMap<>();
+        resMap.put("id","1");
+        resMap.put("name","1");
+        resMap.put("content","1");
+        resMap.put("status","1");
+        res.add(null);
+        res.add(resMap);
+        return res;
     }
 
 }

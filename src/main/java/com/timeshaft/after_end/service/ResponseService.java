@@ -96,6 +96,7 @@ public class ResponseService<T> {
     public ResponseService() {
         this.code = 0;
         this.msg = "成功";
+        this.data = null;
     }
 
     /**
