@@ -115,7 +115,7 @@ export default {
         }
         login(param).then(res => {
           this.$store.commit("setUserId", res.id)
-          // console.log(this.$store.getters.getUserId)
+          // console.log(this.$store.getters.userId)
           this.$store.commit("setMyIcon", res.photo)
           this.$store.commit("setMyNick", res.username)
           this.$store.commit("setEmail", res.email)

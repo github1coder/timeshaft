@@ -24,7 +24,7 @@ export default new Vuex.Store({
     },
 
     getters: {
-        getUserId: state => state.userId
+        userId: state => state.userId
     },
     mutations: {
 
