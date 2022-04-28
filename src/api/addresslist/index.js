@@ -8,7 +8,7 @@ export function getFriends(param) {
     return request({
         url: '/addresslist/getFriends',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -16,7 +16,7 @@ export function addFriend(param) {
     return request({
         url: '/addresslist/addFriend',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -24,7 +24,7 @@ export function delFriend(param) {
     return request({
         url: '/addresslist/addFriend',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -40,7 +40,7 @@ export function getGroups(param) {
     return request({
         url: '/addresslist/getGroups',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -80,7 +80,7 @@ export function delGroup(param) {
     return request({
         url: '/addresslist/delGroup',
         method: 'get',
-        param
+        params: param
     })
 }
 
