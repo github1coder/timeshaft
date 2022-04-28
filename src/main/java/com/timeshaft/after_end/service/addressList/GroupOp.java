@@ -19,11 +19,12 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
-    public boolean createGroup(int id, String name, String photo,
+    public boolean createGroup(String name, String photo,
                                String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date());
-        GroupUser groupUser = new GroupUser(id, master_id, null, "master");
-        return groupService.insert(group) != null;
+        group = groupService.insert(group);
+        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master");
+        return true;
     }
 
     public boolean deleteGroup(int id) {
@@ -38,9 +39,7 @@ public class GroupOp {
         return groupService.update(group) != null;
     }
 
-    private int user_id;
-
-    public List<Group> getGroup() {
+    public List<Group> getGroup(int user_id) {
         GroupUser groupUser = new GroupUser(null, user_id, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
@@ -79,6 +78,16 @@ public class GroupOp {
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity("member");
+            groupUserService.update(tmp);
+        }
+        return true;
+    }
+
+    public boolean changeNickname(int group_id, String name, int user_id) {
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null);
+        List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
+        for (GroupUser tmp : groupUsers) {
+            tmp.setUserNickname(name);
             groupUserService.update(tmp);
         }
         return true;

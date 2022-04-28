@@ -40,6 +40,8 @@ public class FriendOp {
     public boolean delFriend(int friend1, int friend2) {
         Friends friend = new Friends(friend1, friend2, null, null);
         List<Friends> friends = friendsService.queryAll(friend);
+        Friends friend_2 = new Friends(friend2, friend1, null, null);
+        friends.addAll(friendsService.queryAll(friend_2));
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
         }
