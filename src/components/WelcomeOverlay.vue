@@ -70,7 +70,6 @@
 
 <script>
 import { login } from '../api/user/index'
-import socket from "../socket";
 
 export default {
   data () {
@@ -95,18 +94,6 @@ export default {
   },
 
   mounted () {
-    console.say("app.vue mount");
-    if (!this.$store.state.loggedIn) {
-      const acc = window.localStorage.getItem("accToken");
-      if (acc)
-        socket.sendToken(acc, (bool) => {
-          if (!bool) this.overlay = true;
-        });
-      else {
-        this.overlay = true;
-      }
-      this.$store.commit("setLogin", true);
-    }
   },
 
   methods: {
@@ -119,7 +106,7 @@ export default {
     },
 
     login () {
-      this.$refs.registerForm.validate();
+      this.$refs.welcomeform.validate();
       if (this.valid) {
         this.loading = true;
         const param = {
