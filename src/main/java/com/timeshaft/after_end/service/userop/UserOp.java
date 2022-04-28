@@ -16,7 +16,6 @@ public class UserOp {
     @Autowired
     private MyPasswordEncoder myPasswordEncoder;
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public User register(String email, String password, String username) {
         String savePassword = myPasswordEncoder.encode(password);
@@ -26,7 +25,6 @@ public class UserOp {
     }
 
     public User login(String email, String password) {
-        logger.info("开始登录");
         User u = new User(email, null, null, null);
         List<User> users = userService.queryAll(u);
         User user = users.get(0);
