@@ -70,8 +70,6 @@
 
 <script>
 import { login } from '../api/user/index'
-import socket from "../socket";
-
 export default {
   data () {
     return {
@@ -91,20 +89,28 @@ export default {
           (password) => (password && (/^[\w]{6,16}$/).test(password)) || "请输入6~16位密码,仅允许字母和数字",
         ],
       },
-    };
+      friends: [
+        {
+          id: "",
+          nickName: "",
+          url: "",
+          avatar: "",
+          historyData: [
+            {
+              name: "",
+              avatar: "",
+              message: "",
+              time: "",
+            },
+          ],
+        },
+      ]
+    }
   },
-
   mounted () {
     console.say("app.vue mount");
     if (!this.$store.state.loggedIn) {
-      const acc = window.localStorage.getItem("accToken");
-      if (acc)
-        socket.sendToken(acc, (bool) => {
-          if (!bool) this.overlay = true;
-        });
-      else {
-        this.overlay = true;
-      }
+      window.localStorage.getItem("accToken");
       this.$store.commit("setLogin", true);
     }
   },
@@ -116,6 +122,10 @@ export default {
 
     changeShowPassword () {
       this.type = "password";
+    },
+
+    onReceivedMsg(payload) {
+      this.$store.commit("WEBSOCKET_RECEIVE", payload.id, payload.data)
     },
 
     login () {
@@ -134,6 +144,16 @@ export default {
           this.$store.commit("myIcon", res.photo_url)
           this.$store.commit("myNick", res.username)
           this.$store.commit("loggedIn", true)
+          res.friends.forEach(friend => {
+            friend.callback = this.onReceivedMsg
+          })
+          res.friends = [
+              {id: 0, chatName: "1", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
+              {id: 1, chatName: "2", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
+              {id: 2, chatName: "3", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
+          ]
+          this.$store.commit("listenerList", res.friends)
+          // this.$store.commit("WEBSOCKET_INIT", url)
         })
       }
     }

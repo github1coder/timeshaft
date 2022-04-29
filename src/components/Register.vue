@@ -102,7 +102,6 @@
 
 <script>
 import { getCheckCode, register } from '../api/user/index'
-import socket from "../socket";
 export default {
   data () {
     return {
@@ -144,14 +143,7 @@ export default {
   mounted () {
     console.say("app.vue mount");
     if (!this.$store.state.loggedIn) {
-      const acc = window.localStorage.getItem("accToken");
-      if (acc)
-        socket.sendToken(acc, (bool) => {
-          if (!bool) this.overlay = true;
-        });
-      else {
-        this.overlay = true;
-      }
+      window.localStorage.getItem("accToken");
       this.$store.commit("setLogin", true);
     }
   },

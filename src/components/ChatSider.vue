@@ -1,3 +1,6 @@
+
+
+
 <template>
   <div class="sidebar">
     <div class="sb-container">
@@ -22,8 +25,8 @@
                     ref="search"
                 ></v-text-field>
               </template>
-              <v-list v-if="items.length > 0" class="border-list" dense>
-                <v-list-item v-for="(item, index) in items1" :key="index" @click="itemClick(item)">
+              <v-list v-if="searchResult.length > 0" class="border-list" dense>
+                <v-list-item v-for="(item, index) in searchResult" :key="index" @click="itemClick(item)">
                   <v-list-item-title>{{ item.name }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -31,105 +34,36 @@
           </div>
         </v-card>
         <v-card tile class="channels">
-          <!--          <v-expansion-panels flat>-->
-          <!--            <v-expansion-panel-->
-          <!--                class="pa-0"-->
-          <!--                v-for="(item,i) in items"-->
-          <!--                :key="i"-->
-          <!--            >-->
-          <!--              <v-expansion-panel-header class="pa-0" >-->
-          <!--                {{item}}-->
-          <!--              </v-expansion-panel-header>-->
-          <!--              <v-expansion-panel-content class="pa-0">-->
-          <!--                <v-list width="100%" rounded dense>-->
-          <!--                  <v-list-item-group color="primary">-->
-          <!--                    <v-list-item v-for="(item, i) in chat1" :key="i">-->
-          <!--                      <v-list-item-icon>-->
-          <!--                        <v-icon v-text="item.icon"></v-icon>-->
-          <!--                      </v-list-item-icon>-->
-          <!--                      <v-list-item-content>-->
-          <!--                        <v-list-item-title-->
-          <!--                            class="channel-title"-->
-          <!--                            v-text="item.text"-->
-          <!--                        ></v-list-item-title>-->
-          <!--                      </v-list-item-content>-->
-          <!--                    </v-list-item>-->
-          <!--                  </v-list-item-group>-->
-          <!--                  </v-list>-->
-          <!--              </v-expansion-panel-content>-->
-          <!--            </v-expansion-panel>-->
-          <!--          </v-expansion-panels>-->
           <!-- TODO expansion needed! -->
           <v-list width="100%" rounded dense>
-            <!--            <v-subheader>今天</v-subheader>-->
             <v-list-item-group
                 v-model="channelNum"
                 color="primary">
               <v-list-item
-                  v-for="(item, i) in chat1"
-                  @click="selectMessage(i)"
+                  v-for="(item, i) in chats"
+                  @click="selectChannel(item.id, i)"
                   :key="i"
-
               >
                 <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
+                  <v-icon v-text="item.avatar"></v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
                       class="channel-title"
-                      v-text="item.text"
+                      v-text="item.chatName"
                   ></v-list-item-title>
                   <v-list-item-subtitle
+                      v-if="item.data.length>0"
                       class="channel-title"
-                      v-text="item.message">
+                      v-text="item.data[item.data.length-1].message">
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
-            <!--            <v-subheader>更早</v-subheader>-->
-            <!--            <v-list-item-group  color="primary">-->
-            <!--              <v-list-item-->
-            <!--                  v-for="(item, i) in chat2"-->
-            <!--                  @click="selectMessage(i)"-->
-            <!--                  :key="i">-->
-            <!--                <v-list-item-icon>-->
-            <!--                  <v-icon v-text="item.icon"></v-icon>-->
-            <!--                </v-list-item-icon>-->
-            <!--                <v-list-item-content>-->
-            <!--                  <v-list-item-title-->
-            <!--                      class="channel-title"-->
-            <!--                      v-text="item.text"-->
-            <!--                  ></v-list-item-title>-->
-            <!--                  <v-list-item-subtitle-->
-            <!--                      class="channel-title"-->
-            <!--                      v-text="item.message">-->
-            <!--                  </v-list-item-subtitle>-->
-            <!--                </v-list-item-content>-->
-            <!--              </v-list-item>-->
-            <!--            </v-list-item-group>-->
           </v-list>
         </v-card>
       </v-card>
     </div>
-
-    <!--    <v-card-->
-    <!--      height="52"-->
-    <!--      dark-->
-    <!--      tile-->
-    <!--      flat-->
-    <!--      class="mystats"-->
-    <!--      @click="toggleAC"-->
-    <!--    >-->
-    <!--      <v-list-item class="grow">-->
-    <!--        <v-list-item-avatar color="grey darken-3">-->
-    <!--          <v-img class="elevation-6" :src="$store.state.myIcon"></v-img>-->
-    <!--        </v-list-item-avatar>-->
-
-    <!--        <v-list-item-content>-->
-    <!--          <v-list-item-title>{{ $store.state.myNick }}</v-list-item-title>-->
-    <!--        </v-list-item-content>-->
-    <!--      </v-list-item>-->
-    <!--    </v-card>-->
   </div>
 </template>
 
@@ -140,22 +74,25 @@ export default {
     return {
       text: '',
       showSelect: true,
-      chat1: [
-        {text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~"},
-        {text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！"},
-        {text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl"},
-        {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
-        {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
-        {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
+      // chat1: [
+      //   {id : 0, text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~"},
+      //   {id : 1,text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！"},
+      //   {id : 2,text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl"},
+      //   {id : 3,text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
+      //   {id : 4,text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
+      //   {id : 5,text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
+      // ],
+      friends : [
+        {id: 0, chatName: "1", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
+        {id: 1, chatName: "2", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
+        {id: 2, chatName: "3", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
       ],
-      chat2: [
-        {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
-        {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
-        {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
-      ],
-      items: [
-
-      ],
+      // chat2: [
+      //   {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
+      //   {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
+      //   {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
+      // ],
+      searchResult: [],
       channelNum: null,
     }
   },
@@ -178,7 +115,7 @@ export default {
     },
     getEntity() {
       // 请求接口更新 items 数据
-      this.items = [
+      this.searchResult = [
         {
           key: '1234',
           name: '1234'
@@ -213,17 +150,26 @@ export default {
     toggleAC() {
       this.$store.commit("toggleAC");
     },
-    selectMessage() {
-
+    selectChannel(id, idx) {
+      // console.log(id + " " + idx)
+      this.$store.commit("changeChannel", {id: id, idx: idx});
     }
   },
   updated() {
-    console.log(this.channelNum)
-    this.$store.commit("changeChannel", this.channelNum);
+
   },
-  mounted() {
-    this.$store.commit("updateChannels", this.chat1);
+  computed: {
+    // TODO 如果订阅路径有变化则刷新 chat1
+    chats() {
+      return this.$store.state.listenerList
+    }
   }
+  ,
+
+  //TODO 等待登陆注册能用了以后删除
+  mounted() {
+    this.$store.commit("updateChannels", this.friends)
+  },
 }
 </script>
 

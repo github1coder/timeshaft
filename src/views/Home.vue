@@ -1,8 +1,7 @@
 <template>
-  <v-content>
+  <v-main>
     <div class="dc-container">
       <nav class="guilds">
-
         <v-card
           dark
           flat
@@ -44,33 +43,23 @@
         <div class="base-content">
           <!-- here side -->
           <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
-          <!-- <ListSider v-else-if="$store.state.siderState === 1"></ListSider> -->
-          <Addresslist v-else-if="$store.state.siderState === 1"></Addresslist>
 
           <div class="chat">
             <v-card
               class="chat-header"
               tile
             >
-              <div class="hidden-md-and-up">
-                <div class="tool-icon mr-n4">
-                  <v-app-bar-nav-icon
-                    dark
-                    @click.stop="leftDrawer = !leftDrawer"
-                  />
-                </div>
-              </div>
               <div
                 class="ch"
-                v-if="$store.state.channels.length > 0"
+                v-if="$store.state.listenerList.length > 0"
               >
                 <v-icon
                   dark
                   left
                 >{{
-                  $store.state.channels[getCh()].icon
+                  $store.state.listenerList[getCh()].avatar
                 }}</v-icon>
-                {{ $store.state.channels[getCh()].text }}
+                {{ $store.state.listenerList[getCh()].chatName }}
               </div>
               <div class="head-tools">
                 <div class="tool-icons-container">
@@ -120,9 +109,10 @@
                       label="这边输入消息捏~"
                       solo
                       flat
+                      clearable
                       v-model="msginform"
                       autocomplete="off"
-                      @keyup.enter="sendChat"
+                      @keyup.enter="sendChat(chatUrl, msginform)"
                       @keypress="setCanMessageSubmit"
                     >
                     </v-text-field>
@@ -334,26 +324,23 @@
         </div>
       </div>
     </div>
-  </v-content>
+  </v-main>
 </template>
 
 <script>
 // @ is an alias to /src
 import Chat from "@/components/Chat.vue";
+// import Stomp from "stompjs"
 // import Sidebar from "@/components/Sidebar.vue";
 // import Members from "@/components/Members.vue";
 // import AvatarChanger from "@/components/AvatarChanger";
 // import ChatTools from "@/components/ChatTools";
-
-import socket from "../socket";
 // import ListSider from "@/components/ListSider";
 import ChatSider from "@/components/ChatSider";
-import Addresslist from "@/components/Addresslist";
 
 export default {
   name: "Home",
   components: {
-    Addresslist,
     Chat,
     ChatSider,
     // Sidebar,
@@ -366,7 +353,6 @@ export default {
       cache: 0,
       mini: true,
       drawer: false,
-      leftDrawer: false,
       canMessageSubmit: false,
       msginform: "",
       draw: null,
@@ -401,25 +387,40 @@ export default {
     clickIcon () {
       console.log(this.item);
     },
-
+    clearMsg() {
+      this.msginform = ""
+    }
+    ,
     getCh () {
       return (this.cache =
-        this.$store.state.currentChannel === undefined ?
+        this.$store.state.currentChannelIdx === undefined ?
           this.cache :
-          this.$store.state.currentChannel);
+          this.$store.state.currentChannelIdx);
     },
-
     setCanMessageSubmit () {
       this.canMessageSubmit = true;
     },
+    sendChat(url, message) {
+      let name = this.$store.state.myNick
+      let avatar = this.$store.state.myIcon
+      this.$store.state.listenerList[this.$store.state.currentChannelIdx].data.push({
+        name: name,
+        avatar: avatar,
+        message: message,
+      })
+      this.clearMsg()
+      this.$store.commit("WEBSOCKET_SEND", {
+        url: url,
+        message: message
+      })
 
-    sendChat () {
-      if (this.msginform == "") return;
-      console.say("form-msg:", this.msginform);
-      socket.sendChat(this.msginform);
-      this.msginform = "";
     },
+  },
 
+  computed: {
+    chatUrl() {
+      return this.$store.state.listenerList[this.$store.state.currentChannelIdx].url
+    }
   },
 
   mounted () {
