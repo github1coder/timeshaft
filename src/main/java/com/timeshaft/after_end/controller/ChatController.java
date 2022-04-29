@@ -3,13 +3,11 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
-import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
