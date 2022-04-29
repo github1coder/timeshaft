@@ -18,8 +18,8 @@
         </v-row>
         <v-list>
           <v-list-item
-            v-for="(subItem, j) in friendAns.slice(num * (page - 1), num * page)"
-            :key="j + num * (page - 1)"
+            v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
+            :key="j + num * (pageF - 1)"
             @click="method1"
           >
             <v-list-item-avatar>
@@ -34,10 +34,16 @@
             <!-- 后面的省略号 -->
             <v-list-item-action>
               <v-row style="width: 10%; border: 1px black solid">
-                <v-btn small>
+                <v-btn
+                  small
+                  @click="acF(j + num * (pageF - 1))"
+                >
                   <v-icon>mdi-check-bold</v-icon>
                 </v-btn>
-                <v-btn small>
+                <v-btn
+                  small
+                  @click="acF(j + num * (pageF - 1))"
+                >
                   <v-icon>mdi-close-thick</v-icon>
                 </v-btn>
               </v-row>
@@ -48,21 +54,21 @@
         <v-row>
           <v-btn
             width="33%"
-            @click="downPage"
+            @click="downPageF"
           >
-            <v-icon>mdi-next</v-icon>
+            <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           <v-btn
             width="33%"
             disabled
           >
-            {{page}}/{{allPage}}
+            {{pageF}}/{{allPageF}}
           </v-btn>
           <v-btn
             width="33%"
-            @click="upPage"
+            @click="upPageF"
           >
-            <v-icon>mdi-next</v-icon>
+            <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-row>
       </v-card>
@@ -77,8 +83,8 @@
         </v-row>
         <v-list>
           <v-list-item
-            v-for="(subItem, j) in friendAns.slice(num * (page - 1), num * page)"
-            :key="j + num * (page - 1)"
+            v-for="(subItem, j) in friendAns.slice(num * (pageG - 1), num * pageG)"
+            :key="j + num * (pageG - 1)"
             @click="method1"
           >
             <v-list-item-avatar>
@@ -93,10 +99,16 @@
             <!-- 后面的省略号 -->
             <v-list-item-action>
               <v-row style="width: 10%; border: 1px black solid">
-                <v-btn small>
+                <v-btn
+                  small
+                  @click="acG(j + num * (pageG - 1))"
+                >
                   <v-icon>mdi-check-bold</v-icon>
                 </v-btn>
-                <v-btn small>
+                <v-btn
+                  small
+                  @click="reG(j + num * (pageG - 1))"
+                >
                   <v-icon>mdi-close-thick</v-icon>
                 </v-btn>
               </v-row>
@@ -106,21 +118,21 @@
         <v-row style="padding-bottom: 0;">
           <v-btn
             width="33%"
-            @click="downPage"
+            @click="downPageG"
           >
-            <v-icon>mdi-next</v-icon>
+            <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           <v-btn
             width="33%"
             disabled
           >
-            {{page}}/{{allPage}}
+            {{pageG}}/{{allPageG}}
           </v-btn>
           <v-btn
             width="33%"
-            @click="upPage"
+            @click="upPageG"
           >
-            <v-icon>mdi-next</v-icon>
+            <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-row>
       </v-card>
@@ -128,14 +140,15 @@
   </div>
 </template>
 <script>
-
+import { apply } from "../api/addresslist/index"
 export default {
   data () {
     return {
-      num: 4,
-      page: 1,
-      allPage: 2,
-      text: "",
+      num: 5,
+      pageF: 1,
+      allPageF: 2,
+      pageG: 1,
+      allPageG: 2,
       friendAns: [{
         friend_id: 1,
         friend_name: 'Breakfast & brunch',
@@ -187,15 +200,76 @@ export default {
 
     },
 
-    downPage () {
-      if (this.page != 1) {
-        this.page -= 1
+    downPageF () {
+      if (this.pageF != 1) {
+        this.pageF -= 1
       }
     },
-    upPage () {
-      if (this.page != this.allPage) {
-        this.page += 1
+
+    upPageF () {
+      if (this.pageF != this.allPageF) {
+        this.pageF += 1
       }
+    },
+
+    downPageG () {
+      if (this.pageG != 1) {
+        this.pageG -= 1
+      }
+    },
+
+    upPageG () {
+      if (this.pageG != this.allPageG) {
+        this.pageG += 1
+      }
+    },
+
+    acF (index) {
+      apply({
+        type: "friend",
+        action: "accept",
+        id: this.friendAns[index].id,
+      }
+      ).then(res => {
+        console.log(res)
+
+      })
+    },
+
+    reF (index) {
+      apply({
+        type: "friend",
+        action: "refuse",
+        id: this.friendAns[index].id,
+      }
+      ).then(res => {
+        console.log(res)
+
+      })
+    },
+
+    acG (index) {
+      apply({
+        type: "group",
+        action: "accept",
+        id: this.groupAns[index].id,
+      }
+      ).then(res => {
+        console.log(res)
+
+      })
+    },
+
+    reG (index) {
+      apply({
+        type: "group",
+        action: "refuse",
+        id: this.groupAns[index].id,
+      }
+      ).then(res => {
+        console.log(res)
+
+      })
     },
     changeShowText () {
       this.type = "text";
