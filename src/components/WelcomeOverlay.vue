@@ -73,7 +73,7 @@ import { login } from '../api/user/index'
 export default {
   data () {
     return {
-      overlay: false,
+      overlay: true,
       valid: true,
       email: "",
       password: "",
@@ -108,11 +108,6 @@ export default {
     }
   },
   mounted () {
-    console.say("app.vue mount");
-    if (!this.$store.state.loggedIn) {
-      window.localStorage.getItem("accToken");
-      this.$store.commit("setLogin", true);
-    }
   },
 
   methods: {
@@ -129,7 +124,7 @@ export default {
     },
 
     login () {
-      this.$refs.registerForm.validate();
+      this.$refs.welcomeform.validate();
       if (this.valid) {
         this.loading = true;
         const param = {
@@ -137,13 +132,15 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
+          this.$store.commit("setUserId", res.id)
+          // console.log(this.$store.getters.userId)
+          this.$store.commit("setMyIcon", res.photo)
+          this.$store.commit("setMyNick", res.username)
+          this.$store.commit("setEmail", res.email)
+          this.$store.commit("setLogin", true)
           this.$router.push({
             path: '/home',
           })
-          this.$store.commit("userId", res.user_id)
-          this.$store.commit("myIcon", res.photo_url)
-          this.$store.commit("myNick", res.username)
-          this.$store.commit("loggedIn", true)
           res.friends.forEach(friend => {
             friend.callback = this.onReceivedMsg
           })
@@ -153,7 +150,6 @@ export default {
               {id: 2, chatName: "3", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
           ]
           this.$store.commit("listenerList", res.friends)
-          // this.$store.commit("WEBSOCKET_INIT", url)
         })
       }
     }

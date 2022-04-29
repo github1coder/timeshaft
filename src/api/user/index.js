@@ -1,12 +1,11 @@
 import request from "../request"
 
 
-
 export function register(param) {
     return request({
         url: '/user/register',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -14,14 +13,14 @@ export function getCheckCode(param) {
     return request({
         url: '/user/getCheckCode',
         method: 'get',
-        param
+        params: param
     })
 }
 
 export function login(param) {
     return request({
-        url: '/user/login',
+        url: '/user/loginn',
         method: 'post',
-        param
+        data: param
     })
 }

@@ -9,6 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         userId: -1,
+        email: null,
         accessToken: null,
         currentChannelIdx: 0,
         currentChannelId: null,
@@ -39,7 +40,24 @@ export default new Vuex.Store({
             }
         }
     },
+
+    getters: {
+        userId: state => state.userId
+    },
     mutations: {
+
+        setUserId(store, userId) {
+            store.userId = userId
+        },
+        setEmail(store, email) {
+            store.email = email
+        },
+        setMyIcon(store, myIcon) {
+            store.myIcon = myIcon
+        },
+        setMyNick(store, myNick) {
+            store.myNick = myNick
+        },
         changeSiderState(store, s) {
             console.log(s)
             store.siderState = s
@@ -97,10 +115,6 @@ export default new Vuex.Store({
                 //msgElm.scrollTo(0, msgElm.scrollHeight);
                 msgElm.scrollTop = msgElm.scrollHeight;
             }, 10)
-        },
-
-        setNick(store, nick) {
-            store.myNick = nick;
         },
 
         setLogin(store, bool) {

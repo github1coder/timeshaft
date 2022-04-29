@@ -8,7 +8,7 @@ export function getFriends(param) {
     return request({
         url: '/addresslist/getFriends',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -16,7 +16,7 @@ export function addFriend(param) {
     return request({
         url: '/addresslist/addFriend',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -24,7 +24,7 @@ export function delFriend(param) {
     return request({
         url: '/addresslist/addFriend',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -32,7 +32,7 @@ export function changeNickname(param) {
     return request({
         url: '/addresslist/changeNickname',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -40,7 +40,7 @@ export function getGroups(param) {
     return request({
         url: '/addresslist/getGroups',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -48,7 +48,7 @@ export function addGroups(param) {
     return request({
         url: '/addresslist/addGroup',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -56,7 +56,7 @@ export function updateGroup(param) {
     return request({
         url: '/addresslist/updateGroup',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -64,7 +64,7 @@ export function joinGroup(param) {
     return request({
         url: '/addresslist/joinGroup',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -72,7 +72,7 @@ export function quitGroup(param) {
     return request({
         url: '/addresslist/quitGroup',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -80,7 +80,7 @@ export function delGroup(param) {
     return request({
         url: '/addresslist/delGroup',
         method: 'get',
-        param
+        params: param
     })
 }
 
@@ -88,7 +88,7 @@ export function delGroupManager(param) {
     return request({
         url: '/addresslist/delGroupManager',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -96,7 +96,7 @@ export function addGroupManager(param) {
     return request({
         url: '/addresslist/addGroupManager',
         method: 'post',
-        param
+        data: param
     })
 }
 
@@ -106,6 +106,6 @@ export function changeGroupNickname(param) {
     return request({
         url: '/addresslist/changeGroupNickname',
         method: 'post',
-        param
+        data: param
     })
 }
