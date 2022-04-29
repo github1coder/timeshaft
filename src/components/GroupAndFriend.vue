@@ -24,6 +24,7 @@
         <v-list-group
           :prepend-icon="channelLabels[0].action"
           @click="initBtns"
+          value=true
         >
           <!-- no-action -->
           <template v-slot:activator>
@@ -134,6 +135,7 @@
         <v-list-group
           :prepend-icon="channelLabels[1].action"
           @click="initBtns"
+          value=true
         >
           <!-- no-action -->
           <template v-slot:activator>
@@ -479,7 +481,7 @@ export default {
       if (this.name != "") {
         this.friends[j].friend_name = this.name;
         changeNickname({
-          "ACCESS_TOKEN": this.$store.accessToken,
+          "ACCESS_TOKEN": null,
           "friend_id": this.friends[j].friend_id,
           "friend_nickname": this.name
         });

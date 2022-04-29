@@ -7,42 +7,29 @@
       tile
       class="server-info"
     >
-      <v-text-field
-        clearable
-        outlined
-        dense
-        dark
-        hide-details
-        label="请输入关键词"
-        v-model="text"
-        class="input-search mt-3"
-        autocomplete="off"
-        ref="search"
-      ></v-text-field>
-      <v-list>
-        <v-list-item
-          v-for="(subItem, j) in groupAns"
-          :key="j"
-          @click="method1"
+      <v-card height="50%">
+        <v-row
+          dense
+          style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
         >
-          <v-list-item-avatar>
-            <v-img :src="subItem.group_photo"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title
-              v-text="subItem.group_name"
-              style="text-align: left"
-            ></v-list-item-title>
-          </v-list-item-content>
-          <!-- 后面的省略号 -->
-          <v-list-item-action>
-            <v-btn small>
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-      <v-card>
+          <v-text-field
+            clearable
+            outlined
+            dense
+            dark
+            hide-details
+            label="好友昵称查找"
+            v-model="text"
+            class="input-search mt-3"
+            autocomplete="off"
+            style="width: 70%; margin: auto;"
+          ></v-text-field>
+          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+            <v-icon style="width: 100%; height: 100%;">
+              mdi-magnify
+            </v-icon>
+          </v-btn>
+        </v-row>
         <v-list>
           <v-list-item
             v-for="(subItem, j) in friendAns.slice(num * (page - 1), num * page)"
@@ -66,30 +53,94 @@
             </v-list-item-action>
           </v-list-item>
         </v-list>
-        <v-card>
-          <v-row>
-            <v-btn
-              width="33%"
-              @click="downPage"
-            >
-              <v-icon>mdi-next</v-icon>
-            </v-btn>
-            <v-btn
-              width="33%"
-              disabled
-            >
-              {{page}}/{{allPage}}
-            </v-btn>
-            <v-btn
-              width="33%"
-              @click="upPage"
-            >
-              <v-icon>mdi-next</v-icon>
-            </v-btn>
-          </v-row>
-        </v-card>
+        <v-row>
+          <v-btn
+            width="33%"
+            @click="downPage"
+          >
+            <v-icon>mdi-next</v-icon>
+          </v-btn>
+          <v-btn
+            width="33%"
+            disabled
+          >
+            {{page}}/{{allPage}}
+          </v-btn>
+          <v-btn
+            width="33%"
+            @click="upPage"
+          >
+            <v-icon>mdi-next</v-icon>
+          </v-btn>
+        </v-row>
       </v-card>
-
+      <v-card height="50%">
+        <v-row
+          dense
+          style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
+        >
+          <v-text-field
+            clearable
+            outlined
+            dense
+            dark
+            hide-details
+            label="团队名字查找"
+            v-model="text"
+            class="input-search mt-3"
+            autocomplete="off"
+            style="width: 70%; margin: auto;"
+          ></v-text-field>
+          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+            <v-icon style="width: 100%; height: 100%;">
+              mdi-magnify
+            </v-icon>
+          </v-btn>
+        </v-row>
+        <v-list>
+          <v-list-item
+            v-for="(subItem, j) in friendAns.slice(num * (page - 1), num * page)"
+            :key="j + num * (page - 1)"
+            @click="method1"
+          >
+            <v-list-item-avatar>
+              <v-img :src="subItem.friend_photo"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                v-text="subItem.friend_name"
+                style="text-align: left"
+              ></v-list-item-title>
+            </v-list-item-content>
+            <!-- 后面的省略号 -->
+            <v-list-item-action>
+              <v-btn small>
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
+        <v-row style="padding-bottom: 0;">
+          <v-btn
+            width="33%"
+            @click="downPage"
+          >
+            <v-icon>mdi-next</v-icon>
+          </v-btn>
+          <v-btn
+            width="33%"
+            disabled
+          >
+            {{page}}/{{allPage}}
+          </v-btn>
+          <v-btn
+            width="33%"
+            @click="upPage"
+          >
+            <v-icon>mdi-next</v-icon>
+          </v-btn>
+        </v-row>
+      </v-card>
     </v-card>
   </div>
 </template>

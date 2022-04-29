@@ -100,7 +100,7 @@
 
 
 <script>
-import { getCheckCode, register } from '../api/user/index'
+import { getCheckCode, register, login } from '../api/user/index'
 export default {
   data () {
     return {
@@ -161,14 +161,18 @@ export default {
       }
       if (this.valid) {
         this.loading = true;
-        register(param).then(res => {
-          this.$store.commit("setUserId", res.id)
-          this.$store.commit("setMyIcon", res.photo)
-          this.$store.commit("setMyNick", res.username)
-          this.$store.commit("setEmail", res.email)
-          this.$store.commit("setLogin", true)
-          this.$router.push({
-            path: '/home',
+        register(param).then(response => {
+          console.log(response)
+          login(param).then(res => {
+            this.$store.commit("setUserId", res.id)
+            // console.log(this.$store.getters.userId)
+            this.$store.commit("setMyIcon", res.photo)
+            this.$store.commit("setMyNick", res.username)
+            this.$store.commit("setEmail", res.email)
+            this.$store.commit("setLogin", true)
+            this.$router.push({
+              path: '/home',
+            })
           })
         })
       }
@@ -190,7 +194,7 @@ export default {
             console.log(this.checkCode)
           })
         }
-        // console.log(this.checkCode)
+        console.log(this.checkCode)
         // 验证码倒计时, 60s后重新发送，并且验证码为空
         if (!this.timer) {
           this.count = 60
