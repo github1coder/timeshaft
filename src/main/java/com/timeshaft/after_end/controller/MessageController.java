@@ -2,14 +2,17 @@ package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.GroupMessageState;
+import com.timeshaft.after_end.entity.MessageStateType;
 import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.service.MessageStateService;
 import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
+import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.Map;
@@ -21,7 +24,7 @@ import java.util.Map;
  * @author : dxt
  * @since : 2022-04-17 13:43
  **/
-@Controller
+@RestController
 public class MessageController {
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -29,6 +32,8 @@ public class MessageController {
     private PersonalMessageServiceImpl personalMessageService;
     @Autowired
     private GroupMessageServiceImpl groupMessageService;
+    @Autowired
+    private MessageStateServiceImpl messageStateService;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -44,7 +49,8 @@ public class MessageController {
         personalMessage.setMessage((String) payload.get("message"));
         personalMessage.setFriendsId(Integer.valueOf((String) payload.get("targetId")));
         personalMessage.setSenderId(Integer.valueOf((String) payload.get("senderId")));
-        personalMessage.setState("notRead");
+        MessageStateType state = MessageStateType.UNREAD;
+        personalMessage.setState(messageStateService.EnumToString(state));
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
@@ -60,7 +66,7 @@ public class MessageController {
     public void receiveGroupMessage(@Payload Map<String, Object> payload) {
         Date date = new Date(System.currentTimeMillis());
         GroupMessage groupMessage = new GroupMessage();
-        GroupMessageState groupMessageState = new GroupMessageState();
+        //GroupMessageState groupMessageState = new GroupMessageState();
         payload.put("time", date);
         groupMessage.setMessage((String) payload.get("message"));
         groupMessage.setGroupId(Integer.valueOf((String) payload.get("targetId")));
@@ -70,5 +76,6 @@ public class MessageController {
         int groupId = groupMessage.getGroupId();
         messagingTemplate.convertAndSend("/group/" + groupId, payload);
     }
+
 }
 
