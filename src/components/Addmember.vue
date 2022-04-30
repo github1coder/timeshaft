@@ -7,7 +7,10 @@
       tile
       class="server-info"
     >
-      <v-card height="50%">
+      <v-card
+        height="50%"
+        style="overflow: auto; overflow-x: hidden; height: 460px;"
+      >
         <v-row
           dense
           style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
@@ -18,13 +21,16 @@
             dense
             dark
             hide-details
-            label="好友昵称查找"
-            v-model="text"
+            label="好友昵称/邮箱"
+            v-model="textF"
             class="input-search mt-3"
             autocomplete="off"
             style="width: 70%; margin: auto;"
           ></v-text-field>
-          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+          <v-btn
+            style="width: 15%; height: 64%; margin: 12px 0px auto;"
+            @click="searchFriend"
+          >
             <v-icon style="width: 100%; height: 100%;">
               mdi-magnify
             </v-icon>
@@ -88,13 +94,16 @@
             dense
             dark
             hide-details
-            label="团队名字查找"
-            v-model="text"
+            label="团队名字"
+            v-model="textG"
             class="input-search mt-3"
             autocomplete="off"
             style="width: 70%; margin: auto;"
           ></v-text-field>
-          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+          <v-btn
+            style="width: 15%; height: 65%; margin: 12px 0px auto;"
+            @click="searchGroup"
+          >
             <v-icon style="width: 100%; height: 100%;">
               mdi-magnify
             </v-icon>
@@ -167,6 +176,91 @@ export default {
         name: 'Breakfast & brunch',
         photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
         show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
+      }, {
+        id: 1,
+        name: 'Breakfast & brunch',
+        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        show: false,
       },],
       groupAns: [],
     };
@@ -206,32 +300,38 @@ export default {
     },
 
     searchFriend () {
+      if (this.textF == null || this.textF == "") {
+        return;
+      }
       search(
         {
+          "user_id": this.$store.getters.userId,
           "name": this.textF,
           "type": "friend",
           "ACCESS_TOKEN": null,
         }
       ).then(res => {
-        this.friendAns = res.ans
-        this.allPageF = res.ans.length / 5
+        this.friendAns = res
+        this.allPageF = res.length / 5
       })
     },
     searchGroup () {
       search(
         {
-          "name": this.textF,
+          "user_id": this.$store.getters.userId,
+          "name": this.textG,
           "type": "group",
           "ACCESS_TOKEN": null,
         }
       ).then(res => {
-        this.groupAns = res.ans
-        this.allPageF = res.ans.length / 5
+        this.groupAns = res
+        this.allPageF = res.length / 5
       })
     },
 
     newApplyF (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
@@ -244,6 +344,7 @@ export default {
     },
     newApplyG (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,

@@ -23,11 +23,11 @@
             @click="method1"
           >
             <v-list-item-avatar>
-              <v-img :src="subItem.friend_photo"></v-img>
+              <v-img :src="subItem.photo"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title
-                v-text="subItem.friend_name"
+                v-text="subItem.name"
                 style="text-align: left"
               ></v-list-item-title>
             </v-list-item-content>
@@ -83,17 +83,17 @@
         </v-row>
         <v-list>
           <v-list-item
-            v-for="(subItem, j) in friendAns.slice(num * (pageG - 1), num * pageG)"
+            v-for="(subItem, j) in groupAns.slice(num * (pageG - 1), num * pageG)"
             :key="j + num * (pageG - 1)"
             @click="method1"
             v-show="subItem.show"
           >
             <v-list-item-avatar>
-              <v-img :src="subItem.friend_photo"></v-img>
+              <v-img :src="subItem.photo"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title
-                v-text="subItem.friend_name"
+                v-text="subItem.name"
                 style="text-align: left"
               ></v-list-item-title>
             </v-list-item-content>
@@ -151,41 +151,8 @@ export default {
       pageG: 1,
       allPageG: 2,
       friendAns: [{
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      },],
+
+      }],
       groupAns: [{
 
       }],
@@ -194,20 +161,20 @@ export default {
 
   mounted () {
     getApplyList({
+      "user_id": this.$store.getters.userId,
       "type": "friend",
       "ACCESS_TOKEN": null,
     }).then(res => {
-      this.friendAns = res.ans.array.forEach(element => {
-        element['show'] = true
-      });
+      this.friendAns = res
+      console.log(this.friendAns)
     })
     getApplyList({
+      "user_id": this.$store.getters.userId,
       "type": "group",
       "ACCESS_TOKEN": null,
     }).then(res => {
-      this.friendAns = res.ans.array.forEach(element => {
-        element['show'] = true
-      });
+      this.groupAns = res
+      console.log(this.friendAns)
     })
   },
 
@@ -242,6 +209,7 @@ export default {
 
     acF (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "accept",
         "id": this.friendAns[index].id,
@@ -255,6 +223,7 @@ export default {
 
     reF (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "refuse",
         "id": this.friendAns[index].id,
@@ -268,6 +237,7 @@ export default {
 
     acG (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "group",
         "action": "accept",
         "id": this.groupAns[index].id,
@@ -281,6 +251,7 @@ export default {
 
     reG (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "group",
         "action": "refuse",
         "id": this.groupAns[index].id,

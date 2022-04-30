@@ -1,5 +1,8 @@
 <template>
-  <div class="sb-container">
+  <div
+    class="sb-container"
+    style="overflow: auto; overflow-x: hidden; height: 0px"
+  >
     <v-card
       height="100%"
       dark
@@ -7,19 +10,31 @@
       tile
       class="server-info"
     >
-      <v-text-field
-        clearable
-        outlined
+      <v-row
         dense
-        dark
-        hide-details
-        label="请输入关键词"
-        v-model="text"
-        class="input-search mt-3"
-        autocomplete="off"
-        v-on="on"
-        ref="search"
-      ></v-text-field>
+        style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
+      >
+        <v-text-field
+          clearable
+          outlined
+          dense
+          dark
+          hide-details
+          label="团队名字"
+          v-model="textG"
+          class="input-search mt-3"
+          autocomplete="off"
+          style="width: 70%; margin: auto;"
+        ></v-text-field>
+        <v-btn
+          style="width: 15%; height: 64%; margin: 12px 0px auto;"
+          @click="newGroup"
+        >
+          <v-icon style="width: 100%; height: 100%;">
+            mdi-magnify
+          </v-icon>
+        </v-btn>
+      </v-row>
       <v-list>
         <v-list-group
           :prepend-icon="channelLabels[0].action"
@@ -250,22 +265,23 @@
 
 <script>
 import '../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup } from '../api/addresslist/index';
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup, addGroup } from '../api/addresslist/index';
 export default {
   components: {},
 
   data () {
     return {
       name: "",
+      textG: "",
       groupsIndex: null,
       friendsIndex: null,
       groupUnfolder: true,
       friendUnfolder: true,
-      num: 4,
+      num: 10,
       pageF: 1,
       allPageF: 1,
       pageG: 1,
-      allPageG: 2,
+      allPageG: 1,
       itemss: [{
         text: "Announcements",
         icon: "mdi-bell-alert"
@@ -301,18 +317,7 @@ export default {
       },],
 
       friends: [{
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      }, {
-        friend_id: 2,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      },],
+      }],
       member: 0,
       //备注、删除好友、解散群聊，绑定方法
       //问题，如何添加管理员
@@ -482,6 +487,7 @@ export default {
       if (this.name != "") {
         this.friends[j].friend_name = this.name;
         changeNickname({
+          "user_id": this.$store.getters.userId,
           "ACCESS_TOKEN": null,
           "friend_id": this.friends[j].friend_id,
           "friend_nickname": this.name
@@ -495,7 +501,8 @@ export default {
       if (this.name != "") {
         this.groups[j].group_name = this.name;
         changeGroupNickname({
-          "ACCESS_TOKEN": this.$store.accessToken,
+          "user_id": this.$store.getters.userId,
+          "ACCESS_TOKEN": null,
           "group_id": this.groups[j].group_id,
           "group_nickname": this.name
         });
@@ -506,7 +513,8 @@ export default {
 
     killFriend (j) {
       delFriend({
-        ACCESS_TOKEN: this.$store.accessToken,
+        "user_id": this.$store.getters.userId,
+        ACCESS_TOKEN: null,
         friend_id: this.friends[j].friend_id
       });
       this.friends.splice(j, 1);
@@ -515,33 +523,55 @@ export default {
 
     killGroup (j) {
       delGroup({
-        ACCESS_TOKEN: this.$store.accessToken,
+        "user_id": this.$store.getters.userId,
+        ACCESS_TOKEN: null,
         group_id: this.groups[j].group_id
       });
       this.groups.splice(j, 1);
       this.groupsIndex = null;
     },
+
+    newGroup () {
+      if (this.textG == "") {
+        return;
+      }
+      addGroup({
+        "master_id": this.$store.getters.userId,
+        "name": this.textG,
+        "notice": "",
+        "photo": "",
+      }).then(res => {
+        console.log(res)
+      })
+    }
   },
 
   mounted () {
     getGroups({
-      "ACCESS_TOKEN": this.$store.accessToken
+      "user_id": this.$store.getters.userId,
+      "ACCESS_TOKEN": null
     }).then(res => {
       this.$store.commit("channels", res.groupsList)
-      this.groups = res.groupsList.array.forEach(element => {
-        element['show'] = false
-        element['quit'] = false
+      this.groups = res
+      this.gtoups.forEach(function (item) {
+        item.show = false;
+        item.quit = false;
       });
+      this.allPageG = this.groups.length % this.num == 0 ? this.groups.length / this.num : this.groups.length / this.num + 1;
     });
 
     getFriends({
-      "ACCESS_TOKEN": this.$store.accessToken
+      "user_id": this.$store.getters.userId,
+      "ACCESS_TOKEN": null
     }).then(res => {
       this.$store.commit("channels", res.friendsList)
-      this.friends = res.friends.array.forEach(element => {
-        element['show'] = false
-        element['quit'] = false
+      this.friends = res
+      this.friends.forEach(function (item) {
+        item.show = false;
+        item.quit = false;
       });
+      this.allPageF = this.friends.length % this.num == 0 ? this.friends.length / this.num : this.friends.length / this.num + 1;
+
     });
   }
 };
