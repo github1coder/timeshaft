@@ -24,6 +24,7 @@ public class UserOp {
             throw new Exception("邮箱已被注册");
         }
         String savePassword = myPasswordEncoder.encode(password);
+//        String baseURL = "http://182."
         User user = new User(email, savePassword, username, null);
         userService.insert(user);
         return user;

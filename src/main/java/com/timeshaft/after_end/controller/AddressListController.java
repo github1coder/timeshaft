@@ -55,13 +55,13 @@ public class AddressListController {
 
     @RequestMapping(value = "/addGroup")
     public ResponseService addGroup(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
-        groupOp.createGroup(map.get("name"), map.get("photo"), map.get("notice"), user_id);
+        groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/updateGroup")
     public ResponseService updateGroup(@RequestBody Map<String, String> map) {
-        groupOp.updateGroup(Integer.parseInt(map.get("id")), map.get("name"), map.get("photo"), map.get("notice"));
+        groupOp.updateGroup(Integer.parseInt(map.get("id")), map.get("name"), map.get("static/photo"), map.get("notice"));
         return new ResponseService();
     }
 
