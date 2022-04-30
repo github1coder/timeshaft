@@ -7,4 +7,4 @@ RUN rm -f /etc/localtime \
 # 将当前目录下的jar包复制到docker容器的/目录下
 ADD target/after_end-0.0.1.jar after_end.jar
 # 指定docker容器启动时运行jar包
-ENTRYPOINT ["java", "-jar","after_end.jar"]
+ENTRYPOINT ["nohup", "java", "-jar","after_end.jar", ">nohup.out" , "&"]

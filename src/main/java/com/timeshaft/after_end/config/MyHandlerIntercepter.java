@@ -12,7 +12,7 @@ public class MyHandlerIntercepter implements HandlerInterceptor {
 
         Object user_id = request.getSession().getAttribute("user_id");
         if(user_id == null){
-            //request.getRequestDispatcher("/signin").forward(request, response);
+//            request.getRequestDispatcher("/signin").forward(request, response);
             System.out.println("请求鉴权未通过");
             return false;
         }
