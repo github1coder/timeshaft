@@ -86,6 +86,7 @@
             v-for="(subItem, j) in friendAns.slice(num * (pageG - 1), num * pageG)"
             :key="j + num * (pageG - 1)"
             @click="method1"
+            v-show="subItem.show"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.friend_photo"></v-img>
@@ -140,7 +141,7 @@
   </div>
 </template>
 <script>
-import { apply } from "../api/addresslist/index"
+import { apply, getApplyList } from "../api/addresslist/index"
 export default {
   data () {
     return {
@@ -192,7 +193,22 @@ export default {
   },
 
   mounted () {
-
+    getApplyList({
+      "type": "friend",
+      "ACCESS_TOKEN": null,
+    }).then(res => {
+      this.friendAns = res.ans.array.forEach(element => {
+        element['show'] = true
+      });
+    })
+    getApplyList({
+      "type": "group",
+      "ACCESS_TOKEN": null,
+    }).then(res => {
+      this.friendAns = res.ans.array.forEach(element => {
+        element['show'] = true
+      });
+    })
   },
 
   methods: {
@@ -226,49 +242,53 @@ export default {
 
     acF (index) {
       apply({
-        type: "friend",
-        action: "accept",
-        id: this.friendAns[index].id,
+        "type": "friend",
+        "action": "accept",
+        "id": this.friendAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
-
+        this.friendAns[index].show = false
       })
     },
 
     reF (index) {
       apply({
-        type: "friend",
-        action: "refuse",
-        id: this.friendAns[index].id,
+        "type": "friend",
+        "action": "refuse",
+        "id": this.friendAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
-
+        this.friendAns[index].show = false
       })
     },
 
     acG (index) {
       apply({
-        type: "group",
-        action: "accept",
-        id: this.groupAns[index].id,
+        "type": "group",
+        "action": "accept",
+        "id": this.groupAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
-
+        this.groupAns[index].show = false
       })
     },
 
     reG (index) {
       apply({
-        type: "group",
-        action: "refuse",
-        id: this.groupAns[index].id,
+        "type": "group",
+        "action": "refuse",
+        "id": this.groupAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
-
+        this.groupAns[index].show = false
       })
     },
     changeShowText () {

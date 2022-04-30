@@ -127,6 +127,14 @@ export function apply(param) {
     })
 }
 
+export function getApplyList(param) {
+    return request({
+        url: '/addresslist/getApplyList',
+        method: 'get',
+        params: param
+    })
+}
+
 export function getGroupMember(param) {
     return request({
         url: '/addresslist/getGroupMember',

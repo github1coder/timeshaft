@@ -36,6 +36,7 @@
             v-for="(subItem, j) in groups.slice(num * (pageG - 1), num * pageG)"
             :key="j"
             @click="method1"
+            @contextmenu.prevent="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.group_photo"></v-img>
@@ -350,7 +351,7 @@ export default {
     },
 
     method1 () {
-      console.assert(1)
+      console.log(1)
     },
 
     initBtns () {

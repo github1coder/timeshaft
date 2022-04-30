@@ -208,9 +208,9 @@ export default {
     searchFriend () {
       search(
         {
-          name: this.textF,
-          type: "friend",
-          ACCESS_TOKEN: null,
+          "name": this.textF,
+          "type": "friend",
+          "ACCESS_TOKEN": null,
         }
       ).then(res => {
         this.friendAns = res.ans
@@ -220,9 +220,9 @@ export default {
     searchGroup () {
       search(
         {
-          name: this.textF,
-          type: "group",
-          ACCESS_TOKEN: null,
+          "name": this.textF,
+          "type": "group",
+          "ACCESS_TOKEN": null,
         }
       ).then(res => {
         this.groupAns = res.ans
@@ -232,9 +232,10 @@ export default {
 
     newApplyF (index) {
       apply({
-        type: "friend",
-        action: "new",
-        id: this.friendAns[index].id,
+        "type": "friend",
+        "action": "new",
+        "id": this.friendAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
@@ -243,9 +244,10 @@ export default {
     },
     newApplyG (index) {
       apply({
-        type: "group",
-        action: "new",
-        id: this.groupAns[index].id,
+        "type": "group",
+        "action": "new",
+        "id": this.groupAns[index].id,
+        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
