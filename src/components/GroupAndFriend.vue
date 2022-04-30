@@ -294,7 +294,6 @@ export default {
         },
       ],
       groups: [],
-
       friends: [],
       member: 0,
       //备注、删除好友、解散群聊，绑定方法
@@ -370,6 +369,7 @@ export default {
       }
       this.friendsIndex = j;
       this.name = "";
+      console.log(this.friends[j].show)
     },
 
     showQuitField (j) {
@@ -531,8 +531,8 @@ export default {
       // this.$store.commit("channels", res)
       this.groups = res
       this.groups.forEach(function (item) {
-        item.show = false;
-        item.quit = false;
+        item["show"] = false;
+        item["quit"] = false;
       });
       this.allPageG = Math.ceil(this.groups.length / this.num);
     });
@@ -544,11 +544,10 @@ export default {
       // this.$store.commit("channels", res)
       this.friends = res
       this.friends.forEach(function (item) {
-        item.show = false;
-        item.quit = false;
+        item["show"] = false;
+        item["quit"] = false;
       });
       this.allPageF = Math.ceil(this.friends.length / this.num);
-      console.log(this.friends)
     });
   }
 };
