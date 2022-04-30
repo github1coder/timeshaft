@@ -40,11 +40,12 @@
                 v-model="channelNum"
                 color="primary">
               <v-list-item
-                  v-for="(item, i) in chats"
+                  v-for="(item, i) in this.chats"
                   @click="selectChannel(item.id, i)"
                   :key="i"
               >
                 <v-list-item-icon>
+                  <p>123</p>
                   <v-icon v-text="item.avatar"></v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
@@ -74,26 +75,9 @@ export default {
     return {
       text: '',
       showSelect: true,
-      // chat1: [
-      //   {id : 0, text: "Rose", icon: "mdi-emoticon-kiss-outline", message: "晚安哦~"},
-      //   {id : 1,text: "Peter", icon: "mdi-emoticon-confused-outline", message: "上号！"},
-      //   {id : 2,text: "Mike", icon: "mdi-emoticon-lol-outline", message: "bbzl"},
-      //   {id : 3,text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
-      //   {id : 4,text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
-      //   {id : 5,text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
-      // ],
-      friends : [
-        {id: 0, chatName: "1", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"},{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-        {id: 1, chatName: "2", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-        {id: 2, chatName: "3", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-      ],
-      // chat2: [
-      //   {text: "James", icon: "mdi-emoticon-wink-outline", message: "i want more ♂"},
-      //   {text: "Jason", icon: "mdi-emoticon-excited-outline", message: "lol"},
-      //   {text: "WeiHuang", icon: "mdi-emoticon-poop-outline", message: "summit issues!"}
-      // ],
       searchResult: [],
       channelNum: null,
+      data: [1, 2, 3, 4]
     }
   },
   watch: {
@@ -151,25 +135,29 @@ export default {
       this.$store.commit("toggleAC");
     },
     selectChannel(id, idx) {
-      // console.log(id + " " + idx)
       this.$store.commit("changeChannel", {id: id, idx: idx});
     }
   },
   updated() {
-
-  },
-  computed: {
-    // TODO 如果订阅路径有变化则刷新 chat1
-    chats() {
-      return this.$store.state.listenerList
-    }
+    console.log("?")
+    console.log(this.chats)
   }
   ,
+  computed: {
+    chats() {
+      let array
+      for (let listenerListKey in this.$store.state.listenerList) {
+        array.push(this.$store.state.listenerList[listenerListKey])
+      }
+      return array
+      // return this.$store.state.listenerList
+    }
 
-  //TODO 等待登陆注册能用了以后删除
-  mounted() {
-    this.$store.commit("updateChannels", this.friends)
   },
+  mounted() {
+
+  }
+
 }
 </script>
 

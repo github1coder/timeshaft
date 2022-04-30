@@ -29,8 +29,7 @@ export default {
 
   computed:{
     messages() {
-      console.log("?")
-      for (let i = 0; i < this.$store.state.listenerList.length; i++) {
+      for (let i = 0; i < this.$store.state.listenerList.size; i++) {
         console.log(this.$store.state.listenerList[i].id + " " + this.$store.state.currentChannelId)
         if (this.$store.state.listenerList[i].id === this.$store.state.currentChannelId) {
           console.log("id" + this.$store.state.currentChannelId + " found")
@@ -46,7 +45,6 @@ export default {
 
   },
   updated() {
-
 
   },
   methods: {

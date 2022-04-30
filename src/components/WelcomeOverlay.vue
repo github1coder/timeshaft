@@ -70,6 +70,7 @@
 
 <script>
 import { login } from '../api/user/index'
+import {getMessagesList} from "@/api/message";
 export default {
   data () {
     return {
@@ -141,15 +142,15 @@ export default {
           this.$router.push({
             path: '/home',
           })
-          res.friends.forEach(friend => {
-            friend.callback = this.onReceivedMsg
+          getMessagesList({
+            sourceId: this.$store.state.userId
+          }).then(ret => {
+            for (let item in ret) {
+              ret[item].callback = this.onReceivedMsg
+            }
+            this.$store.commit("initListenerList", ret)
+            this.$store.commit("WEBSOCKET_INIT", "http://182.92.163.68:8080/websocket")
           })
-          res.friends = [
-              {id: 0, chatName: "1", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-              {id: 1, chatName: "2", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-              {id: 2, chatName: "3", url: "", avatar: "mdi-emoticon-kiss-outline", data: [{ name: "Jiale Xu", avatar: "mdi-emoticon-kiss-outline", message: "test", time: "2022-4-28-16:35"}]},
-          ]
-          this.$store.commit("listenerList", res.friends)
         })
       }
     }

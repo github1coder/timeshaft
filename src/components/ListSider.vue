@@ -42,25 +42,6 @@
         </v-card>
       </v-card>
     </div>
-
-    <!--    <v-card-->
-    <!--      height="52"-->
-    <!--      dark-->
-    <!--      tile-->
-    <!--      flat-->
-    <!--      class="mystats"-->
-    <!--      @click="toggleAC"-->
-    <!--    >-->
-    <!--      <v-list-item class="grow">-->
-    <!--        <v-list-item-avatar color="grey darken-3">-->
-    <!--          <v-img class="elevation-6" :src="$store.state.myIcon"></v-img>-->
-    <!--        </v-list-item-avatar>-->
-
-    <!--        <v-list-item-content>-->
-    <!--          <v-list-item-title>{{ $store.state.myNick }}</v-list-item-title>-->
-    <!--        </v-list-item-content>-->
-    <!--      </v-list-item>-->
-    <!--    </v-card>-->
   </div>
 </template>
 

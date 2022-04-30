@@ -9,12 +9,64 @@
           width="100%"
           height="100%"
         >
-          <v-avatar
-            class="round-icon"
-            @click="clickIcon"
+          <v-container
+              fluid
           >
-            <v-icon size="30">mdi-emoticon-devil-outline</v-icon>
-          </v-avatar>
+            <v-row justify="center">
+              <v-menu
+                  bottom
+                  min-width="200px"
+                  rounded
+                  offset-y
+              >
+                <template  v-slot:activator="{ on }">
+                  <v-btn
+                      icon
+                      x-large
+                      v-on="on"
+                  >
+                    <v-avatar
+                        color="brown"
+                        size="48"
+                    >
+                      <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
+                    </v-avatar>
+                  </v-btn>
+                </template>
+                <v-card dark>
+                  <v-list-item-content class="justify-center">
+                    <div class="mx-auto text-center">
+                      <v-avatar
+                          color="brown"
+                      >
+                        <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
+                      </v-avatar>
+                      <h3>{{ $store.state.userId }}</h3>
+                      <p class="text-caption mt-1">
+                        {{ $store.state.email }}
+                      </p>
+                      <v-divider class="my-3"></v-divider>
+                      <v-btn
+                          depressed
+                          rounded
+                          text
+                      >
+                        Edit Account
+                      </v-btn>
+                      <v-divider class="my-3"></v-divider>
+                      <v-btn
+                          depressed
+                          rounded
+                          text
+                      >
+                        Disconnect
+                      </v-btn>
+                    </div>
+                  </v-list-item-content>
+                </v-card>
+              </v-menu>
+            </v-row>
+          </v-container>
           <v-list>
             <v-list-item-group
               v-model="model"
@@ -43,7 +95,7 @@
         <div class="base-content">
           <!-- here side -->
           <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
-
+          <Addresslist v-else-if="$store.state.siderState === 1"></Addresslist>
           <div class="chat">
             <v-card
               class="chat-header"
@@ -51,7 +103,7 @@
             >
               <div
                 class="ch"
-                v-if="$store.state.listenerList.length > 0"
+                v-if="$store.state.listenerList.size > 0"
               >
                 <v-icon
                   dark
@@ -337,10 +389,12 @@ import Chat from "@/components/Chat.vue";
 // import ChatTools from "@/components/ChatTools";
 // import ListSider from "@/components/ListSider";
 import ChatSider from "@/components/ChatSider";
+import Addresslist from "@/components/Addresslist";
 
 export default {
   name: "Home",
   components: {
+    Addresslist,
     Chat,
     ChatSider,
     // Sidebar,
@@ -424,7 +478,7 @@ export default {
   },
 
   mounted () {
-    console.say("home.vue mount");
+
   }
 };
 </script>
