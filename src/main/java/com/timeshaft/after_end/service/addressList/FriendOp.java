@@ -40,7 +40,7 @@ public class FriendOp {
     }
 
     public void addFriend(int friend1, int friend2) {
-        Friends friend = new Friends(friend1, friend2, null, null, "accept");
+        Friends friend = new Friends(friend1, friend2, "", "", "accept");
         friendsService.insert(friend);
     }
 
