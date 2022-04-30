@@ -19,6 +19,7 @@ import java.util.List;
  * @author : dxt
  * @since : 2022-04-29 13:25
  **/
+@RequestMapping("/message")
 @RestController
 public class ChatController {
     @Autowired
