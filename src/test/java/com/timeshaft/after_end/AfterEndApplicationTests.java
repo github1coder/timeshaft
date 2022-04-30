@@ -25,9 +25,7 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        ResponseService responseService = chatController.getMessagesList(15);
-        List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) responseService.getData();
-        System.out.println(list.get(0).get("id"));
+     
     }
 
 }

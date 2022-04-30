@@ -5,14 +5,12 @@ import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * feishu
@@ -30,7 +28,8 @@ public class ChatController {
     private FriendOp friendOp;
 
     @RequestMapping(value = "/getMessagesList")
-    public ResponseService getMessagesList(@RequestParam(value = "sourceId") Integer sourceId) {
+    public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
+        int sourceId = (Integer) requestMap.get("sourceId");
         List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> data = new ArrayList<>();
         for (Friends friends : friendsList) {
