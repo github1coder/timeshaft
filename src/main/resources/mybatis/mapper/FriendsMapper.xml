@@ -78,7 +78,7 @@
                 nickname2 = #{nickname2},
             </if>
             <if test="state != null and state != ''">
-                and state = #{state}
+                state = #{state},
             </if>
         </set>
         where id = #{id}

@@ -2,7 +2,9 @@ package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
 import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
+import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
@@ -23,15 +25,17 @@ class AfterEndApplicationTests {
     @Autowired
     private UserOp userOp;
     @Autowired
+    private UserService userService;
+    @Autowired
     private ChatController chatController;
 
     @Test
     void contextLoads() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("sourceId", 15);
-        ResponseService responseService = chatController.getMessagesList(map);
-        Object chatName = ((ArrayList<HashMap<String, Object>>) responseService.getData()).get(0);
-        System.out.println(((HashMap<String, Object>) chatName).get("chatName"));
+        int sourceId = 111;
+        List<Friends> friendsList = friendOp.getFriends(sourceId);
+        for (Friends friends : friendsList) {
+            System.out.println(friends.getNickname1());
+            System.out.println(friends.getNickname2());
+        }
     }
-
 }
