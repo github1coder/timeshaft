@@ -24,6 +24,7 @@ public class GroupOp {
         Group group = new Group(name, master_id, notice, photo, new Date());
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
+        groupUserService.insert(groupUser);
         return true;
     }
 
