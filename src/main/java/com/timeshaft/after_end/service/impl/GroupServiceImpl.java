@@ -76,4 +76,9 @@ public class GroupServiceImpl implements GroupService {
     public boolean deleteById(Integer id) {
         return this.groupMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public List<Group> queryAll(Group group){
+        return groupMapper.queryAll(group);
+    }
 }
