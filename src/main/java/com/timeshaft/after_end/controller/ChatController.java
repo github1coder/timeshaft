@@ -28,7 +28,7 @@ public class ChatController {
     private FriendOp friendOp;
 
     @RequestMapping(value = "/getMessagesList")
-    public ResponseService getMessagesList(@RequestParam Map<String, Object> requestMap) {
+    public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
         int sourceId = (Integer) requestMap.get("sourceId");
         List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> data = new ArrayList<>();
