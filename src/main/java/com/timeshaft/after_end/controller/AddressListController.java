@@ -102,17 +102,20 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/searchByNick")
-    public List<Map<String, String>> searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
-        return friendOp.searchByNick(name, type, user_id);
+    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+        List<Map<String, String>> res = friendOp.searchByNick(name, type, user_id);
+        return new ResponseService(res);
     }
 
     @RequestMapping(value = "/apply")
-    public boolean apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @SessionAttribute("user_id") Integer user_id) {
-        return friendOp.apply(user_id, type, action, id);
+    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @SessionAttribute("user_id") Integer user_id) {
+        friendOp.apply(user_id, type, action, id);
+        return new ResponseService();
     }
 
     @RequestMapping(value = "/getApplyList")
-    public List<Map<String, String>> getApplyList(@RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
-        return friendOp.getApplyList(type, user_id);
+    public ResponseService getApplyList(@RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+        List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
+        return new ResponseService(res);
     }
 }
