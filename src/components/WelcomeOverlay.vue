@@ -70,7 +70,7 @@
 
 <script>
 import { login } from '../api/user/index'
-
+import {getMessagesList} from "@/api/message";
 export default {
   data () {
     return {
@@ -90,9 +90,24 @@ export default {
           (password) => (password && (/^[\w]{6,16}$/).test(password)) || "请输入6~16位密码,仅允许字母和数字",
         ],
       },
-    };
+      friends: [
+        {
+          id: "",
+          nickName: "",
+          url: "",
+          avatar: "",
+          historyData: [
+            {
+              name: "",
+              avatar: "",
+              message: "",
+              time: "",
+            },
+          ],
+        },
+      ]
+    }
   },
-
   mounted () {
   },
 
@@ -103,6 +118,10 @@ export default {
 
     changeShowPassword () {
       this.type = "password";
+    },
+
+    onReceivedMsg(payload) {
+      this.$store.commit("WEBSOCKET_RECEIVE", payload.id, payload.data)
     },
 
     login () {
@@ -122,6 +141,15 @@ export default {
           this.$store.commit("setLogin", true)
           this.$router.push({
             path: '/home',
+          })
+          getMessagesList({
+            sourceId: this.$store.state.userId
+          }).then(ret => {
+            for (let item in ret) {
+              ret[item].callback = this.onReceivedMsg
+            }
+            this.$store.commit("initListenerList", ret)
+            this.$store.commit("WEBSOCKET_INIT", "http://182.92.163.68:8080/websocket")
           })
         })
       }
