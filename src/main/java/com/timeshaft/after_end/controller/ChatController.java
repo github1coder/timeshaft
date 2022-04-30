@@ -3,6 +3,7 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,10 @@ import java.util.List;
  * @author : dxt
  * @since : 2022-04-29 13:25
  **/
-@RequestMapping("/message")
+@RestController //等价于@Controller+@ResponseBody的结合，里面的方法都以json格式输出
+@RequestMapping("/message")  //映射URL
 @CrossOrigin
-@RestController
+@Slf4j
 public class ChatController {
     @Autowired
     private FriendOp friendOp;
