@@ -31,7 +31,7 @@ public class FriendOp {
     @Resource(name = "UserService")
     private UserService userService;
 
-    public List<Friends> getFriends(int id) {
+    public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, null);
         Friends friend2 = new Friends(null, id, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
