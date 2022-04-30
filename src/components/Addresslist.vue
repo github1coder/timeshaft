@@ -8,8 +8,6 @@
       dark
     >
       <v-bottom-navigation
-        v-model="activeBtn"
-        :input-value="showNav"
         color="blue"
         dark
       >
@@ -58,10 +56,6 @@ export default {
     };
   },
 
-  updated () {
-    this.$store.commit("changeChannel", this.item);
-  },
-
   methods: {
     toggleAC () {
       this.$store.commit("toggleAC");
@@ -82,7 +76,6 @@ export default {
   },
 
   mounted () {
-
   },
 };
 </script>

@@ -101,7 +101,7 @@
             style="width: 70%; margin: auto;"
           ></v-text-field>
           <v-btn
-            style="width: 15%; height: 65%; margin: 12px 0px auto;"
+            style="width: 15%; height: 64%; margin: 12px 0px auto;"
             @click="searchGroup"
           >
             <v-icon style="width: 100%; height: 100%;">
@@ -166,102 +166,12 @@ export default {
     return {
       num: 5,
       pageF: 1,
-      allPageF: 1,
+      allPageF: 0,
       pageG: 1,
-      allPageG: 1,
+      allPageG: 0,
       textF: "",
       textG: "",
-      friendAns: [{
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      }, {
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      },],
+      friendAns: [],
       groupAns: [],
     };
   },
@@ -312,7 +222,7 @@ export default {
         }
       ).then(res => {
         this.friendAns = res
-        this.allPageF = res.length / 5
+        this.allPageF = Math.ceil(this.friendAns.length / this.num)
       })
     },
     searchGroup () {
@@ -325,7 +235,7 @@ export default {
         }
       ).then(res => {
         this.groupAns = res
-        this.allPageF = res.length / 5
+        this.allPageG = Math.ceil(this.groupAns.length / this.num)
       })
     },
 

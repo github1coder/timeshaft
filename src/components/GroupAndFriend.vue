@@ -30,9 +30,10 @@
           style="width: 15%; height: 64%; margin: 12px 0px auto;"
           @click="newGroup"
         >
-          <v-icon style="width: 100%; height: 100%;">
+          <!-- <v-icon style="width: 100%; height: 100%;">
             mdi-magnify
-          </v-icon>
+          </v-icon> -->
+          创建
         </v-btn>
       </v-row>
       <v-list>
@@ -282,16 +283,6 @@ export default {
       allPageF: 1,
       pageG: 1,
       allPageG: 1,
-      itemss: [{
-        text: "Announcements",
-        icon: "mdi-bell-alert"
-      }, {
-        text: "Rules",
-        icon: "mdi-file-check"
-      }, {
-        text: "Welcome",
-        icon: "mdi-emoticon"
-      }],
       channelLabels: [
         {
           action: '~',
@@ -302,22 +293,9 @@ export default {
           title: '我的好友',
         },
       ],
-      groups: [{
-        group_id: 1,
-        group_name: 'Breakfast & brunch',
-        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      }, {
-        group_id: 2,
-        group_name: 'List Item',
-        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      },],
+      groups: [],
 
-      friends: [{
-      }],
+      friends: [],
       member: 0,
       //备注、删除好友、解散群聊，绑定方法
       //问题，如何添加管理员
@@ -347,7 +325,6 @@ export default {
   },
 
   updated () {
-    this.$store.commit("changeChannel", this.item);
   },
 
   methods: {
@@ -551,27 +528,27 @@ export default {
       "user_id": this.$store.getters.userId,
       "ACCESS_TOKEN": null
     }).then(res => {
-      this.$store.commit("channels", res.groupsList)
+      // this.$store.commit("channels", res)
       this.groups = res
-      this.gtoups.forEach(function (item) {
+      this.groups.forEach(function (item) {
         item.show = false;
         item.quit = false;
       });
-      this.allPageG = this.groups.length % this.num == 0 ? this.groups.length / this.num : this.groups.length / this.num + 1;
+      this.allPageG = Math.ceil(this.groups.length / this.num);
     });
 
     getFriends({
       "user_id": this.$store.getters.userId,
       "ACCESS_TOKEN": null
     }).then(res => {
-      this.$store.commit("channels", res.friendsList)
+      // this.$store.commit("channels", res)
       this.friends = res
       this.friends.forEach(function (item) {
         item.show = false;
         item.quit = false;
       });
-      this.allPageF = this.friends.length % this.num == 0 ? this.friends.length / this.num : this.friends.length / this.num + 1;
-
+      this.allPageF = Math.ceil(this.friends.length / this.num);
+      console.log(this.friends)
     });
   }
 };

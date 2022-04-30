@@ -150,12 +150,8 @@ export default {
       allPageF: 2,
       pageG: 1,
       allPageG: 2,
-      friendAns: [{
-
-      }],
-      groupAns: [{
-
-      }],
+      friendAns: [],
+      groupAns: [],
     };
   },
 
@@ -166,6 +162,7 @@ export default {
       "ACCESS_TOKEN": null,
     }).then(res => {
       this.friendAns = res
+      this.allPageF = Math.ceil(this.friendAns.length / this.num)
       console.log(this.friendAns)
     })
     getApplyList({
@@ -174,6 +171,7 @@ export default {
       "ACCESS_TOKEN": null,
     }).then(res => {
       this.groupAns = res
+      this.allPageG = Math.ceil(this.groupAns.length / this.num)
       console.log(this.friendAns)
     })
   },

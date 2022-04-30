@@ -70,7 +70,7 @@
 
 <script>
 import { login } from '../api/user/index'
-import {getMessagesList} from "@/api/message";
+import { getMessagesList } from "@/api/message";
 export default {
   data () {
     return {
@@ -120,7 +120,7 @@ export default {
       this.type = "password";
     },
 
-    onReceivedMsg(payload) {
+    onReceivedMsg (payload) {
       this.$store.commit("WEBSOCKET_RECEIVE", payload.id, payload.data)
     },
 
