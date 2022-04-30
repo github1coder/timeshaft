@@ -41,36 +41,34 @@ public class UserController {
     }
 
     @RequestMapping("/register")
-    public ResponseService register(@RequestBody Map<String, String> requestMap, HttpSession session) throws Exception {
+    public ResponseService register(@RequestBody Map<String, String> requestMap) throws Exception {
         log.info("注册开始");
         String email = requestMap.get("email");
         String password = requestMap.get("password");
         String username = requestMap.get("username");
         User user = userOp.register(email, password, username);
-        session.setAttribute("user_id", user.getId());
         log.info("注册成功");
-        return new ResponseService(user);
+        return new ResponseService();
     }
 
     @RequestMapping(value = "/loginn")
-    public ResponseService login(@RequestBody Map<String, String> map, HttpSession session) throws Exception {
+    public ResponseService login(@RequestBody Map<String, String> map) throws Exception {
         log.info("开始登录");
         User user = userOp.login(map.get("email"), map.get("password"));
-        session.setAttribute("user_id", user.getId());
         log.info("登录成功");
         return new ResponseService(user);
     }
 
     @RequestMapping("/logout")
-    public ResponseService logout(HttpSession session) {
-        session.removeAttribute("user_id");
+    public ResponseService logout(@RequestParam("user_id") Integer user_id) {
+
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changePwd")
-    public ResponseService changePwd(@RequestBody Map<String, String> map, @SessionAttribute("user_id") Integer user_id) throws Exception {
+    public ResponseService changePwd(@RequestBody Map<String, String> map) throws Exception {
         //Integer uid = (Integer) session.getAttribute(Const.SESSION_UID);
-        userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"));
+        userOp.changePwd(Integer.parseInt(map.get("user_id")), map.get("oldPassword"), map.get("newPassword"));
         return new ResponseService();
     }
 }

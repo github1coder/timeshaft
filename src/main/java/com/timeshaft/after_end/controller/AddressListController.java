@@ -24,37 +24,37 @@ public class AddressListController {
     private GroupOp groupOp;
 
     @RequestMapping(value = "/getFriends")
-    public ResponseService getFriends(@SessionAttribute("user_id") Integer user_id) {
+    public ResponseService getFriends(@RequestParam("user_id") Integer user_id) {
         List<Friends> res = friendOp.getFriends(user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/addFriend")
-    public ResponseService addFriend(@SessionAttribute("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
+    public ResponseService addFriend(@RequestParam("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.addFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/delFriend")
-    public ResponseService delFriend(@SessionAttribute("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
+    public ResponseService delFriend(@RequestParam("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.delFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changeNickname")
-    public ResponseService changeNickname(@SessionAttribute("user_id") Integer user_id, @RequestBody Map<String, String> map) {
+    public ResponseService changeNickname(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
         friendOp.changeNickname(user_id, Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getGroups")
-    public ResponseService getGroups(@SessionAttribute("user_id") Integer user_id) {
+    public ResponseService getGroups(@RequestParam("user_id") Integer user_id) {
         List<Group> res = groupOp.getGroup(user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/addGroup")
-    public ResponseService addGroup(@SessionAttribute("user_id") Integer user_id, @RequestBody Map<String, String> map) {
+    public ResponseService addGroup(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
         groupOp.createGroup(map.get("name"), map.get("photo"), map.get("notice"), user_id);
         return new ResponseService();
     }
@@ -96,25 +96,25 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/changeGroupNickname")
-    public ResponseService changeGroupNickname(@RequestBody Map<String, String> map, @SessionAttribute("user_id") Integer user_id) {
-        groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), user_id);
+    public ResponseService changeGroupNickname(@RequestBody Map<String, String> map) {
+        groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), Integer.parseInt(map.get("user_id")));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/searchByNick")
-    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.searchByNick(name, type, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/apply")
-    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @SessionAttribute("user_id") Integer user_id) {
+    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestParam("user_id") Integer user_id) {
         friendOp.apply(user_id, type, action, id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getApplyList")
-    public ResponseService getApplyList(@RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+    public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
         return new ResponseService(res);
     }
