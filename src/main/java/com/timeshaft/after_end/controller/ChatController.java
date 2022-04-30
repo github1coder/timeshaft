@@ -4,6 +4,7 @@ import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import java.util.List;
  * @since : 2022-04-29 13:25
  **/
 @RequestMapping("/message")
+@CrossOrigin
 @RestController
 public class ChatController {
     @Autowired
