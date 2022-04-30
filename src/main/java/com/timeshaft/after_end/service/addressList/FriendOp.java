@@ -181,6 +181,7 @@ public class FriendOp {
                     map.put("id", user.getId().toString());
                     map.put("name", user.getUsername());
                     map.put("photo", user.getPhoto());
+                    map.put("show", "true");
                     ans.add(map);
                 }
             }
@@ -193,6 +194,7 @@ public class FriendOp {
                 map.put("id", user.getId().toString());
                 map.put("name", user.getUsername());
                 map.put("photo", user.getPhoto());
+                map.put("show", "true");
                 ans.add(map);
             }
         }
