@@ -24,6 +24,7 @@
         <v-list-group
           :prepend-icon="channelLabels[0].action"
           @click="initBtns"
+          value=true
         >
           <!-- no-action -->
           <template v-slot:activator>
@@ -32,9 +33,10 @@
             </v-list-item-content>
           </template>
           <v-list-item
-            v-for="(subItem, j) in groups.slice(num * (gPage - 1), num * gPage)"
+            v-for="(subItem, j) in groups.slice(num * (pageG - 1), num * pageG)"
             :key="j"
             @click="method1"
+            @contextmenu.prevent="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.group_photo"></v-img>
@@ -48,8 +50,8 @@
               <v-text-field
                 v-show="subItem.show"
                 v-model="name"
-                @keydown.esc="showGroupTextField(j + num * (gPage - 1))"
-                @keydown.enter="changeGroupName(j + num * (gPage - 1))"
+                @keydown.esc="showGroupTextField(j + num * (pageG - 1))"
+                @keydown.enter="changeGroupName(j + num * (pageG - 1))"
                 clearable
               >
 
@@ -63,7 +65,7 @@
                   color="error"
                   fab
                   x-small
-                  @click="killGroup(j + num * (gPage - 1))"
+                  @click="killGroup(j + num * (pageG - 1))"
                 >
                   确定
                 </v-btn>
@@ -72,7 +74,7 @@
                   color="success"
                   fab
                   x-small
-                  @click="showGroupQuitField(j + num * (gPage - 1))"
+                  @click="showGroupQuitField(j + num * (pageG - 1))"
                 >
                   取消
                 </v-btn>
@@ -98,7 +100,7 @@
                   <v-list-item
                     v-for="(btnn, i) in groupsBtns"
                     :key="i"
-                    @click="getMethod(btnn.method, j + num * (gPage - 1))"
+                    @click="getMethod(btnn.method, j + num * (pageG - 1))"
                   >
                     <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                   </v-list-item>
@@ -110,21 +112,21 @@
             <v-row>
               <v-btn
                 width="33%"
-                @click="downgPage"
+                @click="downPageG"
               >
-                <v-icon>mdi-next</v-icon>
+                <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
               <v-btn
                 width="33%"
                 disabled
               >
-                {{gPage}}/{{gAllPage}}
+                {{pageG}}/{{allPageG}}
               </v-btn>
               <v-btn
                 width="33%"
-                @click="upgPage"
+                @click="upPageG"
               >
-                <v-icon>mdi-next</v-icon>
+                <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
             </v-row>
           </v-card>
@@ -134,6 +136,7 @@
         <v-list-group
           :prepend-icon="channelLabels[1].action"
           @click="initBtns"
+          value=true
         >
           <!-- no-action -->
           <template v-slot:activator>
@@ -143,7 +146,7 @@
             </v-list-item-content>
           </template>
           <v-list-item
-            v-for="(subItem, j) in friends.slice(num * (fPage - 1), num * fPage)"
+            v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
             :key="j"
             @click="method1"
           >
@@ -159,8 +162,8 @@
               <v-text-field
                 v-show="subItem.show"
                 v-model="name"
-                @keydown.esc="showTextField(j + num * (fPage - 1))"
-                @keydown.enter="changeFriendName(j + num * (fPage - 1))"
+                @keydown.esc="showTextField(j + num * (pageF - 1))"
+                @keydown.enter="changeFriendName(j + num * (pageF - 1))"
                 clearable
               >
                 <!-- 确定删除好友 -->
@@ -174,7 +177,7 @@
                   color="error"
                   fab
                   x-small
-                  @click="killFriend(j + num * (fPage - 1))"
+                  @click="killFriend(j + num * (pageF - 1))"
                 >
                   确定
                 </v-btn>
@@ -183,7 +186,7 @@
                   color="success"
                   fab
                   x-small
-                  @click="showQuitField(j + num * (fPage - 1))"
+                  @click="showQuitField(j + num * (pageF - 1))"
                 >
                   取消
                 </v-btn>
@@ -209,7 +212,7 @@
                   <v-list-item
                     v-for="(btnn, i) in friendsBtns"
                     :key="i"
-                    @click="getMethod(btnn.method, j + num * (fPage - 1))"
+                    @click="getMethod(btnn.method, j + num * (pageF - 1))"
                   >
                     <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                   </v-list-item>
@@ -221,21 +224,21 @@
             <v-row>
               <v-btn
                 width="33%"
-                @click="downfPage"
+                @click="downPageF"
               >
-                <v-icon>mdi-next</v-icon>
+                <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
               <v-btn
                 width="33%"
                 disabled
               >
-                {{fPage}}/{{fAllPage}}
+                {{pageF}}/{{allPageF}}
               </v-btn>
               <v-btn
                 width="33%"
-                @click="upfPage"
+                @click="upPageF"
               >
-                <v-icon>mdi-next</v-icon>
+                <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
             </v-row>
           </v-card>
@@ -259,10 +262,10 @@ export default {
       groupUnfolder: true,
       friendUnfolder: true,
       num: 4,
-      fPage: 1,
-      fAllPage: 2,
-      gPage: 1,
-      gAllPage: 2,
+      pageF: 1,
+      allPageF: 1,
+      pageG: 1,
+      allPageG: 2,
       itemss: [{
         text: "Announcements",
         icon: "mdi-bell-alert"
@@ -348,7 +351,7 @@ export default {
     },
 
     method1 () {
-      console.assert(1)
+      console.log(1)
     },
 
     initBtns () {
@@ -450,28 +453,28 @@ export default {
       this.name = "";
     },
 
-    downfPage () {
+    downPageF () {
       this.initBtns()
-      if (this.fPage != 1) {
-        this.fPage -= 1
+      if (this.pageF != 1) {
+        this.pageF -= 1
       }
     },
-    upfPage () {
+    upPageF () {
       this.initBtns()
-      if (this.fPage != this.fAllPage) {
-        this.fPage += 1
+      if (this.pageF != this.allPageF) {
+        this.pageF += 1
       }
     },
-    downgPage () {
+    downPageG () {
       this.initBtns()
-      if (this.gPage != 1) {
-        this.gPage -= 1
+      if (this.pageG != 1) {
+        this.pageG -= 1
       }
     },
-    upgPage () {
+    upPageG () {
       this.initBtns()
-      if (this.gPage != this.gAllPage) {
-        this.gPage += 1
+      if (this.pageG != this.allPageG) {
+        this.pageG += 1
       }
     },
 
@@ -479,7 +482,7 @@ export default {
       if (this.name != "") {
         this.friends[j].friend_name = this.name;
         changeNickname({
-          "ACCESS_TOKEN": this.$store.accessToken,
+          "ACCESS_TOKEN": null,
           "friend_id": this.friends[j].friend_id,
           "friend_nickname": this.name
         });

@@ -109,3 +109,36 @@ export function changeGroupNickname(param) {
         data: param
     })
 }
+
+//添加好友
+export function search(param) {
+    return request({
+        url: '/addresslist/search',
+        method: 'get',
+        params: param
+    })
+}
+
+export function apply(param) {
+    return request({
+        url: '/addresslist/apply',
+        method: 'get',
+        params: param
+    })
+}
+
+export function getApplyList(param) {
+    return request({
+        url: '/addresslist/getApplyList',
+        method: 'get',
+        params: param
+    })
+}
+
+export function getGroupMember(param) {
+    return request({
+        url: '/addresslist/getGroupMember',
+        method: 'get',
+        params: param
+    })
+}

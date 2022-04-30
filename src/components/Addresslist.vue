@@ -2,7 +2,7 @@
   <div class="sidebar">
     <group-and-friend v-if="show == 1"></group-and-friend>
     <add-member v-else-if="show == 2"></add-member>
-    <group-and-friend v-else></group-and-friend>
+    <apply-list v-else></apply-list>
     <div
       class="overflow-hidden"
       dark
@@ -33,10 +33,12 @@
 import '../api/addresslist/index'
 import GroupAndFriend from './GroupAndFriend.vue'
 import AddMember from './Addmember.vue'
+import ApplyList from './ApplyList.vue'
 export default {
   components: {
     AddMember,
     GroupAndFriend,
+    ApplyList,
   },
 
   data () {
