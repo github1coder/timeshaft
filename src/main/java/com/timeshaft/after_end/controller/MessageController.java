@@ -8,10 +8,13 @@ import com.timeshaft.after_end.service.MessageStateService;
 import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
 import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -24,7 +27,9 @@ import java.util.Map;
  * @author : dxt
  * @since : 2022-04-17 13:43
  **/
-@RestController
+@RestController //等价于@Controller+@ResponseBody的结合，里面的方法都以json格式输出
+@CrossOrigin
+@Slf4j
 public class MessageController {
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
