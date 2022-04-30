@@ -10,7 +10,6 @@ import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class FriendOp {
     @Resource(name = "UserService")
     private UserService userService;
 
-    public List<Friends> getFriends(int id) {
+    public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, null);
         Friends friend2 = new Friends(null, id, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
@@ -40,12 +39,12 @@ public class FriendOp {
         return friends;
     }
 
-    public boolean addFriend(int friend1, int friend2) {
+    public void addFriend(int friend1, int friend2) {
         Friends friend = new Friends(friend1, friend2, null, null, "accept");
-        return friendsService.insert(friend) != null;
+        friendsService.insert(friend);
     }
 
-    public boolean delFriend(int friend1, int friend2) {
+    public void delFriend(int friend1, int friend2) {
         Friends friend = new Friends(friend1, friend2, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend);
         Friends friend_2 = new Friends(friend2, friend1, null, null, null);
@@ -53,22 +52,20 @@ public class FriendOp {
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
         }
-        return true;
     }
 
-    public boolean changeNickname(int self_id, int friend_id, String name) {
+    public void changeNickname(int self_id, int friend_id, String name) {
         Friends friend1 = new Friends(self_id, friend_id, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
         for(Friends tmp : friends){
             tmp.setNickname2(name);
-            return true;
+            return;
         }
         Friends friend2 = new Friends(friend_id, self_id, null, null, null);
         friends.addAll(friendsService.queryAll(friend2));
         for(Friends tmp : friends){
             tmp.setNickname1(name);
         }
-        return true;
     }
 
     public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
@@ -113,7 +110,7 @@ public class FriendOp {
         return ans;
     }
 
-    public boolean apply(Integer self_id, String type, String action, Integer id) {
+    public void apply(Integer self_id, String type, String action, Integer id) {
         if(type.equals("group")) {
             GroupUser groupUser = new GroupUser(self_id, id, null, null, null);
             if(action.equals("new")) {
@@ -158,7 +155,6 @@ public class FriendOp {
                 friendsService.deleteById(friends.get(0).getId());
             }
         }
-        return true;
     }
 
     public List<Map<String, String>> getApplyList(String type, Integer id) {

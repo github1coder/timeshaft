@@ -3,13 +3,17 @@ package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.Group;
+import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
+import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +26,26 @@ public class AddressListController {
     private FriendOp friendOp;
     @Autowired
     private GroupOp groupOp;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/getFriends")
     public ResponseService getFriends(@RequestParam("user_id") Integer user_id) {
-        List<Friends> res = friendOp.getFriends(user_id);
+        List<Friends> friends = friendOp.getFriends(user_id);
+        List<Map<String, String>> res = new ArrayList<>();
+        for(Friends f : friends) {
+            HashMap<String, String> map = new HashMap<>();
+            User tmp;
+            if(f.getUserId1().equals(user_id)) {
+                tmp = userService.queryById(f.getUserId2());
+            } else {
+                tmp = userService.queryById(f.getUserId1());
+            }
+            map.put("friend_id", tmp.getId().toString());
+            map.put("friend_name", tmp.getUsername());
+            map.put("friend_photo", tmp.getPhoto());
+            res.add(map);
+        }
         return new ResponseService(res);
     }
 
@@ -49,7 +69,15 @@ public class AddressListController {
 
     @RequestMapping(value = "/getGroups")
     public ResponseService getGroups(@RequestParam("user_id") Integer user_id) {
-        List<Group> res = groupOp.getGroup(user_id);
+        List<Group> groups = groupOp.getGroup(user_id);
+        List<Map<String, String>> res = new ArrayList<>();
+        for(Group group : groups) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("group_id", group.getId().toString());
+            map.put("group_name", group.getName());
+            map.put("group_photo", group.getPhoto());
+            res.add(map);
+        }
         return new ResponseService(res);
     }
 
