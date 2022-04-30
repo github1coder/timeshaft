@@ -115,7 +115,6 @@ public class FriendOp {
 
     public boolean apply(Integer self_id, String type, String action, Integer id) {
         if(type.equals("group")) {
-            Group group = groupService.queryById(id);
             GroupUser groupUser = new GroupUser(self_id, id, null, null, null);
             if(action.equals("new")) {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
@@ -135,8 +134,8 @@ public class FriendOp {
                 groupUserService.deleteById(groupUsers.get(0).getGroupId());
             }
         } else {
-            Friends friend1 = new Friends(id, self_id, null, null, null);
-            Friends friend2 = new Friends(self_id, id, null, null, null);
+            Friends friend1 = new Friends(self_id, id, null, null, null);
+            Friends friend2 = new Friends(id, self_id, null, null, null);
             if(action.equals("new")) {
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
