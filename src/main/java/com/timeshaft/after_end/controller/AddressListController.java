@@ -82,8 +82,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/addGroup")
-    public ResponseService addGroup(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
-        groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), user_id);
+    public ResponseService addGroup(@RequestBody Map<String, String> map) {
+        groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), Integer.parseInt(map.get("master_id")));
         return new ResponseService();
     }
 
