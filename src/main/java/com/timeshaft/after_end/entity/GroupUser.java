@@ -21,11 +21,14 @@ public class GroupUser implements Serializable {
     
     private String identity;
 
-    public GroupUser(Integer groupId, Integer userId, String userNickname, String identity) {
+    private String state;
+
+    public GroupUser(Integer groupId, Integer userId, String userNickname, String identity, String state) {
         this.groupId = groupId;
         this.userId = userId;
         this.userNickname = userNickname;
         this.identity = identity;
+        this.state = state;
     }
 
     public Integer getId() {
@@ -68,4 +71,11 @@ public class GroupUser implements Serializable {
         this.identity = identity;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

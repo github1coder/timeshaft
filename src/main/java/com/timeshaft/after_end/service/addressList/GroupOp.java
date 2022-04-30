@@ -23,7 +23,7 @@ public class GroupOp {
                                String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date());
         group = groupService.insert(group);
-        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master");
+        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
         return true;
     }
 
@@ -40,7 +40,7 @@ public class GroupOp {
     }
 
     public List<Group> getGroup(int user_id) {
-        GroupUser groupUser = new GroupUser(null, user_id, null, null);
+        GroupUser groupUser = new GroupUser(null, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
         for(GroupUser tmp : groupUsers) {
@@ -50,12 +50,12 @@ public class GroupOp {
     }
 
     public boolean joinGroup(int group_id, int join_user_id) {
-        GroupUser groupUser = new GroupUser(group_id, join_user_id, null, "member");
+        GroupUser groupUser = new GroupUser(group_id, join_user_id, null, "member", "accept");
         return groupUserService.insert(groupUser) != null;
     }
 
     public boolean quitGroup(int group_id, int quit_user_id) {
-        GroupUser groupUser = new GroupUser(group_id, quit_user_id, null, null);
+        GroupUser groupUser = new GroupUser(group_id, quit_user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             groupUserService.deleteById(tmp.getGroupId());
@@ -64,7 +64,7 @@ public class GroupOp {
     }
 
     public boolean addManager(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, null);
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             tmp.setIdentity("manager");
@@ -74,7 +74,7 @@ public class GroupOp {
     }
 
     public boolean delManager(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, "manager");
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, "manager", null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity("member");
@@ -84,7 +84,7 @@ public class GroupOp {
     }
 
     public boolean changeNickname(int group_id, String name, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, null);
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setUserNickname(name);

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/AddressList")  //映射URL
+@RequestMapping("/addresslist")  //映射URL
 public class AddressListController {
     @Autowired
     private FriendOp friendOp;
@@ -88,4 +88,18 @@ public class AddressListController {
         return groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), user_id);
     }
 
+    @RequestMapping(value = "/searchByNick")
+    public List<Map<String, String>> searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+        return friendOp.searchByNick(name, type, user_id);
+    }
+
+    @RequestMapping(value = "/apply")
+    public boolean apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @SessionAttribute("user_id") Integer user_id) {
+        return friendOp.apply(user_id, type, action, id);
+    }
+
+    @RequestMapping(value = "/getApplyList")
+    public List<Map<String, String>> getApplyList(@RequestParam(value = "type") String type, @SessionAttribute("user_id") Integer user_id) {
+        return friendOp.getApplyList(type, user_id);
+    }
 }

@@ -52,4 +52,5 @@ public interface GroupService {
      */
     boolean deleteById(Integer id);
 
+    List<Group> queryAll(Group group);
 }
