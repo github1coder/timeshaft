@@ -1,0 +1,24 @@
+name: Vue
+
+on:
+  push:
+    # 分支
+    branches: [ front_dev ]
+  pull_request:
+    branches: [ front_dev ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      # push后，用ssh连接服务器执行脚本
+      - name: SSH
+        uses: appleboy/ssh-action@master # 使用ssh链接服务器
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          #key: ${{ secrets.PRIVATE_KEY}}
+          port: ${{ secrets.PORT }}
+          script: |
+            sh /root/front_start.sh

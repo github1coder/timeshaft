@@ -12,7 +12,7 @@ export default new Vuex.Store({
         email: null,
         accessToken: null,
         currentChannelIdx: 0,
-        currentChannelId: null,
+        currentChannelId: -1,
         myIcon: "guest.png",
         // ownerIcon: "https://media.discordapp.net/attachments/603940670914297867/685302017165623352/plusrekt1.jpg?width=513&height=513",
         ownerIcon: "guest.png",
@@ -25,11 +25,13 @@ export default new Vuex.Store({
         loggedIn: false,
         siderState: 0,
         // socket 相关
-        url: "http://182.92.163.68:8080/websocket",
+        url: "http://localhost:8080/websocket",
+        // url: "http://182.92.163.68:8080/websocket",
         checkInterval: null,//断线重连时 检测连接是否建立成功
         websocket: null,
         stompClient: null,
-        listenerList: {},//监听器列表，断线重连时 用于重新注册监听
+        listenerList: [], //监听器列表，断线重连时 用于重新注册监听
+        messageList: [], //聊天信息栏列表
         // item : {topic: "string", data: {}}
         //
     },
@@ -174,9 +176,10 @@ export default new Vuex.Store({
                 {name: state.myNick},  //此处注意更换自己的用户名，最好以参数形式带入
                 frame => { // eslint-disable-line no-unused-vars
                     console.log('链接成功！')
-                    for (let listenerListKey in state.listenerList) {
-                        console.log(state.listenerList[listenerListKey].url + "?")
-                        state.stompClient.subscribe(state.listenerList[listenerListKey].url, state.listenerList[listenerListKey].callback)
+                    for (let listener in state.listenerList) {
+                        state.stompClient.subscribe(listener.url, payload => {
+                            this.WEBSOCKET_RECEIVE(payload)
+                        })
                     }
                 },
                 err => {// eslint-disable-line no-unused-vars
@@ -189,7 +192,11 @@ export default new Vuex.Store({
             state.stompClient = stompClient
         },
         WEBSOCKET_SEND(state, p) {
-            state.stompClient.send(p.url, {}, p.message);
+            // const text = p.data.msgFromName + "," + p.data.msgFromAvatar + ","
+            //     + p.data.msg + "," + p.data.time + ","
+            //     + p.data.srcId + "," + p.data.dstId
+            state.stompClient.send(p.url, {}, JSON.stringify(p.data));
+            console.log("send + " + JSON.stringify(p.data) + " to " +  p.url)
         },
         WEBSOCKET_UNSUBSRCIBE(state, p) {
             state.stompClient.unsubscribe(p)
@@ -202,33 +209,26 @@ export default new Vuex.Store({
             }
         },
 
-        WEBSOCKET_RECEIVE(id, data) {
-            let friend;
-            for (friend in this.$store.state.listenerList) {
-                if (id === friend.id) {
-                    break;
+        WEBSOCKET_RECEIVE(state, payload) {
+            for (let friend in this.$store.state.messageList) {
+                if (payload.srcId === this.$store.state.messageList[friend].id) {
+                    this.$store.state.messageList.data.push(payload)
                 }
             }
-            friend.historyData.push(data)
         },
 
         // ---------------------- 以上是 Stomp 封装 请谨慎修改 --------------------------- //
 
-        initListenerList(state, res) {
-            for (let itemKey in res) {
-                if (state.listenerList[res[itemKey].id] === undefined) {
-                    state.listenerList[res[itemKey].id] = res[itemKey]
-                } else {
-                    // 更新已有id的信息
-                    let tmp = state.listenerList[res[itemKey].id]
-                    tmp.chatName = res[itemKey].chatName
-                    tmp.avatar = res[itemKey].avatar
-                    tmp.data.append(res[itemKey].data)
-                    state.listenerList[res[itemKey].id] = tmp
-                }
+        initListenerList(state, data) {
+            state.listenerList.push(data)
+        },
+
+        initMessageList(state, data) {
+            console.log(state.messageList)
+            for (let d in data) {
+                state.messageList.push(data[d])
             }
-            console.log("!!!")
-            console.log(state.listenerList)
+            console.log(state.messageList)
         }
         // --------------------- 通讯录管理 -----------------------------//
     },

@@ -41,23 +41,22 @@
                 color="primary">
               <v-list-item
                   v-for="(item, i) in this.chats"
-                  @click="selectChannel(item.id, i)"
+                  @click="selectChannel(item.id, i, item)"
                   :key="i"
               >
                 <v-list-item-icon>
-                  <p>123</p>
-                  <v-icon v-text="item.avatar"></v-icon>
+                  <v-icon v-text="item.chatAvatar"></v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
                       class="channel-title"
                       v-text="item.chatName"
                   ></v-list-item-title>
-                  <v-list-item-subtitle
-                      v-if="item.data.length>0"
-                      class="channel-title"
-                      v-text="item.data[item.data.length-1].message">
-                  </v-list-item-subtitle>
+<!--                  <v-list-item-subtitle-->
+<!--                      v-if="item.data.length>0"-->
+<!--                      class="channel-title"-->
+<!--                      v-text="item.data[item.data.length-1].message">-->
+<!--                  </v-list-item-subtitle>-->
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -77,11 +76,7 @@ export default {
       showSelect: true,
       searchResult: [],
       channelNum: null,
-      data: [1, 2, 3, 4]
     }
-  },
-  watch: {
-    text: 'inputHandle'
   },
   methods: {
     itemClick(item) {
@@ -134,27 +129,29 @@ export default {
     toggleAC() {
       this.$store.commit("toggleAC");
     },
-    selectChannel(id, idx) {
+    selectChannel(id, idx, item) {
+      console.log(id)
+      console.log(item)
       this.$store.commit("changeChannel", {id: id, idx: idx});
     }
   },
-  updated() {
-    console.log("?")
-    console.log(this.chats)
+  watch: {
+
   }
   ,
-  computed: {
-    chats() {
-      let array
-      for (let listenerListKey in this.$store.state.listenerList) {
-        array.push(this.$store.state.listenerList[listenerListKey])
-      }
-      return array
-      // return this.$store.state.listenerList
-    }
+  updated() {
 
   },
+  computed: {
+    chats() {
+      console.log("size:"  + this.$store.state.messageList.length)
+      return this.$store.state.messageList
+    }
+  },
   mounted() {
+
+  },
+  created() {
 
   }
 

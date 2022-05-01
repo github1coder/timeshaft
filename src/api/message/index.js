@@ -7,3 +7,11 @@ export function getMessagesList(param) {
         data: param
     })
 }
+
+export function getSubscribeUrlList(param) {
+    return request({
+        url: '/message/getSubscribeUrlList',
+        method: 'post',
+        data: param
+    })
+}
