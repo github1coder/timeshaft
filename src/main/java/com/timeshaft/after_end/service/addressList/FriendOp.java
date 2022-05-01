@@ -176,7 +176,7 @@ public class FriendOp {
                 groups.add(groupService.queryById(g.getId()));
             }
             for(Group group: groups) {
-                GroupUser tmp = new GroupUser(group.getId(), id, null, null, "new");
+                GroupUser tmp = new GroupUser(group.getId(), null, null, null, "new");
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
                     HashMap<String, String> map = new HashMap<>();
