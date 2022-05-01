@@ -10,32 +10,6 @@
       tile
       class="server-info"
     >
-      <v-row
-        dense
-        style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
-      >
-        <v-text-field
-          clearable
-          outlined
-          dense
-          dark
-          hide-details
-          label="团队名字"
-          v-model="textG"
-          class="input-search mt-3"
-          autocomplete="off"
-          style="width: 70%; margin: auto;"
-        ></v-text-field>
-        <v-btn
-          style="width: 15%; height: 64%; margin: 12px 0px auto;"
-          @click="newGroup"
-        >
-          <!-- <v-icon style="width: 100%; height: 100%;">
-            mdi-magnify
-          </v-icon> -->
-          创建
-        </v-btn>
-      </v-row>
       <v-list>
         <v-list-group
           :prepend-icon="channelLabels[0].action"
@@ -304,21 +278,13 @@ export default {
       }, {
         title: '删除好友',
         method: 'showQuitField'
-      }, {
-        title: 'Click Me'
-      }, {
-        title: 'Click Me 2'
       },],
       groupsBtns: [{
-        title: '备注',
-        method: 'showGroupTextField'
+        title: '详情',
+        method: 'aboutG'
       }, {
         title: '退出群聊',
         method: 'showGroupQuitField'
-      }, {
-        title: '解散群聊'
-      }, {
-        title: 'Click Me 2'
       },],
     };
   },
@@ -333,6 +299,17 @@ export default {
 
     method1 () {
       console.log(1)
+    },
+
+    aboutG (index) {
+      this.$store.commit("setGroupId", this.groups[index].group_id)
+      this.$store.commit("setGroupName", this.groups[index].group_name)
+      this.$store.commit("setGroupPhoto", this.groups[index].group_photo)
+      this.$store.commit("changeSiderState", 4)
+      this.$store.commit("setAbout", 2)
+      this.$router.push({
+        path: "/home"
+      })
     },
 
     initBtns () {
@@ -536,7 +513,8 @@ export default {
   },
 
   mounted () {
-    if (this.$store.getters.user_id != -1) {
+    if (this.$store.getters.userId != -1) {
+      console.log(this.$store.getters.userId)
       getGroups({
         "user_id": this.$store.getters.userId,
         "ACCESS_TOKEN": null

@@ -23,7 +23,7 @@
             <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
-                  style="border-radius: 50%; width: 200px;"
+                  style="border-radius: 50%; width: 150px;"
                   src="https://cdn.vuetifyjs.com/images/john.png"
                 ></v-img>
               </v-list-item-icon>
@@ -48,34 +48,85 @@
           <v-divider></v-divider>
         </v-navigation-drawer>
         <v-list>
-          <v-list-group>
+          <v-list-group
+            prepend-icon="~"
+            @click="initPassword"
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>修改密码</v-list-item-title>
+              </v-list-item-content>
+            </template>
             <v-list-item>
-              <v-text-field>
+              <v-text-field
+                label="旧密码"
+                v-model="password"
+              >
               </v-text-field>
             </v-list-item>
             <v-list-item>
-              <v-text-field>
+              <v-text-field
+                label="新密码"
+                v-model="passwordN"
+              >
               </v-text-field>
             </v-list-item>
             <v-list-item>
-              <div style="margin: auto; border: 1px white solid">
+              <v-text-field
+                label="验证码"
+                v-model="checkCode"
+              >
+              </v-text-field>
+            </v-list-item>
+            <v-list-item>
+              <div style="width: 100%;">
                 <v-btn
                   class="mx-2"
-                  color="error"
-                  large
-                  @click="killFriend(j + num * (pageF - 1))"
+                  color="blue"
+                  width="40%"
+                >
+                  发送验证码
+                </v-btn>
+                <v-btn
+                  class="mx-2"
+                  color="blue"
+                  width="40%"
                 >
                   确定
                 </v-btn>
-                <v-btn
-                  class="mx-2"
-                  color="success"
-                  large
-                  @click="showQuitField(j + num * (pageF - 1))"
-                >
-                  取消
-                </v-btn>
               </div>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="~">
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>创建团队</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item>
+              <v-row
+                dense
+                style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
+              >
+                <v-text-field
+                  clearable
+                  outlined
+                  dense
+                  dark
+                  hide-details
+                  label="团队名字"
+                  v-model="textG"
+                  class="input-search mt-3"
+                  autocomplete="off"
+                  style="width: 70%; margin: auto;"
+                ></v-text-field>
+                <v-btn
+                  style="width: 15%; height: 64%; margin: 12px 0px auto;"
+                  @click="newGroup"
+                >
+                  创建
+                </v-btn>
+              </v-row>
             </v-list-item>
           </v-list-group>
         </v-list>
@@ -87,7 +138,9 @@
 export default {
   data () {
     return {
-
+      checkCode: "",
+      password: "",
+      passwordN: "",
     };
   },
 
@@ -97,6 +150,12 @@ export default {
   methods: {
     method1 () {
 
+    },
+
+    initPassword () {
+      this.checkCode = ""
+      this.password = ""
+      this.passwordN = ""
     },
   }
 }

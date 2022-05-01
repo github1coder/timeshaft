@@ -1,7 +1,8 @@
 <template>
   <div class="sidebar">
-    <about-me v-if="show == 1"></about-me>
-    <about-group v-else-if="show == 2"></about-group>
+    <about-group v-if="this.$store.getters.about == 2"></about-group>
+    <about-me v-else-if="this.$store.getters.about == 1"></about-me>
+
     <div
       class="overflow-hidden"
       dark
@@ -45,7 +46,6 @@ export default {
         icon: "mdi-emoticon"
       }],
       member: 0,
-      show: 1,
     };
   },
 
@@ -58,13 +58,10 @@ export default {
       console.assert(1)
     },
     show1 () {
-      this.show = 1;
+      this.$store.commit("setAbout", 1)
     },
     show2 () {
-      this.show = 2;
-    },
-    show3 () {
-      this.show = 3;
+      this.$store.commit("setAbout", 2)
     },
   },
 
