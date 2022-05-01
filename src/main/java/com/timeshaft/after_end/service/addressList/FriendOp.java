@@ -114,7 +114,7 @@ public class FriendOp {
 
     public void apply(Integer self_id, String type, String action, Integer id) {
         if(type.equals("group")) {
-            GroupUser groupUser = new GroupUser(self_id, id, null, null, null);
+            GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
             if(action.equals("new")) {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
