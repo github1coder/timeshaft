@@ -29,6 +29,10 @@ public class GroupOp {
     }
 
     public boolean deleteGroup(int id) {
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
+        for(GroupUser groupUser : groupUsers) {
+            groupUserService.deleteById(groupUser.getId());
+        }
         return groupService.deleteById(id);
     }
 
