@@ -36,14 +36,18 @@ public class AddressListController {
         for(Friends f : friends) {
             HashMap<String, String> map = new HashMap<>();
             User tmp;
+            String nick;
             if(f.getUserId1().equals(user_id)) {
                 tmp = userService.queryById(f.getUserId2());
+                nick = f.getNickname2();
             } else {
                 tmp = userService.queryById(f.getUserId1());
+                nick = f.getNickname1();
             }
             map.put("friend_id", tmp.getId().toString());
             map.put("friend_name", tmp.getUsername());
             map.put("friend_photo", tmp.getPhoto());
+            map.put("friend_nick", nick);
             res.add(map);
         }
         return new ResponseService(res);

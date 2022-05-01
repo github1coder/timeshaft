@@ -181,6 +181,8 @@ public class FriendOp {
                 for(GroupUser g : apply) {
                     HashMap<String, String> map = new HashMap<>();
                     User user = userService.queryById(g.getId());
+                    map.put("group_id", g.getGroupId().toString());
+                    map.put("group_name", group.getName());
                     map.put("id", user.getId().toString());
                     map.put("name", user.getUsername());
                     map.put("photo", user.getPhoto());
