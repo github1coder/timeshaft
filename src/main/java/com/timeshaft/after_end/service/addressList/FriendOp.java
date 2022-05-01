@@ -205,4 +205,14 @@ public class FriendOp {
         }
         return ans;
     }
+
+    public List<User> getGroupMember(int id) {
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
+        List<User> users = new ArrayList<>();
+        for (GroupUser groupUser : groupUsers) {
+            User user = userService.queryById(groupUser.getUserId());
+            users.add(user);
+        }
+        return users;
+    }
 }

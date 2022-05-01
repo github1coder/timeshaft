@@ -151,4 +151,18 @@ public class AddressListController {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
         return new ResponseService(res);
     }
+
+    @RequestMapping(value = "/getGroupMember")
+    public ResponseService getGroupMember(@RequestParam("id") Integer id) {
+        List<User> users = friendOp.getGroupMember(id);
+        List<Map<String, String>> res = new ArrayList<>();
+        for(User user : users) {
+            HashMap<String, String> ans = new HashMap<>();
+            ans.put("id", user.getId().toString());
+            ans.put("name", user.getUsername());
+            ans.put("photo", user.getPhoto());
+            res.add(ans);
+        }
+        return new ResponseService(res);
+    }
 }
