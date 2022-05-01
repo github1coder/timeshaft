@@ -163,7 +163,7 @@
           </template>
           <v-list-item
             v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
-            :key="j"
+            :key="j + num * (pageF - 1)"
             @click="method1"
           >
             <v-list-item-avatar>
@@ -369,7 +369,6 @@ export default {
       }
       this.friendsIndex = j;
       this.name = "";
-      console.log(this.friends[j].show)
     },
 
     showQuitField (j) {
@@ -383,11 +382,11 @@ export default {
           this.friends[this.friendsIndex].show = false;
         }
         this.friends[j].quit = !this.friends[j].quit;
-        this.friends[j].show = !this.friends[j].quit;
+        this.friends[j].show = false;
       }
       else {
         this.friends[j].quit = !this.friends[j].quit;
-        this.friends[j].show = !this.friends[j].quit;
+        this.friends[j].show = false;
       }
       this.friendsIndex = j;
       this.name = "";
@@ -461,7 +460,7 @@ export default {
     },
 
     changeFriendName (j) {
-      if (this.name != "") {
+      if (this.name && this.name != "") {
         this.friends[j].friend_name = this.name;
         changeNickname({
           "user_id": this.$store.getters.userId,
@@ -475,7 +474,7 @@ export default {
     },
 
     changeGroupName (j) {
-      if (this.name != "") {
+      if (this.name && this.name != "") {
         this.groups[j].group_name = this.name;
         changeGroupNickname({
           "user_id": this.$store.getters.userId,
@@ -534,7 +533,21 @@ export default {
         item["show"] = false;
         item["quit"] = false;
       });
+      this.groups = JSON.parse(JSON.stringify(this.groups))
       this.allPageG = Math.ceil(this.groups.length / this.num);
+      // this.groups = [{
+      //   group_id: 1,
+      //   group_name: 'Breakfast & brunch',
+      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+      //   show: false,
+      //   quit: false,
+      // }, {
+      //   group_id: 2,
+      //   group_name: 'List Item',
+      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+      //   show: false,
+      //   quit: false,
+      // },]
     });
 
     getFriends({
@@ -547,7 +560,17 @@ export default {
         item["show"] = false;
         item["quit"] = false;
       });
+      this.friends = JSON.parse(JSON.stringify(this.friends))
       this.allPageF = Math.ceil(this.friends.length / this.num);
+      // console.log(this.friends)
+      // this.friends = [{
+      //   'friend_id': 1,
+      //   'friend_name': "1",
+      //   'friend_photo': "",
+      //   "quit": false,
+      //   "show": false,
+      // }]
+      // console.log(this.friends)
     });
   }
 };

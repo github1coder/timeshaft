@@ -78,7 +78,7 @@
           style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
         >
           <v-card-title style="margin: auto;">
-            团队邀请
+            团队申请
           </v-card-title>
         </v-row>
         <v-list>
@@ -96,6 +96,7 @@
                 v-text="subItem.name"
                 style="text-align: left"
               ></v-list-item-title>
+              <v-list-item-subtitle v-text="subItem.nameG"></v-list-item-subtitle>
             </v-list-item-content>
             <!-- 后面的省略号 -->
             <v-list-item-action>

@@ -22,7 +22,7 @@ export function addFriend(param) {
 
 export function delFriend(param) {
     return request({
-        url: '/addresslist/addFriend',
+        url: '/addresslist/delFriend',
         method: 'get',
         params: param
     })

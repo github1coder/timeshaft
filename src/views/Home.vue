@@ -53,6 +53,7 @@
                       depressed
                       rounded
                       text
+                      @click="disconnect"
                     >
                       Disconnect
                     </v-btn>
@@ -91,6 +92,7 @@
         <!-- here side -->
         <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
         <Addresslist v-else-if="$store.state.siderState === 1"></Addresslist>
+        <About v-else-if="$store.state.siderState === 4"></About>
         <div class="chat">
           <v-card
             class="chat-header"
@@ -390,11 +392,14 @@ import Chat from "@/components/Chat.vue";
 // import ListSider from "@/components/ListSider";
 import ChatSider from "@/components/ChatSider";
 import Addresslist from "@/components/Addresslist";
+import About from "@/components/About";
+import { logout } from '../api/user';
 
 export default {
   name: "Home",
   components: {
     Addresslist,
+    About,
     Chat,
     ChatSider,
     // Sidebar,
@@ -431,6 +436,9 @@ export default {
         text: '',
       }, {
         icon: 'mdi-calendar-check',
+        text: '',
+      }, {
+        icon: 'mdi-account-cog',
         text: '',
       },],
       model: 0
@@ -469,6 +477,21 @@ export default {
       })
 
     },
+
+    disconnect () {
+      logout({
+        "user_id": this.$store.state.userId,
+      }).then(res => {
+        console.log(res)
+        this.$store.commit("setMyIcon", "guest.png")
+        this.$store.commit("setMyNick", "N")
+        this.$store.commit("setEmail", null)
+        this.$store.commit("setLogin", false)
+        this.$router.push({
+          path: '/',
+        })
+      })
+    }
   },
 
   computed: {
