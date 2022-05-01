@@ -10,7 +10,6 @@ import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
-import org.omg.CORBA.OBJECT_NOT_EXIST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;

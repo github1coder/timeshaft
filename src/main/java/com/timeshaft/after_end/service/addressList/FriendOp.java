@@ -119,6 +119,8 @@ public class FriendOp {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
+                    groupUser.setIdentity("");
+                    groupUser.setUserNickname("");
                     groupUserService.insert(groupUser);
                 }
             } else if(action.equals("accept")) {
@@ -126,6 +128,7 @@ public class FriendOp {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUsers.get(0).setState(action);
                 groupUser = groupUsers.get(0);
+                groupUser.setIdentity("member");
                 groupUserService.update(groupUser);
             } else {
                 groupUser.setState("new");
@@ -140,6 +143,8 @@ public class FriendOp {
                 friends.addAll(friendsService.queryAll(friend2));
                 if (friends.size() == 0) {
                     friend1.setState(action);
+                    friend1.setNickname2("");
+                    friend1.setNickname1("");
                     friendsService.insert(friend1);
                 }
             } else if(action.equals("accept")) {
