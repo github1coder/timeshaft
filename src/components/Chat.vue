@@ -40,8 +40,7 @@ export default {
 
   },
   updated() {
-    console.log("----")
-    console.log(this.messages)
+
   },
   methods: {
 

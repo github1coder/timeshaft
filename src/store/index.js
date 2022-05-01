@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        DEBUG: false,
         userId: -1,
         email: null,
         accessToken: null,
@@ -25,8 +26,8 @@ export default new Vuex.Store({
         loggedIn: false,
         siderState: 0,
         // socket 相关
-        url: "http://localhost:8080/websocket",
-        // url: "http://182.92.163.68:8080/websocket",
+        // url: "http://localhost:8080/websocket",
+        // // url: "http://182.92.163.68:8080/websocket",
         checkInterval: null,//断线重连时 检测连接是否建立成功
         websocket: null,
         stompClient: null,
@@ -122,9 +123,9 @@ export default new Vuex.Store({
 
         // ------------------------------- 以上全是原版 目前原封不动 ----------------------------------//
 
-        WEBSOCKET_INIT(state, url) {
+        WEBSOCKET_INIT(state) {
             if (state.stompClient == null || !state.stompClient.connected) {
-                state.url = url
+                state.url = state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
                 if (state.stompClient != null && state.websocket.readyState === SockJS.OPEN) {
                     state.stompClient.disconnect(() => {
                         this.commit('WEBSOCKET_CONNECT')
@@ -176,10 +177,24 @@ export default new Vuex.Store({
                 {name: state.myNick},  //此处注意更换自己的用户名，最好以参数形式带入
                 frame => { // eslint-disable-line no-unused-vars
                     console.log('链接成功！')
+                    console.log(state.stompClient)
                     for (let listener in state.listenerList) {
-                        state.stompClient.subscribe(listener.url, payload => {
-                            this.WEBSOCKET_RECEIVE(payload)
+                        state.stompClient.subscribe(state.listenerList[listener].url, payload => {
+                            console.log("谢谢你 因为有你")
+                            let json = JSON.parse(payload.body)
+                            console.log("收到的json:")
+                            console.log(json)
+                            for (let friend in state.messageList) {
+                                console.log(json.srcId.toString() + " "  + friend.toString() + " " + state.messageList[friend].id.toString())
+                                if (json.srcId === state.messageList[friend].id) {
+                                    state.messageList[friend].data.push(json)
+                                    console.log("收到 id:" + json.srcId.toString() + " 消息:")
+                                    console.log(json)
+                                }
+                            }
+                            console.log("温暖了四季")
                         })
+                        console.log(state.listenerList[listener].url)
                     }
                 },
                 err => {// eslint-disable-line no-unused-vars
@@ -209,18 +224,12 @@ export default new Vuex.Store({
             }
         },
 
-        WEBSOCKET_RECEIVE(state, payload) {
-            for (let friend in this.$store.state.messageList) {
-                if (payload.srcId === this.$store.state.messageList[friend].id) {
-                    this.$store.state.messageList.data.push(payload)
-                }
-            }
-        },
-
         // ---------------------- 以上是 Stomp 封装 请谨慎修改 --------------------------- //
 
         initListenerList(state, data) {
-            state.listenerList.push(data)
+            for (let d in data) {
+                state.listenerList.push(data[d])
+            }
         },
 
         initMessageList(state, data) {

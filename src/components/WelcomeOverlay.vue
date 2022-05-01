@@ -104,22 +104,7 @@ export default {
           (password) => (password && (/^[\w]{6,16}$/).test(password)) || "请输入6~16位密码,仅允许字母和数字",
         ],
       },
-      friends: [
-        {
-          id: "",
-          nickName: "",
-          url: "",
-          avatar: "",
-          historyData: [
-            {
-              name: "",
-              avatar: "",
-              message: "",
-              time: "",
-            },
-          ],
-        },
-      ]
+
     }
   },
   mounted () {
@@ -159,7 +144,6 @@ export default {
             this.show = true
             this.loading = false
           }
-
           getMessagesList({
             srcId: this.$store.state.userId,
           }).then(res => {
@@ -170,7 +154,7 @@ export default {
             srcId: this.$store.state.userId,
           }).then(res => {
             this.$store.commit("initListenerList", res)
-            this.$store.commit("WEBSOCKET_INIT", "http://localhost:8080/websocket")
+            this.$store.commit("WEBSOCKET_INIT")
           })
         })
 

@@ -100,7 +100,7 @@
           >
             <div
               class="ch"
-              v-if="$store.state.listenerList.size > 0"
+              v-if="$store.state.listenerList.length > 0"
             >
               <div
                 class="ch"
