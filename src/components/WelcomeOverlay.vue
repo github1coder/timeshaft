@@ -70,7 +70,7 @@
 
 <script>
 import { login } from '../api/user/index'
-import {getMessagesList} from "@/api/message";
+import {getMessagesList, getSubscribeUrlList} from "@/api/message";
 export default {
   data () {
     return {
@@ -120,10 +120,6 @@ export default {
       this.type = "password";
     },
 
-    onReceivedMsg(payload) {
-      this.$store.commit("WEBSOCKET_RECEIVE", payload.id, payload.data)
-    },
-
     login () {
       this.$refs.welcomeform.validate();
       if (this.valid) {
@@ -142,16 +138,21 @@ export default {
           this.$router.push({
             path: '/home',
           })
+          console.log(this.$store.state.userId)
           getMessagesList({
-            sourceId: this.$store.state.userId
-          }).then(ret => {
-            for (let item in ret) {
-              ret[item].callback = this.onReceivedMsg
-            }
-            this.$store.commit("initListenerList", ret)
-            this.$store.commit("WEBSOCKET_INIT", "http://182.92.163.68:8080/websocket")
+            srcId: this.$store.state.userId,
+          }).then(res => {
+            console.log(res)
+            this.$store.commit("initMessageList", res)
+          })
+          getSubscribeUrlList({
+            srcId: this.$store.state.userId,
+          }).then(res => {
+            this.$store.commit("initListenerList", res)
+            this.$store.commit("WEBSOCKET_INIT", "http://localhost:8080/websocket")
           })
         })
+
       }
     }
   },

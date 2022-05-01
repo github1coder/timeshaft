@@ -103,15 +103,15 @@
             >
               <div
                 class="ch"
-                v-if="$store.state.listenerList.size > 0"
+                v-if="$store.state.messageList.length > 0"
               >
                 <v-icon
                   dark
                   left
                 >{{
-                  $store.state.listenerList[getCh()].avatar
+                  $store.state.messageList[getCh()].chatAvatar
                 }}</v-icon>
-                {{ $store.state.listenerList[getCh()].chatName }}
+                {{ $store.state.messageList[getCh()].chatName }}
               </div>
               <div class="head-tools">
                 <div class="tool-icons-container">
@@ -457,23 +457,46 @@ export default {
     sendChat(url, message) {
       let name = this.$store.state.myNick
       let avatar = this.$store.state.myIcon
-      this.$store.state.listenerList[this.$store.state.currentChannelIdx].data.push({
-        name: name,
-        avatar: avatar,
-        message: message,
-      })
+      const msgForm = {
+        msgFromName: name,
+        msgFromAvatar: avatar,
+        msg: message,
+        time: this.getDate(),
+        srcId: this.$store.state.userId,
+        dstId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
+      }
+      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+      this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
       this.clearMsg()
       this.$store.commit("WEBSOCKET_SEND", {
         url: url,
-        message: message
+        data: msgForm,
       })
-
     },
+    getDate() {
+      const date = new Date();//当前时间
+      const year = date.getFullYear(); //返回指定日期的年份
+      const month = this.repair(date.getMonth() + 1);//月
+      const day = this.repair(date.getDate());//日
+      const hour = this.repair(date.getHours());//时
+      const minute = this.repair(date.getMinutes());//分
+      const second = this.repair(date.getSeconds());//秒
+        //当前时间
+      return year + "-" + month + "-" + day
+            + " " + hour + ":" + minute + ":" + second
+    },
+    repair(i){
+      if (i >= 0 && i <= 9) {
+        return "0" + i;
+      } else {
+        return i;
+      }
+    }
   },
 
   computed: {
     chatUrl() {
-      return this.$store.state.listenerList[this.$store.state.currentChannelIdx].url
+      return "/app/personalMessage"
     }
   },
 
