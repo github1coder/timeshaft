@@ -91,6 +91,14 @@
           >注册</v-btn>
         </v-card-actions>
       </v-card-text>
+      <v-card-text
+        style="margin: auto"
+        v-show="show"
+      >
+        <span>
+          {{error}}
+        </span>
+      </v-card-text>
       <router-link to="/login">
         <v-card-text to="/login">已有账号，返回登录</v-card-text>
       </router-link>
@@ -108,6 +116,8 @@ export default {
       valid: true,
       loadingCheckCode: false,
       loadingRegister: false,
+      show: false,
+      error: "",
       checkCode: "",
       username: "",
       email: "",
@@ -164,15 +174,22 @@ export default {
         register(param).then(response => {
           console.log(response)
           login(param).then(res => {
-            this.$store.commit("setUserId", res.id)
-            // console.log(this.$store.getters.userId)
-            this.$store.commit("setMyIcon", res.photo)
-            this.$store.commit("setMyNick", res.username)
-            this.$store.commit("setEmail", res.email)
-            this.$store.commit("setLogin", true)
-            this.$router.push({
-              path: '/home',
-            })
+            if (res.id) {
+              this.$store.commit("setUserId", res.id)
+              console.log(res)
+              this.$store.commit("setMyIcon", res.photo)
+              this.$store.commit("setMyNick", res.username)
+              this.$store.commit("setEmail", res.email)
+              this.$store.commit("setLogin", true)
+              this.$router.push({
+                path: '/home',
+              })
+            }
+            else {
+              this.error = res
+              this.show = true
+              this.loading = false
+            }
           })
         })
       }

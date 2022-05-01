@@ -24,3 +24,11 @@ export function login(param) {
         data: param
     })
 }
+
+export function logout(param) {
+    return request({
+        url: '/user/logout',
+        method: 'get',
+        params: param
+    })
+}

@@ -40,7 +40,7 @@
           <v-list-item
             v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
             :key="j + num * (pageF - 1)"
-            @click="searchFriend"
+            @click="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -56,6 +56,7 @@
               <v-btn
                 small
                 @click="newApplyF(j + num * (pageG - 1))"
+                :disabled="subItem.show"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -113,7 +114,7 @@
           <v-list-item
             v-for="(subItem, j) in groupAns.slice(num * (pageG - 1), num * pageG)"
             :key="j + num * (pageG - 1)"
-            @click="searchGroup"
+            @click="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -129,6 +130,7 @@
               <v-btn
                 small
                 @click="newApplyG(j + num * (pageG - 1))"
+                :disabled="subItem.show"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -222,6 +224,10 @@ export default {
         }
       ).then(res => {
         this.friendAns = res
+        this.friendAns.forEach(function (item) {
+          item["show"] = false;
+        });
+        this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
         this.allPageF = Math.ceil(this.friendAns.length / this.num)
       })
     },
@@ -235,6 +241,10 @@ export default {
         }
       ).then(res => {
         this.groupAns = res
+        this.groupAns.forEach(function (item) {
+          item["show"] = false;
+        });
+        this.groupAns = JSON.parse(JSON.stringify(this.groupAns))
         this.allPageG = Math.ceil(this.groupAns.length / this.num)
       })
     },
@@ -249,7 +259,7 @@ export default {
       }
       ).then(res => {
         console.log(res)
-
+        this.friendAns[index].show = true
       })
     },
     newApplyG (index) {
@@ -262,7 +272,7 @@ export default {
       }
       ).then(res => {
         console.log(res)
-
+        this.groupAns[index].show = true
       })
     },
   },
