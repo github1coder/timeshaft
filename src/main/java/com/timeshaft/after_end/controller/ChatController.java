@@ -29,7 +29,30 @@ public class ChatController {
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
-        int sourceId = (Integer) requestMap.get("sourceId");
+        int sourceId = (Integer) requestMap.get("srcId");
+        List<Friends> friendsList = friendOp.getFriends(sourceId);
+        List<HashMap<String, Object>> res = new ArrayList<>();
+        for (Friends friends : friendsList) {
+            HashMap<String, Object> map = new HashMap<>();
+            Integer friendId = friends.getUserId1().equals(sourceId)? friends.getUserId2():friends.getUserId1();
+            String chatName = friends.getUserId1().equals(sourceId)? friends.getNickname2():friends.getNickname1();
+            String url = "/user/" + friendId + "-" + sourceId;
+            String chatAvatar = "mdi-emoticon-kiss-outline";
+            map.put("id", friendId);
+            map.put("chatName", chatName);
+            map.put("url", url);
+            map.put("chatAvatar", chatAvatar);
+            //拉取双方加起来最近20条聊天记录
+            List<HashMap<String, Object>> data = new ArrayList<>();
+            map.put("data", data);
+            res.add(map);
+        }
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/getSubscribeUrlList")
+    public ResponseService getSubscribeUrlList(@RequestBody Map<String, Object> requestMap) {
+        int sourceId = (Integer) requestMap.get("srcId");
         List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> data = new ArrayList<>();
         for (Friends friends : friendsList) {
@@ -37,11 +60,8 @@ public class ChatController {
             Integer friendId = friends.getUserId1().equals(sourceId) ? friends.getUserId2():friends.getUserId1();
             String chatName = friends.getUserId1().equals(sourceId) ? friends.getNickname2():friends.getNickname1();
             String url = "/user/" + friendId + "-" + sourceId;
-            String chatAvatar = "mdi-emoticon-kiss-outline";
             map.put("id", friendId);
-            map.put("chatName", chatName);
             map.put("url", url);
-            map.put("chatAvatar", chatAvatar);
             data.add(map);
         }
         return new ResponseService(data);
