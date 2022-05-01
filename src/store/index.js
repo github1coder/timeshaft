@@ -26,6 +26,7 @@ export default new Vuex.Store({
         siderState: 0,
         // socket 相关
         url: "http://localhost:8080/websocket",
+        // url: "http://182.92.163.68:8080/websocket",
         checkInterval: null,//断线重连时 检测连接是否建立成功
         websocket: null,
         stompClient: null,
@@ -209,13 +210,11 @@ export default new Vuex.Store({
         },
 
         WEBSOCKET_RECEIVE(state, payload) {
-            let friend;
-            for (friend in this.$store.state.messageList) {
-                if (payload.id === friend.id) {
-                    break;
+            for (let friend in this.$store.state.messageList) {
+                if (payload.srcId === this.$store.state.messageList[friend].id) {
+                    this.$store.state.messageList.data.push(payload)
                 }
             }
-            friend.push(payload.data)
         },
 
         // ---------------------- 以上是 Stomp 封装 请谨慎修改 --------------------------- //
