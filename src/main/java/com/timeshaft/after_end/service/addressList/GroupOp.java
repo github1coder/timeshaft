@@ -41,7 +41,7 @@ public class GroupOp {
     }
 
     public List<Group> getGroup(int user_id) {
-        GroupUser groupUser = new GroupUser(null, user_id, null, null, null);
+        GroupUser groupUser = new GroupUser(null, user_id, null, null, "accept");
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
         for(GroupUser tmp : groupUsers) {

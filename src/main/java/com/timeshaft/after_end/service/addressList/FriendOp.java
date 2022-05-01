@@ -32,8 +32,8 @@ public class FriendOp {
     private UserService userService;
 
     public List<Friends> getFriends(Integer id) {
-        Friends friend1 = new Friends(id, null, null, null, null);
-        Friends friend2 = new Friends(null, id, null, null, null);
+        Friends friend1 = new Friends(id, null, null, null, "accept");
+        Friends friend2 = new Friends(null, id, null, null, "accept");
         List<Friends> friends = friendsService.queryAll(friend1);
         friends.addAll(friendsService.queryAll(friend2));
         return friends;
