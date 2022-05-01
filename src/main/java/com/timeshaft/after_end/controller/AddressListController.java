@@ -80,6 +80,7 @@ public class AddressListController {
             map.put("group_id", group.getId().toString());
             map.put("group_name", group.getName());
             map.put("group_photo", group.getPhoto());
+            map.put("master_id", group.getMasterId().toString());
             res.add(map);
         }
         return new ResponseService(res);
@@ -148,6 +149,20 @@ public class AddressListController {
     @RequestMapping(value = "/getApplyList")
     public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/getGroupMember")
+    public ResponseService getGroupMember(@RequestParam("id") Integer id) {
+        List<User> users = friendOp.getGroupMember(id);
+        List<Map<String, String>> res = new ArrayList<>();
+        for(User user : users) {
+            HashMap<String, String> ans = new HashMap<>();
+            ans.put("id", user.getId().toString());
+            ans.put("name", user.getUsername());
+            ans.put("photo", user.getPhoto());
+            res.add(ans);
+        }
         return new ResponseService(res);
     }
 }
