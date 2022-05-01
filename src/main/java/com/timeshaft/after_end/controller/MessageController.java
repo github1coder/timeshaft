@@ -52,14 +52,14 @@ public class MessageController {
         personalMessage.setSendtime(date);
         //payload.put("time", date);
         personalMessage.setMessage((String) payload.get("msg"));
-        personalMessage.setFriendsId(Integer.valueOf((String) payload.get("dstId")));
-        personalMessage.setSenderId(Integer.valueOf((String) payload.get("srcId")));
+        personalMessage.setFriendsId(Integer.valueOf(payload.get("dstId").toString()));
+        personalMessage.setSenderId(Integer.valueOf(payload.get("srcId").toString()));
         MessageStateType state = MessageStateType.UNREAD;
         personalMessage.setState(messageStateService.EnumToString(state));
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
-        messagingTemplate.convertAndSend("/user/" + senderId + "-" + friendId, payload);
+        messagingTemplate.convertAndSend("/user/" + senderId + "/" + friendId, payload);
     }
 
     /**
@@ -74,8 +74,8 @@ public class MessageController {
         //GroupMessageState groupMessageState = new GroupMessageState();
         //payload.put("time", date);
         groupMessage.setMessage((String) payload.get("msg"));
-        groupMessage.setGroupId(Integer.valueOf((String) payload.get("dstId")));
-        groupMessage.setSenderId(Integer.valueOf((String) payload.get("srcId")));
+        groupMessage.setGroupId(Integer.valueOf(payload.get("dstId").toString()));
+        groupMessage.setSenderId(Integer.valueOf(payload.get("srcId").toString()));
         groupMessage.setSendtime(date);
         groupMessageService.insert(groupMessage);
         int groupId = groupMessage.getGroupId();
