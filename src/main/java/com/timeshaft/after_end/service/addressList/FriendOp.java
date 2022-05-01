@@ -173,7 +173,7 @@ public class FriendOp {
             groupUsers.addAll(groupUserService.queryAll(groupUser));
             List<Group> groups = new ArrayList<>();
             for(GroupUser g : groupUsers) {
-                groups.add(groupService.queryById(g.getId()));
+                groups.add(groupService.queryById(g.getGroupId()));
             }
             for(Group group: groups) {
                 GroupUser tmp = new GroupUser(group.getId(), null, null, null, "new");
