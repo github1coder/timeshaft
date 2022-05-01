@@ -59,12 +59,14 @@ public class FriendOp {
         List<Friends> friends = friendsService.queryAll(friend1);
         for(Friends tmp : friends){
             tmp.setNickname2(name);
+            friendsService.update(tmp);
             return;
         }
         Friends friend2 = new Friends(friend_id, self_id, null, null, null);
         friends.addAll(friendsService.queryAll(friend2));
         for(Friends tmp : friends){
             tmp.setNickname1(name);
+            friendsService.update(tmp);
         }
     }
 
