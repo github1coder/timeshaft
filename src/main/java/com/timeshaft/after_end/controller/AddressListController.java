@@ -80,6 +80,7 @@ public class AddressListController {
             map.put("group_id", group.getId().toString());
             map.put("group_name", group.getName());
             map.put("group_photo", group.getPhoto());
+            map.put("master_id", group.getMasterId().toString());
             res.add(map);
         }
         return new ResponseService(res);
