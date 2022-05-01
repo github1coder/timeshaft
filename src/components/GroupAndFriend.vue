@@ -10,32 +10,6 @@
       tile
       class="server-info"
     >
-      <v-row
-        dense
-        style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
-      >
-        <v-text-field
-          clearable
-          outlined
-          dense
-          dark
-          hide-details
-          label="团队名字"
-          v-model="textG"
-          class="input-search mt-3"
-          autocomplete="off"
-          style="width: 70%; margin: auto;"
-        ></v-text-field>
-        <v-btn
-          style="width: 15%; height: 64%; margin: 12px 0px auto;"
-          @click="newGroup"
-        >
-          <!-- <v-icon style="width: 100%; height: 100%;">
-            mdi-magnify
-          </v-icon> -->
-          创建
-        </v-btn>
-      </v-row>
       <v-list>
         <v-list-group
           :prepend-icon="channelLabels[0].action"
@@ -266,7 +240,7 @@
 
 <script>
 import '../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup, addGroup } from '../api/addresslist/index';
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup, addGroup } from '../api/addresslist/index';
 export default {
   components: {},
 
@@ -304,21 +278,13 @@ export default {
       }, {
         title: '删除好友',
         method: 'showQuitField'
-      }, {
-        title: 'Click Me'
-      }, {
-        title: 'Click Me 2'
       },],
       groupsBtns: [{
-        title: '备注',
-        method: 'showGroupTextField'
+        title: '详情',
+        method: 'aboutG'
       }, {
         title: '退出群聊',
         method: 'showGroupQuitField'
-      }, {
-        title: '解散群聊'
-      }, {
-        title: 'Click Me 2'
       },],
     };
   },
@@ -333,6 +299,17 @@ export default {
 
     method1 () {
       console.log(1)
+    },
+
+    aboutG (index) {
+      this.$store.commit("setGroupId", this.groups[index].group_id)
+      this.$store.commit("setGroupName", this.groups[index].group_name)
+      this.$store.commit("setGroupPhoto", this.groups[index].group_photo)
+      this.$store.commit("changeSiderState", 4)
+      this.$store.commit("setAbout", 2)
+      this.$router.push({
+        path: "/home"
+      })
     },
 
     initBtns () {
@@ -498,7 +475,7 @@ export default {
     },
 
     killGroup (j) {
-      delGroup({
+      quitGroup({
         "user_id": this.$store.getters.userId,
         ACCESS_TOKEN: null,
         group_id: this.groups[j].group_id
@@ -508,7 +485,7 @@ export default {
     },
 
     newGroup () {
-      if (this.textG == "") {
+      if (this.textG == "" && this.$store.getters.userId == -1) {
         return;
       }
       addGroup({
@@ -519,59 +496,78 @@ export default {
       }).then(res => {
         console.log(res)
       })
+      getGroups({
+        "user_id": this.$store.getters.userId,
+        "ACCESS_TOKEN": null
+      }).then(res => {
+        // this.$store.commit("channels", res)
+        this.groups = res
+        this.groups.forEach(function (item) {
+          item["show"] = false;
+          item["quit"] = false;
+        });
+        this.groups = JSON.parse(JSON.stringify(this.groups))
+        this.allPageG = Math.ceil(this.groups.length / this.num);
+      });
     }
   },
 
   mounted () {
-    getGroups({
-      "user_id": this.$store.getters.userId,
-      "ACCESS_TOKEN": null
-    }).then(res => {
-      // this.$store.commit("channels", res)
-      this.groups = res
-      this.groups.forEach(function (item) {
-        item["show"] = false;
-        item["quit"] = false;
+    if (this.$store.getters.userId != -1) {
+      console.log(this.$store.getters.userId)
+      getGroups({
+        "user_id": this.$store.getters.userId,
+        "ACCESS_TOKEN": null
+      }).then(res => {
+        // this.$store.commit("channels", res)
+        this.groups = res
+        this.groups.forEach(function (item) {
+          item["show"] = false;
+          item["quit"] = false;
+        });
+        this.groups = JSON.parse(JSON.stringify(this.groups))
+        this.allPageG = Math.ceil(this.groups.length / this.num);
+        // this.groups = [{
+        //   group_id: 1,
+        //   group_name: 'Breakfast & brunch',
+        //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        //   show: false,
+        //   quit: false,
+        // }, {
+        //   group_id: 2,
+        //   group_name: 'List Item',
+        //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        //   show: false,
+        //   quit: false,
+        // },]
       });
-      this.groups = JSON.parse(JSON.stringify(this.groups))
-      this.allPageG = Math.ceil(this.groups.length / this.num);
-      // this.groups = [{
-      //   group_id: 1,
-      //   group_name: 'Breakfast & brunch',
-      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-      //   show: false,
-      //   quit: false,
-      // }, {
-      //   group_id: 2,
-      //   group_name: 'List Item',
-      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-      //   show: false,
-      //   quit: false,
-      // },]
-    });
 
-    getFriends({
-      "user_id": this.$store.getters.userId,
-      "ACCESS_TOKEN": null
-    }).then(res => {
-      // this.$store.commit("channels", res)
-      this.friends = res
-      this.friends.forEach(function (item) {
-        item["show"] = false;
-        item["quit"] = false;
+      getFriends({
+        "user_id": this.$store.getters.userId,
+        "ACCESS_TOKEN": null
+      }).then(res => {
+        // this.$store.commit("channels", res)
+        this.friends = res
+        this.friends.forEach(function (item) {
+          item["show"] = false;
+          item["quit"] = false;
+          if (item.friend_nick && item.friend_nick != "") {
+            item.friend_name = item.friend_nick
+          }
+        });
+        this.friends = JSON.parse(JSON.stringify(this.friends))
+        this.allPageF = Math.ceil(this.friends.length / this.num);
+        // console.log(this.friends)
+        // this.friends = [{
+        //   'friend_id': 1,
+        //   'friend_name': "1",
+        //   'friend_photo': "",
+        //   "quit": false,
+        //   "show": false,
+        // }]
+        // console.log(this.friends)
       });
-      this.friends = JSON.parse(JSON.stringify(this.friends))
-      this.allPageF = Math.ceil(this.friends.length / this.num);
-      // console.log(this.friends)
-      // this.friends = [{
-      //   'friend_id': 1,
-      //   'friend_name': "1",
-      //   'friend_photo': "",
-      //   "quit": false,
-      //   "show": false,
-      // }]
-      // console.log(this.friends)
-    });
+    }
   }
 };
 </script>

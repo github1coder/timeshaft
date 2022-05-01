@@ -12,6 +12,10 @@ export default new Vuex.Store({
         userId: -1,
         email: null,
         accessToken: null,
+        groupId: -1,
+        groupPhoto: null,
+        groupName: null,
+        about: 1,
         currentChannelIdx: 0,
         currentChannelId: -1,
         myIcon: "guest.png",
@@ -26,8 +30,6 @@ export default new Vuex.Store({
         loggedIn: false,
         siderState: 0,
         // socket 相关
-        // url: "http://localhost:8080/websocket",
-        // // url: "http://182.92.163.68:8080/websocket",
         checkInterval: null,//断线重连时 检测连接是否建立成功
         websocket: null,
         stompClient: null,
@@ -38,14 +40,29 @@ export default new Vuex.Store({
     },
     getters: {
         userId: state => state.userId,
+        groupId: state => state.groupId,
+        groupPhoto: state => state.groupPhoto,
+        groupName: state => state.groupName,
+        about: state => state.about,
         stompClient(state) {
-            return function () {
+            return function() {
                 return state.stompClient;
             }
         },
     },
     mutations: {
-
+        setAbout(store, about) {
+            store.about = about
+        },
+        setGroupId(store, groupId) {
+            store.groupId = groupId
+        },
+        setGroupPhoto(store, groupPhoto) {
+            store.groupPhoto = groupPhoto
+        },
+        setGroupName(store, groupName) {
+            store.groupName = groupName
+        },
         setUserId(store, userId) {
             store.userId = userId
         },
@@ -165,16 +182,15 @@ export default new Vuex.Store({
             console.log(state.url)
             console.log("--")
             state.websocket = websock
-            // 获取STOMP子协议的客户端对象
+                // 获取STOMP子协议的客户端对象
             const stompClient = Stomp.over(websock);
             console.log(stompClient)
             console.log("---")
             stompClient.debug = null //关闭控制台打印
             stompClient.heartbeat.outgoing = 20000;
-            stompClient.heartbeat.incoming = 0;//客户端不从服务端接收心跳包
+            stompClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
             // 向服务器发起websocket连接
-            stompClient.connect(
-                {name: state.myNick},  //此处注意更换自己的用户名，最好以参数形式带入
+            stompClient.connect({ name: state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
                 frame => { // eslint-disable-line no-unused-vars
                     console.log('链接成功！')
                     console.log(state.stompClient)
@@ -197,7 +213,7 @@ export default new Vuex.Store({
                         console.log(state.listenerList[listener].url)
                     }
                 },
-                err => {// eslint-disable-line no-unused-vars
+                err => { // eslint-disable-line no-unused-vars
                     setTimeout(() => {
                         console.log("reconnecting...")
                         _this.commit('WEBSOCKET_INIT', state.url)
@@ -211,7 +227,7 @@ export default new Vuex.Store({
             //     + p.data.msg + "," + p.data.time + ","
             //     + p.data.srcId + "," + p.data.dstId
             state.stompClient.send(p.url, {}, JSON.stringify(p.data));
-            console.log("send + " + JSON.stringify(p.data) + " to " +  p.url)
+            console.log("send + " + JSON.stringify(p.data) + " to " + p.url)
         },
         WEBSOCKET_UNSUBSRCIBE(state, p) {
             state.stompClient.unsubscribe(p)

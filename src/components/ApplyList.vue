@@ -87,6 +87,7 @@
             :key="j + num * (pageG - 1)"
             @click="method1"
             v-show="subItem.show"
+            two_line
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -96,7 +97,7 @@
                 v-text="subItem.name"
                 style="text-align: left"
               ></v-list-item-title>
-              <v-list-item-subtitle v-text="subItem.nameG"></v-list-item-subtitle>
+              <v-list-item-subtitle style="text-align: left">申请加入{{subItem.group_name}}</v-list-item-subtitle>
             </v-list-item-content>
             <!-- 后面的省略号 -->
             <v-list-item-action>
@@ -173,7 +174,7 @@ export default {
     }).then(res => {
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
-      console.log(this.friendAns)
+      console.log(this.groupAns)
     })
   },
 
@@ -236,10 +237,10 @@ export default {
 
     acG (index) {
       apply({
-        "user_id": this.$store.getters.userId,
+        "user_id": this.groupAns[index].id,
         "type": "group",
         "action": "accept",
-        "id": this.groupAns[index].id,
+        "id": this.groupAns[index].group_id,
         "ACCESS_TOKEN": null,
       }
       ).then(res => {

@@ -45,6 +45,7 @@
                       depressed
                       rounded
                       text
+                      @click="editAccount"
                     >
                       Edit Account
                     </v-btn>
@@ -461,6 +462,10 @@ export default {
   },
 
   methods: {
+    editAccount () {
+      this.$store.commit("setAbout", 1)
+      this.$store.commit("changeSiderState", 4)
+    },
     clickIcon () {
       console.log(this.item);
     },
@@ -497,7 +502,7 @@ export default {
       })
     },
 
-    getDate() {
+    getDate () {
       const date = new Date();//当前时间
       const year = date.getFullYear(); //返回指定日期的年份
       const month = this.repair(date.getMonth() + 1);//月
@@ -505,11 +510,11 @@ export default {
       const hour = this.repair(date.getHours());//时
       const minute = this.repair(date.getMinutes());//分
       const second = this.repair(date.getSeconds());//秒
-        //当前时间
+      //当前时间
       return year + "-" + month + "-" + day
-            + " " + hour + ":" + minute + ":" + second
+        + " " + hour + ":" + minute + ":" + second
     },
-    repair(i) {
+    repair (i) {
       if (i >= 0 && i <= 9) {
         return "0" + i;
       } else {
@@ -535,7 +540,7 @@ export default {
   },
 
   computed: {
-    chatUrl() {
+    chatUrl () {
       return "/app/personalMessage"
     }
   },
