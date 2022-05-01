@@ -62,8 +62,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/changeNickname")
-    public ResponseService changeNickname(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
-        friendOp.changeNickname(user_id, Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
+    public ResponseService changeNickname(@RequestBody Map<String, String> map) {
+        friendOp.changeNickname(Integer.parseInt(map.get("user_id")), Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
         return new ResponseService();
     }
 
