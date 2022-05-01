@@ -56,6 +56,7 @@
             :loading="loading"
             :disabled="loading"
           >登录</v-btn>
+
           <v-btn
             class="join-btn"
             large
@@ -63,6 +64,15 @@
             to="/register"
           >注册</v-btn>
         </v-card-actions>
+
+      </v-card-text>
+      <v-card-text
+        style="margin: auto"
+        v-show="show"
+      >
+        <span>
+          {{error}}
+        </span>
       </v-card-text>
     </v-card>
   </v-overlay>
@@ -70,7 +80,9 @@
 
 <script>
 import { login } from '../api/user/index'
+
 import {getMessagesList, getSubscribeUrlList} from "@/api/message";
+
 export default {
   data () {
     return {
@@ -79,6 +91,8 @@ export default {
       email: "",
       password: "",
       loading: false,
+      show: false,
+      error: "",
       type: "password",
       rules: {
         email: [
@@ -129,16 +143,23 @@ export default {
           'password': this.password
         }
         login(param).then(res => {
-          this.$store.commit("setUserId", res.id)
-          // console.log(this.$store.getters.userId)
-          this.$store.commit("setMyIcon", res.photo)
-          this.$store.commit("setMyNick", res.username)
-          this.$store.commit("setEmail", res.email)
-          this.$store.commit("setLogin", true)
-          this.$router.push({
-            path: '/home',
-          })
-          console.log(this.$store.state.userId)
+          if (res.id) {
+            this.$store.commit("setUserId", res.id)
+            console.log(res)
+            this.$store.commit("setMyIcon", res.photo)
+            this.$store.commit("setMyNick", res.username)
+            this.$store.commit("setEmail", res.email)
+            this.$store.commit("setLogin", true)
+            this.$router.push({
+              path: '/home',
+            })
+          }
+          else {
+            this.error = res
+            this.show = true
+            this.loading = false
+          }
+
           getMessagesList({
             srcId: this.$store.state.userId,
           }).then(res => {

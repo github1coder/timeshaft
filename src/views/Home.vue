@@ -1,105 +1,106 @@
 <template>
-  <v-main>
-    <div class="dc-container">
-      <nav class="guilds">
-        <v-card
-          dark
-          flat
-          tile
-          width="100%"
-          height="100%"
-        >
-          <v-container
-              fluid
-          >
-            <v-row justify="center">
-              <v-menu
-                  bottom
-                  min-width="200px"
-                  rounded
-                  offset-y
-              >
-                <template  v-slot:activator="{ on }">
-                  <v-btn
-                      icon
-                      x-large
-                      v-on="on"
+  <div class="dc-container">
+    <nav class="guilds">
+      <v-card
+        dark
+        flat
+        tile
+        width="100%"
+        height="100%"
+      >
+        <v-container fluid>
+          <v-row justify="center">
+            <v-menu
+              bottom
+              min-width="200px"
+              rounded
+              offset-y
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  icon
+                  x-large
+                  v-on="on"
+                >
+                  <v-avatar
+                    color="brown"
+                    size="48"
                   >
-                    <v-avatar
-                        color="brown"
-                        size="48"
-                    >
+                    <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
+                  </v-avatar>
+                </v-btn>
+              </template>
+              <v-card dark>
+                <v-list-item-content class="justify-center">
+                  <div class="mx-auto text-center">
+                    <v-avatar color="brown">
                       <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
                     </v-avatar>
-                  </v-btn>
-                </template>
-                <v-card dark>
-                  <v-list-item-content class="justify-center">
-                    <div class="mx-auto text-center">
-                      <v-avatar
-                          color="brown"
-                      >
-                        <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
-                      </v-avatar>
-                      <h3>{{ $store.state.userId }}</h3>
-                      <p class="text-caption mt-1">
-                        {{ $store.state.email }}
-                      </p>
-                      <v-divider class="my-3"></v-divider>
-                      <v-btn
-                          depressed
-                          rounded
-                          text
-                      >
-                        Edit Account
-                      </v-btn>
-                      <v-divider class="my-3"></v-divider>
-                      <v-btn
-                          depressed
-                          rounded
-                          text
-                      >
-                        Disconnect
-                      </v-btn>
-                    </div>
-                  </v-list-item-content>
-                </v-card>
-              </v-menu>
-            </v-row>
-          </v-container>
-          <v-list>
-            <v-list-item-group
-              v-model="model"
-              mandatory
-              color="indigo"
-            >
-              <v-list-item
-                v-for="(item, i) in navs"
-                :key="i"
-                @click="$store.commit('changeSiderState', i)"
-              >
-                <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                    <h3>{{ $store.state.userId }}</h3>
+                    <p class="text-caption mt-1">
+                      {{ $store.state.email }}
+                    </p>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      depressed
+                      rounded
+                      text
+                    >
+                      Edit Account
+                    </v-btn>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      depressed
+                      rounded
+                      text
+                      @click="disconnect"
+                    >
+                      Disconnect
+                    </v-btn>
+                  </div>
                 </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card>
-      </nav>
+              </v-card>
+            </v-menu>
+          </v-row>
+        </v-container>
+        <v-list>
+          <v-list-item-group
+            v-model="model"
+            mandatory
+            color="indigo"
+          >
+            <v-list-item
+              v-for="(item, i) in navs"
+              :key="i"
+              @click="$store.commit('changeSiderState', i)"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
 
-      <div class="base">
-        <div class="base-content">
-          <!-- here side -->
-          <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
-          <Addresslist v-else-if="$store.state.siderState === 1"></Addresslist>
-          <div class="chat">
-            <v-card
-              class="chat-header"
-              tile
+              <v-list-item-content>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+    </nav>
+
+    <div class="base">
+      <div class="base-content">
+        <!-- here side -->
+        <ChatSider v-if="$store.state.siderState === 0"></ChatSider>
+        <Addresslist v-else-if="$store.state.siderState === 1"></Addresslist>
+        <About v-else-if="$store.state.siderState === 4"></About>
+        <div class="chat">
+          <v-card
+            class="chat-header"
+            tile
+          >
+            <div
+              class="ch"
+              v-if="$store.state.listenerList.size > 0"
             >
               <div
                 class="ch"
@@ -132,251 +133,267 @@
                       </v-btn>
                     </div>
                   </div>
-                  <div class="hidden-md-and-up">
-                    <div class="tool-icon mr-n4">
-                      <v-btn icon>
-                        <v-icon
-                          color="white"
-                          @click="drawer = !drawer"
-                        >mdi-account-group</v-icon>
-                      </v-btn>
-                    </div>
+                  <div class="tool-icon">
+                    <v-btn icon>
+                      <v-icon color="white">mdi-cloud</v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="tool-icon">
+                    <v-btn icon>
+                      <v-icon color="white">mdi-account-supervisor-circle</v-icon>
+                    </v-btn>
                   </div>
                 </div>
-
-              </div>
-            </v-card>
-
-            <div class="chat-screen">
-              <div class="chat-content">
-                <div class="messages">
-                  <div :class="draw ? 'message-container-open' : 'message-container-close'">
-                    <Chat></Chat>
-                  </div>
-                </div>
-                <div class="chat-form">
-                  <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
-                    <v-text-field
-                      class="mx-5 my-3 chat-form-tf"
-                      label="这边输入消息捏~"
-                      solo
-                      flat
-                      clearable
-                      v-model="msginform"
-                      autocomplete="off"
-                      @keyup.enter="sendChat(chatUrl, msginform)"
-                      @keypress="setCanMessageSubmit"
-                    >
-                    </v-text-field>
-                  </div>
-                </div>
-                <div class="chat-tool-open" v-if="draw">
-                  <v-card dark class="overflow-y-auto">
-                    <v-timeline  >
-                      <v-timeline-item
-                          color="purple lighten-2"
-                          fill-dot
-                          right
-                      >
-                        <v-card>
-                          <v-card-title class="purple lighten-2">
-                            <v-icon
-                                dark
-                                size="42"
-                                class="mr-4"
-                            >
-                              mdi-magnify
-                            </v-icon>
-                            <h2 class="text-h4 white--text font-weight-light">
-                              Title 1
-                            </h2>
-                          </v-card-title>
-                          <v-container>
-                            <v-row>
-                              <v-col
-                                  cols="12"
-                                  md="10"
-                              >
-                                Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                              </v-col>
-                              <v-col
-                                  class="hidden-sm-and-down text-right"
-                                  md="2"
-                              >
-                                <v-icon size="64">
-                                  mdi-calendar-text
-                                </v-icon>
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-timeline-item>
-
-                      <v-timeline-item
-                          color="amber lighten-1"
-                          fill-dot
-                          left
-                          small
-                      >
-                        <v-card>
-                          <v-card-title class="amber lighten-1 justify-end">
-                            <h2 class="text-h4 mr-4 white--text font-weight-light">
-                              Title 2
-                            </h2>
-                            <v-icon
-                                dark
-                                size="42"
-                            >
-                              mdi-home-outline
-                            </v-icon>
-                          </v-card-title>
-                          <v-container>
-                            <v-row>
-                              <v-col
-                                  cols="12"
-                                  md="8"
-                              >
-                                Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                              </v-col>
-                              <v-col
-                                  cols="12"
-                                  md="4"
-                              >
-                                Lorem ipsum dolor sit amet, no nam oblique veritus.
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-timeline-item>
-
-                      <v-timeline-item
-                          color="cyan lighten-1"
-                          fill-dot
-                          right
-                      >
-                        <v-card>
-                          <v-card-title class="cyan lighten-1">
-                            <v-icon
-                                class="mr-4"
-                                dark
-                                size="42"
-                            >
-                              mdi-email-outline
-                            </v-icon>
-                            <h2 class="text-h4 white--text font-weight-light">
-                              Title 3
-                            </h2>
-                          </v-card-title>
-                          <v-container>
-                            <v-row>
-                              <v-col
-                                  v-for="n in 3"
-                                  :key="n"
-                                  cols="12"
-                                  md="4"
-                              >
-                                Lorem ipsum dolor sit amet, no nam oblique veritus no nam oblique.
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-timeline-item>
-
-                      <v-timeline-item
-                          color="red lighten-1"
-                          fill-dot
-                          left
-                          small
-                      >
-                        <v-card>
-                          <v-card-title class="red lighten-1 justify-end">
-                            <h2 class="text-h4 mr-4 white--text font-weight-light">
-                              Title 4
-                            </h2>
-                            <v-icon
-                                dark
-                                size="42"
-                            >
-                              mdi-account-multiple-outline
-                            </v-icon>
-                          </v-card-title>
-                          <v-container>
-                            <v-row>
-                              <v-col
-                                  class="hidden-sm-and-down"
-                                  md="2"
-                              >
-                                <v-icon size="64">
-                                  mdi-server-network
-                                </v-icon>
-                              </v-col>
-                              <v-col
-                                  cols="12"
-                                  md="10"
-                              >
-                                Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus.
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-timeline-item>
-
-                      <v-timeline-item
-                          color="green lighten-1"
-                          fill-dot
-                          right
-                      >
-                        <v-card>
-                          <v-card-title class="green lighten-1">
-                            <v-icon
-                                class="mr-4"
-                                dark
-                                size="42"
-                            >
-                              mdi-phone-in-talk
-                            </v-icon>
-                            <h2 class="text-h4 white--text font-weight-light">
-                              Title 5
-                            </h2>
-                          </v-card-title>
-                          <v-container>
-                            <v-row>
-                              <v-col>
-                                Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-timeline-item>
-                    </v-timeline>
-                  </v-card>
-                </div>
-              </div>
-              <div class="members hidden-sm-and-down">
-                <v-card dark>
-                  <v-list
-                    dark
-                    v-for="(item, i) in tools"
-                    :key="i"
-                  >
-                    <v-list-item-icon>
+                <div class="hidden-md-and-up">
+                  <div class="tool-icon mr-n4">
+                    <v-btn icon>
                       <v-icon
-                        v-text="item.icon"
-                        @click="draw = !draw"
-                      ></v-icon>
-                    </v-list-item-icon>
-                  </v-list>
-                </v-card>
-                <!--                  <v-icon class="pr-16" style="float: left;flex-direction:column" v-text="'mdi-wifi'" @click="draw = !draw"></v-icon>-->
-                <!--                  <v-icon style="float: left;flex-direction:column" v-text="'mdi-bluetooth'" @click="draw = !draw"></v-icon>-->
-
+                        color="white"
+                        @click="drawer = !drawer"
+                      >mdi-account-group</v-icon>
+                    </v-btn>
+                  </div>
+                </div>
               </div>
+
+            </div>
+          </v-card>
+
+          <div class="chat-screen">
+            <div class="chat-content">
+              <div class="messages">
+                <div :class="draw ? 'message-container-open' : 'message-container-close'">
+                  <Chat></Chat>
+                </div>
+              </div>
+              <div class="chat-form">
+                <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
+                  <v-text-field
+                    class="mx-5 my-3 chat-form-tf"
+                    label="这边输入消息捏~"
+                    solo
+                    flat
+                    clearable
+                    v-model="msginform"
+                    autocomplete="off"
+                    @keyup.enter="sendChat(chatUrl, msginform)"
+                    @keypress="setCanMessageSubmit"
+                  >
+                  </v-text-field>
+                </div>
+              </div>
+              <div
+                class="chat-tool-open"
+                v-if="draw"
+              >
+                <v-card
+                  dark
+                  class="overflow-y-auto"
+                >
+                  <v-timeline>
+                    <v-timeline-item
+                      color="purple lighten-2"
+                      fill-dot
+                      right
+                    >
+                      <v-card>
+                        <v-card-title class="purple lighten-2">
+                          <v-icon
+                            dark
+                            size="42"
+                            class="mr-4"
+                          >
+                            mdi-magnify
+                          </v-icon>
+                          <h2 class="text-h4 white--text font-weight-light">
+                            Title 1
+                          </h2>
+                        </v-card-title>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              cols="12"
+                              md="10"
+                            >
+                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
+                            </v-col>
+                            <v-col
+                              class="hidden-sm-and-down text-right"
+                              md="2"
+                            >
+                              <v-icon size="64">
+                                mdi-calendar-text
+                              </v-icon>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-timeline-item>
+
+                    <v-timeline-item
+                      color="amber lighten-1"
+                      fill-dot
+                      left
+                      small
+                    >
+                      <v-card>
+                        <v-card-title class="amber lighten-1 justify-end">
+                          <h2 class="text-h4 mr-4 white--text font-weight-light">
+                            Title 2
+                          </h2>
+                          <v-icon
+                            dark
+                            size="42"
+                          >
+                            mdi-home-outline
+                          </v-icon>
+                        </v-card-title>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              cols="12"
+                              md="8"
+                            >
+                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
+                            </v-col>
+                            <v-col
+                              cols="12"
+                              md="4"
+                            >
+                              Lorem ipsum dolor sit amet, no nam oblique veritus.
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-timeline-item>
+
+                    <v-timeline-item
+                      color="cyan lighten-1"
+                      fill-dot
+                      right
+                    >
+                      <v-card>
+                        <v-card-title class="cyan lighten-1">
+                          <v-icon
+                            class="mr-4"
+                            dark
+                            size="42"
+                          >
+                            mdi-email-outline
+                          </v-icon>
+                          <h2 class="text-h4 white--text font-weight-light">
+                            Title 3
+                          </h2>
+                        </v-card-title>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              v-for="n in 3"
+                              :key="n"
+                              cols="12"
+                              md="4"
+                            >
+                              Lorem ipsum dolor sit amet, no nam oblique veritus no nam oblique.
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-timeline-item>
+
+                    <v-timeline-item
+                      color="red lighten-1"
+                      fill-dot
+                      left
+                      small
+                    >
+                      <v-card>
+                        <v-card-title class="red lighten-1 justify-end">
+                          <h2 class="text-h4 mr-4 white--text font-weight-light">
+                            Title 4
+                          </h2>
+                          <v-icon
+                            dark
+                            size="42"
+                          >
+                            mdi-account-multiple-outline
+                          </v-icon>
+                        </v-card-title>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              class="hidden-sm-and-down"
+                              md="2"
+                            >
+                              <v-icon size="64">
+                                mdi-server-network
+                              </v-icon>
+                            </v-col>
+                            <v-col
+                              cols="12"
+                              md="10"
+                            >
+                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus.
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-timeline-item>
+
+                    <v-timeline-item
+                      color="green lighten-1"
+                      fill-dot
+                      right
+                    >
+                      <v-card>
+                        <v-card-title class="green lighten-1">
+                          <v-icon
+                            class="mr-4"
+                            dark
+                            size="42"
+                          >
+                            mdi-phone-in-talk
+                          </v-icon>
+                          <h2 class="text-h4 white--text font-weight-light">
+                            Title 5
+                          </h2>
+                        </v-card-title>
+                        <v-container>
+                          <v-row>
+                            <v-col>
+                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-timeline-item>
+                  </v-timeline>
+                </v-card>
+              </div>
+            </div>
+            <div class="members hidden-sm-and-down">
+              <v-card dark>
+                <v-list
+                  dark
+                  v-for="(item, i) in tools"
+                  :key="i"
+                >
+                  <v-list-item-icon>
+                    <v-icon
+                      v-text="item.icon"
+                      @click="draw = !draw"
+                    ></v-icon>
+                  </v-list-item-icon>
+                </v-list>
+              </v-card>
+              <!--                  <v-icon class="pr-16" style="float: left;flex-direction:column" v-text="'mdi-wifi'" @click="draw = !draw"></v-icon>-->
+              <!--                  <v-icon style="float: left;flex-direction:column" v-text="'mdi-bluetooth'" @click="draw = !draw"></v-icon>-->
+
             </div>
           </div>
         </div>
       </div>
     </div>
-  </v-main>
+  </div>
 </template>
 
 <script>
@@ -390,11 +407,14 @@ import Chat from "@/components/Chat.vue";
 // import ListSider from "@/components/ListSider";
 import ChatSider from "@/components/ChatSider";
 import Addresslist from "@/components/Addresslist";
+import About from "@/components/About";
+import { logout } from '../api/user';
 
 export default {
   name: "Home",
   components: {
     Addresslist,
+    About,
     Chat,
     ChatSider,
     // Sidebar,
@@ -432,6 +452,9 @@ export default {
       }, {
         icon: 'mdi-calendar-check',
         text: '',
+      }, {
+        icon: 'mdi-account-cog',
+        text: '',
       },],
       model: 0
     };
@@ -441,7 +464,7 @@ export default {
     clickIcon () {
       console.log(this.item);
     },
-    clearMsg() {
+    clearMsg () {
       this.msginform = ""
     }
     ,
@@ -454,7 +477,7 @@ export default {
     setCanMessageSubmit () {
       this.canMessageSubmit = true;
     },
-    sendChat(url, message) {
+    sendChat (url, message) {
       let name = this.$store.state.myNick
       let avatar = this.$store.state.myIcon
       const msgForm = {
@@ -473,6 +496,7 @@ export default {
         data: msgForm,
       })
     },
+
     getDate() {
       const date = new Date();//当前时间
       const year = date.getFullYear(); //返回指定日期的年份
@@ -485,12 +509,28 @@ export default {
       return year + "-" + month + "-" + day
             + " " + hour + ":" + minute + ":" + second
     },
-    repair(i){
+    repair(i) {
       if (i >= 0 && i <= 9) {
         return "0" + i;
       } else {
         return i;
       }
+    },
+
+    disconnect () {
+      logout({
+        "user_id": this.$store.state.userId,
+      }).then(res => {
+        console.log(res)
+        this.$store.commit("setMyIcon", "guest.png")
+        this.$store.commit("setMyNick", "N")
+        this.$store.commit("setEmail", null)
+        this.$store.commit("setLogin", false)
+        this.$router.push({
+          path: '/',
+        })
+      })
+
     }
   },
 

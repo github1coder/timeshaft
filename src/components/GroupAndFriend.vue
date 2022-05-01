@@ -1,5 +1,8 @@
 <template>
-  <div class="sb-container">
+  <div
+    class="sb-container"
+    style="overflow: auto; overflow-x: hidden; height: 0px"
+  >
     <v-card
       height="100%"
       dark
@@ -7,19 +10,32 @@
       tile
       class="server-info"
     >
-      <v-text-field
-        clearable
-        outlined
+      <v-row
         dense
-        dark
-        hide-details
-        label="请输入关键词"
-        v-model="text"
-        class="input-search mt-3"
-        autocomplete="off"
-        v-on="on"
-        ref="search"
-      ></v-text-field>
+        style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
+      >
+        <v-text-field
+          clearable
+          outlined
+          dense
+          dark
+          hide-details
+          label="团队名字"
+          v-model="textG"
+          class="input-search mt-3"
+          autocomplete="off"
+          style="width: 70%; margin: auto;"
+        ></v-text-field>
+        <v-btn
+          style="width: 15%; height: 64%; margin: 12px 0px auto;"
+          @click="newGroup"
+        >
+          <!-- <v-icon style="width: 100%; height: 100%;">
+            mdi-magnify
+          </v-icon> -->
+          创建
+        </v-btn>
+      </v-row>
       <v-list>
         <v-list-group
           :prepend-icon="channelLabels[0].action"
@@ -147,7 +163,7 @@
           </template>
           <v-list-item
             v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
-            :key="j"
+            :key="j + num * (pageF - 1)"
             @click="method1"
           >
             <v-list-item-avatar>
@@ -250,32 +266,23 @@
 
 <script>
 import '../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup } from '../api/addresslist/index';
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, delGroup, addGroup } from '../api/addresslist/index';
 export default {
   components: {},
 
   data () {
     return {
       name: "",
+      textG: "",
       groupsIndex: null,
       friendsIndex: null,
       groupUnfolder: true,
       friendUnfolder: true,
-      num: 4,
+      num: 10,
       pageF: 1,
       allPageF: 1,
       pageG: 1,
-      allPageG: 2,
-      itemss: [{
-        text: "Announcements",
-        icon: "mdi-bell-alert"
-      }, {
-        text: "Rules",
-        icon: "mdi-file-check"
-      }, {
-        text: "Welcome",
-        icon: "mdi-emoticon"
-      }],
+      allPageG: 1,
       channelLabels: [
         {
           action: '~',
@@ -286,33 +293,8 @@ export default {
           title: '我的好友',
         },
       ],
-      groups: [{
-        group_id: 1,
-        group_name: 'Breakfast & brunch',
-        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      }, {
-        group_id: 2,
-        group_name: 'List Item',
-        group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      },],
-
-      friends: [{
-        friend_id: 1,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      }, {
-        friend_id: 2,
-        friend_name: 'Breakfast & brunch',
-        friend_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-        quit: false,
-      },],
+      groups: [],
+      friends: [],
       member: 0,
       //备注、删除好友、解散群聊，绑定方法
       //问题，如何添加管理员
@@ -342,7 +324,6 @@ export default {
   },
 
   updated () {
-    this.$store.commit("changeChannel", this.item);
   },
 
   methods: {
@@ -401,11 +382,11 @@ export default {
           this.friends[this.friendsIndex].show = false;
         }
         this.friends[j].quit = !this.friends[j].quit;
-        this.friends[j].show = !this.friends[j].quit;
+        this.friends[j].show = false;
       }
       else {
         this.friends[j].quit = !this.friends[j].quit;
-        this.friends[j].show = !this.friends[j].quit;
+        this.friends[j].show = false;
       }
       this.friendsIndex = j;
       this.name = "";
@@ -479,9 +460,10 @@ export default {
     },
 
     changeFriendName (j) {
-      if (this.name != "") {
+      if (this.name && this.name != "") {
         this.friends[j].friend_name = this.name;
         changeNickname({
+          "user_id": this.$store.getters.userId,
           "ACCESS_TOKEN": null,
           "friend_id": this.friends[j].friend_id,
           "friend_nickname": this.name
@@ -492,10 +474,11 @@ export default {
     },
 
     changeGroupName (j) {
-      if (this.name != "") {
+      if (this.name && this.name != "") {
         this.groups[j].group_name = this.name;
         changeGroupNickname({
-          "ACCESS_TOKEN": this.$store.accessToken,
+          "user_id": this.$store.getters.userId,
+          "ACCESS_TOKEN": null,
           "group_id": this.groups[j].group_id,
           "group_nickname": this.name
         });
@@ -506,7 +489,8 @@ export default {
 
     killFriend (j) {
       delFriend({
-        ACCESS_TOKEN: this.$store.accessToken,
+        "user_id": this.$store.getters.userId,
+        ACCESS_TOKEN: null,
         friend_id: this.friends[j].friend_id
       });
       this.friends.splice(j, 1);
@@ -515,33 +499,78 @@ export default {
 
     killGroup (j) {
       delGroup({
-        ACCESS_TOKEN: this.$store.accessToken,
+        "user_id": this.$store.getters.userId,
+        ACCESS_TOKEN: null,
         group_id: this.groups[j].group_id
       });
       this.groups.splice(j, 1);
       this.groupsIndex = null;
     },
+
+    newGroup () {
+      if (this.textG == "") {
+        return;
+      }
+      addGroup({
+        "master_id": this.$store.getters.userId,
+        "name": this.textG,
+        "notice": "",
+        "photo": "",
+      }).then(res => {
+        console.log(res)
+      })
+    }
   },
 
   mounted () {
     getGroups({
-      "ACCESS_TOKEN": this.$store.accessToken
+      "user_id": this.$store.getters.userId,
+      "ACCESS_TOKEN": null
     }).then(res => {
-      this.$store.commit("channels", res.groupsList)
-      this.groups = res.groupsList.array.forEach(element => {
-        element['show'] = false
-        element['quit'] = false
+      // this.$store.commit("channels", res)
+      this.groups = res
+      this.groups.forEach(function (item) {
+        item["show"] = false;
+        item["quit"] = false;
       });
+      this.groups = JSON.parse(JSON.stringify(this.groups))
+      this.allPageG = Math.ceil(this.groups.length / this.num);
+      // this.groups = [{
+      //   group_id: 1,
+      //   group_name: 'Breakfast & brunch',
+      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+      //   show: false,
+      //   quit: false,
+      // }, {
+      //   group_id: 2,
+      //   group_name: 'List Item',
+      //   group_photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+      //   show: false,
+      //   quit: false,
+      // },]
     });
 
     getFriends({
-      "ACCESS_TOKEN": this.$store.accessToken
+      "user_id": this.$store.getters.userId,
+      "ACCESS_TOKEN": null
     }).then(res => {
-      this.$store.commit("channels", res.friendsList)
-      this.friends = res.friends.array.forEach(element => {
-        element['show'] = false
-        element['quit'] = false
+      // this.$store.commit("channels", res)
+      this.friends = res
+      this.friends.forEach(function (item) {
+        item["show"] = false;
+        item["quit"] = false;
       });
+      this.friends = JSON.parse(JSON.stringify(this.friends))
+      this.allPageF = Math.ceil(this.friends.length / this.num);
+      // console.log(this.friends)
+      // this.friends = [{
+      //   'friend_id': 1,
+      //   'friend_name': "1",
+      //   'friend_photo': "",
+      //   "quit": false,
+      //   "show": false,
+      // }]
+      // console.log(this.friends)
     });
   }
 };

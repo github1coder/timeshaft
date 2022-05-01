@@ -7,7 +7,10 @@
       tile
       class="server-info"
     >
-      <v-card height="50%">
+      <v-card
+        height="50%"
+        style="overflow: auto; overflow-x: hidden; height: 460px;"
+      >
         <v-row
           dense
           style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
@@ -18,13 +21,16 @@
             dense
             dark
             hide-details
-            label="好友昵称查找"
-            v-model="text"
+            label="好友昵称/邮箱"
+            v-model="textF"
             class="input-search mt-3"
             autocomplete="off"
             style="width: 70%; margin: auto;"
           ></v-text-field>
-          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+          <v-btn
+            style="width: 15%; height: 64%; margin: 12px 0px auto;"
+            @click="searchFriend"
+          >
             <v-icon style="width: 100%; height: 100%;">
               mdi-magnify
             </v-icon>
@@ -34,7 +40,7 @@
           <v-list-item
             v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
             :key="j + num * (pageF - 1)"
-            @click="searchFriend"
+            @click="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -50,6 +56,7 @@
               <v-btn
                 small
                 @click="newApplyF(j + num * (pageG - 1))"
+                :disabled="subItem.show"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -88,13 +95,16 @@
             dense
             dark
             hide-details
-            label="团队名字查找"
-            v-model="text"
+            label="团队名字"
+            v-model="textG"
             class="input-search mt-3"
             autocomplete="off"
             style="width: 70%; margin: auto;"
           ></v-text-field>
-          <v-btn style="width: 15%; height: 65%; margin: 12px 0px auto;">
+          <v-btn
+            style="width: 15%; height: 64%; margin: 12px 0px auto;"
+            @click="searchGroup"
+          >
             <v-icon style="width: 100%; height: 100%;">
               mdi-magnify
             </v-icon>
@@ -104,7 +114,7 @@
           <v-list-item
             v-for="(subItem, j) in groupAns.slice(num * (pageG - 1), num * pageG)"
             :key="j + num * (pageG - 1)"
-            @click="searchGroup"
+            @click="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -120,6 +130,7 @@
               <v-btn
                 small
                 @click="newApplyG(j + num * (pageG - 1))"
+                :disabled="subItem.show"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -157,17 +168,12 @@ export default {
     return {
       num: 5,
       pageF: 1,
-      allPageF: 1,
+      allPageF: 0,
       pageG: 1,
-      allPageG: 1,
+      allPageG: 0,
       textF: "",
       textG: "",
-      friendAns: [{
-        id: 1,
-        name: 'Breakfast & brunch',
-        photo: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        show: false,
-      },],
+      friendAns: [],
       groupAns: [],
     };
   },
@@ -206,32 +212,46 @@ export default {
     },
 
     searchFriend () {
+      if (this.textF == null || this.textF == "") {
+        return;
+      }
       search(
         {
+          "user_id": this.$store.getters.userId,
           "name": this.textF,
           "type": "friend",
           "ACCESS_TOKEN": null,
         }
       ).then(res => {
-        this.friendAns = res.ans
-        this.allPageF = res.ans.length / 5
+        this.friendAns = res
+        this.friendAns.forEach(function (item) {
+          item["show"] = false;
+        });
+        this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
+        this.allPageF = Math.ceil(this.friendAns.length / this.num)
       })
     },
     searchGroup () {
       search(
         {
-          "name": this.textF,
+          "user_id": this.$store.getters.userId,
+          "name": this.textG,
           "type": "group",
           "ACCESS_TOKEN": null,
         }
       ).then(res => {
-        this.groupAns = res.ans
-        this.allPageF = res.ans.length / 5
+        this.groupAns = res
+        this.groupAns.forEach(function (item) {
+          item["show"] = false;
+        });
+        this.groupAns = JSON.parse(JSON.stringify(this.groupAns))
+        this.allPageG = Math.ceil(this.groupAns.length / this.num)
       })
     },
 
     newApplyF (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
@@ -239,11 +259,12 @@ export default {
       }
       ).then(res => {
         console.log(res)
-
+        this.friendAns[index].show = true
       })
     },
     newApplyG (index) {
       apply({
+        "user_id": this.$store.getters.userId,
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
@@ -251,7 +272,7 @@ export default {
       }
       ).then(res => {
         console.log(res)
-
+        this.groupAns[index].show = true
       })
     },
   },

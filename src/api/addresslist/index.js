@@ -22,7 +22,7 @@ export function addFriend(param) {
 
 export function delFriend(param) {
     return request({
-        url: '/addresslist/addFriend',
+        url: '/addresslist/delFriend',
         method: 'get',
         params: param
     })
@@ -44,7 +44,7 @@ export function getGroups(param) {
     })
 }
 
-export function addGroups(param) {
+export function addGroup(param) {
     return request({
         url: '/addresslist/addGroup',
         method: 'post',
@@ -113,7 +113,7 @@ export function changeGroupNickname(param) {
 //添加好友
 export function search(param) {
     return request({
-        url: '/addresslist/search',
+        url: '/addresslist/searchByNick',
         method: 'get',
         params: param
     })
