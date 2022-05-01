@@ -170,6 +170,13 @@ export default {
         'email': this.email
       }
       if (this.valid) {
+        //
+        // {  'id':[1: {
+        // }
+        //
+        //    }
+        //
+        //
         this.loading = true;
         register(param).then(response => {
           console.log(response)
