@@ -76,4 +76,16 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     public boolean deleteById(Integer id) {
         return this.personalMessageMapper.deleteById(id) > 0;
     }
+
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param personalMessage 包含查询信息的实体
+     * @return 查询结果列表
+     */
+    @Override
+    public List<PersonalMessage> queryAll(PersonalMessage personalMessage) {
+        return this.personalMessageMapper.queryAll(personalMessage);
+    }
 }

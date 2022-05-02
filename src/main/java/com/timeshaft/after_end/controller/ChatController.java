@@ -1,12 +1,19 @@
 package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.MessageStateType;
+import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
+import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
+import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
+import com.timeshaft.after_end.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +33,10 @@ import java.util.Map;
 public class ChatController {
     @Autowired
     private FriendOp friendOp;
+    @Autowired
+    private PersonalMessageServiceImpl personalMessageService;
+    @Autowired
+    private MessageStateServiceImpl messageStateService;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -42,8 +53,26 @@ public class ChatController {
             map.put("chatName", chatName);
             map.put("url", url);
             map.put("chatAvatar", chatAvatar);
-            //拉取双方加起来最近20条聊天记录
+
+            //拉取所有未读消息
             List<HashMap<String, Object>> data = new ArrayList<>();
+            PersonalMessage messageQuery = new PersonalMessage();
+            MessageStateType state = MessageStateType.UNREAD;
+            messageQuery.setState(messageStateService.EnumToString(state));
+            messageQuery.setSenderId(friendId);
+            messageQuery.setFriendsId(sourceId);
+            List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+            for (PersonalMessage message : notReadMessages) {
+                HashMap<String, Object> dataMap = new HashMap<>();
+                dataMap.put("msgFromName", chatName);
+                dataMap.put("msgFromAvatar", chatAvatar);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                dataMap.put("msg", message.getMessage());
+                dataMap.put("time", sdf.format(message.getSendtime()));
+                dataMap.put("srcId", message.getSenderId());
+                dataMap.put("dstId", message.getFriendsId());
+                data.add(dataMap);
+            }
             map.put("data", data);
             res.add(map);
         }

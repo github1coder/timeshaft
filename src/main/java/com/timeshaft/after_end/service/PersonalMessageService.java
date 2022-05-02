@@ -54,4 +54,12 @@ public interface PersonalMessageService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     * 查询符合条件的私信
+     *
+     * @param personalMessage 包含查询信息的实体
+     * @return 查询结果列表
+     */
+    List<PersonalMessage> queryAll(PersonalMessage personalMessage);
+
 }
