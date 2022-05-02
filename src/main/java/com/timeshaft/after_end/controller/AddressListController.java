@@ -106,7 +106,7 @@ public class AddressListController {
 
     @RequestMapping(value = "/quitGroup")
     public ResponseService quitGroup(@RequestBody Map<String, String> map) {
-        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("quit_user_id")));
+        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("user_id")));
         return new ResponseService();
     }
 

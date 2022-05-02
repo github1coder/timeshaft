@@ -54,18 +54,17 @@ public class GroupOp {
         return groups;
     }
 
-    public boolean joinGroup(int group_id, int join_user_id) {
+    public void joinGroup(int group_id, int join_user_id) {
         GroupUser groupUser = new GroupUser(group_id, join_user_id, null, "member", "accept");
-        return groupUserService.insert(groupUser) != null;
+        groupUserService.insert(groupUser);
     }
 
-    public boolean quitGroup(int group_id, int quit_user_id) {
+    public void quitGroup(int group_id, int quit_user_id) {
         GroupUser groupUser = new GroupUser(group_id, quit_user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
-            groupUserService.deleteById(tmp.getGroupId());
+            groupUserService.deleteById(tmp.getId());
         }
-        return true;
     }
 
     public void addManager(int group_id, int user_id) {
