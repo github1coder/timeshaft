@@ -68,33 +68,30 @@ public class GroupOp {
         return true;
     }
 
-    public boolean addManager(int group_id, int user_id) {
+    public void addManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             tmp.setIdentity("manager");
             groupUserService.update(tmp);
         }
-        return true;
     }
 
-    public boolean delManager(int group_id, int user_id) {
+    public void delManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, "manager", null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity("member");
             groupUserService.update(tmp);
         }
-        return true;
     }
 
-    public boolean changeNickname(int group_id, String name, int user_id) {
+    public void changeNickname(int group_id, String name, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setUserNickname(name);
             groupUserService.update(tmp);
         }
-        return true;
     }
 }

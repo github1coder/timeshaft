@@ -154,13 +154,14 @@ public class AddressListController {
 
     @RequestMapping(value = "/getGroupMember")
     public ResponseService getGroupMember(@RequestParam("id") Integer id) {
-        List<User> users = friendOp.getGroupMember(id);
+        Map<User, String> users = friendOp.getGroupMember(id);
         List<Map<String, String>> res = new ArrayList<>();
-        for(User user : users) {
+        for(User user : users.keySet()) {
             HashMap<String, String> ans = new HashMap<>();
             ans.put("id", user.getId().toString());
             ans.put("name", user.getUsername());
             ans.put("photo", user.getPhoto());
+            ans.put("nick", users.get(user));
             res.add(ans);
         }
         return new ResponseService(res);

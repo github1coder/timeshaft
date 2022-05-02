@@ -206,12 +206,12 @@ public class FriendOp {
         return ans;
     }
 
-    public List<User> getGroupMember(int id) {
+    public Map<User, String> getGroupMember(int id) {
         List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
-        List<User> users = new ArrayList<>();
+        Map<User, String> users = new HashMap<>();
         for (GroupUser groupUser : groupUsers) {
             User user = userService.queryById(groupUser.getUserId());
-            users.add(user);
+            users.put(user, groupUser.getUserNickname());
         }
         return users;
     }
