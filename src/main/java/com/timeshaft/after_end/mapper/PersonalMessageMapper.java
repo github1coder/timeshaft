@@ -21,6 +21,15 @@ public interface PersonalMessageMapper {
     PersonalMessage queryById(Integer id);
 
     /**
+     * 通过id组合查询最新历史消息
+     *
+     * @param friendsId 接收者id
+     * @param senderId 发送者id
+     * @return 实例对象
+     */
+    PersonalMessage queryLatestById(@Param("friendsId") Integer friendsId, @Param("senderId") Integer senderId);
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置

@@ -3,12 +3,10 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.MessageStateType;
 import com.timeshaft.after_end.entity.PersonalMessage;
-import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
-import com.timeshaft.after_end.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +60,14 @@ public class ChatController {
             messageQuery.setSenderId(friendId);
             messageQuery.setFriendsId(sourceId);
             List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+            int index = -1;
+            if (notReadMessages != null && !notReadMessages.isEmpty()) {
+                index = notReadMessages.get(0).getId();
+            }
             for (PersonalMessage message : notReadMessages) {
+                if (message.getId() < index) {
+                    index = message.getId();
+                }
                 HashMap<String, Object> dataMap = new HashMap<>();
                 dataMap.put("msgFromName", chatName);
                 dataMap.put("msgFromAvatar", chatAvatar);
@@ -73,7 +78,14 @@ public class ChatController {
                 dataMap.put("dstId", message.getFriendsId());
                 data.add(dataMap);
             }
+            //若没有已读消息，index应该为双方最近的一条消息
+            if (index == -1) {
+                PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
+                PersonalMessage messageFrom = personalMessageService.queryLatestById(sourceId, friendId);
+                index = messageFrom.getId() > messageTo.getId() ? messageFrom.getId() : messageTo.getId();
+            }
             map.put("data", data);
+            map.put("index", index);
             res.add(map);
         }
         return new ResponseService(res);
@@ -94,5 +106,35 @@ public class ChatController {
             data.add(map);
         }
         return new ResponseService(data);
+    }
+
+    @RequestMapping(value = "/getHistoryMessage")
+    public ResponseService getHistoryMessage(@RequestParam(value = "srcId") Integer srcId,
+                                             @RequestParam(value = "dstId") Integer dstId,
+                                             @RequestParam(value = "index") Integer index) {
+
+
+        return new ResponseService();
+    }
+
+    @RequestMapping(value = "/haveRead")
+    public ResponseService markMessages(@RequestBody Map<String, Object> requestMap) {
+        String time = (String) requestMap.get("time");
+        int srcId = (Integer) requestMap.get("srcId");
+        int dstId = (Integer) requestMap.get("dstId");
+        PersonalMessage messageQuery = new PersonalMessage();
+        MessageStateType state = MessageStateType.UNREAD;
+        messageQuery.setState(messageStateService.EnumToString(state));
+        messageQuery.setSenderId(srcId);
+        messageQuery.setFriendsId(dstId);
+        List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+        PersonalMessage messageToSet = new PersonalMessage();
+        messageToSet.setState(messageStateService.EnumToString(MessageStateType.READ));
+        for (PersonalMessage message : notReadMessages) {
+            int id = message.getId();
+            messageToSet.setId(id);
+            personalMessageService.update(messageToSet);
+        }
+        return new ResponseService();
     }
 }
