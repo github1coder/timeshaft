@@ -133,7 +133,7 @@ public class FriendOp {
             } else {
                 groupUser.setState("new");
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
-                groupUserService.deleteById(groupUsers.get(0).getGroupId());
+                groupUserService.deleteById(groupUsers.get(0).getId());
             }
         } else {
             Friends friend1 = new Friends(self_id, id, null, null, null);
