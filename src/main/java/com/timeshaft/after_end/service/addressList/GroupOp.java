@@ -19,29 +19,28 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
-    public boolean createGroup(String name, String photo,
-                               String notice, int master_id) {
+    public void createGroup(String name, String photo,
+                            String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date());
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
         groupUserService.insert(groupUser);
-        return true;
     }
 
-    public boolean deleteGroup(int id) {
+    public void deleteGroup(int id) {
         List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
         for(GroupUser groupUser : groupUsers) {
             groupUserService.deleteById(groupUser.getId());
         }
-        return groupService.deleteById(id);
+        groupService.deleteById(id);
     }
 
-    public boolean updateGroup(int id, String name, String photo, String notice) {
+    public void updateGroup(int id, String name, String photo, String notice) {
         Group group = groupService.queryById(id);
         group.setName(name);
         group.setNotice(notice);
         group.setPhoto(photo);
-        return groupService.update(group) != null;
+        groupService.update(group);
     }
 
     public List<Group> getGroup(int user_id) {

@@ -207,7 +207,7 @@ public class FriendOp {
     }
 
     public Map<User, String> getGroupMember(int id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, "accept"));
         Map<User, String> users = new HashMap<>();
         for (GroupUser groupUser : groupUsers) {
             User user = userService.queryById(groupUser.getUserId());
