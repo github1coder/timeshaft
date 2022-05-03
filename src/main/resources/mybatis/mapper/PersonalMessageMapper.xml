@@ -25,7 +25,7 @@
         select
         id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
         where friends_id = #{friendsId} and sender_id = #{senderId}
-        order by sendtime desc
+        order by id desc
         limit 0, 1
     </select>
 

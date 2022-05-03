@@ -131,7 +131,7 @@ public class ChatController {
         historyMessage.sort(new Comparator<PersonalMessage>() {
             @Override
             public int compare(PersonalMessage o1, PersonalMessage o2) {
-                return o2.getSendtime().compareTo(o1.getSendtime());
+                return o2.getId().compareTo(o1.getId());
             }
         });
         int length = Math.min(historyMessage.size(), 20);
