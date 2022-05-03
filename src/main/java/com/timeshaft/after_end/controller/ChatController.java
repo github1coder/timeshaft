@@ -3,19 +3,18 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.MessageStateType;
 import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
+import com.timeshaft.after_end.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * feishu
@@ -35,6 +34,8 @@ public class ChatController {
     private PersonalMessageServiceImpl personalMessageService;
     @Autowired
     private MessageStateServiceImpl messageStateService;
+    @Autowired
+    private UserServiceImpl userService;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -64,26 +65,39 @@ public class ChatController {
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
-            for (PersonalMessage message : notReadMessages) {
-                if (message.getId() < index) {
-                    index = message.getId();
+            if (notReadMessages != null) {
+                for (PersonalMessage message : notReadMessages) {
+                    if (message.getId() < index) {
+                        index = message.getId();
+                    }
+                    HashMap<String, Object> dataMap = new HashMap<>();
+                    dataMap.put("msgFromName", chatName);
+                    dataMap.put("msgFromAvatar", chatAvatar);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    dataMap.put("msg", message.getMessage());
+                    dataMap.put("time", sdf.format(message.getSendtime()));
+                    dataMap.put("srcId", message.getSenderId());
+                    dataMap.put("dstId", message.getFriendsId());
+                    data.add(dataMap);
                 }
-                HashMap<String, Object> dataMap = new HashMap<>();
-                dataMap.put("msgFromName", chatName);
-                dataMap.put("msgFromAvatar", chatAvatar);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                dataMap.put("msg", message.getMessage());
-                dataMap.put("time", sdf.format(message.getSendtime()));
-                dataMap.put("srcId", message.getSenderId());
-                dataMap.put("dstId", message.getFriendsId());
-                data.add(dataMap);
             }
             //若没有已读消息，index应该为双方最近的一条消息
             if (index == -1) {
                 PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
                 PersonalMessage messageFrom = personalMessageService.queryLatestById(sourceId, friendId);
-                index = messageFrom.getId() > messageTo.getId() ? messageFrom.getId() : messageTo.getId();
+                if (messageTo == null) {
+                    if (messageFrom != null) {
+                        index = messageFrom.getId();
+                    }
+                } else {
+                    if (messageFrom == null) {
+                        index = messageTo.getId();
+                    } else {
+                        index = Math.max(messageFrom.getId(), messageTo.getId());
+                    }
+                }
             }
+            //若没聊过天，index为-1——加好友会打招呼，此种情况不会发生
             map.put("data", data);
             map.put("index", index);
             res.add(map);
@@ -99,7 +113,6 @@ public class ChatController {
         for (Friends friends : friendsList) {
             HashMap<String, Object> map = new HashMap<>();
             Integer friendId = friends.getUserId1().equals(sourceId) ? friends.getUserId2():friends.getUserId1();
-            String chatName = friends.getUserId1().equals(sourceId) ? friends.getNickname2():friends.getNickname1();
             String url = "/user/" + friendId + "/" + sourceId;
             map.put("id", friendId);
             map.put("url", url);
@@ -112,9 +125,39 @@ public class ChatController {
     public ResponseService getHistoryMessage(@RequestParam(value = "srcId") Integer srcId,
                                              @RequestParam(value = "dstId") Integer dstId,
                                              @RequestParam(value = "index") Integer index) {
-
-
-        return new ResponseService();
+        List<PersonalMessage> historyMessage = new ArrayList<>();
+        historyMessage.addAll(personalMessageService.queryHistoryById(dstId, srcId, index));
+        historyMessage.addAll(personalMessageService.queryHistoryById(srcId, dstId, index));
+        historyMessage.sort(new Comparator<PersonalMessage>() {
+            @Override
+            public int compare(PersonalMessage o1, PersonalMessage o2) {
+                return o2.getSendtime().compareTo(o1.getSendtime());
+            }
+        });
+        int length = Math.min(historyMessage.size(), 20);
+        boolean more = (length != 0);
+        HashMap<String, Object> data = new HashMap<>();
+        for (int i = length - 1; i >= 0; i--) {
+            PersonalMessage message = historyMessage.get(i);
+            data.put("srcId", message.getSenderId());
+            data.put("dstId", message.getFriendsId());
+            data.put("message", message.getMessage());
+            User user = userService.queryById(srcId);
+            data.put("msgFromName", user.getUsername());
+            data.put("msgFromAvatar", user.getPhoto());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            data.put("time", sdf.format(message.getSendtime()));
+        }
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("data", data);
+        int newIndex = index;
+        //若还有剩余的历史消息，则更新index
+        if (more) {
+            newIndex = historyMessage.get(length-1).getId();
+        }
+        res.put("index", newIndex);
+        res.put("more", more);
+        return new ResponseService(res);
     }
 
     @RequestMapping(value = "/haveRead")

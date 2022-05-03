@@ -22,7 +22,17 @@ public interface PersonalMessageService {
     PersonalMessage queryById(Integer id);
 
     /**
-     * 通过id组合查询最新历史消息
+     * 通过id组合与索引查询最近历史消息（默认20条）
+     *
+     * @param friendsId 接收者id
+     * @param senderId 发送者id
+     * @param index 查询起始的id
+     * @return 实例对象列表
+     */
+    List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index);
+
+    /**
+     * 通过id组合与索引查询最新历史消息
      *
      * @param friendsId 接收者id
      * @param senderId 发送者id

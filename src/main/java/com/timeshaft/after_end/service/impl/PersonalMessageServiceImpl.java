@@ -43,6 +43,19 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     }
 
     /**
+     * 通过id组合与索引查询最近历史消息（默认20条）
+     *
+     * @param friendsId 接收者id
+     * @param senderId 发送者id
+     * @param index 查询起始的id
+     * @return 实例对象列表
+     */
+    @Override
+    public List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index) {
+        return this.personalMessageMapper.queryHistoryById(friendsId, senderId, index);
+    }
+
+    /**
      * 查询多条数据
      *
      * @param offset 查询起始位置

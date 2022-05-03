@@ -26,7 +26,16 @@
         id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
         where friends_id = #{friendsId} and sender_id = #{senderId}
         order by sendtime desc
-        limit 0,1
+        limit 0, 1
+    </select>
+
+    <!--查询历史消息-->
+    <select id="queryHistoryById" resultMap="BaseResultMap">
+        select
+        id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
+        where friends_id = #{friendsId} and sender_id = #{senderId} and id &lt; #{index}
+        order by sendtime desc
+        limit 0, 20
     </select>
 
     <!--查询指定行数据-->
