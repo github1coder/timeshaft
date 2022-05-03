@@ -21,6 +21,7 @@
             v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
             :key="j + num * (pageF - 1)"
             @click="method1"
+            v-show="subItem.show"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.photo"></v-img>
@@ -42,7 +43,7 @@
                 </v-btn>
                 <v-btn
                   small
-                  @click="acF(j + num * (pageF - 1))"
+                  @click="reF(j + num * (pageF - 1))"
                 >
                   <v-icon>mdi-close-thick</v-icon>
                 </v-btn>
@@ -251,10 +252,10 @@ export default {
 
     reG (index) {
       apply({
-        "user_id": this.$store.getters.userId,
+        "user_id": this.groupAns[index].id,
         "type": "group",
         "action": "refuse",
-        "id": this.groupAns[index].id,
+        "id": this.groupAns[index].group_id,
         "ACCESS_TOKEN": null,
       }
       ).then(res => {

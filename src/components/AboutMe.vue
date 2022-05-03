@@ -24,7 +24,7 @@
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
-                  src="https://cdn.vuetifyjs.com/images/john.png"
+                  :src="photo"
                 ></v-img>
               </v-list-item-icon>
             </v-list-item>
@@ -40,8 +40,8 @@
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title class="title">John Leider</v-list-item-title>
-                <v-list-item-subtitle>john@vuetifyjs.com</v-list-item-subtitle>
+                <v-list-item-title v-text="name"></v-list-item-title>
+                <v-list-item-subtitle v-text="email"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -135,12 +135,17 @@
   </div>
 </template>
 <script>
+import { addGroup } from '../api/addresslist/index';
 export default {
   data () {
     return {
+      name: this.$store.getters.myNick,
+      photo: this.$store.getters.myIcon,
+      email: this.$store.getters.email,
       checkCode: "",
       password: "",
       passwordN: "",
+      textG: "",
     };
   },
 
@@ -157,6 +162,33 @@ export default {
       this.password = ""
       this.passwordN = ""
     },
+
+    newGroup () {
+      if (this.textG == "" || this.$store.getters.userId == -1) {
+        return;
+      }
+      addGroup({
+        "master_id": this.$store.getters.userId,
+        "name": this.textG,
+        "notice": "",
+        "photo": "",
+      }).then(res => {
+        console.log(res)
+      })
+      // getGroups({
+      //   "user_id": this.$store.getters.userId,
+      //   "ACCESS_TOKEN": null
+      // }).then(res => {
+      //   // this.$store.commit("channels", res)
+      //   this.groups = res
+      //   this.groups.forEach(function (item) {
+      //     item["show"] = false;
+      //     item["quit"] = false;
+      //   });
+      //   this.groups = JSON.parse(JSON.stringify(this.groups))
+      //   this.allPageG = Math.ceil(this.groups.length / this.num);
+      // });
+    }
   }
 }
 </script>
