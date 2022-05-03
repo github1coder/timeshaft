@@ -66,7 +66,7 @@ public class ChatController {
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
-            if (notReadMessages != null) {
+            if (notReadMessages != null && notReadMessages.size() > 0) {
                 for (PersonalMessage message : notReadMessages) {
                     HashMap<String, Object> dataMap = new HashMap<>();
                     dataMap.put("msgFromName", chatName);
