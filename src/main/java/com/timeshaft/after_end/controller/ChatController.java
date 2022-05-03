@@ -136,17 +136,19 @@ public class ChatController {
         });
         int length = Math.min(historyMessage.size(), 20);
         boolean more = (length != 0);
-        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> data = new ArrayList<>();
         for (int i = length - 1; i >= 0; i--) {
+            HashMap<String, Object> messageMap = new HashMap<>();
             PersonalMessage message = historyMessage.get(i);
-            data.put("srcId", message.getSenderId());
-            data.put("dstId", message.getFriendsId());
-            data.put("message", message.getMessage());
+            messageMap.put("srcId", message.getSenderId());
+            messageMap.put("dstId", message.getFriendsId());
+            messageMap.put("message", message.getMessage());
             User user = userService.queryById(srcId);
-            data.put("msgFromName", user.getUsername());
-            data.put("msgFromAvatar", user.getPhoto());
+            messageMap.put("msgFromName", user.getUsername());
+            messageMap.put("msgFromAvatar", user.getPhoto());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            data.put("time", sdf.format(message.getSendtime()));
+            messageMap.put("time", sdf.format(message.getSendtime()));
+            data.add(messageMap);
         }
         HashMap<String, Object> res = new HashMap<>();
         res.put("data", data);
