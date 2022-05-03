@@ -81,19 +81,19 @@ public class ChatController {
                     data.add(dataMap);
                 }
             }
-            //若没有已读消息，index应该为双方最近的一条消息
+            //若没有已读消息，index应该为双方最近的一条消息+1 (因为索引的时候是使用 < 查询)
             if (index == -1) {
                 PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
                 PersonalMessage messageFrom = personalMessageService.queryLatestById(sourceId, friendId);
                 if (messageTo == null) {
                     if (messageFrom != null) {
-                        index = messageFrom.getId();
+                        index = messageFrom.getId() + 1;
                     }
                 } else {
                     if (messageFrom == null) {
-                        index = messageTo.getId();
+                        index = messageTo.getId() + 1;
                     } else {
-                        index = Math.max(messageFrom.getId(), messageTo.getId());
+                        index = Math.max(messageFrom.getId(), messageTo.getId()) + 1;
                     }
                 }
             }
