@@ -21,7 +21,7 @@
         >
           <!-- <v-system-bar></v-system-bar> -->
           <v-list dark>
-            <v-list-item>
+            <!-- <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
@@ -37,10 +37,10 @@
               >
                 修改头像
               </v-btn>
-            </v-list-item>
+            </v-list-item> -->
             <v-list-item>
               <v-list-item-content @dblclick="iShowC">
-                <v-list-item-title>
+                <v-list-item-title large>
                   {{this.$store.getters.groupName}}
                 </v-list-item-title>
                 <v-textarea
@@ -184,6 +184,7 @@
       <v-btn
         v-show="isMaster() && !this.kill"
         @click="showKill"
+        color="error"
       >
         解散群聊
       </v-btn>

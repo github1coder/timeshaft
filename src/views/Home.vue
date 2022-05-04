@@ -74,6 +74,7 @@
               v-for="(item, i) in navs"
               :key="i"
               @click="$store.commit('changeSiderState', i)"
+              :ref="`sider` + i"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon"></v-icon>
@@ -184,8 +185,8 @@
                 </div>
               </div>
               <div
-                  class="moveband"
-                   v-if="draw"
+                class="moveband"
+                v-if="draw"
               >
                 <TimeShaft v-if="tools[0].show"></TimeShaft>
               </div>
@@ -202,7 +203,6 @@
                       v-text="item.icon"
                       style="margin-left: 30%;"
                       @click="changeBand(i)"
-
                     ></v-icon>
                   </v-list-item-icon>
                 </v-list>
@@ -290,12 +290,12 @@ export default {
   },
 
   methods: {
-    changeBand(index) {
+    changeBand (index) {
       if (!this.draw) {
         this.draw = !this.draw
         this.tools[index].show = true
       }
-      else{
+      else {
         if (this.tools[index].show) {
           this.draw = !this.draw
           this.tools[index].show = false
@@ -382,12 +382,18 @@ export default {
         this.$store.commit("setMyNick", "N")
         this.$store.commit("setEmail", null)
         this.$store.commit("setLogin", false)
+        this.$store.commit("setGroupId", -1)
+        this.$store.commit("setGroupName", null)
+        this.$store.commit("setGroupPhoto", null)
+        this.$store.commit("setMaster", -1)
+        this.$store.commit("changeSiderState", 0)
+        this.$store.commit("setAbout", 1)
         this.$router.push({
           path: '/',
         })
       })
 
-    }
+    },
   },
 
   computed: {
@@ -397,8 +403,7 @@ export default {
   },
 
   mounted () {
-
-  }
+  },
 };
 </script>
 

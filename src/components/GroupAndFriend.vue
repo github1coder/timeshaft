@@ -28,8 +28,9 @@
             @click="method1"
             @contextmenu.prevent="method1"
           >
-            <v-list-item-avatar>
-              <v-img :src="subItem.group_photo"></v-img>
+            <v-list-item-avatar color="blue">
+              <span class="white--text text-h5">{{ subItem.group_name[0] }}</span>
+              <!-- <v-img :src="subItem.group_photo"></v-img> -->
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title
@@ -321,9 +322,10 @@ export default {
       this.$store.commit("setMaster", this.groups[index].master_id)
       this.$store.commit("changeSiderState", 4)
       this.$store.commit("setAbout", 2)
-      this.$router.push({
-        path: "/home"
-      })
+      this.$parent.$parent.$refs.sider4[0].$el.click()
+      // this.$router.push({
+      //   path: "/home"
+      // })
     },
 
     initBtns () {
@@ -514,6 +516,9 @@ export default {
         });
         this.groups = JSON.parse(JSON.stringify(this.groups))
         this.allPageG = Math.ceil(this.groups.length / this.num);
+        if (this.allPageG == 0) {
+          this.pageG = 0;
+        }
         // this.groups = [{
         //   group_id: 1,
         //   group_name: 'Breakfast & brunch',
@@ -544,6 +549,9 @@ export default {
         });
         this.friends = JSON.parse(JSON.stringify(this.friends))
         this.allPageF = Math.ceil(this.friends.length / this.num);
+        if (this.allPageF == 0) {
+          this.pageF = 0;
+        }
         // console.log(this.friends)
         // this.friends = [{
         //   'friend_id': 1,

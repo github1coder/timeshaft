@@ -218,7 +218,7 @@ export default {
             console.log(this.checkCode)
           })
         }
-        console.log(this.checkCode)
+        // console.log(this.checkCode)
         // 验证码倒计时, 60s后重新发送，并且验证码为空
         if (!this.timer) {
           this.count = 60

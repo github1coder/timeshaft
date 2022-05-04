@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
-    <group-and-friend v-if="show == 1"></group-and-friend>
-    <add-member v-else-if="show == 2"></add-member>
+    <group-and-friend v-if="show == 0"></group-and-friend>
+    <add-member v-else-if="show == 1"></add-member>
     <apply-list v-else></apply-list>
     <div
       class="overflow-hidden"
@@ -10,6 +10,7 @@
       <v-bottom-navigation
         color="blue"
         dark
+        mandatory
       >
         <v-btn @click="show1">
           <v-icon>mdi-account-group</v-icon>
@@ -52,7 +53,8 @@ export default {
         icon: "mdi-emoticon"
       }],
       member: 0,
-      show: 1,
+      show: 0,
+      values: [true, false, false]
     };
   },
 
@@ -65,13 +67,13 @@ export default {
       console.assert(1)
     },
     show1 () {
-      this.show = 1;
+      this.show = 0;
     },
     show2 () {
-      this.show = 2;
+      this.show = 1;
     },
     show3 () {
-      this.show = 3;
+      this.show = 2;
     },
   },
 

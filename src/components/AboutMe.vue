@@ -173,6 +173,7 @@ export default {
         "notice": "",
         "photo": "",
       }).then(res => {
+        this.textG = ""
         console.log(res)
       })
       // getGroups({
