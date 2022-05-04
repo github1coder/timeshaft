@@ -291,13 +291,24 @@ export default {
 
   methods: {
     changeBand(index) {
-      this.draw = !this.draw
-      for (let i = 0; i < this.tools.length; i++) {
-        if (i === index) {
-          this.tools[i].show = !this.tools[i].show
+      if (!this.draw) {
+        this.draw = !this.draw
+        this.tools[index].show = true
+      }
+      else{
+        if (this.tools[index].show) {
+          this.draw = !this.draw
+          this.tools[index].show = false
         }
         else {
-          this.tools[i].show = false
+          for (let i = 0; i < this.tools.length; i++) {
+            if (i === index) {
+              this.tools[i].show = true
+            }
+            else {
+              this.tools[i].show = false
+            }
+          }
         }
       }
 
