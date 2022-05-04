@@ -201,7 +201,7 @@
                     <v-icon
                       v-text="item.icon"
                       style="margin-left: 30%;"
-                      @click="draw = !draw; item.show = !item.show "
+                      @click="changeBand(i)"
 
                     ></v-icon>
                   </v-list-item-icon>
@@ -290,6 +290,18 @@ export default {
   },
 
   methods: {
+    changeBand(index) {
+      this.draw = !this.draw
+      for (let i = 0; i < this.tools.length; i++) {
+        if (i === index) {
+          this.tools[i].show = !this.tools[i].show
+        }
+        else {
+          this.tools[i].show = false
+        }
+      }
+
+    },
     editAccount () {
       this.$store.commit("setAbout", 1)
       this.$store.commit("changeSiderState", 4)

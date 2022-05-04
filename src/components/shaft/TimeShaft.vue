@@ -45,82 +45,30 @@
 
       >
         <v-timeline-item
-            color="pink"
             small
-
+            v-for="(item, i) in items"
+            :key="i"
+            :color="timecolor[i % 10]"
         >
           <v-row class="pt-1">
             <v-col cols="3">
-              <strong>5pm</strong>
+              <strong>{{item.date}}</strong>
             </v-col>
             <v-col>
-              <strong>New Icon</strong>
+              <strong>会议主题：{{item.title}}</strong>
               <div class="text-caption">
-                Mobile App
+                会议摘要：{{ item.conclude }}
               </div>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>3-4pm</strong>
-            </v-col>
-            <v-col>
-              <strong>Design Stand Up</strong>
-              <div class="text-caption mb-2">
-                Hangouts
-              </div>
-              <v-avatar>
-                <v-img
-                    src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
-                ></v-img>
-              </v-avatar>
-              <v-avatar>
-                <v-img
-                    src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
-                ></v-img>
-              </v-avatar>
-              <v-avatar>
-                <v-img
-                    src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
-                ></v-img>
-              </v-avatar>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-
-        <v-timeline-item
-            color="pink"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>12pm</strong>
-            </v-col>
-            <v-col>
-              <strong>Lunch break</strong>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>9-11am</strong>
-            </v-col>
-            <v-col>
-              <strong>Finish Home Screen</strong>
-              <div class="text-caption">
-                Web App
-              </div>
+              <v-row>
+                <div class="text-caption">
+                  会议摘要：
+                </div>
+                <v-avatar>
+                  <v-img
+                      :src="item.img"
+                  ></v-img>
+                </v-avatar>
+              </v-row>
             </v-col>
           </v-row>
         </v-timeline-item>
@@ -136,8 +84,13 @@ export default {
     return {
       //显示时间
       time: '',
+      timecolor: [
+          'deep-orange','deep-orange lighten-5','deep-orange lighten-4', 'deep-orange lighten-3',
+          'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1','deep-orange darken-2',
+          'deep-orange darken-3', 'deep-orange darken-4'
+      ],
       items: [
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022-5.3-16:23', conclude: '1111'},
+        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022-5.3-16:23', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法'},
         {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022-5.3-16:23', conclude: '1111'},
       ]
     }
