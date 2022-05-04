@@ -222,10 +222,6 @@ body {
     }
 }
 
-.shaftback {
-    height: calc(100% - 20px);
-}
-
 .chat-screen {
     top: 48px;
     flex: 1 1 auto;
@@ -240,7 +236,7 @@ body {
     max-width: 100%;
     width: 100%;
     .chat-form-open {
-        width: 55%;
+        width: 65%;
     }
     .chat-form-close {
         width: 100%;

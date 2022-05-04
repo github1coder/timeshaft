@@ -25,10 +25,10 @@
         <v-container class="fill-height">
           <v-row align="center">
             <v-row justify="end">
-              <div class="text-h5 font-weight-light" style="font-size: 50px">
+              <div class="text-h5 font-weight-light" style="font-size: 30px">
                 Time Shaft
               </div>
-              <div class="text-uppercase font-weight-light" style="font-size: 25px">
+              <div class="text-uppercase font-weight-light" style="font-size: 15px">
                 {{$data.time}}
               </div>
             </v-row>
@@ -36,14 +36,18 @@
         </v-container>
       </v-img>
     </v-card>
-    <v-card-text class="py-0">
+
+    <v-card-text
+    >
       <v-timeline
           align-top
           dense
+
       >
         <v-timeline-item
             color="pink"
             small
+
         >
           <v-row class="pt-1">
             <v-col cols="3">
@@ -120,70 +124,7 @@
             </v-col>
           </v-row>
         </v-timeline-item>
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>9-11am</strong>
-            </v-col>
-            <v-col>
-              <strong>Finish Home Screen</strong>
-              <div class="text-caption">
-                Web App
-              </div>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>9-11am</strong>
-            </v-col>
-            <v-col>
-              <strong>Finish Home Screen</strong>
-              <div class="text-caption">
-                Web App
-              </div>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>9-11am</strong>
-            </v-col>
-            <v-col>
-              <strong>Finish Home Screen</strong>
-              <div class="text-caption">
-                Web App
-              </div>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
-        <v-timeline-item
-            color="teal lighten-3"
-            small
-        >
-          <v-row class="pt-1">
-            <v-col cols="3">
-              <strong>9-11am</strong>
-            </v-col>
-            <v-col>
-              <strong>Finish Home Screen</strong>
-              <div class="text-caption">
-                Web App
-              </div>
-            </v-col>
-          </v-row>
-        </v-timeline-item>
+
       </v-timeline>
     </v-card-text>
   </v-card>
@@ -195,7 +136,10 @@ export default {
     return {
       //显示时间
       time: '',
-
+      items: [
+        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022-5.3-16:23', conclude: '1111'},
+        {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022-5.3-16:23', conclude: '1111'},
+      ]
     }
   },
   mounted() {
@@ -206,6 +150,8 @@ export default {
   },
   beforeDestroy() {
     this.dataDestroy();
+  },
+  computed: {
   },
   methods: {
     dataDestroy() {

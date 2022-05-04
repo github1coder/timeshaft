@@ -17,5 +17,5 @@ export default {
 <style lang="scss">
 @import "./main.scss";
 @import "./style.scss";
-@import "./views/home.scss";
+@import "style/shaft";
 </style>
