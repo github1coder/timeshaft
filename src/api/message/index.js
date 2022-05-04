@@ -15,3 +15,19 @@ export function getSubscribeUrlList(param) {
         data: param
     })
 }
+
+export function haveRead(param) {
+    return request({
+        url: '/message/haveRead',
+        method: 'post',
+        data: param
+    })
+}
+
+export function getHistoryMessage(param) {
+    return request({
+        url: '/message/getHistoryMessage',
+        method: 'post',
+        data: param
+    })
+}

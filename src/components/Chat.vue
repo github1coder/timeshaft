@@ -1,20 +1,22 @@
 <template>
-  <v-list three-line dark>
-    <template v-for="(message, i) in messages" class="chat-list">
-      <v-list-item :key="i" class="chat-list-item">
-        <v-list-item-avatar>
-      <!--TODO-- 等待对接后改成图片>
-      <v-image :src="message.avatar"></v-image>-->
-          <v-icon v-text="message.msgFromAvatar"></v-icon>
-        </v-list-item-avatar>
-<!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
-        <v-list-item-content>
-          <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-          <v-list-item-subtitle>{{ message.msg }}</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
-  </v-list>
+<!--  <v-card dark v-scroll.self="onScroll" class="overflow-y-auto" max-height="400px">-->
+    <v-list  three-line dark>
+      <template v-for="(message, i) in messages" class="chat-list">
+        <v-list-item :key="i" class="chat-list-item">
+          <v-list-item-avatar>
+        <!--TODO-- 等待对接后改成图片>
+        <v-image :src="message.avatar"></v-image>-->
+            <v-icon v-text="message.msgFromAvatar"></v-icon>
+          </v-list-item-avatar>
+  <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
+          <v-list-item-content>
+            <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
+            <v-list-item-subtitle>{{ message.msg }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
+<!--  </v-card>-->
 </template>
 
 <script>
@@ -23,7 +25,8 @@
 export default {
   data() {
     return {
-
+      screenHeight: document.body.clientHeight,
+      refreshed: false,
     };
   },
 

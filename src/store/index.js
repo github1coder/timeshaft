@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        more: true,
         DEBUG: false,
         userId: -1,
         email: null,
@@ -87,9 +88,6 @@ export default new Vuex.Store({
             console.log(s)
             store.siderState = s
             console.log(s)
-        },
-        updateChannels(store, list) {
-            store.listenerList = list;
         },
         changeChannel(store, data) {
             store.currentChannelId = data.id;
@@ -212,8 +210,10 @@ export default new Vuex.Store({
                                 console.log(json.srcId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
                                 if (json.srcId === state.messageList[friend].id) {
                                     state.messageList[friend].data.push(json)
+                                    // this.commit("updateMessageList", {id: json.srcId, data: json})
                                     console.log("收到 id:" + json.srcId.toString() + " 消息:")
                                     console.log(json)
+                                    break
                                 }
                             }
                             console.log("温暖了四季")
@@ -262,8 +262,35 @@ export default new Vuex.Store({
                 state.messageList.push(data[d])
             }
             console.log(state.messageList)
-        }
+        },
         // --------------------- 通讯录管理 -----------------------------//
+
+        // ---- 工具 ----//
+        // updateMessageList(state, payload) {
+        //     // 找出messageList是否存在
+        //     const idx = state.messageList.findIndex(
+        //         message => {
+        //             return message.id === payload.id
+        //         }
+        //     )
+        //     // 若存在,那么删除原有的，加上目前的数据，插入头部
+        //     if (idx !== -1) {
+        //         const msg = state.messageList.splice(idx,1)
+        //         msg[0].data.push(payload.data)
+        //         state.messageList.unshift(msg[0])
+        //         // this.commit("updateCurrentIdx")
+        //     } else {
+        //         // 若不存在，那么重新创建一个 messageList 待定
+        //         console.log(" 功能尚未实现 ")
+        //     }
+        // },
+
+        // updateCurrentIdx(state) {
+        //     state.currentChannelIdx = state.messageList.findIndex(message => {
+        //         return message.id === state.currentChannelId
+        //     })
+        // }
+
     },
     modules: {}
 })

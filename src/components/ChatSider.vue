@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import {getHistoryMessage, haveRead} from "@/api/message";
+
 export default {
   name: "ChatSider",
   data() {
@@ -133,6 +135,38 @@ export default {
       console.log(id)
       console.log(item)
       this.$store.commit("changeChannel", {id: id, idx: idx});
+      if (item.data.length < 10) {
+        getHistoryMessage({
+          srcId: this.$store.state.userId,
+          dstId: this.$store.state.currentChannelId,
+          index: this.$store.state.messageList[this.$store.state.currentChannelIdx].index,
+        }).then(res => {
+          console.log("000000000000000000")
+          console.log(res)
+          this.$store.state.more = res.more
+          if (this.$store.state.currentChannelIdx !== -1) {
+            this.$store.state.messageList[this.$store.state.currentChannelIdx].index = res.index
+            console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+            for (let i = res.data.length-1; i >= 0; i--) {
+              this.$store.state.messageList[this.$store.state.currentChannelIdx].data.unshift(res.data[i])
+            }
+            console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+          }
+        })
+      }
+      if (item.data.length !== 0) {
+        haveRead({
+          srcId:this.$store.state.userId,
+          dstId:this.$store.state.currentChannelId,
+          time:item.data[item.data.length-1].time,
+        }).then(res => {
+          res
+          console.log("have read this msg")
+        })
+      }
+
+
+
     }
   },
   watch: {
