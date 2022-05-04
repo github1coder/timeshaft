@@ -162,7 +162,7 @@
 
           <div class="chat-screen">
             <div class="chat-content">
-              <div class="messages">
+              <div class="messages"  v-scroll.self="onScroll" >
                 <div :class="draw ? 'message-container-open' : 'message-container-close'">
                   <Chat></Chat>
                 </div>
@@ -410,6 +410,7 @@ import ChatSider from "@/components/ChatSider";
 import Addresslist from "@/components/Addresslist";
 import About from "@/components/About";
 import { logout } from '../api/user';
+import {getHistoryMessage} from "@/api/message";
 
 export default {
   name: "Home",
@@ -425,6 +426,7 @@ export default {
   },
   data () {
     return {
+      refreshed: true,
       cache: 0,
       mini: true,
       drawer: false,
@@ -493,8 +495,9 @@ export default {
         srcId: this.$store.state.userId,
         dstId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
       }
-      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
+      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+      // this.$store.commit("updateMessageList", {id: this.$store.state.currentChannelId, data:msgForm})
       this.clearMsg()
       this.$store.commit("WEBSOCKET_SEND", {
         url: url,
@@ -536,13 +539,50 @@ export default {
         })
       })
 
+    },
+    onScroll() {
+      // console.log(document.documentElement.scrollTop || document.querySelector('.messages').scrollTop)
+      if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
+        this.refreshed = true
+      } else if (document.documentElement.scrollTop || document.querySelector('.messages').scrollTop !== 0) {
+        this.refreshed = false
+      }
+      // console.log(this.refreshed)
+    }
+  },
+
+  watch: {
+    refreshed(newVal, oldVal) {
+      if (newVal && !oldVal) {
+        //TODO 补全
+        console.log(this.$store.state.more)
+        if (this.$store.state.more) {
+          getHistoryMessage({
+            srcId: this.$store.state.userId,
+            dstId: this.$store.state.currentChannelId,
+            index: this.$store.state.messageList[this.$store.state.currentChannelIdx].index,
+          }).then(res => {
+            console.log("000000000000000000")
+            console.log(res)
+            this.$store.state.more = res.more
+            if (this.$store.state.currentChannelIdx !== -1) {
+              this.$store.state.messageList[this.$store.state.currentChannelIdx].index = res.index
+              console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+              for (let i = res.data.length-1; i >= 0; i--) {
+                this.$store.state.messageList[this.$store.state.currentChannelIdx].data.unshift(res.data[i])
+              }
+              console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
+            }
+          })
+        }
+      }
     }
   },
 
   computed: {
     chatUrl () {
       return "/app/personalMessage"
-    }
+    },
   },
 
   mounted () {
