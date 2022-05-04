@@ -146,7 +146,7 @@ public class ChatController {
             PersonalMessage message = historyMessage.get(i);
             messageMap.put("srcId", message.getSenderId());
             messageMap.put("dstId", message.getFriendsId());
-            messageMap.put("message", message.getMessage());
+            messageMap.put("msg", message.getMessage());
             User user = userService.queryById(srcId);
             messageMap.put("msgFromName", user.getUsername());
             messageMap.put("msgFromAvatar", user.getPhoto());
