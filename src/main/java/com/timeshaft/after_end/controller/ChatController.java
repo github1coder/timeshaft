@@ -129,6 +129,8 @@ public class ChatController {
         int srcId = (Integer) requestMap.get("srcId");
         int dstId = (Integer) requestMap.get("dstId");
         int index = (Integer) requestMap.get("index");
+        User userSrc = userService.queryById(srcId);
+        User userDst = userService.queryById(dstId);
         List<PersonalMessage> historyMessage = new ArrayList<>();
         historyMessage.addAll(personalMessageService.queryHistoryById(dstId, srcId, index));
         historyMessage.addAll(personalMessageService.queryHistoryById(srcId, dstId, index));
@@ -147,9 +149,13 @@ public class ChatController {
             messageMap.put("srcId", message.getSenderId());
             messageMap.put("dstId", message.getFriendsId());
             messageMap.put("msg", message.getMessage());
-            User user = userService.queryById(srcId);
-            messageMap.put("msgFromName", user.getUsername());
-            messageMap.put("msgFromAvatar", user.getPhoto());
+            if (message.getSenderId() == srcId) {
+                messageMap.put("msgFromName", userSrc.getUsername());
+                messageMap.put("msgFromAvatar", userSrc.getPhoto());
+            } else {
+                messageMap.put("msgFromName", userDst.getUsername());
+                messageMap.put("msgFromAvatar", userDst.getPhoto());
+            }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             messageMap.put("time", sdf.format(message.getSendtime()));
             data.add(messageMap);
