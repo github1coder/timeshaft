@@ -97,7 +97,10 @@
               </div>
             </v-list-item>
           </v-list-group>
-          <v-list-group prepend-icon="~">
+          <v-list-group
+            prepend-icon="~"
+            @click="initText"
+          >
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>创建团队</v-list-item-title>
@@ -114,7 +117,7 @@
                   dense
                   dark
                   hide-details
-                  label="团队名字"
+                  :label="labelG"
                   v-model="textG"
                   class="input-search mt-3"
                   autocomplete="off"
@@ -146,6 +149,7 @@ export default {
       password: "",
       passwordN: "",
       textG: "",
+      labelG: "团队名字",
     };
   },
 
@@ -163,6 +167,11 @@ export default {
       this.passwordN = ""
     },
 
+    initText () {
+      this.textG = ""
+      this.labelG = "团队名字"
+    },
+
     newGroup () {
       if (this.textG == "" || this.$store.getters.userId == -1) {
         return;
@@ -174,6 +183,7 @@ export default {
         "photo": "",
       }).then(res => {
         this.textG = ""
+        this.labelG = "创建成功"
         console.log(res)
       })
       // getGroups({

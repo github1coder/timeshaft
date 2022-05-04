@@ -50,8 +50,11 @@
                   rows="4"
                   black
                   v-model="introduction"
-                  row-height="30"
+                  row-height="40"
                 ></v-textarea>
+                <!-- <span>
+                  双击修改团队介绍
+                </span> -->
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -210,7 +213,13 @@
         </v-btn>
       </div>
     </v-card>
-
+    <v-card
+      dark
+      style="margin-top: 200px"
+      v-show="this.$store.getters.groupId == -1"
+    >
+      从通讯录“我的团队”点击“详情”可在此页面查看团队信息
+    </v-card>
   </div>
 
 </template>
@@ -223,7 +232,7 @@ export default {
       name: "",
       iShow: true,
       kill: false,
-      introduction: "这是我的软工团队",
+      introduction: "这是我的团队",
       num: 10,
       pageF: 1,
       allPageF: 1,
@@ -387,9 +396,7 @@ export default {
         this.$store.commit("setMaster", "")
         this.$store.commit("changeSiderState", 1)
         this.$store.commit("setAbout", 1)
-        this.$router.push({
-          path: "/home"
-        })
+        this.$parent.$parent.$refs.sider1[0].$el.click()
       })
     }
   }
