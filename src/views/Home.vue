@@ -74,6 +74,7 @@
               v-for="(item, i) in navs"
               :key="i"
               @click="$store.commit('changeSiderState', i)"
+              :ref="`sider` + i"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon"></v-icon>
@@ -184,191 +185,10 @@
                 </div>
               </div>
               <div
-                class="chat-tool-open"
+                class="moveband"
                 v-if="draw"
               >
-                <v-card
-                  dark
-                  class="overflow-y-auto"
-                >
-                  <v-timeline>
-                    <v-timeline-item
-                      color="purple lighten-2"
-                      fill-dot
-                      right
-                    >
-                      <v-card>
-                        <v-card-title class="purple lighten-2">
-                          <v-icon
-                            dark
-                            size="42"
-                            class="mr-4"
-                          >
-                            mdi-magnify
-                          </v-icon>
-                          <h2 class="text-h4 white--text font-weight-light">
-                            Title 1
-                          </h2>
-                        </v-card-title>
-                        <v-container>
-                          <v-row>
-                            <v-col
-                              cols="12"
-                              md="10"
-                            >
-                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                            </v-col>
-                            <v-col
-                              class="hidden-sm-and-down text-right"
-                              md="2"
-                            >
-                              <v-icon size="64">
-                                mdi-calendar-text
-                              </v-icon>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-timeline-item>
-
-                    <v-timeline-item
-                      color="amber lighten-1"
-                      fill-dot
-                      left
-                      small
-                    >
-                      <v-card>
-                        <v-card-title class="amber lighten-1 justify-end">
-                          <h2 class="text-h4 mr-4 white--text font-weight-light">
-                            Title 2
-                          </h2>
-                          <v-icon
-                            dark
-                            size="42"
-                          >
-                            mdi-home-outline
-                          </v-icon>
-                        </v-card-title>
-                        <v-container>
-                          <v-row>
-                            <v-col
-                              cols="12"
-                              md="8"
-                            >
-                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                            </v-col>
-                            <v-col
-                              cols="12"
-                              md="4"
-                            >
-                              Lorem ipsum dolor sit amet, no nam oblique veritus.
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-timeline-item>
-
-                    <v-timeline-item
-                      color="cyan lighten-1"
-                      fill-dot
-                      right
-                    >
-                      <v-card>
-                        <v-card-title class="cyan lighten-1">
-                          <v-icon
-                            class="mr-4"
-                            dark
-                            size="42"
-                          >
-                            mdi-email-outline
-                          </v-icon>
-                          <h2 class="text-h4 white--text font-weight-light">
-                            Title 3
-                          </h2>
-                        </v-card-title>
-                        <v-container>
-                          <v-row>
-                            <v-col
-                              v-for="n in 3"
-                              :key="n"
-                              cols="12"
-                              md="4"
-                            >
-                              Lorem ipsum dolor sit amet, no nam oblique veritus no nam oblique.
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-timeline-item>
-
-                    <v-timeline-item
-                      color="red lighten-1"
-                      fill-dot
-                      left
-                      small
-                    >
-                      <v-card>
-                        <v-card-title class="red lighten-1 justify-end">
-                          <h2 class="text-h4 mr-4 white--text font-weight-light">
-                            Title 4
-                          </h2>
-                          <v-icon
-                            dark
-                            size="42"
-                          >
-                            mdi-account-multiple-outline
-                          </v-icon>
-                        </v-card-title>
-                        <v-container>
-                          <v-row>
-                            <v-col
-                              class="hidden-sm-and-down"
-                              md="2"
-                            >
-                              <v-icon size="64">
-                                mdi-server-network
-                              </v-icon>
-                            </v-col>
-                            <v-col
-                              cols="12"
-                              md="10"
-                            >
-                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus.
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-timeline-item>
-
-                    <v-timeline-item
-                      color="green lighten-1"
-                      fill-dot
-                      right
-                    >
-                      <v-card>
-                        <v-card-title class="green lighten-1">
-                          <v-icon
-                            class="mr-4"
-                            dark
-                            size="42"
-                          >
-                            mdi-phone-in-talk
-                          </v-icon>
-                          <h2 class="text-h4 white--text font-weight-light">
-                            Title 5
-                          </h2>
-                        </v-card-title>
-                        <v-container>
-                          <v-row>
-                            <v-col>
-                              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-timeline-item>
-                  </v-timeline>
-                </v-card>
+                <TimeShaft v-if="tools[0].show"></TimeShaft>
               </div>
             </div>
             <div class="members hidden-sm-and-down">
@@ -381,7 +201,8 @@
                   <v-list-item-icon>
                     <v-icon
                       v-text="item.icon"
-                      @click="draw = !draw"
+                      style="margin-left: 30%;"
+                      @click="changeBand(i)"
                     ></v-icon>
                   </v-list-item-icon>
                 </v-list>
@@ -400,6 +221,7 @@
 <script>
 // @ is an alias to /src
 import Chat from "@/components/Chat.vue";
+import TimeShaft from "../components/shaft/TimeShaft.vue";
 // import Stomp from "stompjs"
 // import Sidebar from "@/components/Sidebar.vue";
 // import Members from "@/components/Members.vue";
@@ -409,6 +231,7 @@ import Chat from "@/components/Chat.vue";
 import ChatSider from "@/components/ChatSider";
 import Addresslist from "@/components/Addresslist";
 import About from "@/components/About";
+
 import { logout } from '../api/user';
 import {getHistoryMessage} from "@/api/message";
 
@@ -419,6 +242,7 @@ export default {
     About,
     Chat,
     ChatSider,
+    TimeShaft,
     // Sidebar,
     // Members,
     // ChatTools,
@@ -436,13 +260,17 @@ export default {
       tools: [{
         icon: 'mdi-timeline',
         text: '',
+        show: false
       }, {
         icon: 'mdi-cloud-search-outline',
         text: '',
+        show: false
       }, {
         icon: 'mdi-cog-outline',
         text: '',
-      },],
+        show: false
+      },
+      ],
       navs: [{
         icon: 'mdi-message-text',
         text: '',
@@ -464,6 +292,29 @@ export default {
   },
 
   methods: {
+    changeBand (index) {
+      if (!this.draw) {
+        this.draw = !this.draw
+        this.tools[index].show = true
+      }
+      else {
+        if (this.tools[index].show) {
+          this.draw = !this.draw
+          this.tools[index].show = false
+        }
+        else {
+          for (let i = 0; i < this.tools.length; i++) {
+            if (i === index) {
+              this.tools[i].show = true
+            }
+            else {
+              this.tools[i].show = false
+            }
+          }
+        }
+      }
+
+    },
     editAccount () {
       this.$store.commit("setAbout", 1)
       this.$store.commit("changeSiderState", 4)
@@ -495,6 +346,7 @@ export default {
         srcId: this.$store.state.userId,
         dstId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
       }
+      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
       console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       // this.$store.commit("updateMessageList", {id: this.$store.state.currentChannelId, data:msgForm})
@@ -534,6 +386,12 @@ export default {
         this.$store.commit("setMyNick", "N")
         this.$store.commit("setEmail", null)
         this.$store.commit("setLogin", false)
+        this.$store.commit("setGroupId", -1)
+        this.$store.commit("setGroupName", null)
+        this.$store.commit("setGroupPhoto", null)
+        this.$store.commit("setMaster", -1)
+        this.$store.commit("changeSiderState", 0)
+        this.$store.commit("setAbout", 1)
         this.$router.push({
           path: '/',
         })
@@ -586,8 +444,7 @@ export default {
   },
 
   mounted () {
-
-  }
+  },
 };
 </script>
 

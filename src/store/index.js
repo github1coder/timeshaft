@@ -16,6 +16,7 @@ export default new Vuex.Store({
         groupId: -1,
         groupPhoto: null,
         groupName: null,
+        master: -1,
         about: 1,
         currentChannelIdx: 0,
         currentChannelId: -1,
@@ -31,7 +32,7 @@ export default new Vuex.Store({
         loggedIn: false,
         siderState: 0,
         // socket 相关
-        checkInterval: null,//断线重连时 检测连接是否建立成功
+        checkInterval: null, //断线重连时 检测连接是否建立成功
         websocket: null,
         stompClient: null,
         listenerList: [], //监听器列表，断线重连时 用于重新注册监听
@@ -41,10 +42,14 @@ export default new Vuex.Store({
     },
     getters: {
         userId: state => state.userId,
+        email: state => state.email,
+        myNick: state => state.myNick,
+        myIcon: state => state.myIcon,
         groupId: state => state.groupId,
         groupPhoto: state => state.groupPhoto,
         groupName: state => state.groupName,
         about: state => state.about,
+        master: state => state.master,
         stompClient(state) {
             return function() {
                 return state.stompClient;
@@ -52,6 +57,9 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setMaster(store, master) {
+            store.master = master
+        },
         setAbout(store, about) {
             store.about = about
         },
@@ -199,7 +207,7 @@ export default new Vuex.Store({
                             console.log("收到的json:")
                             console.log(json)
                             for (let friend in state.messageList) {
-                                console.log(json.srcId.toString() + " "  + friend.toString() + " " + state.messageList[friend].id.toString())
+                                console.log(json.srcId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
                                 if (json.srcId === state.messageList[friend].id) {
                                     state.messageList[friend].data.push(json)
                                     // this.commit("updateMessageList", {id: json.srcId, data: json})

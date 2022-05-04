@@ -28,8 +28,9 @@
             @click="method1"
             @contextmenu.prevent="method1"
           >
-            <v-list-item-avatar>
-              <v-img :src="subItem.group_photo"></v-img>
+            <v-list-item-avatar color="blue">
+              <span class="white--text text-h5">{{ subItem.group_name[0] }}</span>
+              <!-- <v-img :src="subItem.group_photo"></v-img> -->
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title
@@ -87,12 +88,21 @@
                   hover
                   dark
                 >
-                  <v-list-item
+                  <!-- <v-list-item
                     v-for="(btnn, i) in groupsBtns"
                     :key="i"
                     @click="getMethod(btnn.method, j + num * (pageG - 1))"
                   >
                     <v-list-item-title>{{ btnn.title }}</v-list-item-title>
+                  </v-list-item> -->
+                  <v-list-item @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))">
+                    <v-list-item-title>{{ groupsBtns[0].title }}</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    v-show="isMaster(j + num * (pageG - 1))"
+                    @click="getMethod(groupsBtns[1].method, j + num * (pageG - 1))"
+                  >
+                    <v-list-item-title>{{ groupsBtns[1].title }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -240,7 +250,7 @@
 
 <script>
 import '../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup, addGroup } from '../api/addresslist/index';
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup } from '../api/addresslist/index';
 export default {
   components: {},
 
@@ -297,6 +307,10 @@ export default {
       this.$store.commit("toggleAC");
     },
 
+    isMaster (index) {
+      return this.$store.getters.userId != this.groups[index].master_id
+    },
+
     method1 () {
       console.log(1)
     },
@@ -305,11 +319,13 @@ export default {
       this.$store.commit("setGroupId", this.groups[index].group_id)
       this.$store.commit("setGroupName", this.groups[index].group_name)
       this.$store.commit("setGroupPhoto", this.groups[index].group_photo)
+      this.$store.commit("setMaster", this.groups[index].master_id)
       this.$store.commit("changeSiderState", 4)
       this.$store.commit("setAbout", 2)
-      this.$router.push({
-        path: "/home"
-      })
+      this.$parent.$parent.$refs.sider4[0].$el.click()
+      // this.$router.push({
+      //   path: "/home"
+      // })
     },
 
     initBtns () {
@@ -442,7 +458,7 @@ export default {
         changeNickname({
           "user_id": this.$store.getters.userId,
           "ACCESS_TOKEN": null,
-          "friend_id": this.friends[j].friend_id,
+          "friend_id": parseInt(this.friends[j].friend_id),
           "friend_nickname": this.name
         });
       }
@@ -456,7 +472,7 @@ export default {
         changeGroupNickname({
           "user_id": this.$store.getters.userId,
           "ACCESS_TOKEN": null,
-          "group_id": this.groups[j].group_id,
+          "group_id": parseInt(this.groups[j].group_id),
           "group_nickname": this.name
         });
       }
@@ -467,8 +483,8 @@ export default {
     killFriend (j) {
       delFriend({
         "user_id": this.$store.getters.userId,
-        ACCESS_TOKEN: null,
-        friend_id: this.friends[j].friend_id
+        "ACCESS_TOKEN": null,
+        "friend_id": parseInt(this.friends[j].friend_id)
       });
       this.friends.splice(j, 1);
       this.friendsIndex = null;
@@ -477,39 +493,12 @@ export default {
     killGroup (j) {
       quitGroup({
         "user_id": this.$store.getters.userId,
-        ACCESS_TOKEN: null,
-        group_id: this.groups[j].group_id
+        "ACCESS_TOKEN": null,
+        "group_id": parseInt(this.groups[j].group_id)
       });
       this.groups.splice(j, 1);
       this.groupsIndex = null;
     },
-
-    newGroup () {
-      if (this.textG == "" && this.$store.getters.userId == -1) {
-        return;
-      }
-      addGroup({
-        "master_id": this.$store.getters.userId,
-        "name": this.textG,
-        "notice": "",
-        "photo": "",
-      }).then(res => {
-        console.log(res)
-      })
-      getGroups({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null
-      }).then(res => {
-        // this.$store.commit("channels", res)
-        this.groups = res
-        this.groups.forEach(function (item) {
-          item["show"] = false;
-          item["quit"] = false;
-        });
-        this.groups = JSON.parse(JSON.stringify(this.groups))
-        this.allPageG = Math.ceil(this.groups.length / this.num);
-      });
-    }
   },
 
   mounted () {
@@ -527,6 +516,9 @@ export default {
         });
         this.groups = JSON.parse(JSON.stringify(this.groups))
         this.allPageG = Math.ceil(this.groups.length / this.num);
+        if (this.allPageG == 0) {
+          this.pageG = 0;
+        }
         // this.groups = [{
         //   group_id: 1,
         //   group_name: 'Breakfast & brunch',
@@ -557,6 +549,9 @@ export default {
         });
         this.friends = JSON.parse(JSON.stringify(this.friends))
         this.allPageF = Math.ceil(this.friends.length / this.num);
+        if (this.allPageF == 0) {
+          this.pageF = 0;
+        }
         // console.log(this.friends)
         // this.friends = [{
         //   'friend_id': 1,

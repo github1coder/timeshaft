@@ -21,7 +21,7 @@
         >
           <!-- <v-system-bar></v-system-bar> -->
           <v-list dark>
-            <v-list-item>
+            <!-- <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
@@ -37,10 +37,10 @@
               >
                 修改头像
               </v-btn>
-            </v-list-item>
+            </v-list-item> -->
             <v-list-item>
               <v-list-item-content @dblclick="iShowC">
-                <v-list-item-title>
+                <v-list-item-title large>
                   {{this.$store.getters.groupName}}
                 </v-list-item-title>
                 <v-textarea
@@ -50,8 +50,11 @@
                   rows="4"
                   black
                   v-model="introduction"
-                  row-height="30"
+                  row-height="40"
                 ></v-textarea>
+                <!-- <span>
+                  双击修改团队介绍
+                </span> -->
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -81,7 +84,7 @@
                   v-show="subItem.show"
                   v-model="name"
                   @keydown.esc="showTextField(j + num * (pageF - 1))"
-                  @keydown.enter="changeFriendName(j + num * (pageF - 1))"
+                  @keydown.enter="changeName(j + num * (pageF - 1))"
                   clearable
                 >
                   <!-- 确定删除好友 -->
@@ -95,7 +98,7 @@
                     color="error"
                     fab
                     x-small
-                    @click="killFriend(j + num * (pageF - 1))"
+                    @click="addSubMaster(j + num * (pageF - 1))"
                   >
                     确定
                   </v-btn>
@@ -111,7 +114,7 @@
                 </div>
               </v-list-item-content>
               <!-- 后面的省略号 -->
-              <v-list-item-action>
+              <v-list-item-action v-show="isSelf(j + num * (pageF - 1)) || isMaster()">
                 <v-menu right>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -127,12 +130,30 @@
                     hover
                     dark
                   >
-                    <v-list-item
+                    <!-- <v-list-item
                       v-for="(btnn, i) in friendsBtns"
                       :key="i"
                       @click="getMethod(btnn.method, j + num * (pageF - 1))"
                     >
                       <v-list-item-title>{{ btnn.title }}</v-list-item-title>
+                    </v-list-item> -->
+                    <v-list-item
+                      v-show="isSelf(j + num * (pageF - 1))"
+                      @click="getMethod(friendsBtns[0].method, j + num * (pageF - 1))"
+                    >
+                      <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item
+                      v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                      @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
+                    >
+                      <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item
+                      v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                      @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
+                    >
+                      <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -163,18 +184,55 @@
           </v-list-group>
         </v-list>
       </v-card>
+      <v-btn
+        v-show="isMaster() && !this.kill"
+        @click="showKill"
+        color="error"
+      >
+        解散群聊
+      </v-btn>
+      <div
+        style="width: 100%;"
+        v-show="kill"
+      >
+        <v-btn
+          class="mx-2"
+          color="blue"
+          width="40%"
+          @click="subGroup"
+        >
+          确认解散
+        </v-btn>
+        <v-btn
+          class="mx-2"
+          color="blue"
+          width="40%"
+          @click="showKill"
+        >
+          取消
+        </v-btn>
+      </div>
+    </v-card>
+    <v-card
+      dark
+      style="margin-top: 200px"
+      v-show="this.$store.getters.groupId == -1"
+    >
+      从通讯录“我的团队”点击“详情”可在此页面查看团队信息
     </v-card>
   </div>
+
 </template>
 
 <script>
-import { getGroupMember } from '../api/addresslist/index'
+import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup } from '../api/addresslist/index'
 export default {
   data () {
     return {
       name: "",
       iShow: true,
-      introduction: "这是我的软工团队",
+      kill: false,
+      introduction: "这是我的团队",
       num: 10,
       pageF: 1,
       allPageF: 1,
@@ -186,6 +244,9 @@ export default {
       }, {
         title: '设置管理员',
         method: 'showQuitField'
+      }, {
+        title: '取消管理员',
+        method: 'subSubMaster'
       },],
     };
   },
@@ -222,6 +283,10 @@ export default {
   methods: {
     method1 () {
 
+    },
+
+    getMethod: function (methodName, index) {
+      this[methodName](index);
     },
     downPageF () {
       this.initBtns()
@@ -271,6 +336,69 @@ export default {
       this.friendsIndex = j;
       this.name = "";
     },
+
+    isMaster () {
+      return this.$store.getters.userId == this.$store.getters.master
+    },
+
+    isSelf (index) {
+      return this.$store.getters.userId == this.friends[index].id
+    },
+
+    changeName (index) {
+      changeGroupNickname({
+        "nickname": this.name,
+        "group_id": this.$store.getters.groupId,
+        "user_id": this.friends[index].id,
+        "ACCESS_TOKEN": null,
+      }).then(res => {
+        console.log(res)
+        this.friends[index].name = this.name
+        this.friends[this.friendsIndex].show = false;
+      })
+    },
+
+    addSubMaster (index) {
+      addGroupManager({
+        "group_id": this.$store.getters.groupId,
+        "user_id": this.friends[index].id,
+        "ACCESS_TOKEN": null,
+      }).then(res => {
+        console.log(res)
+        this.showQuitField(index)
+      })
+    },
+
+    subSubMaster (index) {
+      delGroupManager({
+        "group_id": this.$store.getters.groupId,
+        "user_id": this.friends[index].id,
+        "ACCESS_TOKEN": null,
+      }).then(res => {
+        console.log(res)
+      })
+    },
+
+    showKill () {
+      this.kill = !this.kill
+    },
+
+    subGroup () {
+      delGroup({
+        "user_id": this.$store.getters.userId,
+        "ACCESS_TOKEN": null,
+        "group_id": this.$store.getters.groupId
+      }).then(res => {
+        console.log(res)
+        this.$store.commit("setGroupId", -1)
+        this.$store.commit("setGroupName", "")
+        this.$store.commit("setGroupPhoto", "")
+        this.$store.commit("setMaster", "")
+        this.$store.commit("changeSiderState", 1)
+        this.$store.commit("setAbout", 1)
+        this.$parent.$parent.$refs.sider1[0].$el.click()
+      })
+    }
   }
 }
 </script>

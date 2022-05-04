@@ -24,7 +24,7 @@
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
-                  src="https://cdn.vuetifyjs.com/images/john.png"
+                  :src="photo"
                 ></v-img>
               </v-list-item-icon>
             </v-list-item>
@@ -40,8 +40,8 @@
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title class="title">John Leider</v-list-item-title>
-                <v-list-item-subtitle>john@vuetifyjs.com</v-list-item-subtitle>
+                <v-list-item-title v-text="name"></v-list-item-title>
+                <v-list-item-subtitle v-text="email"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -97,7 +97,10 @@
               </div>
             </v-list-item>
           </v-list-group>
-          <v-list-group prepend-icon="~">
+          <v-list-group
+            prepend-icon="~"
+            @click="initText"
+          >
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>创建团队</v-list-item-title>
@@ -114,7 +117,7 @@
                   dense
                   dark
                   hide-details
-                  label="团队名字"
+                  :label="labelG"
                   v-model="textG"
                   class="input-search mt-3"
                   autocomplete="off"
@@ -135,12 +138,18 @@
   </div>
 </template>
 <script>
+import { addGroup } from '../api/addresslist/index';
 export default {
   data () {
     return {
+      name: this.$store.getters.myNick,
+      photo: this.$store.getters.myIcon,
+      email: this.$store.getters.email,
       checkCode: "",
       password: "",
       passwordN: "",
+      textG: "",
+      labelG: "团队名字",
     };
   },
 
@@ -157,6 +166,40 @@ export default {
       this.password = ""
       this.passwordN = ""
     },
+
+    initText () {
+      this.textG = ""
+      this.labelG = "团队名字"
+    },
+
+    newGroup () {
+      if (this.textG == "" || this.$store.getters.userId == -1) {
+        return;
+      }
+      addGroup({
+        "master_id": this.$store.getters.userId,
+        "name": this.textG,
+        "notice": "",
+        "photo": "",
+      }).then(res => {
+        this.textG = ""
+        this.labelG = "创建成功"
+        console.log(res)
+      })
+      // getGroups({
+      //   "user_id": this.$store.getters.userId,
+      //   "ACCESS_TOKEN": null
+      // }).then(res => {
+      //   // this.$store.commit("channels", res)
+      //   this.groups = res
+      //   this.groups.forEach(function (item) {
+      //     item["show"] = false;
+      //     item["quit"] = false;
+      //   });
+      //   this.groups = JSON.parse(JSON.stringify(this.groups))
+      //   this.allPageG = Math.ceil(this.groups.length / this.num);
+      // });
+    }
   }
 }
 </script>

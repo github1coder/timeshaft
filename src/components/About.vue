@@ -10,13 +10,20 @@
       <v-bottom-navigation
         color="blue"
         dark
+        mandatory
       >
-        <v-btn @click="show1">
-          <v-icon>mdi-account-group</v-icon>
+        <v-btn
+          @click="show1"
+          ref="show1"
+        >
+          <v-icon>mdi-account-wrench</v-icon>
         </v-btn>
 
-        <v-btn @click="show2">
-          <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-btn
+          @click="show2"
+          ref="show2"
+        >
+          <v-icon>mdi-account-supervisor-circle</v-icon>
         </v-btn>
       </v-bottom-navigation>
     </div>
@@ -66,6 +73,9 @@ export default {
   },
 
   mounted () {
+    if (this.$store.getters.about == 2) {
+      this.$refs.show2.$el.click()
+    }
   },
 };
 </script>
