@@ -125,9 +125,10 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/getHistoryMessage")
-    public ResponseService getHistoryMessage(@RequestParam(value = "srcId") Integer srcId,
-                                             @RequestParam(value = "dstId") Integer dstId,
-                                             @RequestParam(value = "index") Integer index) {
+    public ResponseService getHistoryMessage(@RequestBody Map<String, Object> requestMap) {
+        int srcId = (Integer) requestMap.get("srcId");
+        int dstId = (Integer) requestMap.get("dstId");
+        int index = (Integer) requestMap.get("index");
         List<PersonalMessage> historyMessage = new ArrayList<>();
         historyMessage.addAll(personalMessageService.queryHistoryById(dstId, srcId, index));
         historyMessage.addAll(personalMessageService.queryHistoryById(srcId, dstId, index));
