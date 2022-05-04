@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import '../api/addresslist/index'
-import GroupAndFriend from './GroupAndFriend.vue'
+import '../../api/addresslist/index'
+import GroupAndFriend from '../GroupAndFriend.vue'
 import AddMember from './Addmember.vue'
 import ApplyList from './ApplyList.vue'
 export default {

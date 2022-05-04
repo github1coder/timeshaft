@@ -138,7 +138,7 @@
   </div>
 </template>
 <script>
-import { addGroup } from '../api/addresslist/index';
+import { addGroup } from '../../api/addresslist/index';
 export default {
   data () {
     return {

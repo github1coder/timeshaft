@@ -163,7 +163,10 @@
 
           <div class="chat-screen">
             <div class="chat-content">
-              <div class="messages"  v-scroll.self="onScroll" >
+              <div
+                class="messages"
+                v-scroll.self="onScroll"
+              >
                 <div :class="draw ? 'message-container-open' : 'message-container-close'">
                   <Chat></Chat>
                 </div>
@@ -229,11 +232,11 @@ import TimeShaft from "../components/shaft/TimeShaft.vue";
 // import ChatTools from "@/components/ChatTools";
 // import ListSider from "@/components/ListSider";
 import ChatSider from "@/components/ChatSider";
-import Addresslist from "@/components/Addresslist";
-import About from "@/components/About";
+import Addresslist from "@/components/Addresslist/Addresslist";
+import About from "@/components/About/About";
 
 import { logout } from '../api/user';
-import {getHistoryMessage} from "@/api/message";
+import { getHistoryMessage } from "@/api/message";
 
 export default {
   name: "Home",
@@ -398,7 +401,7 @@ export default {
       })
 
     },
-    onScroll() {
+    onScroll () {
       // console.log(document.documentElement.scrollTop || document.querySelector('.messages').scrollTop)
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
         this.refreshed = true
@@ -410,7 +413,7 @@ export default {
   },
 
   watch: {
-    refreshed(newVal, oldVal) {
+    refreshed (newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
         console.log(this.$store.state.more)
@@ -426,7 +429,7 @@ export default {
             if (this.$store.state.currentChannelIdx !== -1) {
               this.$store.state.messageList[this.$store.state.currentChannelIdx].index = res.index
               console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
-              for (let i = res.data.length-1; i >= 0; i--) {
+              for (let i = res.data.length - 1; i >= 0; i--) {
                 this.$store.state.messageList[this.$store.state.currentChannelIdx].data.unshift(res.data[i])
               }
               console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
