@@ -162,7 +162,7 @@
   </div>
 </template>
 <script>
-import { apply, search } from "../api/addresslist/index"
+import { apply, search } from "../../api/addresslist/index"
 export default {
   data () {
     return {
@@ -188,7 +188,7 @@ export default {
     },
 
     downPageF () {
-      if (this.pageF != 1) {
+      if (this.pageF != 1 && this.pageF != 0) {
         this.pageF -= 1
       }
     },
@@ -200,7 +200,7 @@ export default {
     },
 
     downPageG () {
-      if (this.pageG != 1) {
+      if (this.pageG != 1 && this.pageG != 0) {
         this.pageG -= 1
       }
     },
