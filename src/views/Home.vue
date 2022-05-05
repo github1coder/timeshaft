@@ -11,8 +11,8 @@
 
 <script>
 // @ is an alias to /src
-import Addresslist from "@/components/Addresslist";
-import About from "@/components/About";
+import Addresslist from "@/components/Addresslist/Addresslist";
+import About from "@/components/About/About";
 import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
 
