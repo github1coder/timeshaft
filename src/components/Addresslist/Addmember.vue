@@ -9,7 +9,7 @@
     >
       <v-card
         height="50%"
-        style="overflow: auto; overflow-x: hidden; height: 460px;"
+        style="overflow: auto; overflow-x: hidden"
       >
         <v-row
           dense
@@ -84,7 +84,10 @@
           </v-btn>
         </v-row>
       </v-card>
-      <v-card height="50%">
+      <v-card
+        height="50%"
+        style="overflow: auto; overflow-x: hidden"
+      >
         <v-row
           dense
           style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
@@ -162,14 +165,14 @@
   </div>
 </template>
 <script>
-import { apply, search } from "../api/addresslist/index"
+import { apply, search } from "../../api/addresslist/index"
 export default {
   data () {
     return {
       num: 5,
-      pageF: 1,
+      pageF: 0,
       allPageF: 0,
-      pageG: 1,
+      pageG: 0,
       allPageG: 0,
       textF: "",
       textG: "",
@@ -188,7 +191,7 @@ export default {
     },
 
     downPageF () {
-      if (this.pageF != 1) {
+      if (this.pageF != 1 && this.pageF != 0) {
         this.pageF -= 1
       }
     },
@@ -200,7 +203,7 @@ export default {
     },
 
     downPageG () {
-      if (this.pageG != 1) {
+      if (this.pageG != 1 && this.pageG != 0) {
         this.pageG -= 1
       }
     },
@@ -229,6 +232,9 @@ export default {
         });
         this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
         this.allPageF = Math.ceil(this.friendAns.length / this.num)
+        if (this.allPageF != 0) {
+          this.pageF = 1
+        }
       })
     },
     searchGroup () {
@@ -246,6 +252,9 @@ export default {
         });
         this.groupAns = JSON.parse(JSON.stringify(this.groupAns))
         this.allPageG = Math.ceil(this.groupAns.length / this.num)
+        if (this.allPageG != 0) {
+          this.pageG = 1
+        }
       })
     },
 

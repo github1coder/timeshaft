@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import '../api/addresslist/index'
+import '../../api/addresslist/index'
 import AboutMe from './AboutMe'
 import AboutGroup from './AboutGroup'
 export default {

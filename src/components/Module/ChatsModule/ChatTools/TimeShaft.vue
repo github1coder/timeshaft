@@ -79,7 +79,7 @@
 </template>
 <script>
 export default {
-  name: "TimeShft",
+  name: "TimeShaft",
   data() {
     return {
       //显示时间
