@@ -1,6 +1,10 @@
 <template>
   <v-card style="height: 100%; width: 100%">
-    <div v-if="this.$store.getters.about == -1"></div>
+    <v-card
+      dark
+      style="height: 100%; width: 100%"
+      v-if="this.$store.getters.about == -1"
+    ></v-card>
     <info-f v-if="this.$store.getters.about == 0"></info-f>
     <info-g v-else-if="this.$store.getters.about == 1"></info-g>
   </v-card>

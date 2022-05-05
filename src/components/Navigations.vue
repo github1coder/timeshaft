@@ -1,29 +1,29 @@
 <template>
   <nav class="guilds">
     <v-card
-        dark
-        flat
-        tile
-        width="100%"
-        height="100%"
+      dark
+      flat
+      tile
+      width="100%"
+      height="100%"
     >
       <v-container fluid>
         <v-row justify="center">
           <v-menu
-              bottom
-              min-width="200px"
-              rounded
-              offset-y
+            bottom
+            min-width="200px"
+            rounded
+            offset-y
           >
             <template v-slot:activator="{ on }">
               <v-btn
-                  icon
-                  x-large
-                  v-on="on"
+                icon
+                x-large
+                v-on="on"
               >
                 <v-avatar
-                    color="brown"
-                    size="48"
+                  color="brown"
+                  size="48"
                 >
                   <span class="white--text text-h5">{{ $store.state.myNick[0] }}</span>
                 </v-avatar>
@@ -41,19 +41,19 @@
                   </p>
                   <v-divider class="my-3"></v-divider>
                   <v-btn
-                      depressed
-                      rounded
-                      text
-                      @click="editAccount"
+                    depressed
+                    rounded
+                    text
+                    @click="editAccount"
                   >
                     Edit Account
                   </v-btn>
                   <v-divider class="my-3"></v-divider>
                   <v-btn
-                      depressed
-                      rounded
-                      text
-                      @click="disconnect"
+                    depressed
+                    rounded
+                    text
+                    @click="disconnect"
                   >
                     Disconnect
                   </v-btn>
@@ -65,15 +65,15 @@
       </v-container>
       <v-list>
         <v-list-item-group
-            v-model="model"
-            mandatory
-            color="indigo"
+          v-model="model"
+          mandatory
+          color="indigo"
         >
           <v-list-item
-              v-for="(item, i) in navs"
-              :key="i"
-              @click="$store.commit('changeSiderState', i)"
-              :ref="`sider` + i"
+            v-for="(item, i) in navs"
+            :key="i"
+            @click="$store.commit('changeSiderState', i)"
+            :ref="`sider` + i"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
@@ -90,11 +90,11 @@
 </template>
 
 <script>
-import {logout} from "@/api/user";
+import { logout } from "@/api/user";
 
 export default {
   name: "Navigations",
-  data() {
+  data () {
     return {
       model: 0,
       navs: [{
@@ -130,7 +130,7 @@ export default {
         this.$store.commit("setGroupPhoto", null)
         this.$store.commit("setMaster", -1)
         this.$store.commit("changeSiderState", 0)
-        this.$store.commit("setAbout", 1)
+        this.$store.commit("setAbout", -1)
         this.$router.push({
           path: '/',
         })
@@ -146,5 +146,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
