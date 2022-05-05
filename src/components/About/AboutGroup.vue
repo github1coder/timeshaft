@@ -13,6 +13,7 @@
         width="280px"
         tile
         dark
+        style="overflow: auto; overflow-x: hidden"
       >
         <v-navigation-drawer
           permanent
@@ -182,6 +183,7 @@
               </v-row>
             </v-card>
           </v-list-group>
+
         </v-list>
       </v-card>
       <v-btn

@@ -1,7 +1,7 @@
 <template>
   <div
     class="sb-container"
-    style="overflow: auto; overflow-x: hidden; height: 100%"
+    style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"
   >
     <v-card
       height="100%"
@@ -249,8 +249,8 @@
 </template>
 
 <script>
-import '../../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup } from '../../api/addresslist/index';
+import '../../../api/addresslist/index'
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup } from '../../../api/addresslist/index';
 export default {
   components: {},
 

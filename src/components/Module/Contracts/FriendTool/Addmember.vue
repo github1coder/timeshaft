@@ -165,7 +165,7 @@
   </div>
 </template>
 <script>
-import { apply, search } from "../../api/addresslist/index"
+import { apply, search } from "../../../../api/addresslist/index"
 export default {
   data () {
     return {
