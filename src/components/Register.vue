@@ -2,10 +2,10 @@
   <v-overlay
     class="welcome-overlay"
     :value="overlay"
-    opacity="0.8"
+    opacity="0.2"
   >
     <v-card
-      color="#474b63"
+      color="#78909C"
       class="welcome-card"
     >
       <div>
@@ -77,14 +77,14 @@
           <v-btn
             class="join-btn"
             large
-            color="info"
+            color="normal"
             @click="sendCheckCode"
             :disabled="loadingCheckCode"
           >{{hint}}</v-btn>
           <v-btn
             class="join-btn"
             large
-            color="info"
+            color="normal"
             @click="register"
             :loading="loadingRegister"
             :disabled="loadingRegister"
@@ -100,7 +100,7 @@
         </span>
       </v-card-text>
       <router-link to="/login">
-        <v-card-text to="/login">已有账号，返回登录</v-card-text>
+        <v-card-text to="/login" style="color: #323335">已有账号，返回登录</v-card-text>
       </router-link>
     </v-card>
   </v-overlay>
