@@ -150,7 +150,7 @@
   </div>
 </template>
 <script>
-import { apply, getApplyList } from "../../api/addresslist/index"
+import { apply, getApplyList } from "../../../../api/addresslist/index"
 export default {
   data () {
     return {
