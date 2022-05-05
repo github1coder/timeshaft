@@ -1,12 +1,8 @@
-
-
-
 <template>
   <div class="sidebar">
     <div class="sb-container">
       <v-card height="100%" dark flat tile class="server-info">
         <v-card height="60" tile class="server-title">
-          <!--          <div style="line-height:48px">Discord Clone</div>-->
           <div v-on:keyup.enter="search">
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
@@ -52,11 +48,6 @@
                       class="channel-title"
                       v-text="item.chatName"
                   ></v-list-item-title>
-<!--                  <v-list-item-subtitle-->
-<!--                      v-if="item.data.length>0"-->
-<!--                      class="channel-title"-->
-<!--                      v-text="item.data[item.data.length-1].message">-->
-<!--                  </v-list-item-subtitle>-->
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -71,7 +62,7 @@
 import {getHistoryMessage, haveRead} from "@/api/message";
 
 export default {
-  name: "ChatSider",
+  name: "MessageList",
   data() {
     return {
       text: '',
