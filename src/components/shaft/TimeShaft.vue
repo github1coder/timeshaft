@@ -10,7 +10,7 @@
       <v-btn
           absolute
           bottom
-          color="pink"
+          color="blue-grey darken-4"
           right
           fab
       >
@@ -38,7 +38,7 @@
     </v-card>
 
     <v-card
-        class="overflow-x-hidden overflow-y-auto"
+        class="overflow-x-auto overflow-y-auto"
         max-height="65vh"
     >
       <v-timeline
