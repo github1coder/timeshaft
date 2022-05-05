@@ -1,7 +1,7 @@
 <template>
   <div
     class="sb-container"
-    style="overflow: auto; overflow-x: hidden; height: 0px"
+    style="overflow: auto; overflow-x: hidden; height: 100%"
   >
     <v-card
       height="100%"
@@ -441,7 +441,7 @@ export default {
     },
     downPageG () {
       this.initBtns()
-      if (this.pageG != 1  && this.pageG != 0) {
+      if (this.pageG != 1 && this.pageG != 0) {
         this.pageG -= 1
       }
     },

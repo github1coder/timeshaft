@@ -9,7 +9,7 @@
     >
       <v-card
         height="50%"
-        style="overflow: auto; overflow-x: hidden; height: 460px;"
+        style="overflow: auto; overflow-x: hidden"
       >
         <v-row
           dense
@@ -84,7 +84,10 @@
           </v-btn>
         </v-row>
       </v-card>
-      <v-card height="50%">
+      <v-card
+        height="50%"
+        style="overflow: auto; overflow-x: hidden"
+      >
         <v-row
           dense
           style="width: 100%; height: 64px; border: white 0px solid; margin: auto;"
