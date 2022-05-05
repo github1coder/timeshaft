@@ -25,17 +25,18 @@ export default {
   data () {
     return {
       model: 1,
+      tempDraw: false,
     }
   },
   methods: {
     changeBand (index) {
-      if (!this.draw) {
-        this.draw = !this.draw
+      if (!this.tempDraw) {
+        this.tempDraw = !this.tempDraw
         this.tools[index].show = true
       }
       else {
         if (this.tools[index].show) {
-          this.draw = !this.draw
+          this.tempDraw = !this.tempDraw
           this.tools[index].show = false
         }
         else {
@@ -44,8 +45,14 @@ export default {
           }
         }
       }
-      this.$emit("callback", this.draw)
+      this.$emit("callback", this.tempDraw)
     },
+  },
+  watch: {
+    draw(newVal, oldVal) {
+      oldVal
+      this.tempDraw = this.draw
+    }
   }
 }
 

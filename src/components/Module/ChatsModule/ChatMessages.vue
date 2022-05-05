@@ -1,8 +1,8 @@
 <template>
   <div class="chat-content">
-    <div class="messages"  v-scroll.self="onScroll" >
+    <div class="messages" id="scroll-target" >
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
-        <v-list  three-line dark>
+        <v-list  three-line dark v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
               <v-list-item-avatar>
@@ -74,11 +74,13 @@ export default {
       })
     },
     onScroll() {
+      console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
         this.refreshed = true
       } else if (document.documentElement.scrollTop || document.querySelector('.messages').scrollTop !== 0) {
         this.refreshed = false
       }
+      console.log(this.refreshed)
     },
     getDate () {
       const date = new Date();//当前时间
@@ -116,7 +118,7 @@ export default {
     refreshed(newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
-        console.log(this.$store.state.more)
+        console.log("more: " + this.$store.state.more)
         if (this.$store.state.more) {
           getHistoryMessage({
             srcId: this.$store.state.userId,

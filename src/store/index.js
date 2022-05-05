@@ -92,6 +92,7 @@ export default new Vuex.Store({
         changeChannel(store, data) {
             store.currentChannelId = data.id;
             store.currentChannelIdx = data.idx;
+            store.more = true
             // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {
@@ -259,6 +260,7 @@ export default new Vuex.Store({
         initMessageList(state, data) {
             console.log(state.messageList)
             for (let d in data) {
+                data.shaftId = null
                 state.messageList.push(data[d])
             }
             console.log(state.messageList)
