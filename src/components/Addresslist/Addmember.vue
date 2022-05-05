@@ -167,9 +167,9 @@ export default {
   data () {
     return {
       num: 5,
-      pageF: 1,
+      pageF: 0,
       allPageF: 0,
-      pageG: 1,
+      pageG: 0,
       allPageG: 0,
       textF: "",
       textG: "",
@@ -229,6 +229,9 @@ export default {
         });
         this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
         this.allPageF = Math.ceil(this.friendAns.length / this.num)
+        if (this.allPageF != 0) {
+          this.pageF = 1
+        }
       })
     },
     searchGroup () {
@@ -246,6 +249,9 @@ export default {
         });
         this.groupAns = JSON.parse(JSON.stringify(this.groupAns))
         this.allPageG = Math.ceil(this.groupAns.length / this.num)
+        if (this.allPageG != 0) {
+          this.pageG = 1
+        }
       })
     },
 

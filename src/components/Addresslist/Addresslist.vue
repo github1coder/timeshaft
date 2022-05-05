@@ -30,9 +30,9 @@
 
 <script>
 import '../../api/addresslist/index'
-import GroupAndFriend from '../GroupAndFriend.vue'
 import AddMember from './Addmember.vue'
 import ApplyList from './ApplyList.vue'
+import GroupAndFriend from './GroupAndFriend.vue'
 export default {
   components: {
     AddMember,

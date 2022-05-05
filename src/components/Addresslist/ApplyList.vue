@@ -167,6 +167,9 @@ export default {
       this.friendAns = res
       this.allPageF = Math.ceil(this.friendAns.length / this.num)
       console.log(this.friendAns)
+      if (this.allPageF == 0) {
+        this.pageF = 0;
+      }
     })
     getApplyList({
       "user_id": this.$store.getters.userId,
@@ -176,6 +179,9 @@ export default {
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
       console.log(this.groupAns)
+      if (this.allPageG == 0) {
+        this.pageG = 0;
+      }
     })
   },
 

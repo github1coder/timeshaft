@@ -249,8 +249,8 @@
 </template>
 
 <script>
-import '../api/addresslist/index'
-import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup } from '../api/addresslist/index';
+import '../../api/addresslist/index'
+import { getGroups, changeNickname, getFriends, changeGroupNickname, delFriend, quitGroup } from '../../api/addresslist/index';
 export default {
   components: {},
 
