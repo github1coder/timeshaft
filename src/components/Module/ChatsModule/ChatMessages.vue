@@ -106,12 +106,22 @@ export default {
     clearMsg () {
       this.inputMsg = ""
     },
+    scrollToBottom() {
+      this.$nextTick(()=>{
+        const list = this.$el.querySelector(".messages");
+        console.log("list is:")
+        console.log(list)
+        list.scrollTop = list.scrollHeight
+      })
+
+    }
   },
   computed: {
     messages() {
       if (this.$store.state.messageList.length === 0 || this.$store.state.currentChannelIdx === -1) {
         return []
       } else {
+        this.scrollToBottom()
         return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
       }
     },
@@ -142,7 +152,7 @@ export default {
           })
         }
       }
-    }
+    },
   },
 
 }

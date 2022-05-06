@@ -24,9 +24,27 @@ export default {
     ContractsModule,
   },
   created() {
-    sessionStorage.getItem("data") &&
-    this.$store.replaceState(JSON.parse(sessionStorage.getItem("data")))
+
+
+
+    window.onbeforeunload = () => {
+      sessionStorage.setItem("data", JSON.stringify(this.$store.state))
+      console.log("save")
+      console.log(sessionStorage.getItem("data"))
+    }
+
+    console.log("get")
+    console.log(sessionStorage.getItem("data"))
+    if (sessionStorage.getItem("data")) {
+      this.$store.replaceState(JSON.parse(sessionStorage.getItem("data")))
+      setTimeout(function () {
+        sessionStorage.removeItem("data");
+      }, 300)
+    }
+
   }
+
+
 };
 </script>
 

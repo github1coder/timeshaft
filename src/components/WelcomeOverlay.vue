@@ -177,7 +177,6 @@ export default {
               console.log("收到聊天订阅列表")
               this.$store.commit("initListenerList", res)
               this.$store.commit("WEBSOCKET_INIT")
-              sessionStorage.setItem("data", JSON.stringify(this.$store.state))
             })
           })
 
