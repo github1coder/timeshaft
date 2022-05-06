@@ -48,6 +48,7 @@ public class AddressListController {
             map.put("friend_name", tmp.getUsername());
             map.put("friend_photo", tmp.getPhoto());
             map.put("friend_nick", nick);
+            map.put("mail", userService.queryById(tmp.getId()).getEmail());
             res.add(map);
         }
         return new ResponseService(res);
@@ -162,6 +163,7 @@ public class AddressListController {
             ans.put("name", user.getUsername());
             ans.put("photo", user.getPhoto());
             ans.put("nick", users.get(user));
+            ans.put("mail", user.getEmail());
             res.add(ans);
         }
         return new ResponseService(res);
