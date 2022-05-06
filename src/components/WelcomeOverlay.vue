@@ -3,37 +3,36 @@
     class="welcome-overlay"
     :value="overlay"
     opacity="0.2"
-
   >
-  <v-card
+    <v-card
       color="#78909C"
       class="welcome-card"
-  >
-    <div>
-      <v-avatar
+    >
+      <div>
+        <v-avatar
           width="100"
           height="0"
           class="mt-5"
-      >
-        <v-img :src="$store.state.ownerIcon"></v-img>
-      </v-avatar>
-    </div>
-    <h2 class="mt-4 text-center">欢迎使用Time Shaft</h2>
-    <v-card-text>请登录</v-card-text>
-    <v-card-text class="mt-n4 mb-n6">
-      <v-form
+        >
+          <v-img :src="$store.state.ownerIcon"></v-img>
+        </v-avatar>
+      </div>
+      <h2 class="mt-4 text-center">欢迎使用Time Shaft</h2>
+      <v-card-text>请登录</v-card-text>
+      <v-card-text class="mt-n4 mb-n6">
+        <v-form
           ref="welcomeform"
           v-model="valid"
-      >
-        <v-text-field
+        >
+          <v-text-field
             class="text-field"
             v-model="email"
             label="邮箱"
             required
             :counter="30"
             :rules="rules.email"
-        ></v-text-field>
-        <v-text-field
+          ></v-text-field>
+          <v-text-field
             class="text-field"
             v-model="password"
             label="密码"
@@ -43,47 +42,47 @@
             :type="type"
             @mouseover="changeShowText"
             @mouseleave="changeShowPassword"
-        ></v-text-field>
-      </v-form>
-    </v-card-text>
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
 
-    <v-card-text>
-      <v-card-actions>
-        <v-btn
+      <v-card-text>
+        <v-card-actions>
+          <v-btn
             class="join-btn"
             large
             color="normal"
             @click="login"
             :loading="loading"
             :disabled="loading"
-        >登录</v-btn>
+          >登录</v-btn>
 
-        <v-btn
+          <v-btn
             class="join-btn"
             large
             color="normal"
             to="/register"
-        >注册</v-btn>
-      </v-card-actions>
+          >注册</v-btn>
+        </v-card-actions>
 
-    </v-card-text>
-    <v-card-text
+      </v-card-text>
+      <v-card-text
         style="margin: auto"
         v-show="show"
-    >
+      >
         <span style="color: brown">
           {{error}}
         </span>
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
 
   </v-overlay>
 </template>
 
 <script>
-import {login} from '../api/user/index'
+import { login } from '../api/user/index'
 
-import {getMessagesList, getSubscribeUrlList} from "@/api/message";
+import { getMessagesList, getSubscribeUrlList } from "@/api/message";
 
 export default {
   data () {
@@ -120,7 +119,7 @@ export default {
     this.$store.commit("setGroupPhoto", null)
     this.$store.commit("setMaster", -1)
     this.$store.commit("changeSiderState", 0)
-    this.$store.commit("setAbout", 1)
+    this.$store.commit("setAbout", -1)
     this.$store.state.messageList = []
     this.$store.state.listenerList = []
     this.$store.state.stompClient = null
