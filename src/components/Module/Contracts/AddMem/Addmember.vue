@@ -80,7 +80,7 @@
               <v-list-item-action>
                 <v-btn
                   small
-                  @click="newApplyF(j + num * (pageG - 1))"
+                  @click="newApplyF(j + num * (pageF - 1))"
                   :disabled="subItem.show"
                 >
                   <v-icon>mdi-plus</v-icon>
@@ -153,7 +153,7 @@
               @click="method1"
             >
               <v-list-item-avatar>
-                <v-img :src="subItem.photo"></v-img>
+                <span class="white--text text-h5">{{ subItem.name[0] }}</span>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title

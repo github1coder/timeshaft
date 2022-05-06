@@ -25,7 +25,7 @@
           <v-list-item
             v-for="(subItem, j) in groups.slice(num * (pageG - 1), num * pageG)"
             :key="j"
-            @click="infoG(j + num * (pageF - 1))"
+            @click="infoG(j + num * (pageG - 1))"
             @contextmenu.prevent="method1"
           >
             <v-list-item-avatar color="blue">
