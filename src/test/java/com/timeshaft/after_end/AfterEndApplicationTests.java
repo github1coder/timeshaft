@@ -34,9 +34,9 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        int sourceId = 1;
-        GroupUser groupUser = groupUserService.queryById(sourceId);
-        System.out.println(groupUser.getUserNickname());
-        System.out.println(groupUser.getUserId());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("srcId", 15);
+        hashMap.put("dstId", 12);
+        chatController.getMessagesList(hashMap);
     }
 }
