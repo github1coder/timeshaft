@@ -137,8 +137,8 @@ export default {
       })
     },
     editAccount () {
-      this.$store.commit("setAbout", 1)
-      this.$store.commit("changeSiderState", 4)
+      this.$store.commit("setAbout", -1)
+      this.$store.commit("changeSiderState", 1)
     },
   }
 }

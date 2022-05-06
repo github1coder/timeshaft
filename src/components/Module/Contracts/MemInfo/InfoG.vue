@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%; height: 100%">
     <v-card
-      style="width: 100%; height: 100%; border: 1px green solid"
+      style="width: 100%; height: 100%;"
       dark
       flat
       tile
@@ -12,7 +12,7 @@
         dark
         style="width: 100%; height: 100%;overflow: auto; overflow-x: hidden"
       >
-        <v-row style="width: 100%; height: 100%; border: 1px green solid">
+        <v-row style="width: 100%; height: 100%;">
           <v-navigation-drawer
             permanent
             style="width: 50%; height:100%"
@@ -58,8 +58,8 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <v-col style="width: 50%; height:100%; border: 1px green solid">
-            <v-list style="width: 100%; height:90%; border: 1px green solid">
+          <v-col style="width: 50%; height:100%;">
+            <v-list style="width: 100%; height:90%;">
               <v-list-group prepend-icon="~">
                 <template v-slot:activator>
                   <v-list-item-content>
@@ -159,7 +159,7 @@
                     </v-menu>
                   </v-list-item-action>
                 </v-list-item>
-                <v-card style="width: 100%; height: 100%; border: 1px green solid">
+                <v-card style="width: 100%; height: 100%;">
                   <v-btn
                     width="33%"
                     @click="downPageF"
@@ -181,7 +181,7 @@
                 </v-card>
               </v-list-group>
             </v-list>
-            <v-card style="width: 100%; height:10%; border: 1px green solid">
+            <v-card style="width: 100%; height:10%;">
               <v-btn
                 v-show="isMaster() && !this.kill"
                 @click="showKill"

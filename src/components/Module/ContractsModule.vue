@@ -1,16 +1,25 @@
 <template>
-  <div style="height:100%; padding: 0px; margin: 0px; border: 1px solid red;">
-    <v-row style="height:93%; border: 1px solid red;">
-      <div style="height:100%; width: 20%;  border: 1px solid red;">
+  <div style="height:100%; padding: 0px; margin: 0px;">
+    <v-row
+      style="height:93%;"
+      v-if="show == 0"
+    >
+      <div style="height:100%; width: 20%;">
         <group-and-friend v-if="show == 0"></group-and-friend>
-        <add-member v-else-if="show == 1"></add-member>
-        <apply-list v-else></apply-list>
       </div>
-      <div style="height:100%; width: 80%; border: 1px solid red;">
+      <div style="height:100%; width: 80%;">
         <info-tool></info-tool>
       </div>
     </v-row>
-    <div style="height:7%; border: 1px solid red;">
+    <add-tool
+      style="height:93%;"
+      v-if="show == 1"
+    ></add-tool>
+    <apply-tool
+      style="height:93%;"
+      v-if="show == 2"
+    ></apply-tool>
+    <div style="height:7%;">
       <v-bottom-navigation
         color="blue"
         dark
@@ -25,13 +34,14 @@
         </v-btn>
 
         <v-btn @click="show2">
-          <span>新朋友/团队</span>
+          <span>添加朋友/团队</span>
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
 
-        <!-- <v-btn @click="show3">
-        <v-icon>mdi-email-plus-outline</v-icon>
-      </v-btn> -->
+        <v-btn @click="show3">
+          <span>好友/团队邀请</span>
+          <v-icon>mdi-email-plus-outline</v-icon>
+        </v-btn>
       </v-bottom-navigation>
     </div>
   </div>
@@ -39,33 +49,22 @@
 
 <script>
 import '../../api/addresslist/index'
-import AddMember from './Contracts/AddMem/Addmember.vue'
-import ApplyList from './Contracts/AddMem/ApplyList.vue'
+import ApplyTool from './Contracts/ApplyTool.vue'
+import AddTool from './Contracts/AddTool.vue'
 import InfoTool from './Contracts/InfoTool.vue'
 import GroupAndFriend from './Contracts/MemberList.vue'
 export default {
   components: {
-    AddMember,
+    AddTool,
     GroupAndFriend,
-    ApplyList,
     InfoTool,
+    ApplyTool,
   },
 
   data () {
     return {
-      itemss: [{
-        text: "Announcements",
-        icon: "mdi-bell-alert"
-      }, {
-        text: "Rules",
-        icon: "mdi-file-check"
-      }, {
-        text: "Welcome",
-        icon: "mdi-emoticon"
-      }],
       member: 0,
       show: 0,
-      values: [true, false, false]
     };
   },
 

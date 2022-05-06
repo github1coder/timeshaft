@@ -4,9 +4,9 @@
       dark
       flat
       tile
-      style="width: 100%; height: 100%; border: 1px green solid"
+      style="width: 100%; height: 100%;"
     >
-      <v-card style="margin: 10% 30%; width: 40%; height: 60%; border: 1px green solid">
+      <v-card style="margin: auto; width: 40%; height: 100%;">
         <div style="width: 100%; height: 100%;">
           <v-img
             style="margin: auto; border-radius: 50%; width: 60%"

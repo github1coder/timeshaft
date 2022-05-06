@@ -1,15 +1,15 @@
 <template>
   <v-card style="height: 100%; width: 100%">
-    <add-member> </add-member>
+    <apply-list></apply-list>
   </v-card>
 </template>
 
 <script>
-import AddMember from "./AddMem/Addmember.vue"
+import ApplyList from "./Apply/ApplyList.vue"
 
 export default {
   components: {
-    AddMember
+    ApplyList
   },
 
   data () {

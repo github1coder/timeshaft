@@ -1,10 +1,10 @@
 <template>
   <v-card style="height: 100%; width: 100%">
-    <v-card
+    <info-me
       dark
-      style="height: 100%; width: 100%"
+      style="height: 100%; width: 100%; border-radius:0px;"
       v-if="this.$store.getters.about == -1"
-    ></v-card>
+    ></info-me>
     <info-f v-if="this.$store.getters.about == 0"></info-f>
     <info-g v-else-if="this.$store.getters.about == 1"></info-g>
   </v-card>
@@ -13,11 +13,13 @@
 <script>
 import InfoF from "./MemInfo/InfoF.vue"
 import InfoG from "./MemInfo/InfoG.vue"
+import InfoMe from "./MemInfo/InfoMe.vue"
 
 export default {
   components: {
     InfoF,
     InfoG,
+    InfoMe
   },
 
   data () {
@@ -29,6 +31,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-</style>
