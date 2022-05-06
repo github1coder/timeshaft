@@ -48,7 +48,7 @@ public class ChatController {
             Integer friendId = friends.getUserId1().equals(sourceId)? friends.getUserId2():friends.getUserId1();
             String chatName = friends.getUserId1().equals(sourceId)? friends.getNickname2():friends.getNickname1();
             String url = "/user/" + friendId + "/" + sourceId;
-            String chatAvatar = "mdi-emoticon-kiss-outline";
+            String chatAvatar = userService.queryById(friendId).getPhoto();
             map.put("id", friendId);
             map.put("chatName", chatName);
             map.put("url", url);
