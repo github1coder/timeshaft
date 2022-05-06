@@ -13,11 +13,13 @@ export default new Vuex.Store({
         userId: -1,
         email: null,
         accessToken: null,
-        groupId: -1,
-        groupPhoto: null,
-        groupName: null,
+        //info相关
+        infoId: -1,
+        infoPhoto: null,
+        infoName: null,
+        infoEmail: null,
         master: -1,
-        about: 1,
+        about: -1, //0代表朋友，1代表群聊
         currentChannelIdx: 0,
         currentChannelId: -1,
         myIcon: "guest.png",
@@ -40,9 +42,10 @@ export default new Vuex.Store({
         email: state => state.email,
         myNick: state => state.myNick,
         myIcon: state => state.myIcon,
-        groupId: state => state.groupId,
-        groupPhoto: state => state.groupPhoto,
-        groupName: state => state.groupName,
+        infoId: state => state.infoId,
+        infoPhoto: state => state.infoPhoto,
+        infoName: state => state.infoName,
+        infoEmail: state => state.infoEmail,
         about: state => state.about,
         master: state => state.master,
         stompClient(state) {
@@ -52,20 +55,23 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setInfoEmail(store, infoEmail) {
+            store.infoEmail = infoEmail
+        },
         setMaster(store, master) {
             store.master = master
         },
         setAbout(store, about) {
             store.about = about
         },
-        setGroupId(store, groupId) {
-            store.groupId = groupId
+        setInfoId(store, infoId) {
+            store.infoId = infoId
         },
-        setGroupPhoto(store, groupPhoto) {
-            store.groupPhoto = groupPhoto
+        setInfoPhoto(store, infoPhoto) {
+            store.infoPhoto = infoPhoto
         },
-        setGroupName(store, groupName) {
-            store.groupName = groupName
+        setInfoName(store, infoName) {
+            store.infoName = infoName
         },
         setUserId(store, userId) {
             store.userId = userId
@@ -206,7 +212,7 @@ export default new Vuex.Store({
                                 console.log(json.srcId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
                                 if (json.srcId === state.messageList[friend].id) {
                                     state.messageList[friend].data.push(json)
-                                    // this.commit("updateMessageList", {id: json.srcId, data: json})
+                                        // this.commit("updateMessageList", {id: json.srcId, data: json})
                                     console.log("收到 id:" + json.srcId.toString() + " 消息:")
                                     console.log(json)
                                     break

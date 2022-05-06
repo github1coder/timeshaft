@@ -32,12 +32,8 @@
 
 <script>
 import '../../api/addresslist/index'
-import AboutMe from './AboutMe'
-import AboutGroup from './AboutGroup'
 export default {
   components: {
-    AboutMe,
-    AboutGroup,
   },
 
   data () {

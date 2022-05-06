@@ -25,7 +25,7 @@
           <v-list-item
             v-for="(subItem, j) in groups.slice(num * (pageG - 1), num * pageG)"
             :key="j"
-            @click="method1"
+            @click="infoG(j + num * (pageF - 1))"
             @contextmenu.prevent="method1"
           >
             <v-list-item-avatar color="blue">
@@ -148,7 +148,7 @@
           <v-list-item
             v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
             :key="j + num * (pageF - 1)"
-            @click="method1"
+            @click="infoF(j + num * (pageF - 1))"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.friend_photo"></v-img>
@@ -316,13 +316,13 @@ export default {
     },
 
     aboutG (index) {
-      this.$store.commit("setGroupId", this.groups[index].group_id)
-      this.$store.commit("setGroupName", this.groups[index].group_name)
-      this.$store.commit("setGroupPhoto", this.groups[index].group_photo)
+      this.$store.commit("setInfoId", this.groups[index].group_id)
+      this.$store.commit("setInfoName", this.groups[index].group_name)
+      this.$store.commit("setInfoPhoto", this.groups[index].group_photo)
       this.$store.commit("setMaster", this.groups[index].master_id)
-      this.$store.commit("changeSiderState", 4)
-      this.$store.commit("setAbout", 2)
-      this.$parent.$parent.$refs.sider4[0].$el.click()
+      // this.$store.commit("changeSiderState", 4)
+      this.$store.commit("setAbout", 1)
+      // this.$parent.$parent.$refs.sider4[0].$el.click()
       // this.$router.push({
       //   path: "/home"
       // })
@@ -498,6 +498,26 @@ export default {
       });
       this.groups.splice(j, 1);
       this.groupsIndex = null;
+    },
+
+    infoF (index) {
+      this.$store.commit("setInfoName", this.friends[index].friend_name)
+      this.$store.commit("setInfoPhoto", this.friends[index].friend_photo)
+      this.$store.commit("setInfoEmail", this.friends[index].friend_email)
+      this.$store.commit("setAbout", 0)
+    },
+
+    infoG (index) {
+      this.$store.commit("setInfoId", this.groups[index].group_id)
+      this.$store.commit("setInfoName", this.groups[index].group_name)
+      this.$store.commit("setInfoPhoto", this.groups[index].group_photo)
+      this.$store.commit("setMaster", this.groups[index].master_id)
+      // this.$store.commit("changeSiderState", 4)
+      this.$store.commit("setAbout", 1)
+      // this.$parent.$parent.$refs.sider4[0].$el.click()
+      // this.$router.push({
+      //   path: "/home"
+      // })
     },
   },
 
