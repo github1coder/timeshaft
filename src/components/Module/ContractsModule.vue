@@ -5,7 +5,10 @@
       v-if="show == 0"
     >
       <div style="height:100%; width: 20%;">
-        <group-and-friend v-if="show == 0"></group-and-friend>
+        <member-list
+          ref="MemberList"
+          v-if="show == 0"
+        ></member-list>
       </div>
       <div style="height:100%; width: 80%;">
         <info-tool></info-tool>
@@ -52,11 +55,11 @@ import '../../api/addresslist/index'
 import ApplyTool from './Contracts/ApplyTool.vue'
 import AddTool from './Contracts/AddTool.vue'
 import InfoTool from './Contracts/InfoTool.vue'
-import GroupAndFriend from './Contracts/MemberList.vue'
+import MemberList from './Contracts/MemberList.vue'
 export default {
   components: {
     AddTool,
-    GroupAndFriend,
+    MemberList,
     InfoTool,
     ApplyTool,
   },

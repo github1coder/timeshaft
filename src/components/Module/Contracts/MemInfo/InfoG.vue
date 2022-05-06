@@ -392,12 +392,12 @@ export default {
         "group_id": this.$store.getters.infoId
       }).then(res => {
         console.log(res)
-        this.$store.commit("setGroupId", -1)
-        this.$store.commit("setGroupName", "")
-        this.$store.commit("setGroupPhoto", "")
+        this.$store.commit("setInfoId", -1)
+        this.$store.commit("setInfoName", "")
+        this.$store.commit("setInfoPhoto", "")
         this.$store.commit("setMaster", "")
         this.$store.commit("changeSiderState", 1)
-        this.$store.commit("setAbout", 1)
+        this.$store.commit("setAbout", -1)
         // this.$parent.$parent.$refs.sider1[0].$el.click()
       })
     }
