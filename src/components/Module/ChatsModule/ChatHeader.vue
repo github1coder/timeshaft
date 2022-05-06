@@ -5,18 +5,12 @@
   >
     <div
         class="ch"
-        v-if="$store.state.listenerList.length > 0"
+        v-if="$store.state.listenerList.length > 0 && $store.state.currentChannelId !== -1"
     >
       <div
           class="ch"
           v-if="$store.state.messageList.length > 0"
       >
-        <v-icon
-            dark
-            left
-        >{{
-            $store.state.messageList[getCh()].chatAvatar
-          }}</v-icon>
         {{ $store.state.messageList[getCh()].chatName }}
       </div>
       <div class="head-tools">

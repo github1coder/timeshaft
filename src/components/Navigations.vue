@@ -134,6 +134,14 @@ export default {
         this.$router.push({
           path: '/',
         })
+        this.$store.state.messageList = []
+        this.$store.state.listenerList = []
+        this.$store.state.stompClient = null
+        this.$store.state.websocket = null
+        this.$store.state.checkInterval = null
+        this.$store.state.siderState = 0
+        this.$store.state.currentChannelId = -1
+        this.$store.state.currentChannelIdx = -1
       })
     },
     editAccount () {

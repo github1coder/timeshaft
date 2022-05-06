@@ -6,9 +6,9 @@
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
               <v-list-item-avatar>
-                <!--TODO-- 等待对接后改成图片>
-                <v-image :src="message.avatar"></v-image>-->
-                <v-icon v-text="message.msgFromAvatar"></v-icon>
+                <!--TODO-- 等待对接后改成图片>-->
+                <v-img :src="message.msgFromAvatar"></v-img>
+<!--                <v-icon v-text="message.msgFromAvatar"></v-icon>-->
               </v-list-item-avatar>
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
@@ -22,6 +22,7 @@
     </div>
     <div class="chat-form">
       <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
+
         <v-text-field
             class="mx-5 my-3 chat-form-tf"
             label="这边输入消息捏~"
@@ -72,6 +73,7 @@ export default {
         url: url,
         data: msgForm,
       })
+      this.$store.state.messageList[this.$store.state.currentChannelIdx].haveRead += 1
     },
     onScroll() {
       console.log("It's scrolling")
@@ -107,7 +109,7 @@ export default {
   },
   computed: {
     messages() {
-      if (this.$store.state.messageList.length === 0) {
+      if (this.$store.state.messageList.length === 0 || this.$store.state.currentChannelIdx === -1) {
         return []
       } else {
         return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
@@ -125,7 +127,7 @@ export default {
             dstId: this.$store.state.currentChannelId,
             index: this.$store.state.messageList[this.$store.state.currentChannelIdx].index,
           }).then(res => {
-            console.log("000000000000000000")
+            console.log("拉取 " + res.data.length + " 条历史消息")
             console.log(res)
             this.$store.state.more = res.more
             if (this.$store.state.currentChannelIdx !== -1) {
@@ -134,6 +136,7 @@ export default {
               for (let i = res.data.length-1; i >= 0; i--) {
                 this.$store.state.messageList[this.$store.state.currentChannelIdx].data.unshift(res.data[i])
               }
+              this.$store.state.messageList[this.$store.state.currentChannelIdx].haveRead += res.data.length
               console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
             }
           })

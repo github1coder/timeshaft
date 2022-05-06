@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { login } from '../api/user/index'
+import {login} from '../api/user/index'
 
 import {getMessagesList, getSubscribeUrlList} from "@/api/message";
 
@@ -110,6 +110,26 @@ export default {
     }
   },
   mounted () {
+    console.log("reset usr config")
+    this.$store.commit("setMyIcon", "guest.png")
+    this.$store.commit("setMyNick", "N")
+    this.$store.commit("setEmail", null)
+    this.$store.commit("setLogin", false)
+    this.$store.commit("setGroupId", -1)
+    this.$store.commit("setGroupName", null)
+    this.$store.commit("setGroupPhoto", null)
+    this.$store.commit("setMaster", -1)
+    this.$store.commit("changeSiderState", 0)
+    this.$store.commit("setAbout", 1)
+    this.$store.state.messageList = []
+    this.$store.state.listenerList = []
+    this.$store.state.stompClient = null
+    this.$store.state.websocket = null
+    this.$store.state.checkInterval = null
+    this.$store.state.siderState = 0
+    this.$store.state.currentChannelId = -1
+    this.$store.state.currentChannelIdx = -1
+    sessionStorage.clear()
   },
 
   methods: {
@@ -149,15 +169,18 @@ export default {
           getMessagesList({
             srcId: this.$store.state.userId,
           }).then(res => {
-            console.log(res)
+            console.log("收到联系人列表")
             this.$store.commit("initMessageList", res)
+            getSubscribeUrlList({
+              srcId: this.$store.state.userId,
+            }).then(res => {
+              console.log("收到聊天订阅列表")
+              this.$store.commit("initListenerList", res)
+              this.$store.commit("WEBSOCKET_INIT")
+              sessionStorage.setItem("data", JSON.stringify(this.$store.state))
+            })
           })
-          getSubscribeUrlList({
-            srcId: this.$store.state.userId,
-          }).then(res => {
-            this.$store.commit("initListenerList", res)
-            this.$store.commit("WEBSOCKET_INIT")
-          })
+
         })
 
       }

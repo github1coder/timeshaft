@@ -11,7 +11,7 @@ const router = new VueRouter({
     routes: [{
             path: '/',
             name: 'WelcomeOverlay',
-            component: WelcomeOverlay
+            component: WelcomeOverlay,
         },
         {
             path: '/login',

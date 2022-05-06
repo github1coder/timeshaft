@@ -24,6 +24,10 @@ export default {
     ContractsModule,
     About,
   },
+  created() {
+    sessionStorage.getItem("data") &&
+    this.$store.replaceState(JSON.parse(sessionStorage.getItem("data")))
+  }
 };
 </script>
 

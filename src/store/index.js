@@ -24,11 +24,6 @@ export default new Vuex.Store({
         // ownerIcon: "https://media.discordapp.net/attachments/603940670914297867/685302017165623352/plusrekt1.jpg?width=513&height=513",
         ownerIcon: "guest.png",
         myNick: "noname",
-        members: [],
-        member: 0,
-        membersComponentMounted: false,
-        showAC: false,
-        chats: [],
         loggedIn: false,
         siderState: 0,
         // socket 相关
@@ -260,7 +255,7 @@ export default new Vuex.Store({
         initMessageList(state, data) {
             console.log(state.messageList)
             for (let d in data) {
-                data.shaftId = null
+                data[d].haveRead = -1
                 state.messageList.push(data[d])
             }
             console.log(state.messageList)
