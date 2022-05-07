@@ -149,6 +149,7 @@
             v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
             :key="j + num * (pageF - 1)"
             @click="infoF(j + num * (pageF - 1))"
+            @contextmenu.prevent="method1"
           >
             <v-list-item-avatar>
               <v-img :src="subItem.friend_photo"></v-img>
@@ -156,7 +157,7 @@
             <v-list-item-content>
               <v-list-item-title
                 v-show="!subItem.show && !subItem.quit"
-                v-text="subItem.friend_name"
+                v-text="subItem.friend_nick"
                 style="text-align: left"
               ></v-list-item-title>
               <v-text-field
@@ -269,11 +270,11 @@ export default {
       allPageG: 1,
       channelLabels: [
         {
-          action: '~',
+          action: 'mdi-account-multiple',
           title: '我的团队',
         },
         {
-          action: '~',
+          action: 'mdi-message',
           title: '我的好友',
         },
       ],
@@ -454,7 +455,7 @@ export default {
 
     changeFriendName (j) {
       if (this.name && this.name != "") {
-        this.friends[j].friend_name = this.name;
+        this.friends[j].friend_nick = this.name;
         changeNickname({
           "user_id": this.$store.getters.userId,
           "ACCESS_TOKEN": null,
@@ -501,9 +502,13 @@ export default {
     },
 
     infoF (index) {
+      this.$store.commit("setInfoNick", null)
+      if (this.friends[index].friend_name != this.friends[index].friend_nick) {
+        this.$store.commit("setInfoNick", this.friends[index].friend_nick)
+      }
       this.$store.commit("setInfoName", this.friends[index].friend_name)
       this.$store.commit("setInfoPhoto", this.friends[index].friend_photo)
-      this.$store.commit("setInfoEmail", this.friends[index].friend_email)
+      // this.$store.commit("setInfoEmail", this.friends[index].friend_email)
       this.$store.commit("setAbout", 0)
     },
 
@@ -518,6 +523,27 @@ export default {
       // this.$router.push({
       //   path: "/home"
       // })
+    },
+
+
+    //解散、创建群聊后调用
+    getG () {
+      getGroups({
+        "user_id": this.$store.getters.userId,
+        "ACCESS_TOKEN": null
+      }).then(res => {
+        // this.$store.commit("channels", res)
+        this.groups = res
+        this.groups.forEach(function (item) {
+          item["show"] = false;
+          item["quit"] = false;
+        });
+        this.groups = JSON.parse(JSON.stringify(this.groups))
+        this.allPageG = Math.ceil(this.groups.length / this.num);
+        if (this.allPageG == 0) {
+          this.pageG = 0;
+        }
+      });
     },
   },
 
@@ -563,8 +589,8 @@ export default {
         this.friends.forEach(function (item) {
           item["show"] = false;
           item["quit"] = false;
-          if (item.friend_nick && item.friend_nick != "") {
-            item.friend_name = item.friend_nick
+          if (item.friend_nick == "") {
+            item.friend_nick = item.friend_name
           }
         });
         this.friends = JSON.parse(JSON.stringify(this.friends))

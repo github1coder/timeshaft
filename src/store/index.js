@@ -17,6 +17,7 @@ export default new Vuex.Store({
         infoId: -1,
         infoPhoto: null,
         infoName: null,
+        infoNick: null,
         infoEmail: null,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
@@ -48,6 +49,7 @@ export default new Vuex.Store({
         infoEmail: state => state.infoEmail,
         about: state => state.about,
         master: state => state.master,
+        infoNick: state => state.infoNick,
         stompClient(state) {
             return function() {
                 return state.stompClient;
@@ -55,6 +57,9 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setInfoNick(store, infoNick) {
+            store.infoNick = infoNick
+        },
         setInfoEmail(store, infoEmail) {
             store.infoEmail = infoEmail
         },
@@ -94,7 +99,7 @@ export default new Vuex.Store({
             store.currentChannelId = data.id;
             store.currentChannelIdx = data.idx;
             store.more = true
-            // console.log(store.currentChannelId + " " + store.currentChannelIdx);
+                // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {
             store.myIcon = url;

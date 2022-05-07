@@ -59,8 +59,14 @@
             </v-list>
           </v-navigation-drawer>
           <v-col style="width: 50%; height:100%;">
-            <v-list style="width: 100%; height:90%;">
-              <v-list-group prepend-icon="~">
+            <v-list
+              style="width: 100%; height:90%;"
+              value="false"
+            >
+              <v-list-group
+                prepend-icon="mdi-account-supervisor-circle"
+                @click="getMember"
+              >
                 <template v-slot:activator>
                   <v-list-item-content>
                     <v-list-item-title>群成员</v-list-item-title>
@@ -254,37 +260,66 @@ export default {
   },
 
   mounted () {
-    if (this.$store.getters.infoId != -1) {
-      getGroupMember({
-        "id": this.$store.getters.infoId,
-        "ACCESS_TOKEN": null
-      }).then(res => {
-        this.friends = res
-        this.friends.forEach(function (item) {
-          item["show"] = false;
-          item["quit"] = false;
-          if (item.nick && item.nick != "") {
-            item.name = item.nick
-          }
-        });
-        this.friends = JSON.parse(JSON.stringify(this.friends))
-        this.allPageF = Math.ceil(this.friends.length / this.num);
-        // console.log(this.friends)
-        // this.friends = [{
-        //   'id': 1,
-        //   'name': "1",
-        //   'photo': "",
-        //   "quit": false,
-        //   "show": false,
-        // }]
-        // console.log(this.friends)
-      })
-    }
+    // if (this.$store.getters.infoId != -1) {
+    //   getGroupMember({
+    //     "id": this.$store.getters.infoId,
+    //     "ACCESS_TOKEN": null
+    //   }).then(res => {
+    //     this.friends = res
+    //     this.friends.forEach(function (item) {
+    //       item["show"] = false;
+    //       item["quit"] = false;
+    //       if (item.nick && item.nick != "") {
+    //         item.name = item.nick
+    //       }
+    //     });
+    //     this.friends = JSON.parse(JSON.stringify(this.friends))
+    //     this.allPageF = Math.ceil(this.friends.length / this.num);
+    //     // console.log(this.friends)
+    //     // this.friends = [{
+    //     //   'id': 1,
+    //     //   'name': "1",
+    //     //   'photo': "",
+    //     //   "quit": false,
+    //     //   "show": false,
+    //     // }]
+    //     // console.log(this.friends)
+    //   })
+    // }
   },
 
   methods: {
     method1 () {
 
+    },
+
+    getMember () {
+      if (this.$store.getters.infoId != -1) {
+        getGroupMember({
+          "id": this.$store.getters.infoId,
+          "ACCESS_TOKEN": null
+        }).then(res => {
+          this.friends = res
+          this.friends.forEach(function (item) {
+            item["show"] = false;
+            item["quit"] = false;
+            if (item.nick && item.nick != "") {
+              item.name = item.nick
+            }
+          });
+          this.friends = JSON.parse(JSON.stringify(this.friends))
+          this.allPageF = Math.ceil(this.friends.length / this.num);
+          // console.log(this.friends)
+          // this.friends = [{
+          //   'id': 1,
+          //   'name': "1",
+          //   'photo': "",
+          //   "quit": false,
+          //   "show": false,
+          // }]
+          // console.log(this.friends)
+        })
+      }
     },
 
     getMethod: function (methodName, index) {
@@ -398,6 +433,7 @@ export default {
         this.$store.commit("setMaster", "")
         this.$store.commit("changeSiderState", 1)
         this.$store.commit("setAbout", -1)
+        this.$parent.$parent.$parent.$children[1].getG()
         // this.$parent.$parent.$refs.sider1[0].$el.click()
       })
     }

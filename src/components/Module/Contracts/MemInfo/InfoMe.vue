@@ -45,7 +45,7 @@
       </v-navigation-drawer>
       <v-list style="width: 50%; float: right">
         <v-list-group
-          prepend-icon="~"
+          prepend-icon="mdi-account-cog"
           @click="initPassword"
         >
           <template v-slot:activator>
@@ -94,7 +94,7 @@
           </v-list-item>
         </v-list-group>
         <v-list-group
-          prepend-icon="~"
+          prepend-icon="mdi-account-cowboy-hat"
           @click="initText"
         >
           <template v-slot:activator>
@@ -180,6 +180,7 @@ export default {
         this.textG = ""
         this.labelG = "创建成功"
         console.log(res)
+        this.$parent.$parent.$parent.$children[1].getG()
       })
       // getGroups({
       //   "user_id": this.$store.getters.userId,

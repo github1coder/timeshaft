@@ -109,9 +109,6 @@ export default {
       }, {
         icon: 'mdi-calendar-check',
         text: '',
-      }, {
-        icon: 'mdi-account-cog',
-        text: '',
       },],
     }
   },
