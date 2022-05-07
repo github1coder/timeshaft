@@ -4,6 +4,7 @@
     <div class="base">
       <ChatsModule v-if="$store.state.siderState === 0"></ChatsModule>
       <ContractsModule v-else-if="$store.state.siderState === 1"></ContractsModule>
+      <CalendarModule v-else-if="$store.state.siderState === 3"></CalendarModule>
       <!-- <About v-else-if="$store.state.siderState === 4"></About> -->
     </div>
   </div>
@@ -15,18 +16,17 @@ import ContractsModule from "@/components/Module/ContractsModule";
 // import About from "@/components/About/About";
 import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
+import CalendarModule from "@/components/Module/CalendarModule";
 
 export default {
   name: "Home",
   components: {
+    CalendarModule,
     ChatsModule,
     Navigations,
     ContractsModule,
   },
   created() {
-
-
-
     window.onbeforeunload = () => {
       sessionStorage.setItem("data", JSON.stringify(this.$store.state))
       console.log("save")
