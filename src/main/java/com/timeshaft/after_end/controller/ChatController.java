@@ -183,6 +183,9 @@ public class ChatController {
         messageQuery.setSenderId(srcId);
         messageQuery.setFriendsId(dstId);
         List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+        messageQuery.setSenderId(dstId);
+        messageQuery.setFriendsId(srcId);
+        notReadMessages.addAll(personalMessageService.queryAll(messageQuery));
         PersonalMessage messageToSet = new PersonalMessage();
         messageToSet.setState(messageStateService.EnumToString(MessageStateType.READ));
         for (PersonalMessage message : notReadMessages) {
