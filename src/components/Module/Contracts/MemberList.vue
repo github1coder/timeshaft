@@ -95,11 +95,11 @@
                   >
                     <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                   </v-list-item> -->
-                  <v-list-item @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))">
+                  <!-- <v-list-item @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))">
                     <v-list-item-title>{{ groupsBtns[0].title }}</v-list-item-title>
-                  </v-list-item>
+                  </v-list-item> -->
                   <v-list-item
-                    v-show="isMaster(j + num * (pageG - 1))"
+                    v-if="isMaster(j + num * (pageG - 1))"
                     @click="getMethod(groupsBtns[1].method, j + num * (pageG - 1))"
                   >
                     <v-list-item-title>{{ groupsBtns[1].title }}</v-list-item-title>
@@ -508,7 +508,7 @@ export default {
       }
       this.$store.commit("setInfoName", this.friends[index].friend_name)
       this.$store.commit("setInfoPhoto", this.friends[index].friend_photo)
-      // this.$store.commit("setInfoEmail", this.friends[index].friend_email)
+      this.$store.commit("setInfoEmail", this.friends[index].mail)
       this.$store.commit("setAbout", 0)
     },
 

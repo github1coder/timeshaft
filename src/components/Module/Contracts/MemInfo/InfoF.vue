@@ -16,9 +16,13 @@
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>{{this.$store.getters.infoName}}</v-list-item-title>
-              <v-list-item-title v-show="this.$store.getters.infoNick != null">备注：{{this.$store.getters.infoNick}}</v-list-item-title>
+            <v-list-item-content style="font-size: 25px;">
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">{{this.$store.getters.infoName}}</v-list-item-title>
+              <v-list-item-title
+                style="font-size: 20px; line-height: 40px;"
+                v-show="this.$store.getters.infoNick != null"
+              >备注：{{this.$store.getters.infoNick}}</v-list-item-title>
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title>
               <!-- <v-list-item-title>邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title> -->
             </v-list-item-content>
           </v-list-item>
