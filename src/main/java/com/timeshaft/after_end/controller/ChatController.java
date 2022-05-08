@@ -77,8 +77,8 @@ public class ChatController {
                     dataMap.put("msgFromAvatar", chatAvatar);
                     dataMap.put("msg", message.getMessage());
                     dataMap.put("time", sdf.format(message.getSendtime()));
-                    dataMap.put("srcId", message.getSenderId());
-                    dataMap.put("dstId", message.getFriendsId());
+                    dataMap.put("userId", message.getSenderId());
+                    dataMap.put("chatId", message.getFriendsId());
                     data.add(dataMap);
                 }
                 recent = sdf.format(notReadMessages.get(notReadMessages.size()-1).getSendtime());
@@ -134,8 +134,8 @@ public class ChatController {
 
     @RequestMapping(value = "/getHistoryMessage")
     public ResponseService getHistoryMessage(@RequestBody Map<String, Object> requestMap) {
-        int srcId = (Integer) requestMap.get("srcId");
-        int friendId = (Integer) requestMap.get("dstId");
+        int srcId = (Integer) requestMap.get("userId");
+        int friendId = (Integer) requestMap.get("chatId");
         int index = (Integer) requestMap.get("index");
         Friends friends = friendsService.queryById(friendId);
         int dstId = friends.getUserId1() == srcId? friends.getUserId2():friends.getUserId1();
@@ -158,8 +158,8 @@ public class ChatController {
         for (int i = length - 1; i >= 0; i--) {
             HashMap<String, Object> messageMap = new HashMap<>();
             PersonalMessage message = historyMessage.get(i);
-            messageMap.put("srcId", message.getSenderId());
-            messageMap.put("dstId", message.getFriendsId());
+            messageMap.put("userId", message.getSenderId());
+            messageMap.put("chatId", message.getFriendsId());
             messageMap.put("msg", message.getMessage());
             if (message.getSenderId() == srcId) {
                 messageMap.put("msgFromName", srcNickName);
@@ -187,21 +187,14 @@ public class ChatController {
     @RequestMapping(value = "/haveRead")
     public ResponseService markMessages(@RequestBody Map<String, Object> requestMap) {
         String time = (String) requestMap.get("time");
-        int srcId = (Integer) requestMap.get("srcId");
-        int dstId = (Integer) requestMap.get("dstId");
         int userId = (Integer) requestMap.get("userId");
+        int friendId = (Integer) requestMap.get("chatId");
         PersonalMessage messageQuery = new PersonalMessage();
         MessageStateType state = MessageStateType.UNREAD;
         messageQuery.setState(messageStateService.EnumToString(state));
-        int senderId;
-        Friends friends;
-        if (srcId == userId) {
-            friends = friendsService.queryById(dstId);
-        } else {
-            friends = friendsService.queryById(srcId);
-        }
-        senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
-        messageQuery.setFriendsId(friends.getId());
+        Friends friends = friendsService.queryById(friendId);
+        int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
+        messageQuery.setFriendsId(friendId);
         messageQuery.setSenderId(senderId);
         List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
         PersonalMessage messageToSet = new PersonalMessage();
