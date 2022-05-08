@@ -43,7 +43,6 @@ public class ChatController {
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
         int sourceId = (Integer) requestMap.get("srcId");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> res = new ArrayList<>();
         for (Friends friends : friendsList) {
@@ -57,7 +56,7 @@ public class ChatController {
             map.put("chatName", chatName);
             map.put("url", url);
             map.put("chatAvatar", chatAvatar);
-            String recent = null;
+            Date recent = null;
             //拉取所有未读消息
             List<HashMap<String, Object>> data = new ArrayList<>();
             PersonalMessage messageQuery = new PersonalMessage();
@@ -76,12 +75,12 @@ public class ChatController {
                     dataMap.put("msgFromName", chatName);
                     dataMap.put("msgFromAvatar", chatAvatar);
                     dataMap.put("msg", message.getMessage());
-                    dataMap.put("time", sdf.format(message.getSendtime()));
+                    dataMap.put("time", message.getSendtime());
                     dataMap.put("userId", message.getSenderId());
                     dataMap.put("chatId", message.getFriendsId());
                     data.add(dataMap);
                 }
-                recent = sdf.format(notReadMessages.get(notReadMessages.size()-1).getSendtime());
+                recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
                 index = notReadMessages.get(0).getId();
             }
             //若没有已读消息，index应该为双方最近的一条消息+1 (因为索引的时候是使用 < 查询)
@@ -91,19 +90,19 @@ public class ChatController {
                 if (messageTo == null) {
                     if (messageFrom != null) {
                         index = messageFrom.getId() + 1;
-                        recent = sdf.format(messageFrom.getSendtime());
+                        recent = messageFrom.getSendtime();
                     } else {
                         PersonalMessage messageRecent = personalMessageService.queryLatest();
                         index = messageRecent.getId() + 1;
-                        recent = sdf.format(messageRecent.getSendtime());
+                        recent = messageRecent.getSendtime();
                     }
                 } else {
                     if (messageFrom == null) {
                         index = messageTo.getId() + 1;
-                        recent = sdf.format(messageTo.getSendtime());
+                        recent = messageTo.getSendtime();
                     } else {
                         index = Math.max(messageFrom.getId(), messageTo.getId()) + 1;
-                        recent = messageFrom.getId() > messageTo.getId() ? sdf.format(messageFrom.getSendtime()) : sdf.format(messageTo.getSendtime());
+                        recent = messageFrom.getId() > messageTo.getId() ? messageFrom.getSendtime() : messageTo.getSendtime();
                     }
                 }
             }
@@ -168,8 +167,7 @@ public class ChatController {
                 messageMap.put("msgFromName", dstNickName);
                 messageMap.put("msgFromAvatar", userDst.getPhoto());
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            messageMap.put("time", sdf.format(message.getSendtime()));
+            messageMap.put("time", message.getSendtime());
             data.add(messageMap);
         }
         HashMap<String, Object> res = new HashMap<>();
