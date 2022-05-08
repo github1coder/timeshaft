@@ -4,11 +4,14 @@ package com.timeshaft.after_end.service.timeshaftOp;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@PropertySource("classpath:content.properties")
 public class TimeShaftOp {
     @Autowired
     private TimeshaftService timeshaftService;
@@ -25,11 +28,15 @@ public class TimeShaftOp {
     @Autowired
     private PersonalMessageService personalMessageService;
 
-    private final String OnMeeting = "会议中";
-    private final String OffMeeting = "未会议";
+    @Value("${meeting.on}")
+    private String OnMeeting;
+    @Value("${meeting.off}")
+    private String OffMeeting;
 
-    private final String friendType = "friend";
-    private final String groupType = "group";
+    @Value("${type.friendType}")
+    private String friendType;
+    @Value("${type.groupType}")
+    private String groupType;
 
     public Integer beginTimeShaftSingle(String title, String conclude, Integer creator_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, creator_id, title, new Date(), null, conclude, type);
@@ -89,7 +96,7 @@ public class TimeShaftOp {
             friendsService.update(friend);
         }
         else {
-            throw new Exception("type重复");
+            throw new Exception("type变量错误");
         }
     }
 

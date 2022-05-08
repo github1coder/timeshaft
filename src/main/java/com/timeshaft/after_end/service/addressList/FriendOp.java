@@ -8,6 +8,8 @@ import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@PropertySource("classpath:content.properties")
 public class FriendOp {
 
     @Resource(name = "FriendsService")
@@ -31,6 +34,21 @@ public class FriendOp {
     @Resource(name = "UserService")
     private UserService userService;
 
+    @Value("${type.friendType}")
+    private String friendType;
+    @Value("${type.groupType}")
+    private String groupType;
+    @Value("${groupIdentity.manager}")
+    private String MANAGER;
+    @Value("${groupIdentity.member}")
+    private String MEMBER;
+    @Value("${friendState.neww}")
+    private String NEW;
+    @Value("${friendState.acceptt}")
+    private String ACCEPT;
+
+
+
     public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, null, null);
         Friends friend2 = new Friends(null, id, null, null, null, null);
@@ -40,7 +58,7 @@ public class FriendOp {
     }
 
     public void addFriend(int friend1, int friend2) {
-        Friends friend = new Friends(friend1, friend2, null, null, "accept", null);
+        Friends friend = new Friends(friend1, friend2, null, null, ACCEPT, null);
         friendsService.insert(friend);
     }
 
@@ -72,7 +90,7 @@ public class FriendOp {
 
     public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
-        if(type.equals("group")) {
+        if(groupType.equals(type)) {
             List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
@@ -113,9 +131,9 @@ public class FriendOp {
     }
 
     public void apply(Integer self_id, String type, String action, Integer id) {
-        if(type.equals("group")) {
+        if(groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
-            if(action.equals("new")) {
+            if(action.equals(NEW)) {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
@@ -123,22 +141,22 @@ public class FriendOp {
                     groupUser.setUserNickname("");
                     groupUserService.insert(groupUser);
                 }
-            } else if(action.equals("accept")) {
-                groupUser.setState("new");
+            } else if(action.equals(ACCEPT)) {
+                groupUser.setState(NEW);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUsers.get(0).setState(action);
                 groupUser = groupUsers.get(0);
-                groupUser.setIdentity("member");
+                groupUser.setIdentity(MEMBER);
                 groupUserService.update(groupUser);
             } else {
-                groupUser.setState("new");
+                groupUser.setState(NEW);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUserService.deleteById(groupUsers.get(0).getId());
             }
         } else {
             Friends friend1 = new Friends(self_id, id, null, null, null, null);
             Friends friend2 = new Friends(id, self_id, null, null, null, null);
-            if(action.equals("new")) {
+            if(action.equals(NEW)) {
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
                 if (friends.size() == 0) {
@@ -147,16 +165,16 @@ public class FriendOp {
                     friend1.setNickname1("");
                     friendsService.insert(friend1);
                 }
-            } else if(action.equals("accept")) {
-                friend1.setState("new");
-                friend2.setState("new");
+            } else if(action.equals(ACCEPT)) {
+                friend1.setState(NEW);
+                friend2.setState(NEW);
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
                 friends.get(0).setState(action);
                 friendsService.update(friends.get(0));
             } else {
-                friend1.setState("new");
-                friend2.setState("new");
+                friend1.setState(NEW);
+                friend2.setState(NEW);
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
                 friendsService.deleteById(friends.get(0).getId());
@@ -166,17 +184,17 @@ public class FriendOp {
 
     public List<Map<String, String>> getApplyList(String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
-        if(type.equals("group")) {
+        if(groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(null, id, null, "master", null);
             List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
-            groupUser.setIdentity("manager");
+            groupUser.setIdentity(MANAGER);
             groupUsers.addAll(groupUserService.queryAll(groupUser));
             List<Group> groups = new ArrayList<>();
             for(GroupUser g : groupUsers) {
                 groups.add(groupService.queryById(g.getGroupId()));
             }
             for(Group group: groups) {
-                GroupUser tmp = new GroupUser(group.getId(), null, null, null, "new");
+                GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW);
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
                     HashMap<String, String> map = new HashMap<>();
@@ -191,7 +209,7 @@ public class FriendOp {
                 }
             }
         } else {
-            Friends friend = new Friends(null, id, null, null, "new", null);
+            Friends friend = new Friends(null, id, null, null, NEW, null);
             List<Friends> friends = friendsService.queryAll(friend);
             for(Friends f : friends){
                 HashMap<String, String> map = new HashMap<>();
@@ -207,7 +225,7 @@ public class FriendOp {
     }
 
     public Map<User, String> getGroupMember(int id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, "accept"));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, ACCEPT));
         Map<User, String> users = new HashMap<>();
         for (GroupUser groupUser : groupUsers) {
             User user = userService.queryById(groupUser.getUserId());
