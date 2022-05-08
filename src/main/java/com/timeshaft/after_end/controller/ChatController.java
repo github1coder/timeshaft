@@ -77,8 +77,8 @@ public class ChatController {
                     dataMap.put("msgFromAvatar", chatAvatar);
                     dataMap.put("msg", message.getMessage());
                     dataMap.put("time", sdf.format(message.getSendtime()));
-                    dataMap.put("srcId", message.getSenderId());
-                    dataMap.put("dstId", message.getFriendsId());
+                    dataMap.put("userId", message.getSenderId());
+                    dataMap.put("chatId", message.getFriendsId());
                     data.add(dataMap);
                 }
                 recent = sdf.format(notReadMessages.get(notReadMessages.size()-1).getSendtime());
@@ -158,8 +158,8 @@ public class ChatController {
         for (int i = length - 1; i >= 0; i--) {
             HashMap<String, Object> messageMap = new HashMap<>();
             PersonalMessage message = historyMessage.get(i);
-            messageMap.put("srcId", message.getSenderId());
-            messageMap.put("dstId", message.getFriendsId());
+            messageMap.put("userId", message.getSenderId());
+            messageMap.put("chatId", message.getFriendsId());
             messageMap.put("msg", message.getMessage());
             if (message.getSenderId() == srcId) {
                 messageMap.put("msgFromName", srcNickName);
