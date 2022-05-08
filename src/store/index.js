@@ -210,10 +210,10 @@ export default new Vuex.Store({
                             console.log(json)
                             for (let friend in state.messageList) {
                                 console.log(json.userId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
-                                if (json.userId === state.messageList[friend].id) {
+                                if (json.chatId === state.messageList[friend].id) {
                                     state.messageList[friend].data.push(json)
                                         // this.commit("updateMessageList", {id: json.userId, data: json})
-                                    console.log("收到 id:" + json.userId.toString() + " 消息:")
+                                    console.log("收到 chat:" + json.chatId.toString() + " 消息:")
                                     console.log(json)
                                     break
                                 }
