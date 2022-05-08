@@ -59,12 +59,14 @@ public class FriendOp {
         List<Friends> friends = friendsService.queryAll(friend1);
         for(Friends tmp : friends){
             tmp.setNickname2(name);
+            friendsService.update(tmp);
             return;
         }
         Friends friend2 = new Friends(friend_id, self_id, null, null, null, null);
         friends.addAll(friendsService.queryAll(friend2));
         for(Friends tmp : friends){
             tmp.setNickname1(name);
+            friendsService.update(tmp);
         }
     }
 
@@ -112,11 +114,13 @@ public class FriendOp {
 
     public void apply(Integer self_id, String type, String action, Integer id) {
         if(type.equals("group")) {
-            GroupUser groupUser = new GroupUser(self_id, id, null, null, null);
+            GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
             if(action.equals("new")) {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
+                    groupUser.setIdentity("");
+                    groupUser.setUserNickname("");
                     groupUserService.insert(groupUser);
                 }
             } else if(action.equals("accept")) {
@@ -124,11 +128,12 @@ public class FriendOp {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUsers.get(0).setState(action);
                 groupUser = groupUsers.get(0);
+                groupUser.setIdentity("member");
                 groupUserService.update(groupUser);
             } else {
                 groupUser.setState("new");
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
-                groupUserService.deleteById(groupUsers.get(0).getGroupId());
+                groupUserService.deleteById(groupUsers.get(0).getId());
             }
         } else {
             Friends friend1 = new Friends(self_id, id, null, null, null, null);
@@ -138,6 +143,8 @@ public class FriendOp {
                 friends.addAll(friendsService.queryAll(friend2));
                 if (friends.size() == 0) {
                     friend1.setState(action);
+                    friend1.setNickname2("");
+                    friend1.setNickname1("");
                     friendsService.insert(friend1);
                 }
             } else if(action.equals("accept")) {
@@ -166,14 +173,16 @@ public class FriendOp {
             groupUsers.addAll(groupUserService.queryAll(groupUser));
             List<Group> groups = new ArrayList<>();
             for(GroupUser g : groupUsers) {
-                groups.add(groupService.queryById(g.getId()));
+                groups.add(groupService.queryById(g.getGroupId()));
             }
             for(Group group: groups) {
-                GroupUser tmp = new GroupUser(group.getId(), id, null, null, "new");
+                GroupUser tmp = new GroupUser(group.getId(), null, null, null, "new");
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
                     HashMap<String, String> map = new HashMap<>();
-                    User user = userService.queryById(g.getId());
+                    User user = userService.queryById(g.getUserId());
+                    map.put("group_id", g.getGroupId().toString());
+                    map.put("group_name", group.getName());
                     map.put("id", user.getId().toString());
                     map.put("name", user.getUsername());
                     map.put("photo", user.getPhoto());
@@ -195,5 +204,15 @@ public class FriendOp {
             }
         }
         return ans;
+    }
+
+    public Map<User, String> getGroupMember(int id) {
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, "accept"));
+        Map<User, String> users = new HashMap<>();
+        for (GroupUser groupUser : groupUsers) {
+            User user = userService.queryById(groupUser.getUserId());
+            users.put(user, groupUser.getUserNickname());
+        }
+        return users;
     }
 }

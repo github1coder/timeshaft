@@ -36,14 +36,19 @@ public class AddressListController {
         for(Friends f : friends) {
             HashMap<String, String> map = new HashMap<>();
             User tmp;
+            String nick;
             if(f.getUserId1().equals(user_id)) {
                 tmp = userService.queryById(f.getUserId2());
+                nick = f.getNickname2();
             } else {
                 tmp = userService.queryById(f.getUserId1());
+                nick = f.getNickname1();
             }
             map.put("friend_id", tmp.getId().toString());
             map.put("friend_name", tmp.getUsername());
             map.put("friend_photo", tmp.getPhoto());
+            map.put("friend_nick", nick);
+            map.put("mail", userService.queryById(tmp.getId()).getEmail());
             res.add(map);
         }
         return new ResponseService(res);
@@ -62,8 +67,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/changeNickname")
-    public ResponseService changeNickname(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
-        friendOp.changeNickname(user_id, Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
+    public ResponseService changeNickname(@RequestBody Map<String, String> map) {
+        friendOp.changeNickname(Integer.parseInt(map.get("user_id")), Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
         return new ResponseService();
     }
 
@@ -76,14 +81,15 @@ public class AddressListController {
             map.put("group_id", group.getId().toString());
             map.put("group_name", group.getName());
             map.put("group_photo", group.getPhoto());
+            map.put("master_id", group.getMasterId().toString());
             res.add(map);
         }
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/addGroup")
-    public ResponseService addGroup(@RequestParam("user_id") Integer user_id, @RequestBody Map<String, String> map) {
-        groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), user_id);
+    public ResponseService addGroup(@RequestBody Map<String, String> map) {
+        groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), Integer.parseInt(map.get("master_id")));
         return new ResponseService();
     }
 
@@ -101,7 +107,7 @@ public class AddressListController {
 
     @RequestMapping(value = "/quitGroup")
     public ResponseService quitGroup(@RequestBody Map<String, String> map) {
-        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("quit_user_id")));
+        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("user_id")));
         return new ResponseService();
     }
 
@@ -144,6 +150,22 @@ public class AddressListController {
     @RequestMapping(value = "/getApplyList")
     public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/getGroupMember")
+    public ResponseService getGroupMember(@RequestParam("id") Integer id) {
+        Map<User, String> users = friendOp.getGroupMember(id);
+        List<Map<String, String>> res = new ArrayList<>();
+        for(User user : users.keySet()) {
+            HashMap<String, String> ans = new HashMap<>();
+            ans.put("id", user.getId().toString());
+            ans.put("name", user.getUsername());
+            ans.put("photo", user.getPhoto());
+            ans.put("nick", users.get(user));
+            ans.put("mail", user.getEmail());
+            res.add(ans);
+        }
         return new ResponseService(res);
     }
 }

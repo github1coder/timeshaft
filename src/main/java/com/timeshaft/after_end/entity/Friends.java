@@ -25,6 +25,9 @@ public class Friends implements Serializable {
 
     private String status;
 
+    public Friends() {
+    }
+
     public Friends(Integer userId1, Integer userId2, String nickname1, String nickname2, String state, String status) {
         this.userId1 = userId1;
         this.userId2 = userId2;

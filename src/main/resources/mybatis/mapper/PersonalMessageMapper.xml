@@ -20,6 +20,32 @@
         where id = #{id}
     </select>
 
+    <!--查询最近的一条消息-->
+    <select id="queryLatestById" resultMap="BaseResultMap">
+        select
+        id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
+        where friends_id = #{friendsId} and sender_id = #{senderId}
+        order by id desc
+        limit 0, 1
+    </select>
+
+    <!--查询数据库最新消息-->
+    <select id="queryLatest" resultMap="BaseResultMap">
+        select
+        id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
+        order by id desc
+        limit 0, 1
+    </select>
+
+    <!--查询历史消息-->
+    <select id="queryHistoryById" resultMap="BaseResultMap">
+        select
+        id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
+        where friends_id = #{friendsId} and sender_id = #{senderId} and id &lt; #{index}
+        order by sendtime desc
+        limit 0, 20
+    </select>
+
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select

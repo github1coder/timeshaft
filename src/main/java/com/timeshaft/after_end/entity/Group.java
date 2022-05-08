@@ -26,6 +26,9 @@ public class Group implements Serializable {
 
     private String status;
 
+    public Group() {
+    }
+
     public Group(String name, Integer masterId, String notice, String photo, Date buildtime, String status) {
         this.name = name;
         this.masterId = masterId;

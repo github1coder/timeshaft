@@ -19,28 +19,33 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
-    public boolean createGroup(String name, String photo,
-                               String notice, int master_id) {
+
+    public void createGroup(String name, String photo,
+                            String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date(), "");
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
-        return true;
+        groupUserService.insert(groupUser);
     }
 
-    public boolean deleteGroup(int id) {
-        return groupService.deleteById(id);
+    public void deleteGroup(int id) {
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
+        for(GroupUser groupUser : groupUsers) {
+            groupUserService.deleteById(groupUser.getId());
+        }
+        groupService.deleteById(id);
     }
 
-    public boolean updateGroup(int id, String name, String photo, String notice) {
+    public void updateGroup(int id, String name, String photo, String notice) {
         Group group = groupService.queryById(id);
         group.setName(name);
         group.setNotice(notice);
         group.setPhoto(photo);
-        return groupService.update(group) != null;
+        groupService.update(group);
     }
 
     public List<Group> getGroup(int user_id) {
-        GroupUser groupUser = new GroupUser(null, user_id, null, null, null);
+        GroupUser groupUser = new GroupUser(null, user_id, null, null, "accept");
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
         for(GroupUser tmp : groupUsers) {
@@ -49,47 +54,43 @@ public class GroupOp {
         return groups;
     }
 
-    public boolean joinGroup(int group_id, int join_user_id) {
+    public void joinGroup(int group_id, int join_user_id) {
         GroupUser groupUser = new GroupUser(group_id, join_user_id, null, "member", "accept");
-        return groupUserService.insert(groupUser) != null;
+        groupUserService.insert(groupUser);
     }
 
-    public boolean quitGroup(int group_id, int quit_user_id) {
+    public void quitGroup(int group_id, int quit_user_id) {
         GroupUser groupUser = new GroupUser(group_id, quit_user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
-            groupUserService.deleteById(tmp.getGroupId());
+            groupUserService.deleteById(tmp.getId());
         }
-        return true;
     }
 
-    public boolean addManager(int group_id, int user_id) {
+    public void addManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             tmp.setIdentity("manager");
             groupUserService.update(tmp);
         }
-        return true;
     }
 
-    public boolean delManager(int group_id, int user_id) {
+    public void delManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, "manager", null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity("member");
             groupUserService.update(tmp);
         }
-        return true;
     }
 
-    public boolean changeNickname(int group_id, String name, int user_id) {
+    public void changeNickname(int group_id, String name, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setUserNickname(name);
             groupUserService.update(tmp);
         }
-        return true;
     }
 }

@@ -33,6 +33,41 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     }
 
     /**
+     * 通过id组合查询最新历史消息
+     *
+     * @param friendsId 接收者id
+     * @param senderId 发送者id
+     * @return 实例对象
+     */
+    @Override
+    public PersonalMessage queryLatestById(Integer friendsId, Integer senderId) {
+        return this.personalMessageMapper.queryLatestById(friendsId, senderId);
+    }
+
+    /**
+     * 查询最新历史消息
+     *
+     * @return 实例对象
+     */
+    @Override
+    public PersonalMessage queryLatest() {
+        return this.personalMessageMapper.queryLatest();
+    }
+
+    /**
+     * 通过id组合与索引查询最近历史消息（默认20条）
+     *
+     * @param friendsId 接收者id
+     * @param senderId 发送者id
+     * @param index 查询起始的id
+     * @return 实例对象列表
+     */
+    @Override
+    public List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index) {
+        return this.personalMessageMapper.queryHistoryById(friendsId, senderId, index);
+    }
+
+    /**
      * 查询多条数据
      *
      * @param offset 查询起始位置
@@ -82,5 +117,10 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     @Override
     public List<PersonalMessage> queryTimeshaft(Timeshaft timeshaft) {
         return this.personalMessageMapper.queryTimeshaft(timeshaft.getGroupId(), timeshaft.getBeginTime(), timeshaft.getEndTime());
+    }
+
+    @Override
+    public List<PersonalMessage> queryAll(PersonalMessage personalMessage) {
+        return this.personalMessageMapper.queryAll(personalMessage);
     }
 }
