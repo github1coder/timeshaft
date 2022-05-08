@@ -15,7 +15,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
     config => {
-        config.headers["ACCESS_TOKEN"] = this.$store.getters.accessToken
+        //config.headers["ACCESS_TOKEN"] = this.$store.getters.accessToken
         config.headers["Content-Type"] = 'application/json'
         return config
     },
