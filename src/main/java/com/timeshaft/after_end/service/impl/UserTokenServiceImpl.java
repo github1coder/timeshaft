@@ -76,4 +76,9 @@ public class UserTokenServiceImpl implements UserTokenService {
     public boolean deleteById(Integer id) {
         return this.userTokenDao.deleteById(id) > 0;
     }
+
+    @Override
+    public List<UserToken> queryAll(UserToken userToken) {
+        return this.userTokenDao.queryAll(userToken);
+    }
 }

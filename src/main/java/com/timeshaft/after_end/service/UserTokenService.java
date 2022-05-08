@@ -53,4 +53,6 @@ public interface UserTokenService {
      */
     boolean deleteById(Integer id);
 
+    List<UserToken> queryAll(UserToken userToken);
+
 }

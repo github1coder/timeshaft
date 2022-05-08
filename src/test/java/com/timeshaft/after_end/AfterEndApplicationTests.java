@@ -4,9 +4,11 @@ import com.timeshaft.after_end.controller.ChatController;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.GroupUser;
 import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.UserToken;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
+import com.timeshaft.after_end.service.UserTokenService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
@@ -31,12 +33,14 @@ class AfterEndApplicationTests {
     private ChatController chatController;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Test
     void contextLoads() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("srcId", 15);
-        hashMap.put("dstId", 12);
-        chatController.getMessagesList(hashMap);
+        List<UserToken> tokens = userTokenService.queryAll(new UserToken(122, "dasdasdasdsadsadsa"));
+        if (tokens.size() <= 0) {
+            System.out.println("aaaaaaaa");
+        }
     }
 }
