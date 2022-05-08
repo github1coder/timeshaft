@@ -6,19 +6,20 @@
       tile
       style="width: 100%; height: 100%;"
     >
-      <v-card style="margin: auto; width: 40%; height: 100%;">
+      <v-card style="margin: auto; width: 60%; height: 100%; border: grey 5px dashed;">
         <div style="width: 100%; height: 100%;">
           <v-img
-            style="margin: auto; border-radius: 50%; width: 60%"
-            :src="photo"
+            style="margin: auto; border-radius: 50%; width: 40%"
+            :src="this.$store.getters.infoPhoto"
           ></v-img>
           <v-list-item>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title v-text="name"></v-list-item-title>
-              <v-list-item-subtitle v-text="email"></v-list-item-subtitle>
+              <v-list-item-title>{{this.$store.getters.infoName}}</v-list-item-title>
+              <v-list-item-title v-show="this.$store.getters.infoNick != null">备注：{{this.$store.getters.infoNick}}</v-list-item-title>
+              <!-- <v-list-item-title>邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title> -->
             </v-list-item-content>
           </v-list-item>
         </div>
@@ -32,9 +33,6 @@
 export default {
   data () {
     return {
-      name: this.$store.getters.infoName,
-      photo: this.$store.getters.infoPhoto,
-      email: this.$store.getters.infoEmail,
     };
   },
 
