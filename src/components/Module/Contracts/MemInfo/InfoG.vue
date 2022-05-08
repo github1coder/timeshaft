@@ -12,15 +12,14 @@
         dark
         style="width: 100%; height: 100%;overflow: auto; overflow-x: hidden"
       >
-        <v-row style="width: 100%; height: 100%;">
-          <v-navigation-drawer
-            permanent
-            style="width: 50%; height:100%"
-            dark
-          >
-            <!-- <v-system-bar></v-system-bar> -->
-            <v-list dark>
-              <!-- <v-list-item>
+        <!-- <v-row style="width: 100%; height: 100%;"> -->
+        <v-navigation-drawer
+          permanent
+          style="width: 50%; height:100%; float: left;"
+          dark
+        >
+          <!-- <v-system-bar></v-system-bar> -->
+          <!-- <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
@@ -37,188 +36,207 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-              <v-list-item>
-                <v-list-item-content @dblclick="iShowC">
-                  <v-list-item-title large>
-                    {{this.$store.getters.infoName}}
-                  </v-list-item-title>
-                  <v-textarea
-                    :disabled="iShow"
-                    filled
-                    auto-grow
-                    rows="4"
-                    black
-                    v-model="introduction"
-                    row-height="40"
-                  ></v-textarea>
-                  <!-- <span>
-                  双击修改团队介绍
-                </span> -->
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-navigation-drawer>
-          <v-col style="width: 50%; height:100%;">
-            <v-list
-              style="width: 100%; height:90%;"
-              value="false"
+          <v-card style="font-size: 50px;">
+            {{this.$store.getters.infoName}}
+          </v-card>
+          <v-textarea
+            :disabled="iShow"
+            filled
+            auto-grow
+            rows="4"
+            black
+            v-model="introduction"
+            row-height="40"
+            style="margin: 20px 20px 0px 20px;"
+          ></v-textarea>
+          <!-- <v-btn
+            color="blue"
+            class="mx-2"
+            v-show="!iShow"
+            @click="iShowChange"
+          >
+            修改群公告
+          </v-btn>
+          <v-btn
+            v-show="iShow"
+            class="mx-2"
+            color="success"
+            width="40%"
+            @click="method1"
+          >
+            确认
+          </v-btn>
+          <v-btn
+            v-show="iShow"
+            class="mx-2"
+            color="error"
+            width="40%"
+            @click="method1"
+          >
+            取消
+          </v-btn> -->
+        </v-navigation-drawer>
+        <v-col style="width: 50%; height:100%; float: right">
+          <v-list
+            style="width: 100%; height:90%;"
+            value="false"
+          >
+            <v-list-group
+              prepend-icon="mdi-account-supervisor-circle"
+              @click="getMember"
             >
-              <v-list-group
-                prepend-icon="mdi-account-supervisor-circle"
-                @click="getMember"
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title>群成员</v-list-item-title>
+                </v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
+                :key="j + num * (pageF - 1)"
+                @click="method1"
               >
-                <template v-slot:activator>
-                  <v-list-item-content>
-                    <v-list-item-title>群成员</v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <v-list-item
-                  v-for="(subItem, j) in friends.slice(num * (pageF - 1), num * pageF)"
-                  :key="j + num * (pageF - 1)"
-                  @click="method1"
-                >
-                  <v-list-item-avatar>
-                    <v-img :src="subItem.photo"></v-img>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title
-                      v-show="!subItem.show && !subItem.quit"
-                      v-text="subItem.name"
-                      style="text-align: left"
-                    ></v-list-item-title>
-                    <v-text-field
-                      v-show="subItem.show"
-                      v-model="name"
-                      @keydown.esc="showTextField(j + num * (pageF - 1))"
-                      @keydown.enter="changeName(j + num * (pageF - 1))"
-                      clearable
+                <v-list-item-avatar>
+                  <v-img :src="subItem.photo"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-show="!subItem.show && !subItem.quit"
+                    v-text="subItem.name"
+                    style="text-align: left"
+                  ></v-list-item-title>
+                  <v-text-field
+                    v-show="subItem.show"
+                    v-model="name"
+                    @keydown.esc="showTextField(j + num * (pageF - 1))"
+                    @keydown.enter="changeName(j + num * (pageF - 1))"
+                    clearable
+                  >
+                    <!-- 确定删除好友 -->
+                  </v-text-field>
+                  <div
+                    class="text-center"
+                    v-show="subItem.quit"
+                  >
+                    <v-btn
+                      class="mx-2"
+                      color="error"
+                      fab
+                      x-small
+                      @click="addSubMaster(j + num * (pageF - 1))"
                     >
-                      <!-- 确定删除好友 -->
-                    </v-text-field>
-                    <div
-                      class="text-center"
-                      v-show="subItem.quit"
+                      确定
+                    </v-btn>
+                    <v-btn
+                      class="mx-2"
+                      color="success"
+                      fab
+                      x-small
+                      @click="showQuitField(j + num * (pageF - 1))"
                     >
+                      取消
+                    </v-btn>
+                  </div>
+                </v-list-item-content>
+                <!-- 后面的省略号 -->
+                <v-list-item-action v-show="isSelf(j + num * (pageF - 1)) || isMaster()">
+                  <v-menu right>
+                    <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        class="mx-2"
-                        color="error"
-                        fab
-                        x-small
-                        @click="addSubMaster(j + num * (pageF - 1))"
-                      >
-                        确定
-                      </v-btn>
-                      <v-btn
-                        class="mx-2"
-                        color="success"
-                        fab
-                        x-small
-                        @click="showQuitField(j + num * (pageF - 1))"
-                      >
-                        取消
-                      </v-btn>
-                    </div>
-                  </v-list-item-content>
-                  <!-- 后面的省略号 -->
-                  <v-list-item-action v-show="isSelf(j + num * (pageF - 1)) || isMaster()">
-                    <v-menu right>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          dark
-                          icon
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                          <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list
-                        hover
                         dark
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
                       >
-                        <!-- <v-list-item
+                        <v-icon>mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list
+                      hover
+                      dark
+                    >
+                      <!-- <v-list-item
                       v-for="(btnn, i) in friendsBtns"
                       :key="i"
                       @click="getMethod(btnn.method, j + num * (pageF - 1))"
                     >
                       <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                     </v-list-item> -->
-                        <v-list-item
-                          v-show="isSelf(j + num * (pageF - 1))"
-                          @click="getMethod(friendsBtns[0].method, j + num * (pageF - 1))"
-                        >
-                          <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                          v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
-                          @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
-                        >
-                          <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                          v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
-                          @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
-                        >
-                          <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-list-item-action>
-                </v-list-item>
-                <v-card style="width: 100%; height: 100%;">
-                  <v-btn
-                    width="33%"
-                    @click="downPageF"
-                  >
-                    <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn>
-                  <v-btn
-                    width="33%"
-                    disabled
-                  >
-                    {{pageF}}/{{allPageF}}
-                  </v-btn>
-                  <v-btn
-                    width="33%"
-                    @click="upPageF"
-                  >
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-btn>
-                </v-card>
-              </v-list-group>
-            </v-list>
-            <v-card style="width: 100%; height:10%;">
+                      <v-list-item
+                        v-show="isSelf(j + num * (pageF - 1))"
+                        @click="getMethod(friendsBtns[0].method, j + num * (pageF - 1))"
+                      >
+                        <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
+                      >
+                        <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
+                      >
+                        <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-list-item-action>
+              </v-list-item>
+              <v-card style="width: 100%; height: 100%;">
+                <v-btn
+                  width="33%"
+                  @click="downPageF"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-btn
+                  width="33%"
+                  disabled
+                >
+                  {{pageF}}/{{allPageF}}
+                </v-btn>
+                <v-btn
+                  width="33%"
+                  @click="upPageF"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+              </v-card>
+            </v-list-group>
+          </v-list>
+          <v-card style="width: 100%; height:10%;">
+            <v-btn
+              v-show="isMaster() && !this.kill"
+              @click="showKill"
+              color="error"
+            >
+              解散群聊
+            </v-btn>
+            <div
+              style="width: 100%;"
+              v-show="kill"
+            >
               <v-btn
-                v-show="isMaster() && !this.kill"
-                @click="showKill"
-                color="error"
+                class="mx-2"
+                color="blue"
+                width="40%"
+                @click="subGroup"
               >
-                解散群聊
+                确认解散
               </v-btn>
-              <div
-                style="width: 100%;"
-                v-show="kill"
+              <v-btn
+                class="mx-2"
+                color="blue"
+                width="40%"
+                @click="showKill"
               >
-                <v-btn
-                  class="mx-2"
-                  color="blue"
-                  width="40%"
-                  @click="subGroup"
-                >
-                  确认解散
-                </v-btn>
-                <v-btn
-                  class="mx-2"
-                  color="blue"
-                  width="40%"
-                  @click="showKill"
-                >
-                  取消
-                </v-btn>
-              </div>
-            </v-card>
-          </v-col>
-        </v-row>
+                取消
+              </v-btn>
+            </div>
+          </v-card>
+        </v-col>
+        <!-- </v-row> -->
       </v-card>
     </v-card>
     <!-- <v-card
@@ -240,7 +258,7 @@ export default {
       name: "",
       iShow: true,
       kill: false,
-      introduction: "这是我的团队",
+      introduction: "团队介绍",
       num: 10,
       pageF: 1,
       allPageF: 1,
@@ -436,6 +454,10 @@ export default {
         this.$parent.$parent.$parent.$children[1].getG()
         // this.$parent.$parent.$refs.sider1[0].$el.click()
       })
+    },
+
+    iShowChange () {
+      this.iShow = true
     }
   }
 }

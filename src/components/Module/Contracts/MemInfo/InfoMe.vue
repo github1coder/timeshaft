@@ -25,13 +25,13 @@
             </v-list-item-icon>
           </v-list-item>
           <v-list-item>
-            <v-btn
+            <!-- <v-btn
               dark
               width="50%"
               style="margin: auto;"
             >
               修改头像
-            </v-btn>
+            </v-btn> -->
           </v-list-item>
 
           <v-list-item>
@@ -53,44 +53,62 @@
               <v-list-item-title>修改密码</v-list-item-title>
             </v-list-item-content>
           </template>
-          <v-list-item>
-            <v-text-field
-              label="旧密码"
-              v-model="password"
-            >
-            </v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-text-field
-              label="新密码"
-              v-model="passwordN"
-            >
-            </v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-text-field
-              label="验证码"
-              v-model="checkCode"
-            >
-            </v-text-field>
-          </v-list-item>
+          <v-form
+            ref="changeForm"
+            v-model="valid"
+          >
+            <v-list-item>
+              <v-text-field
+                label="旧密码"
+                v-model="password"
+                :rules="rules.password"
+                :type="type"
+                @mouseover="changeShowText"
+                @mouseleave="changeShowPassword"
+              >
+              </v-text-field>
+            </v-list-item>
+            <v-list-item>
+              <v-text-field
+                label="新密码"
+                v-model="passwordN"
+                :rules="rules.passwordN"
+                :type="type"
+                @mouseover="changeShowText"
+                @mouseleave="changeShowPassword"
+              >
+              </v-text-field>
+            </v-list-item>
+            <v-list-item>
+              <v-text-field
+                label="验证码"
+                v-model="inputCheckCode"
+                :rules="rules.inputCheckCode"
+              >
+              </v-text-field>
+            </v-list-item>
+          </v-form>
           <v-list-item>
             <div style="width: 100%;">
               <v-btn
                 class="mx-2"
                 color="blue"
                 width="40%"
+                @click="newCheckCode"
+                :disabled="loadingCheckCode"
               >
-                发送验证码
+                {{hint}}
               </v-btn>
               <v-btn
                 class="mx-2"
                 color="blue"
                 width="40%"
+                @click="changePassword"
               >
                 确定
               </v-btn>
             </div>
+            <span>{{msg}}</span>
           </v-list-item>
         </v-list-group>
         <v-list-group
@@ -134,6 +152,7 @@
 </template>
 <script>
 import { addGroup } from '../../../../api/addresslist/index';
+import { getCheckCode, changePwd } from '../../../../api/user/index';
 export default {
   data () {
     return {
@@ -141,10 +160,30 @@ export default {
       photo: this.$store.getters.myIcon,
       email: this.$store.getters.email,
       checkCode: "",
+      inputCheckCode: "",
       password: "",
       passwordN: "",
       textG: "",
+      loadingCheckCode: false,
       labelG: "团队名字",
+      hint: "发送验证码",
+      valid: true,
+      type: "password",
+      msg: "",
+      rules: {
+        password: [
+          (password) => !!password || "密码不能为空",
+          (password) => (password && (/^[\w]{6,16}$/).test(password)) || "请输入6~16位密码,仅允许字母和数字",
+        ],
+        passwordN: [
+          (password) => !!password || "密码不能为空",
+          (password) => (password && (/^[\w]{6,16}$/).test(password)) || "请输入6~16位密码,仅允许字母和数字",
+        ],
+        inputCheckCode: [
+          (inputCheckCode) => !!inputCheckCode || "验证码不能为空",
+          (inputCheckCode) => (inputCheckCode && this.inputCheckCode === this.checkCode) || "验证码错误",
+        ]
+      }
     };
   },
 
@@ -156,6 +195,14 @@ export default {
 
     },
 
+    changeShowText () {
+      this.type = "text";
+    },
+
+    changeShowPassword () {
+      this.type = "password";
+    },
+
     initPassword () {
       this.checkCode = ""
       this.password = ""
@@ -165,6 +212,52 @@ export default {
     initText () {
       this.textG = ""
       this.labelG = "团队名字"
+    },
+
+    newCheckCode () {
+      const param = {
+        'email': this.$store.getters.email
+      }
+      console.say(param)
+      getCheckCode(param).then(res => {
+        this.checkCode = res.checkCode
+        console.log(this.checkCode)
+      })
+      if (!this.timer) {
+        this.count = 60
+        this.loadingCheckCode = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 60) {
+            this.count--
+            this.hint = this.count
+          } else {
+            this.loadingCheckCode = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.hint = "发送验证码"
+            this.checkCode = ""
+          }
+        }, 1000)
+      }
+    },
+
+    changePassword () {
+      if (!this.valid) {
+        return
+      }
+      changePwd({
+        'user_id': this.$store.getters.userId,
+        'oldPassword': this.password,
+        'newPassword': this.passwordN,
+      }).then(res => {
+        this.password = ""
+        this.passwordN = ""
+        this.inputCheckCode = ""
+        console(res)
+        if (res != null) {
+          this.msg = res
+        }
+      })
     },
 
     newGroup () {

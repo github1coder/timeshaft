@@ -4,7 +4,9 @@
     <div class="base">
       <ChatsModule v-if="$store.state.siderState === 0"></ChatsModule>
       <ContractsModule v-else-if="$store.state.siderState === 1"></ContractsModule>
+      <Empty v-else-if="$store.state.siderState === 2"></Empty>
       <CalendarModule v-else-if="$store.state.siderState === 3"></CalendarModule>
+
       <!-- <About v-else-if="$store.state.siderState === 4"></About> -->
     </div>
   </div>
@@ -17,6 +19,8 @@ import ContractsModule from "@/components/Module/ContractsModule";
 import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
 import CalendarModule from "@/components/Module/CalendarModule";
+import Empty from "@/components/Module/empty";
+
 
 export default {
   name: "Home",
@@ -25,6 +29,7 @@ export default {
     ChatsModule,
     Navigations,
     ContractsModule,
+    Empty,
   },
   created() {
     window.onbeforeunload = () => {

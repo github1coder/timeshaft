@@ -78,6 +78,7 @@
   </v-card>
 </template>
 <script>
+import { getTimeLine} from '../../../../api/timeShaft/index'
 export default {
   name: "TimeShaft",
   data() {
@@ -89,6 +90,10 @@ export default {
           'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1','deep-orange darken-2',
           'deep-orange darken-3', 'deep-orange darken-4'
       ],
+      chatid: {
+        'user1': -1,
+        'user2': -1
+      },
       items: [
         {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
         {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 16:23-17:30', conclude: '1111', host: 'zzy'},
@@ -108,6 +113,7 @@ export default {
   },
   mounted() {
     this.dateShow();
+
   },
   created() {
     this.dateFormat();
@@ -116,8 +122,21 @@ export default {
     this.dataDestroy();
   },
   computed: {
+    timeline() {
+      if (this.$store.state.currentChannelIdx === -1) {
+        this.chatid['user1'] = ''
+      } else {
+        return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
+      }
+    },
   },
   methods: {
+    getTimeline() {
+      getTimeLine(param).then(res => {
+        this.checkCode = res.checkCode
+        console.log(this.checkCode)
+      })
+    },
     dataDestroy() {
       if (this.timer) {
         clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
