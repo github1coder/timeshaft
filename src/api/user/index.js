@@ -32,3 +32,11 @@ export function logout(param) {
         params: param
     })
 }
+
+export function changePwd(param) {
+    return request({
+        url: '/user/changePwd',
+        method: 'post',
+        data: param
+    })
+}
