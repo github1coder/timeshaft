@@ -1,13 +1,17 @@
 package com.timeshaft.after_end.service.userop;
 
 import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.UserToken;
 import com.timeshaft.after_end.service.UserService;
+import com.timeshaft.after_end.service.UserTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -16,6 +20,8 @@ public class UserOp {
     private UserService userService;
     @Autowired
     private MyPasswordEncoder myPasswordEncoder;
+    @Autowired
+    private UserTokenService userTokenService;
 
 
     public User register(String email, String password, String username) throws Exception {
@@ -32,7 +38,7 @@ public class UserOp {
         return user;
     }
 
-    public User login(String email, String password) throws Exception {
+    public Map<String, Object> login(String email, String password) throws Exception {
         User u = new User(email, null, null, null);
         List<User> users = userService.queryAll(u);
         User user = users.get(0);
@@ -40,7 +46,15 @@ public class UserOp {
         if (!log) {
             throw new Exception("密码错误");
         }
-        return user;
+        String token = getRandomString(26);
+        userTokenService.insert(new UserToken(user.getId(), token));
+        Map<String, Object> userRes = new HashMap<>();
+        userRes.put("id", user.getId());
+        userRes.put("photo", user.getPhoto());
+        userRes.put("username", user.getUsername());
+        userRes.put("email", user.getEmail());
+        userRes.put("ACCESS_TOKEN", token);
+        return userRes;
     }
 
     public void changePwd(Integer user_id, String oldPassword, String newPassword) throws Exception {
@@ -53,5 +67,24 @@ public class UserOp {
         else {
             throw new Exception("密码错误");
         }
+    }
+
+    public void logout(Integer user_id, String token) {
+       List<UserToken> userTokens = userTokenService.queryAll(new UserToken(user_id, token));
+       for (UserToken userToken: userTokens) {
+           userTokenService.deleteById(userToken.getId());
+       }
+    }
+
+    //length用户要求产生字符串的长度
+    private String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random=new Random();
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }

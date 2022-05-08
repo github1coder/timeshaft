@@ -17,7 +17,6 @@ public class MyWebMVCConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(new MyHandlerIntercepter())
 //                .addPathPatterns("/**")
-//                .excludePathPatterns("/user/loginn",  "/assets/**", "/error/**",
-//                        "/user/register");
+//                .excludePathPatterns("/user/loginn", "/user/register", "/user/getCheckCode");
     }
 }

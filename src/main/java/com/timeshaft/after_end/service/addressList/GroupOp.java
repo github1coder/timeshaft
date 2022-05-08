@@ -4,6 +4,7 @@ import com.timeshaft.after_end.entity.Group;
 import com.timeshaft.after_end.entity.GroupUser;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,12 +20,21 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
+    @Value("${groupIdentity.manager}")
+    private String MANAGER;
+    @Value("${groupIdentity.member}")
+    private String MEMBER;
+    @Value("${friendState.neww}")
+    private String NEW;
+    @Value("${friendState.acceptt}")
+    private String ACCEPT;
+
 
     public void createGroup(String name, String photo,
                             String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date(), "");
         group = groupService.insert(group);
-        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
+        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", ACCEPT);
         groupUserService.insert(groupUser);
     }
 
@@ -45,7 +55,7 @@ public class GroupOp {
     }
 
     public List<Group> getGroup(int user_id) {
-        GroupUser groupUser = new GroupUser(null, user_id, null, null, "accept");
+        GroupUser groupUser = new GroupUser(null, user_id, null, null, ACCEPT);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
         for(GroupUser tmp : groupUsers) {
@@ -55,7 +65,7 @@ public class GroupOp {
     }
 
     public void joinGroup(int group_id, int join_user_id) {
-        GroupUser groupUser = new GroupUser(group_id, join_user_id, null, "member", "accept");
+        GroupUser groupUser = new GroupUser(group_id, join_user_id, null, MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
     }
 
@@ -71,16 +81,16 @@ public class GroupOp {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
-            tmp.setIdentity("manager");
+            tmp.setIdentity(MANAGER);
             groupUserService.update(tmp);
         }
     }
 
     public void delManager(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, "manager", null);
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, MANAGER, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
-            tmp.setIdentity("member");
+            tmp.setIdentity(MEMBER);
             groupUserService.update(tmp);
         }
     }

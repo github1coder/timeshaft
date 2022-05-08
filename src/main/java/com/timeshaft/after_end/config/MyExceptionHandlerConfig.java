@@ -23,7 +23,7 @@ public class MyExceptionHandlerConfig {
     @ResponseBody
     public ResponseService exceptionHandler(Exception e) {
         // 把错误信息输入到日志中
-        log.error(Arrays.toString(e.getStackTrace()));
+        log.error("出错了，小笨蛋",e);
         return new ResponseService(ResponseService.Code.ERROR, null, e.toString());
     }
 }

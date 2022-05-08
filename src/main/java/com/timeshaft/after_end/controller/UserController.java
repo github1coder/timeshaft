@@ -54,14 +54,14 @@ public class UserController {
     @RequestMapping(value = "/loginn")
     public ResponseService login(@RequestBody Map<String, String> map) throws Exception {
         log.info("开始登录");
-        User user = userOp.login(map.get("email"), map.get("password"));
+        Map<String, Object> userRes = userOp.login(map.get("email"), map.get("password"));
         log.info("登录成功");
-        return new ResponseService(user);
+        return new ResponseService(userRes);
     }
 
     @RequestMapping("/logout")
-    public ResponseService logout(@RequestParam("user_id") Integer user_id) {
-
+    public ResponseService logout(@RequestHeader("user_id") Integer user_id, @RequestHeader("ACCESS_TOKEN") String token) {
+        userOp.logout(user_id, token);
         return new ResponseService();
     }
 
