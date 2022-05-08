@@ -1,13 +1,8 @@
 package com.timeshaft.after_end.controller;
 
-import com.timeshaft.after_end.entity.GroupMessage;
-import com.timeshaft.after_end.entity.GroupMessageState;
-import com.timeshaft.after_end.entity.MessageStateType;
-import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.MessageStateService;
-import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
-import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
-import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
+import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +35,12 @@ public class MessageController {
     private GroupMessageServiceImpl groupMessageService;
     @Autowired
     private MessageStateServiceImpl messageStateService;
+    @Autowired
+    private GroupMessageStateServiceImpl groupMessageStateService;
+    @Autowired
+    private GroupUserServiceImpl groupUserService;
+    @Autowired
+    private FriendsServiceImpl friendsService;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -50,16 +52,17 @@ public class MessageController {
         Date date = new Date(System.currentTimeMillis());
         PersonalMessage personalMessage = new PersonalMessage();
         personalMessage.setSendtime(date);
-        //payload.put("time", date);
         personalMessage.setMessage((String) payload.get("msg"));
-        personalMessage.setFriendsId(Integer.valueOf(payload.get("dstId").toString()));
-        personalMessage.setSenderId(Integer.valueOf(payload.get("srcId").toString()));
+        personalMessage.setFriendsId(Integer.valueOf(payload.get("chatId").toString()));
+        personalMessage.setSenderId(Integer.valueOf(payload.get("userId").toString()));
         MessageStateType state = MessageStateType.UNREAD;
         personalMessage.setState(messageStateService.EnumToString(state));
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
-        messagingTemplate.convertAndSend("/user/" + senderId + "/" + friendId, payload);
+        Friends friends = friendsService.queryById(friendId);
+        int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
+        messagingTemplate.convertAndSend("/user/" + friendId + "/" + targetId, payload);
     }
 
     /**
@@ -71,14 +74,27 @@ public class MessageController {
     public void receiveGroupMessage(@Payload Map<String, Object> payload) {
         Date date = new Date(System.currentTimeMillis());
         GroupMessage groupMessage = new GroupMessage();
-        //GroupMessageState groupMessageState = new GroupMessageState();
-        //payload.put("time", date);
         groupMessage.setMessage((String) payload.get("msg"));
-        groupMessage.setGroupId(Integer.valueOf(payload.get("dstId").toString()));
-        groupMessage.setSenderId(Integer.valueOf(payload.get("srcId").toString()));
+        groupMessage.setGroupId(Integer.valueOf(payload.get("chatId").toString()));
+        groupMessage.setSenderId(Integer.valueOf(payload.get("userId").toString()));
         groupMessage.setSendtime(date);
-        groupMessageService.insert(groupMessage);
+        GroupMessage insertMessage = groupMessageService.insert(groupMessage);
+        int messageId = insertMessage.getId();
         int groupId = groupMessage.getGroupId();
+        GroupUser groupUser = new GroupUser();
+        groupUser.setGroupId(groupId);
+        List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
+        GroupMessageState groupMessageState = new GroupMessageState();
+        String read = messageStateService.EnumToString(MessageStateType.READ);
+        String unread = messageStateService.EnumToString(MessageStateType.UNREAD);
+        for (GroupUser user : userInGroup) {
+            if (user.getUserId().equals(groupMessage.getSenderId())) {
+                groupMessageState.setState(read);
+
+            } else {
+
+            }
+        }
         messagingTemplate.convertAndSend("/group/" + groupId, payload);
     }
 

@@ -1,6 +1,8 @@
 package com.timeshaft.after_end.service.impl;
 
+import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.mapper.PersonalMessageMapper;
 import com.timeshaft.after_end.service.PersonalMessageService;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,16 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     @Override
     public PersonalMessage queryLatestById(Integer friendsId, Integer senderId) {
         return this.personalMessageMapper.queryLatestById(friendsId, senderId);
+    }
+
+    /**
+     * 查询最新历史消息
+     *
+     * @return 实例对象
+     */
+    @Override
+    public PersonalMessage queryLatest() {
+        return this.personalMessageMapper.queryLatest();
     }
 
     /**
@@ -102,13 +114,11 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
         return this.personalMessageMapper.deleteById(id) > 0;
     }
 
+    @Override
+    public List<PersonalMessage> queryTimeshaft(Timeshaft timeshaft) {
+        return this.personalMessageMapper.queryTimeshaft(timeshaft.getGroupId(), timeshaft.getBeginTime(), timeshaft.getEndTime());
+    }
 
-    /**
-     * 通过主键删除数据
-     *
-     * @param personalMessage 包含查询信息的实体
-     * @return 查询结果列表
-     */
     @Override
     public List<PersonalMessage> queryAll(PersonalMessage personalMessage) {
         return this.personalMessageMapper.queryAll(personalMessage);

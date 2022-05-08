@@ -27,7 +27,6 @@ public class UserOp {
         String savePassword = myPasswordEncoder.encode(password);
         String baseURL = "http://182.92.163.68:8080/photo/" +
                 (new Random().nextInt(12) + 1) + ".png";
-
         User user = new User(email, savePassword, username, baseURL);
         userService.insert(user);
         return user;

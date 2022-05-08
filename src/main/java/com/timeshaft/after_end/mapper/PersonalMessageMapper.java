@@ -1,7 +1,10 @@
 package com.timeshaft.after_end.mapper;
 
+import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +31,13 @@ public interface PersonalMessageMapper {
      * @return 实例对象
      */
     PersonalMessage queryLatestById(@Param("friendsId") Integer friendsId, @Param("senderId") Integer senderId);
+
+    /**
+     * 查询最新消息
+     *
+     * @return 实例对象
+     */
+    PersonalMessage queryLatest();
 
     /**
      * 通过id组合与索引查询最近历史消息（默认20条）
@@ -82,5 +92,7 @@ public interface PersonalMessageMapper {
      * @return 影响行数
      */
     int deleteById(Integer id);
+
+    List<PersonalMessage> queryTimeshaft(@Param("group_id") Integer group_id, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
 }

@@ -24,6 +24,39 @@ public class Timeshaft implements Serializable {
     
     private Date endTime;
 
+    private String conclude;
+
+    private String type;
+
+    public Timeshaft() {
+
+    }
+
+    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type) {
+        this.groupId = groupId;
+        this.creatorId = creatorId;
+        this.name = name;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.conclude = conclude;
+        this.type = type;
+    }
+
+    public String getConclude() {
+        return conclude;
+    }
+
+    public void setConclude(String conclude) {
+        this.conclude = conclude;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;
