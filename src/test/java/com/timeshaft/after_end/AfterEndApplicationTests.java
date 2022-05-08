@@ -2,8 +2,10 @@ package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
 import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.Group;
 import com.timeshaft.after_end.entity.GroupUser;
 import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
@@ -31,12 +33,12 @@ class AfterEndApplicationTests {
     private ChatController chatController;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private GroupService groupService;
 
     @Test
     void contextLoads() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("srcId", 15);
-        hashMap.put("dstId", 12);
-        chatController.getMessagesList(hashMap);
+       Group group = groupService.queryById(7);
+
     }
 }

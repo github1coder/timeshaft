@@ -143,8 +143,8 @@ public class FriendOp {
                 friends.addAll(friendsService.queryAll(friend2));
                 if (friends.size() == 0) {
                     friend1.setState(action);
-                    friend1.setNickname2("");
-                    friend1.setNickname1("");
+                    friend1.setNickname2(userService.queryById(id).getUsername());
+                    friend1.setNickname1(userService.queryById(self_id).getUsername());
                     friendsService.insert(friend1);
                 }
             } else if(action.equals("accept")) {
