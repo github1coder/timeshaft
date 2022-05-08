@@ -62,6 +62,7 @@ public class MessageController {
         int senderId = personalMessage.getSenderId();
         Friends friends = friendsService.queryById(friendId);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
+        payload.put("srcId", friendId);
         messagingTemplate.convertAndSend("/user/" + friendId + "/" + targetId, payload);
     }
 
