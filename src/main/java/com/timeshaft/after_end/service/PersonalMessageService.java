@@ -32,6 +32,13 @@ public interface PersonalMessageService {
     List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index);
 
     /**
+     * 查询最新消息
+     *
+     * @return 实例对象
+     */
+    PersonalMessage queryLatest();
+
+    /**
      * 通过id组合与索引查询最新历史消息
      *
      * @param friendsId 接收者id

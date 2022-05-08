@@ -30,6 +30,13 @@ public interface PersonalMessageMapper {
     PersonalMessage queryLatestById(@Param("friendsId") Integer friendsId, @Param("senderId") Integer senderId);
 
     /**
+     * 查询最新消息
+     *
+     * @return 实例对象
+     */
+    PersonalMessage queryLatest();
+
+    /**
      * 通过id组合与索引查询最近历史消息（默认20条）
      *
      * @param friendsId 接收者id

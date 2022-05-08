@@ -43,6 +43,16 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     }
 
     /**
+     * 查询最新历史消息
+     *
+     * @return 实例对象
+     */
+    @Override
+    public PersonalMessage queryLatest() {
+        return this.personalMessageMapper.queryLatest();
+    }
+
+    /**
      * 通过id组合与索引查询最近历史消息（默认20条）
      *
      * @param friendsId 接收者id

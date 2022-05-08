@@ -92,6 +92,10 @@ public class ChatController {
                     if (messageFrom != null) {
                         index = messageFrom.getId() + 1;
                         recent = sdf.format(messageFrom.getSendtime());
+                    } else {
+                        PersonalMessage messageRecent = personalMessageService.queryLatest();
+                        index = messageRecent.getId() + 1;
+                        recent = sdf.format(messageRecent.getSendtime());
                     }
                 } else {
                     if (messageFrom == null) {
@@ -135,6 +139,8 @@ public class ChatController {
         int index = (Integer) requestMap.get("index");
         Friends friends = friendsService.queryById(friendId);
         int dstId = friends.getUserId1() == srcId? friends.getUserId2():friends.getUserId1();
+        String srcNickName = friends.getUserId1() == srcId? friends.getNickname1():friends.getNickname2();
+        String dstNickName = friends.getUserId1() == dstId? friends.getNickname1():friends.getNickname2();
         User userSrc = userService.queryById(srcId);
         User userDst = userService.queryById(dstId);
         List<PersonalMessage> historyMessage = new ArrayList<>();
@@ -156,10 +162,10 @@ public class ChatController {
             messageMap.put("dstId", message.getFriendsId());
             messageMap.put("msg", message.getMessage());
             if (message.getSenderId() == srcId) {
-                messageMap.put("msgFromName", userSrc.getUsername());
+                messageMap.put("msgFromName", srcNickName);
                 messageMap.put("msgFromAvatar", userSrc.getPhoto());
             } else {
-                messageMap.put("msgFromName", userDst.getUsername());
+                messageMap.put("msgFromName", dstNickName);
                 messageMap.put("msgFromAvatar", userDst.getPhoto());
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
