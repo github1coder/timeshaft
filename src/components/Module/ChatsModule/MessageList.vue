@@ -138,6 +138,7 @@ export default {
         haveRead({
           srcId:this.$store.state.userId,
           dstId:this.$store.state.currentChannelId,
+          userId:this.$store.state.userId,
           time:item.data[item.data.length-1].time,
         }).then(res => {
           res
