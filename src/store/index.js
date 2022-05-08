@@ -13,15 +13,10 @@ export default new Vuex.Store({
         userId: -1,
         email: null,
         accessToken: null,
-        //info相关
-        infoId: -1,
-        infoPhoto: null,
-        infoName: null,
-        infoNick: null,
-        infoEmail: null,
+
         master: -1,
         about: -1, //0代表朋友，1代表群聊
-        currentChannelIdx: 0,
+        currentChannelIdx: -1,
         currentChannelId: -1,
         myIcon: "guest.png",
         // ownerIcon: "https://media.discordapp.net/attachments/603940670914297867/685302017165623352/plusrekt1.jpg?width=513&height=513",
@@ -218,11 +213,11 @@ export default new Vuex.Store({
                             console.log("收到的json:")
                             console.log(json)
                             for (let friend in state.messageList) {
-                                console.log(json.srcId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
-                                if (json.srcId === state.messageList[friend].id) {
+                                console.log(json.userId.toString() + " " + friend.toString() + " " + state.messageList[friend].id.toString())
+                                if (json.chatId === state.messageList[friend].id) {
                                     state.messageList[friend].data.push(json)
-                                        // this.commit("updateMessageList", {id: json.srcId, data: json})
-                                    console.log("收到 id:" + json.srcId.toString() + " 消息:")
+                                        // this.commit("updateMessageList", {id: json.userId, data: json})
+                                    console.log("收到 chat:" + json.chatId.toString() + " 消息:")
                                     console.log(json)
                                     break
                                 }
@@ -244,7 +239,7 @@ export default new Vuex.Store({
         WEBSOCKET_SEND(state, p) {
             // const text = p.data.msgFromName + "," + p.data.msgFromAvatar + ","
             //     + p.data.msg + "," + p.data.time + ","
-            //     + p.data.srcId + "," + p.data.dstId
+            //     + p.data.userId + "," + p.data.dstId
             state.stompClient.send(p.url, {}, JSON.stringify(p.data));
             console.log("send + " + JSON.stringify(p.data) + " to " + p.url)
         },

@@ -78,7 +78,7 @@
   </v-card>
 </template>
 <script>
-import { getTimeLine} from '../../../../api/timeShaft/index'
+// import { getTimeLine} from '../../../../api/timeShaft/index'
 export default {
   name: "TimeShaft",
   data() {
@@ -122,21 +122,21 @@ export default {
     this.dataDestroy();
   },
   computed: {
-    timeline() {
-      if (this.$store.state.currentChannelIdx === -1) {
-        this.chatid['user1'] = ''
-      } else {
-        return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
-      }
-    },
+    // timeline() {
+    //   if (this.$store.state.currentChannelIdx === -1) {
+    //     this.chatid['user1'] = ''
+    //   } else {
+    //     return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
+    //   }
+    // },
   },
   methods: {
-    getTimeline() {
-      getTimeLine(param).then(res => {
-        this.checkCode = res.checkCode
-        console.log(this.checkCode)
-      })
-    },
+    // getTimeline() {
+    //   getTimeLine(param).then(res => {
+    //     this.checkCode = res.checkCode
+    //     console.log(this.checkCode)
+    //   })
+    // },
     dataDestroy() {
       if (this.timer) {
         clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
