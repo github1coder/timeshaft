@@ -134,8 +134,8 @@ public class ChatController {
 
     @RequestMapping(value = "/getHistoryMessage")
     public ResponseService getHistoryMessage(@RequestBody Map<String, Object> requestMap) {
-        int srcId = (Integer) requestMap.get("srcId");
-        int friendId = (Integer) requestMap.get("dstId");
+        int srcId = (Integer) requestMap.get("userId");
+        int friendId = (Integer) requestMap.get("chatId");
         int index = (Integer) requestMap.get("index");
         Friends friends = friendsService.queryById(friendId);
         int dstId = friends.getUserId1() == srcId? friends.getUserId2():friends.getUserId1();
@@ -187,21 +187,14 @@ public class ChatController {
     @RequestMapping(value = "/haveRead")
     public ResponseService markMessages(@RequestBody Map<String, Object> requestMap) {
         String time = (String) requestMap.get("time");
-        int srcId = (Integer) requestMap.get("srcId");
-        int dstId = (Integer) requestMap.get("dstId");
         int userId = (Integer) requestMap.get("userId");
+        int friendId = (Integer) requestMap.get("chatId");
         PersonalMessage messageQuery = new PersonalMessage();
         MessageStateType state = MessageStateType.UNREAD;
         messageQuery.setState(messageStateService.EnumToString(state));
-        int senderId;
-        Friends friends;
-        if (srcId == userId) {
-            friends = friendsService.queryById(dstId);
-        } else {
-            friends = friendsService.queryById(srcId);
-        }
-        senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
-        messageQuery.setFriendsId(friends.getId());
+        Friends friends = friendsService.queryById(friendId);
+        int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
+        messageQuery.setFriendsId(friendId);
         messageQuery.setSenderId(senderId);
         List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
         PersonalMessage messageToSet = new PersonalMessage();
