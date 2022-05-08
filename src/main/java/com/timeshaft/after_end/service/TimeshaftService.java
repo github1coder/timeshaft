@@ -53,4 +53,5 @@ public interface TimeshaftService {
      */
     boolean deleteById(Integer id);
 
+    List<Timeshaft> queryAll(Timeshaft timeshaft);
 }

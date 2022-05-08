@@ -17,6 +17,13 @@ public class Tag implements Serializable {
     
     private String name;
 
+    public Tag() {
+    }
+
+    public Tag(Integer timeshaftId, String name) {
+        this.timeshaftId = timeshaftId;
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;

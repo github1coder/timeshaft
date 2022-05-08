@@ -76,4 +76,9 @@ public class TagServiceImpl implements TagService {
     public boolean deleteById(Integer id) {
         return this.tagMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public List<Tag> queryAll(Tag tag) {
+        return this.tagMapper.queryAll(tag);
+    }
 }

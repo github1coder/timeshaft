@@ -115,4 +115,10 @@
         delete from timeshaft.personal_message where id = #{id}
     </delete>
 
+    <select id="queryTimeshaft" resultMap="BaseResultMap">
+        select
+            id, friends_id, sender_id, message, sendtime, state
+        from timeshaft.personal_message
+        where friends_id = #{group_id} and sendtime between #{startTime} and #{endTime}
+    </select>
 </mapper>

@@ -19,9 +19,10 @@ public class GroupOp {
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
 
+
     public void createGroup(String name, String photo,
                             String notice, int master_id) {
-        Group group = new Group(name, master_id, notice, photo, new Date());
+        Group group = new Group(name, master_id, notice, photo, new Date(), "");
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", "accept");
         groupUserService.insert(groupUser);

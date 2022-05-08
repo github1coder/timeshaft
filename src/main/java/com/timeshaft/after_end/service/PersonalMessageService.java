@@ -1,7 +1,9 @@
 package com.timeshaft.after_end.service;
 
 
+import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.Timeshaft;
 
 import java.util.List;
 
@@ -80,6 +82,7 @@ public interface PersonalMessageService {
      */
     boolean deleteById(Integer id);
 
+    List<PersonalMessage> queryTimeshaft(Timeshaft timeshaft);
     /**
      * 查询符合条件的私信
      *

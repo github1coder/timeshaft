@@ -32,22 +32,22 @@ public class FriendOp {
     private UserService userService;
 
     public List<Friends> getFriends(Integer id) {
-        Friends friend1 = new Friends(id, null, null, null, "accept");
-        Friends friend2 = new Friends(null, id, null, null, "accept");
+        Friends friend1 = new Friends(id, null, null, null, null, null);
+        Friends friend2 = new Friends(null, id, null, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
         friends.addAll(friendsService.queryAll(friend2));
         return friends;
     }
 
     public void addFriend(int friend1, int friend2) {
-        Friends friend = new Friends(friend1, friend2, "", "", "accept");
+        Friends friend = new Friends(friend1, friend2, null, null, "accept", null);
         friendsService.insert(friend);
     }
 
     public void delFriend(int friend1, int friend2) {
-        Friends friend = new Friends(friend1, friend2, null, null, null);
+        Friends friend = new Friends(friend1, friend2, null, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend);
-        Friends friend_2 = new Friends(friend2, friend1, null, null, null);
+        Friends friend_2 = new Friends(friend2, friend1, null, null, null, null);
         friends.addAll(friendsService.queryAll(friend_2));
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
@@ -55,14 +55,14 @@ public class FriendOp {
     }
 
     public void changeNickname(int self_id, int friend_id, String name) {
-        Friends friend1 = new Friends(self_id, friend_id, null, null, null);
+        Friends friend1 = new Friends(self_id, friend_id, null, null, null, null);
         List<Friends> friends = friendsService.queryAll(friend1);
         for(Friends tmp : friends){
             tmp.setNickname2(name);
             friendsService.update(tmp);
             return;
         }
-        Friends friend2 = new Friends(friend_id, self_id, null, null, null);
+        Friends friend2 = new Friends(friend_id, self_id, null, null, null, null);
         friends.addAll(friendsService.queryAll(friend2));
         for(Friends tmp : friends){
             tmp.setNickname1(name);
@@ -73,7 +73,7 @@ public class FriendOp {
     public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
         if(type.equals("group")) {
-            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null));
+            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
                 GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null);
@@ -93,8 +93,8 @@ public class FriendOp {
             List<User> users = userService.queryAll(new User(null, null, name, null));
             List<User> res = new ArrayList<>();
             for(User user : users) {
-                Friends friend1 = new Friends(id, user.getId(), null, null, null);
-                Friends friend2 = new Friends(user.getId(), id, null, null, null);
+                Friends friend1 = new Friends(id, user.getId(), null, null, null, null);
+                Friends friend2 = new Friends(user.getId(), id, null, null, null, null);
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
                 if(friends.size() == 0) {
@@ -136,8 +136,8 @@ public class FriendOp {
                 groupUserService.deleteById(groupUsers.get(0).getId());
             }
         } else {
-            Friends friend1 = new Friends(self_id, id, null, null, null);
-            Friends friend2 = new Friends(id, self_id, null, null, null);
+            Friends friend1 = new Friends(self_id, id, null, null, null, null);
+            Friends friend2 = new Friends(id, self_id, null, null, null, null);
             if(action.equals("new")) {
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
@@ -191,7 +191,7 @@ public class FriendOp {
                 }
             }
         } else {
-            Friends friend = new Friends(null, id, null, null, "new");
+            Friends friend = new Friends(null, id, null, null, "new", null);
             List<Friends> friends = friendsService.queryAll(friend);
             for(Friends f : friends){
                 HashMap<String, String> map = new HashMap<>();

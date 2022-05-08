@@ -2,6 +2,8 @@ package com.timeshaft.after_end.mapper;
 
 import com.timeshaft.after_end.entity.GroupMessage;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,5 +63,7 @@ public interface GroupMessageMapper {
      * @return 影响行数
      */
     int deleteById(Integer id);
+
+    List<GroupMessage> queryTimeshaft(@Param("group_id") Integer group_id, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
 }

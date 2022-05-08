@@ -1,12 +1,9 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
-import com.timeshaft.after_end.entity.Friends;
-import com.timeshaft.after_end.entity.GroupUser;
-import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.Group;
+import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
-import com.timeshaft.after_end.service.ResponseService;
-import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
@@ -26,7 +23,7 @@ class AfterEndApplicationTests {
     @Autowired
     private UserOp userOp;
     @Autowired
-    private UserService userService;
+    private GroupService groupService;
     @Autowired
     private ChatController chatController;
     @Autowired
@@ -34,9 +31,8 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("srcId", 15);
-        hashMap.put("dstId", 12);
-        chatController.getMessagesList(hashMap);
+        System.out.println("aaaaa");
+        Group group = groupService.queryById(7);
+        System.out.println("aaaaa");
     }
 }
