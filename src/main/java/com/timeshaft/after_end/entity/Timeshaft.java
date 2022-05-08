@@ -28,6 +28,10 @@ public class Timeshaft implements Serializable {
 
     private String type;
 
+    public Timeshaft() {
+
+    }
+
     public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type) {
         this.groupId = groupId;
         this.creatorId = creatorId;

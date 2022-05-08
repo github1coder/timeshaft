@@ -95,12 +95,10 @@ public class TimeShaftOp {
 
     private Object getTimeShaftMessage(Timeshaft timeshaft) {
         if (groupType.equals(timeshaft.getType())) {
-            List<GroupMessage> messages = groupMessageService.queryTimeshaft(timeshaft);
-            return messages;
+            return groupMessageService.queryTimeshaft(timeshaft);
         }
         else if (friendType.equals(timeshaft.getType())) {
-            List<PersonalMessage> messages = personalMessageService.queryTimeshaft(timeshaft);
-            return messages;
+            return personalMessageService.queryTimeshaft(timeshaft);
         }
         else {
             return null;

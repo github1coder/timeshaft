@@ -119,6 +119,6 @@
         select
             id, friends_id, sender_id, message, sendtime, state
         from timeshaft.personal_message
-        where friends_id = #{group_id} and sendtime between #{start_time} and #{end_time}
+        where friends_id = #{group_id} and sendtime between #{startTime} and #{endTime}
     </select>
 </mapper>

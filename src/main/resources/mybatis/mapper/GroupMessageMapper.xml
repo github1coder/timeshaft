@@ -86,7 +86,7 @@
         select
             id, group_id, sender_id, message, sendtime
         from timeshaft.group_message
-        where group_id = #{group_id} and sendtime between #{start_time} and #{end_time}
+        where group_id = #{group_id} and sendtime between #{startTime} and #{endTime}
     </select>
 
 </mapper>
