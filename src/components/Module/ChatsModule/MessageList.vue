@@ -136,8 +136,7 @@ export default {
       if (item.data.length !== 0) {
         item.haveRead = item.data.length-1
         haveRead({
-          srcId:this.$store.state.userId,
-          dstId:this.$store.state.currentChannelId,
+          chatId:this.$store.state.currentChannelId,
           userId:this.$store.state.userId,
           time:item.data[item.data.length-1].time,
         }).then(res => {
@@ -152,8 +151,8 @@ export default {
       for (let i in this.$store.state.messageList) {
         if (this.$store.state.messageList[i].data.length < 10) {
           getHistoryMessage({
-            srcId: this.$store.state.userId,
-            dstId: this.$store.state.messageList[i].id,
+            userId: this.$store.state.userId,
+            chatId: this.$store.state.messageList[i].id,
             index: this.$store.state.messageList[i].index,
           }).then(res => {
             console.log("get history message of " + i.toString())

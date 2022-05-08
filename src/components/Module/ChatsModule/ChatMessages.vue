@@ -62,8 +62,8 @@ export default {
         msgFromAvatar: avatar,
         msg: message,
         time: this.getDate(),
-        srcId: this.$store.state.userId,
-        dstId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
+        userId: this.$store.state.userId,
+        chatId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
       }
       console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
@@ -133,8 +133,8 @@ export default {
         console.log("more: " + this.$store.state.more)
         if (this.$store.state.more) {
           getHistoryMessage({
-            srcId: this.$store.state.userId,
-            dstId: this.$store.state.currentChannelId,
+            userId: this.$store.state.userId,
+            chatId: this.$store.state.currentChannelId,
             index: this.$store.state.messageList[this.$store.state.currentChannelIdx].index,
           }).then(res => {
             console.log("拉取 " + res.data.length + " 条历史消息")
