@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.service;
 
 import com.timeshaft.after_end.entity.GroupMessage;
+import com.timeshaft.after_end.entity.Timeshaft;
 
 import java.util.List;
 
@@ -53,4 +54,5 @@ public interface GroupMessageService {
      */
     boolean deleteById(Integer id);
 
+    List<GroupMessage> queryTimeshaft(Timeshaft timeshaft);
 }

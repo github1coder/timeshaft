@@ -52,4 +52,6 @@ public interface TagService {
      */
     boolean deleteById(Integer id);
 
+    List<Tag> queryAll(Tag tag);
+
 }

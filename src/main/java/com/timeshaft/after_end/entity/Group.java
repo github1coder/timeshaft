@@ -24,12 +24,15 @@ public class Group implements Serializable {
     
     private Date buildtime;
 
-    public Group(String name, Integer masterId, String notice, String photo, Date buildtime) {
+    private String status;
+
+    public Group(String name, Integer masterId, String notice, String photo, Date buildtime, String status) {
         this.name = name;
         this.masterId = masterId;
         this.notice = notice;
         this.photo = photo;
         this.buildtime = buildtime;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -80,4 +83,11 @@ public class Group implements Serializable {
         this.buildtime = buildtime;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

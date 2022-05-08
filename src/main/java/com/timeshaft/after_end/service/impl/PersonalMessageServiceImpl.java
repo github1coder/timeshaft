@@ -1,6 +1,8 @@
 package com.timeshaft.after_end.service.impl;
 
+import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
+import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.mapper.PersonalMessageMapper;
 import com.timeshaft.after_end.service.PersonalMessageService;
 import org.springframework.stereotype.Service;
@@ -75,5 +77,10 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     @Override
     public boolean deleteById(Integer id) {
         return this.personalMessageMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<PersonalMessage> queryTimeshaft(Timeshaft timeshaft) {
+        return this.personalMessageMapper.queryTimeshaft(timeshaft.getGroupId(), timeshaft.getBeginTime(), timeshaft.getEndTime());
     }
 }

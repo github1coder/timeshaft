@@ -23,12 +23,15 @@ public class Friends implements Serializable {
 
     private String state;
 
-    public Friends(Integer userId1, Integer userId2, String nickname1, String nickname2, String state) {
+    private String status;
+
+    public Friends(Integer userId1, Integer userId2, String nickname1, String nickname2, String state, String status) {
         this.userId1 = userId1;
         this.userId2 = userId2;
         this.nickname1 = nickname1;
         this.nickname2 = nickname2;
         this.state = state;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -77,5 +80,13 @@ public class Friends implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

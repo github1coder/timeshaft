@@ -2,6 +2,8 @@ package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
 import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.Group;
+import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.userop.UserOp;
@@ -21,11 +23,15 @@ class AfterEndApplicationTests {
     @Autowired
     private UserOp userOp;
     @Autowired
+    private GroupService groupService;
+    @Autowired
     private ChatController chatController;
 
     @Test
     void contextLoads() {
-
+        System.out.println("aaaaa");
+        Group group = groupService.queryById(7);
+        System.out.println("aaaaa");
     }
 
 }

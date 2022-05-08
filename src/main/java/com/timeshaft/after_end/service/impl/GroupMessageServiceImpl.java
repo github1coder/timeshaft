@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.service.impl;
 
 import com.timeshaft.after_end.entity.GroupMessage;
+import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.mapper.GroupMessageMapper;
 import com.timeshaft.after_end.service.GroupMessageService;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,10 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     @Override
     public boolean deleteById(Integer id) {
         return this.groupMessageMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<GroupMessage> queryTimeshaft(Timeshaft timeshaft) {
+        return this.groupMessageMapper.queryTimeshaft(timeshaft.getGroupId(), timeshaft.getBeginTime(), timeshaft.getEndTime());
     }
 }

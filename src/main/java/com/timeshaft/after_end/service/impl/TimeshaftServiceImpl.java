@@ -76,4 +76,9 @@ public class TimeshaftServiceImpl implements TimeshaftService {
     public boolean deleteById(Integer id) {
         return this.timeshaftMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public List<Timeshaft> queryAll(Timeshaft timeshaft) {
+        return this.timeshaftMapper.queryAll(timeshaft);
+    }
 }

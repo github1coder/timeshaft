@@ -82,4 +82,11 @@
         delete from timeshaft.group_message where id = #{id}
     </delete>
 
+    <select id="queryTimeshaft" resultMap="BaseResultMap">
+        select
+            id, group_id, sender_id, message, sendtime
+        from timeshaft.group_message
+        where group_id = #{group_id} and sendtime between #{start_time} and #{end_time}
+    </select>
+
 </mapper>
