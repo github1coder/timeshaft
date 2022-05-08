@@ -39,6 +39,8 @@ public class MessageController {
     private GroupMessageStateServiceImpl groupMessageStateService;
     @Autowired
     private GroupUserServiceImpl groupUserService;
+    @Autowired
+    private FriendsServiceImpl friendsService;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -58,7 +60,9 @@ public class MessageController {
         personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
-        messagingTemplate.convertAndSend("/user/" + senderId + "/" + friendId, payload);
+        Friends friends = friendsService.queryById(friendId);
+        int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
+        messagingTemplate.convertAndSend("/user/" + friendId + "/" + targetId, payload);
     }
 
     /**
