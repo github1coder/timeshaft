@@ -40,6 +40,7 @@ export default new Vuex.Store({
     },
     getters: {
         userId: state => state.userId,
+        accessToken: state => state.accessToken,
         email: state => state.email,
         myNick: state => state.myNick,
         myIcon: state => state.myIcon,
@@ -57,6 +58,9 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setAccessToken(store, AccessToken) {
+            store.AccessToken = AccessToken
+        },
         setInfoNick(store, infoNick) {
             store.infoNick = infoNick
         },
