@@ -17,6 +17,13 @@ public class UserToken implements Serializable {
     
     private String token;
 
+    public UserToken() {
+    }
+
+    public UserToken(Integer userId, String token) {
+        this.userId = userId;
+        this.token = token;
+    }
 
     public Integer getId() {
         return id;
