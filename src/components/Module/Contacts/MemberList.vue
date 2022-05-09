@@ -507,7 +507,8 @@ export default {
       if (this.friends[index].friend_name !== this.friends[index].friend_nick) {
         this.$store.commit("setInfoNick", this.friends[index].friend_nick)
       }
-      this.$store.commit("setInfoId", this.friends[index].friend_id)
+      this.$store.commit("setInfoId", this.friends[index].chat_id)
+      console.log("chat_id:" + this.$store.getters.infoId)
       this.$store.commit("setInfoName", this.friends[index].friend_name)
       this.$store.commit("setInfoPhoto", this.friends[index].friend_photo)
       this.$store.commit("setInfoEmail", this.friends[index].mail)
