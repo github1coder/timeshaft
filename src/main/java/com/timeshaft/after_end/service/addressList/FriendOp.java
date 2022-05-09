@@ -109,6 +109,12 @@ public class FriendOp {
             }
         } else {
             List<User> users = userService.queryAll(new User(null, null, name, null));
+            List<User> tmp = userService.queryAll(new User(name, null, null, null));
+            for(User user : tmp) {
+                if(!users.contains(user)) {
+                    users.add(user);
+                }
+            }
             List<User> res = new ArrayList<>();
             for(User user : users) {
                 Friends friend1 = new Friends(id, user.getId(), null, null, null, null);
