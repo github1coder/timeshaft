@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -50,11 +49,9 @@ public class ChatController {
             Integer friendUserId = friends.getUserId1().equals(sourceId)? friends.getUserId2():friends.getUserId1();
             Integer friendId = friends.getId();
             String chatName = friends.getUserId1().equals(sourceId)? friends.getNickname2():friends.getNickname1();
-            String url = "/user/" + friendId + "/" + sourceId;
             String chatAvatar = userService.queryById(friendUserId).getPhoto();
             map.put("id", friendId);
             map.put("chatName", chatName);
-            map.put("url", url);
             map.put("chatAvatar", chatAvatar);
             Date recent = null;
             //拉取所有未读消息
@@ -118,16 +115,17 @@ public class ChatController {
     @RequestMapping(value = "/getSubscribeUrlList")
     public ResponseService getSubscribeUrlList(@RequestBody Map<String, Object> requestMap) {
         int sourceId = (Integer) requestMap.get("srcId");
-        List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> data = new ArrayList<>();
-        for (Friends friends : friendsList) {
-            HashMap<String, Object> map = new HashMap<>();
-            Integer friendId = friends.getId();
-            String url = "/user/" + friendId + "/" + sourceId;
-            map.put("id", friendId);
-            map.put("url", url);
-            data.add(map);
-        }
+        HashMap<String, Object> mapChat = new HashMap<>();
+        HashMap<String, Object> mapContact = new HashMap<>();
+        String chatUrl = "/user/" + sourceId;
+        String contactUrl = "/user/contact/" + sourceId;
+        mapChat.put("type", 0);
+        mapChat.put("url", chatUrl);
+        mapContact.put("type", 1);
+        mapContact.put("url", contactUrl);
+        data.add(mapChat);
+        data.add(mapContact);
         return new ResponseService(data);
     }
 
