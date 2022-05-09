@@ -27,7 +27,7 @@
           <v-text-field
             class="text-field"
             v-model="email"
-            label="邮箱"
+            label="邮箱!!!!"
             required
             :counter="30"
             :rules="rules.email"
