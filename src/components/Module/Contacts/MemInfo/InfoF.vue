@@ -58,7 +58,23 @@ export default {
     },
 
     sendMessage () {
+      console.log("对好友进行消息发送")
       //todo, friend_id 为 this.$store.getters.infoId
+      // changeSider
+      setTimeout(function () {
+        console.log(document.getElementById('nav-'+0))
+        document.getElementById('nav-'+0).click()
+        console.log("切换到聊天栏")
+      }, 500)
+      // 模拟点击事件
+      const id = this.$store.state.infoId.toString()
+      setTimeout(function () {
+        console.log("得到好友关系id: "+ id)
+        console.log(document.getElementById('message-'+id))
+        document.getElementById('message-'+id).click()
+        console.log("切换到聊天框")
+      }, 500)
+
     },
   }
 }

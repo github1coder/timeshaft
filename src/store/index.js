@@ -13,7 +13,11 @@ export default new Vuex.Store({
         userId: -1,
         email: null,
         accessToken: null,
-
+        infoId: -1,
+        infoPhoto: null,
+        infoName: -1,
+        infoEmail: -1,
+        infoNick: -1,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
         currentChannelIdx: -1,

@@ -52,10 +52,10 @@
 
 <script>
 import '../../api/addresslist/index'
-import ApplyTool from './Contracts/ApplyTool.vue'
-import AddTool from './Contracts/AddTool.vue'
-import InfoTool from './Contracts/InfoTool.vue'
-import MemberList from './Contracts/MemberList.vue'
+import ApplyTool from './Contacts/ApplyTool.vue'
+import AddTool from './Contacts/AddTool.vue'
+import InfoTool from './Contacts/InfoTool.vue'
+import MemberList from './Contacts/MemberList.vue'
 export default {
   components: {
     AddTool,

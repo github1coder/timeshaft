@@ -74,6 +74,7 @@
             :key="i"
             @click="$store.commit('changeSiderState', i)"
             :ref="`sider` + i"
+            :id="'nav-'+i"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>

@@ -33,11 +33,11 @@
           <!-- TODO expansion needed! -->
           <v-list width="100%" rounded max-height="80px">
             <v-list-item-group
-                v-model="channelNum"
                 color="primary">
               <v-list-item
                   v-for="(item, i) in this.chats"
                   @click="selectChannel(item.id, i, item)"
+                  :id="'message-'+item.id.toString()"
                   :key="i"
               >
                 <v-list-item-avatar>
@@ -75,7 +75,6 @@ export default {
       text: '',
       showSelect: true,
       searchResult: [],
-      channelNum: null,
     }
   },
   methods: {
@@ -167,7 +166,7 @@ export default {
           })
         }
       }
-    }
+    },
   },
   updated() {
 

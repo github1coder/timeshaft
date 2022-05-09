@@ -14,7 +14,7 @@
 
 <script>
 // @ is an alias to /src
-import ContractsModule from "@/components/Module/ContractsModule";
+import ContractsModule from "@/components/Module/ContactsModule";
 // import About from "@/components/About/About";
 import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
@@ -37,7 +37,6 @@ export default {
       console.log("save")
       console.log(sessionStorage.getItem("data"))
     }
-
     console.log("get")
     console.log(sessionStorage.getItem("data"))
     if (sessionStorage.getItem("data")) {
