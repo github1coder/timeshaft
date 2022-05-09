@@ -4,6 +4,7 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.entity.Friends;
 import com.timeshaft.after_end.entity.Group;
 import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
@@ -28,6 +29,8 @@ public class AddressListController {
     private GroupOp groupOp;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FriendsService friendsService;
 
     @RequestMapping(value = "/getFriends")
     public ResponseService getFriends(@RequestParam("user_id") Integer user_id) {
@@ -49,6 +52,7 @@ public class AddressListController {
             map.put("friend_photo", tmp.getPhoto());
             map.put("friend_nick", nick);
             map.put("mail", userService.queryById(tmp.getId()).getEmail());
+            map.put("chat_id", f.getId().toString());
             res.add(map);
         }
         return new ResponseService(res);
@@ -164,6 +168,15 @@ public class AddressListController {
             ans.put("photo", user.getPhoto());
             ans.put("nick", users.get(user));
             ans.put("mail", user.getEmail());
+            Friends friend1 = new Friends(id, user.getId(), null, null, null, "accept");
+            Friends friend2 = new Friends(user.getId(), id, null, null, null, "accept");
+            List<Friends> friends = friendsService.queryAll(friend1);
+            friends.addAll(friendsService.queryAll(friend2));
+            if(friends.size() != 0) {
+                ans.put("chat_id", friends.get(0).getId().toString());
+            } else {
+                ans.put("chat_id", "-1");
+            }
             res.add(ans);
         }
         return new ResponseService(res);
