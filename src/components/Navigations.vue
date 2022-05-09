@@ -124,6 +124,7 @@ export default {
         this.$store.commit("setLogin", false)
         this.$store.commit("setInfoId", -1)
         this.$store.commit("setInfoName", null)
+        this.$store.commit("setInfoNick", null)
         this.$store.commit("setInfoPhoto", null)
         this.$store.commit("setMaster", -1)
         this.$store.commit("changeSiderState", 0)
