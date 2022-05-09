@@ -6,16 +6,110 @@
     <v-card
         dark
         flat
+    ><v-dialog
+        v-model="dialog"
+        persistent
+        max-width="600px"
     >
-      <v-btn
-          absolute
-          bottom
-          color="blue-grey darken-4"
-          right
-          fab
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+            absolute
+            bottom
+            color="blue-grey darken-4"
+            right
+            fab
+            v-bind="attrs"
+            v-on="on"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+      <v-card
+
+          class="overflow-y-auto"
       >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+        <v-card-title>
+          <span class="text-h5">添加事件</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+              >
+                <v-text-field
+                    label="事件主题"
+                    required
+                ></v-text-field>
+              </v-col>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+              >
+                <v-text-field
+                    label="打上标签"
+                    required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                    label="事件描述"
+                    required
+                ></v-text-field>
+              </v-col>
+<!--              <v-col-->
+<!--                  cols="12"-->
+<!--                  sm="6"-->
+<!--              >-->
+<!--                <v-select-->
+<!--                    :items="['0-17', '18-29', '30-54', '54+']"-->
+<!--                    label="Age*"-->
+<!--                    required-->
+<!--                ></v-select>-->
+<!--              </v-col>-->
+                  <v-col>
+                    <h1 class="h1" style="font-size: 20px;">开始时间</h1>
+                    <v-time-picker
+                        v-model="start_time"
+                        format="24hr"
+                        header-color="#777777"
+                    ></v-time-picker>
+                  </v-col>
+            </v-row>
+          </v-container>
+          <small>*滑动鼠标选择事件开始时间</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+              color="gray darken-1"
+              text
+              style="
+              font-size: 20px;
+              margin-left: 10%;
+"
+              @click="dialog = false"
+          >
+            关闭
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="gray darken-1"
+              text
+              style="
+              margin-right: 10%;
+              font-size: 20px;
+"
+              @click="dialog = false"
+          >
+            添加
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 
       <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
@@ -85,6 +179,7 @@ export default {
     return {
       //显示时间
       time: '',
+      start_time: null,
       timecolor: [
           'deep-orange','deep-orange lighten-5','deep-orange lighten-4', 'deep-orange lighten-3',
           'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1','deep-orange darken-2',

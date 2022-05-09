@@ -14,8 +14,8 @@ const service = axios.create({
 //service.defaults.withCredentials = true  是否携带cookie
 
 service.interceptors.request.use(
-
     config => {
+        //config.headers["ACCESS_TOKEN"] = this.$store.getters.accessToken
         config.headers["Content-Type"] = 'application/json'
         return config
     },

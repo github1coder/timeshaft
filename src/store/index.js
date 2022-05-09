@@ -15,9 +15,9 @@ export default new Vuex.Store({
         accessToken: null,
         infoId: -1,
         infoPhoto: null,
-        infoName: -1,
-        infoEmail: -1,
-        infoNick: -1,
+        infoEmail: null,
+        infoName: null,
+        infoNick: null,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
         currentChannelIdx: -1,
@@ -39,6 +39,7 @@ export default new Vuex.Store({
     },
     getters: {
         userId: state => state.userId,
+        accessToken: state => state.accessToken,
         email: state => state.email,
         myNick: state => state.myNick,
         myIcon: state => state.myIcon,
@@ -56,6 +57,9 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setAccessToken(store, AccessToken) {
+            store.AccessToken = AccessToken
+        },
         setInfoNick(store, infoNick) {
             store.infoNick = infoNick
         },
