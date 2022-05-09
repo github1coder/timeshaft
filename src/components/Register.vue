@@ -100,7 +100,10 @@
         </span>
       </v-card-text>
       <router-link to="/login">
-        <v-card-text to="/login" style="color: #323335">已有账号，返回登录</v-card-text>
+        <v-card-text
+          to="/login"
+          style="color: #323335"
+        >已有账号，返回登录</v-card-text>
       </router-link>
     </v-card>
   </v-overlay>
@@ -215,7 +218,7 @@ export default {
           console.say(param)
           getCheckCode(param).then(res => {
             this.checkCode = res.checkCode
-            console.log(this.checkCode)
+            // console.log(this.checkCode)
           })
         }
         // console.log(this.checkCode)
