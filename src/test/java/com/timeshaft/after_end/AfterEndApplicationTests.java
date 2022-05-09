@@ -34,6 +34,6 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        List<Friends> friends = friendOp.getFriends(24);
+
     }
 }
