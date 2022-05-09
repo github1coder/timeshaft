@@ -90,8 +90,13 @@ public class ChatController {
                         recent = messageFrom.getSendtime();
                     } else {
                         PersonalMessage messageRecent = personalMessageService.queryLatest();
-                        index = messageRecent.getId() + 1;
-                        recent = messageRecent.getSendtime();
+                        if (messageRecent == null) {
+                            index = 0;
+                            recent = new Date(System.currentTimeMillis());
+                        } else {
+                            index = messageRecent.getId() + 1;
+                            recent = messageRecent.getSendtime();
+                        }
                     }
                 } else {
                     if (messageFrom == null) {
