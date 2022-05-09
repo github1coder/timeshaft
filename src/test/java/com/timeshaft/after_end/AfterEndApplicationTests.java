@@ -34,9 +34,6 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("srcId", 15);
-        hashMap.put("dstId", 12);
-        chatController.getMessagesList(hashMap);
+        List<Friends> friends = friendOp.getFriends(24);
     }
 }
