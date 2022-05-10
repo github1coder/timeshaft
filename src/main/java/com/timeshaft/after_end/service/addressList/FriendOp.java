@@ -50,7 +50,6 @@ public class FriendOp {
     @Autowired
     private MessageStateServiceImpl messageStateService;
 
-
     public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, ACCEPT, null);
         Friends friend2 = new Friends(null, id, null, null, ACCEPT, null);
@@ -171,7 +170,16 @@ public class FriendOp {
                     friend1.setState(action);
                     friend1.setNickname2(userService.queryById(id).getUsername());
                     friend1.setNickname1(userService.queryById(self_id).getUsername());
-                    friendsService.insert(friend1);
+                    Friends ret = friendsService.insert(friend1);
+                    Date date = new Date(System.currentTimeMillis());
+                    PersonalMessage personalMessage = new PersonalMessage();
+                    personalMessage.setSendtime(date);
+                    personalMessage.setMessage("你好，我是" + ret.getNickname2());
+                    personalMessage.setFriendsId(ret.getId());
+                    personalMessage.setSenderId(id);
+                    MessageStateType state = MessageStateType.UNREAD;
+                    personalMessage.setState(messageStateService.EnumToString(state));
+                    personalMessageService.insert(personalMessage);
                 }
             } else if(action.equals(ACCEPT)) {
                 friend1.setState(NEW);
