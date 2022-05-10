@@ -4,7 +4,7 @@
 import axios from 'axios'
 // import { Message } from 'element-ui'
 
-const DEBUG = true;
+const DEBUG = false;
 
 const service = axios.create({
     baseURL: DEBUG ? 'http://localhost:8080' : 'http://182.92.163.68:8080',
