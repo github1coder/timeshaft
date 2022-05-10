@@ -221,7 +221,7 @@ export default {
       console.say(param)
       getCheckCode(param).then(res => {
         this.checkCode = res.checkCode
-        console.log(this.checkCode)
+        // console.log(this.checkCode)
       })
       if (!this.timer) {
         this.count = 60
