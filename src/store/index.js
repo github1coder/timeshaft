@@ -209,40 +209,40 @@ export default new Vuex.Store({
                     console.log(state.stompClient)
                     for (let listener in state.listenerList) {
                         state.stompClient.subscribe(state.listenerList[listener].url, payload => {
-                            // let json = JSON.parse(payload.body)
-                            // console.log("收到的json:")
-                            // console.log(json)
-                            // if (state.listenerList[listener].type === 0) {
-                            //     console.log("即时通信服务收到消息")
-                            //     const idx = state.messageList.findIndex(json.chatId)
-                            //     if (idx !== -1) {
-                            //         state.messageList[idx].data.push(json)
-                            //         console.log("收到 chat:" + json.chatId.toString() + " 消息:")
-                            //         console.log(json)
-                            //     } else {
-                            //         console.log("未知好友关系id:" + json.chatId.toString())
-                            //     }
-                            // } else if (state.listenerList[listener].type === 1) {
-                            //     console.log("添加好友服务收到消息")
-                            //     state.messageList.push(json)
-                            //     console.log(json)
-                            // } else {
-                            //     console.log("未知url类型:" + state.listenerList[listener].type.toString())
-                            // }
-                            console.log("谢谢你 因为有你")
                             let json = JSON.parse(payload.body)
                             console.log("收到的json:")
                             console.log(json)
-                            for (let friend in state.messageList) {
-                                if (json.chatId === state.messageList[friend].id) {
-                                    state.messageList[friend].data.push(json)
-                                        // this.commit("updateMessageList", {id: json.userId, data: json})
+                            if (state.listenerList[listener].type === 0) {
+                                console.log("即时通信服务收到消息")
+                                const idx = state.messageList.findIndex(json.chatId)
+                                if (idx !== -1) {
+                                    state.messageList[idx].data.push(json)
                                     console.log("收到 chat:" + json.chatId.toString() + " 消息:")
                                     console.log(json)
-                                    break
+                                } else {
+                                    console.log("未知好友关系id:" + json.chatId.toString())
                                 }
+                            } else if (state.listenerList[listener].type === 1) {
+                                console.log("添加好友服务收到消息")
+                                state.messageList.push(json)
+                                console.log(json)
+                            } else {
+                                console.log("未知url类型:" + state.listenerList[listener].type.toString())
                             }
-                            console.log("温暖了四季")
+                            // console.log("谢谢你 因为有你")
+                            // let json = JSON.parse(payload.body)
+                            // console.log("收到的json:")
+                            // console.log(json)
+                            // for (let friend in state.messageList) {
+                            //     if (json.chatId === state.messageList[friend].id) {
+                            //         state.messageList[friend].data.push(json)
+                            //             // this.commit("updateMessageList", {id: json.userId, data: json})
+                            //         console.log("收到 chat:" + json.chatId.toString() + " 消息:")
+                            //         console.log(json)
+                            //         break
+                            //     }
+                            // }
+                            // console.log("温暖了四季")
                         })
                         console.log(state.listenerList[listener].url)
                     }
@@ -259,7 +259,8 @@ export default new Vuex.Store({
         WEBSOCKET_SEND(state, p) {
             // const text = p.data.msgFromName + "," + p.data.msgFromAvatar + ","
             //     + p.data.msg + "," + p.data.time + ","
-            //     + p.data.userId + "," + p.data.dstId
+            //     + p.data.userId + "," + p.daconsole.log(JSON.parse(sessionStorage.getItem("data")))ta.dstId
+            console.log(state.stompClient)
             state.stompClient.send(p.url, {}, JSON.stringify(p.data));
             console.log("send + " + JSON.stringify(p.data) + " to " + p.url)
         },
@@ -274,6 +275,11 @@ export default new Vuex.Store({
             }
         },
 
+        WEBSOCKET_DISCONNECT(state){
+            state.stompClient.disconnect(function (){
+                console.log("断开连接")
+            })
+        },
         // ---------------------- 以上是 Stomp 封装 请谨慎修改 --------------------------- //
 
         initListenerList(state, data) {
