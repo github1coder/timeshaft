@@ -8,6 +8,7 @@ import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
+import com.timeshaft.after_end.service.userop.MailService;
 import com.timeshaft.after_end.service.userop.UserOp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ class AfterEndApplicationTests {
     private ChatController chatController;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private MailService mailService;
 
     @Test
     void contextLoads() {
