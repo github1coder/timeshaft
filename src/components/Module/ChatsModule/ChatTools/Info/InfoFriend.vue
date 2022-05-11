@@ -6,23 +6,23 @@
       tile
       style="width: 100%; height: 100%;"
     >
-      <v-card style="margin: auto; width: 60%; height: 100%; border: grey 5px dashed;">
+      <v-card style="margin: auto; width: 100%; height: 100%; border: grey 5px dashed;">
         <div style="width: 100%; height: 100%;">
           <v-img
             style="margin: auto; border-radius: 50%; width: 40%"
-            :src="this.$store.getters.infoPhoto"
+            :src="res.photo"
           ></v-img>
           <v-divider>
           </v-divider>
 
           <v-list-item>
             <v-list-item-content style="font-size: 25px;">
-              <v-list-item-title style="font-size: 20px; line-height: 40px;">{{this.$store.getters.infoName}}</v-list-item-title>
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">{{res.name}}</v-list-item-title>
               <v-list-item-title
                 style="font-size: 20px; line-height: 40px;"
-                v-show="this.$store.getters.infoNick != null"
-              >备注：{{this.$store.getters.infoNick}}</v-list-item-title>
-              <v-list-item-title style="font-size: 20px; line-height: 40px;">邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title>
+                v-show="res.nick != res.name"
+              >备注：{{res.nick}}</v-list-item-title>
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">邮箱：{{res.email}}</v-list-item-title>
               <!-- <v-list-item-title>邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title> -->
             </v-list-item-content>
           </v-list-item>
@@ -43,13 +43,25 @@
   </div>
 </template>
 <script>
+
+import { getInfoMsg } from "../../../../../api/addresslist/index"
 export default {
   data () {
     return {
+      res: [],
     };
   },
 
   mounted () {
+    getInfoMsg({
+      "info_id": this.$store.state.currentChannelId,
+      "type": "friend",
+      "ACCESS_TOKEN": this.$store.getters.accessToken,
+      "user_id": this.$store.getters.userId
+    }).then(res => {
+      console.log("获取好友信息成功:" + this.$store.state.currentChannelId)
+      this.res = res
+    })
   },
 
   methods: {

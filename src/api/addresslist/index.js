@@ -142,3 +142,11 @@ export function getGroupMember(param) {
         params: param
     })
 }
+
+export function getInfoMsg(param) {
+    return request({
+        url: '/addresslist/getInfoMsg',
+        method: 'get',
+        params: param
+    })
+}
