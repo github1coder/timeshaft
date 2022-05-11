@@ -1,11 +1,9 @@
 package com.timeshaft.after_end.controller;
 
-import com.timeshaft.after_end.entity.Friends;
-import com.timeshaft.after_end.entity.MessageStateType;
-import com.timeshaft.after_end.entity.PersonalMessage;
-import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
+import com.timeshaft.after_end.service.addressList.GroupOp;
 import com.timeshaft.after_end.service.impl.FriendsServiceImpl;
 import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
@@ -30,6 +28,8 @@ import java.util.*;
 public class ChatController {
     @Autowired
     private FriendOp friendOp;
+    @Autowired
+    private GroupOp groupOp;
     @Autowired
     private PersonalMessageServiceImpl personalMessageService;
     @Autowired
@@ -90,8 +90,13 @@ public class ChatController {
                         recent = messageFrom.getSendtime();
                     } else {
                         PersonalMessage messageRecent = personalMessageService.queryLatest();
-                        index = messageRecent.getId() + 1;
-                        recent = messageRecent.getSendtime();
+                        if (messageRecent == null) {
+                            index = 0;
+                            recent = new Date(System.currentTimeMillis());
+                        } else {
+                            index = messageRecent.getId() + 1;
+                            recent = messageRecent.getSendtime();
+                        }
                     }
                 } else {
                     if (messageFrom == null) {
@@ -109,6 +114,12 @@ public class ChatController {
             map.put("recent", recent);
             res.add(map);
         }
+        /*
+        List<Group> groupList = groupOp.getGroup(sourceId);
+        for (Group group : groupList) {
+
+        }
+         */
         return new ResponseService(res);
     }
 
@@ -132,17 +143,17 @@ public class ChatController {
     @RequestMapping(value = "/getHistoryMessage")
     public ResponseService getHistoryMessage(@RequestBody Map<String, Object> requestMap) {
         int srcId = (Integer) requestMap.get("userId");
-        int friendId = (Integer) requestMap.get("chatId");
+        int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示来自群聊还是私聊
         int index = (Integer) requestMap.get("index");
-        Friends friends = friendsService.queryById(friendId);
+        Friends friends = friendsService.queryById(chatId);
         int dstId = friends.getUserId1() == srcId? friends.getUserId2():friends.getUserId1();
         String srcNickName = friends.getUserId1() == srcId? friends.getNickname1():friends.getNickname2();
         String dstNickName = friends.getUserId1() == dstId? friends.getNickname1():friends.getNickname2();
         User userSrc = userService.queryById(srcId);
         User userDst = userService.queryById(dstId);
         List<PersonalMessage> historyMessage = new ArrayList<>();
-        historyMessage.addAll(personalMessageService.queryHistoryById(friendId, srcId, index));
-        historyMessage.addAll(personalMessageService.queryHistoryById(friendId, dstId, index));
+        historyMessage.addAll(personalMessageService.queryHistoryById(chatId, srcId, index));
+        historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, index));
         historyMessage.sort(new Comparator<PersonalMessage>() {
             @Override
             public int compare(PersonalMessage o1, PersonalMessage o2) {
@@ -184,13 +195,13 @@ public class ChatController {
     public ResponseService markMessages(@RequestBody Map<String, Object> requestMap) {
         String time = (String) requestMap.get("time");
         int userId = (Integer) requestMap.get("userId");
-        int friendId = (Integer) requestMap.get("chatId");
+        int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
         PersonalMessage messageQuery = new PersonalMessage();
         MessageStateType state = MessageStateType.UNREAD;
         messageQuery.setState(messageStateService.EnumToString(state));
-        Friends friends = friendsService.queryById(friendId);
+        Friends friends = friendsService.queryById(chatId);
         int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
-        messageQuery.setFriendsId(friendId);
+        messageQuery.setFriendsId(chatId);
         messageQuery.setSenderId(senderId);
         List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
         PersonalMessage messageToSet = new PersonalMessage();

@@ -57,10 +57,15 @@ public class MessageController {
         personalMessage.setSenderId(Integer.valueOf(payload.get("userId").toString()));
         MessageStateType state = MessageStateType.UNREAD;
         personalMessage.setState(messageStateService.EnumToString(state));
-        personalMessageService.insert(personalMessage);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
         Friends friends = friendsService.queryById(friendId);
+        if (friends == null) {
+            payload.put("msg", "你被删啦，呜呜呜，重新登录可以去掉负心人");
+            messagingTemplate.convertAndSend("/user/" + senderId, payload);
+            return;
+        }
+        personalMessageService.insert(personalMessage);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
         messagingTemplate.convertAndSend("/user/" + targetId, payload);
     }
@@ -85,15 +90,17 @@ public class MessageController {
         groupUser.setGroupId(groupId);
         List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
         GroupMessageState groupMessageState = new GroupMessageState();
+        groupMessageState.setMessageId(messageId);
         String read = messageStateService.EnumToString(MessageStateType.READ);
         String unread = messageStateService.EnumToString(MessageStateType.UNREAD);
         for (GroupUser user : userInGroup) {
             if (user.getUserId().equals(groupMessage.getSenderId())) {
                 groupMessageState.setState(read);
-
             } else {
-
+                groupMessageState.setState(unread);
             }
+            groupMessageState.setUserId(user.getUserId());
+            groupMessageStateService.insert(groupMessageState);
         }
         messagingTemplate.convertAndSend("/group/" + groupId, payload);
     }

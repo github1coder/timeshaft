@@ -1,9 +1,7 @@
 package com.timeshaft.after_end.controller;
 
 
-import com.timeshaft.after_end.entity.Friends;
-import com.timeshaft.after_end.entity.Group;
-import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
@@ -13,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @Slf4j
@@ -148,6 +143,7 @@ public class AddressListController {
     @RequestMapping(value = "/apply")
     public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestParam("user_id") Integer user_id) {
         friendOp.apply(user_id, type, action, id);
+        friendOp.sendNotification(type, action, id, user_id);
         return new ResponseService();
     }
 
