@@ -239,4 +239,34 @@ public class FriendOp {
         }
         return users;
     }
+
+    public Map<String, String> getInfoMsg(String type, int info_id, int user_id) {
+        Map<String, String> res = new HashMap<>();
+        if(groupType.equals(type)) {
+            Group group = groupService.queryById(info_id);
+            res.put("id", group.getId().toString());
+            res.put("photo", group.getPhoto());
+            res.put("email", null);
+            res.put("name", group.getName());
+            res.put("nick", null);
+        } else {
+            Friends friends = friendsService.queryById(info_id);
+            if(friends.getUserId1() == user_id) {
+                User user = userService.queryById(friends.getUserId2());
+                res.put("id", user.getId().toString());
+                res.put("photo", user.getPhoto());
+                res.put("email", user.getEmail());
+                res.put("name", user.getUsername());
+                res.put("nick", friends.getNickname2());
+            } else {
+                User user = userService.queryById(friends.getUserId1());
+                res.put("id", user.getId().toString());
+                res.put("photo", user.getPhoto());
+                res.put("email", user.getEmail());
+                res.put("name", user.getUsername());
+                res.put("nick", friends.getNickname1());
+            }
+        }
+        return res;
+    }
 }
