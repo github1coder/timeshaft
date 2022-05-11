@@ -1,22 +1,20 @@
 package com.timeshaft.after_end.service.addressList;
 
-import com.timeshaft.after_end.entity.Friends;
-import com.timeshaft.after_end.entity.Group;
-import com.timeshaft.after_end.entity.GroupUser;
-import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
+import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
+import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @PropertySource("classpath:content.properties")
@@ -47,7 +45,12 @@ public class FriendOp {
     @Value("${friendState.acceptt}")
     private String ACCEPT;
 
-
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
+    @Autowired
+    private PersonalMessageServiceImpl personalMessageService;
+    @Autowired
+    private MessageStateServiceImpl messageStateService;
 
     public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, ACCEPT, null);
@@ -238,5 +241,49 @@ public class FriendOp {
             users.put(user, groupUser.getUserNickname());
         }
         return users;
+    }
+
+    public void sendNotification(String type, String action,  Integer id, Integer user_id) {
+        if (type.equals(friendType) && action.equals(ACCEPT)) {
+            User acceptor = userService.queryById(user_id);
+            User sender = userService.queryById(id);
+            Friends friend1 = new Friends(user_id, id, null, null, null, null);
+            Friends friend2 = new Friends(id, user_id, null, null, null, null);
+            List<Friends> friends = friendsService.queryAll(friend1);
+            friends.addAll(friendsService.queryAll(friend2));
+            Friends friendsRelation = friends.get(0);
+            HashMap<String, Object> res = new HashMap<>();
+            res.put("id", friendsRelation.getId());
+            String senderNickName = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();
+            String accNickName = Objects.equals(friendsRelation.getUserId1(), acceptor.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();
+            res.put("chatName", senderNickName);
+            res.put("chatAvatar", sender.getPhoto());
+            HashMap<String, Object> data = new HashMap<>();
+            PersonalMessage personalMessage = personalMessageService.queryLatestById(friendsRelation.getId(), sender.getId());
+            if (personalMessage == null) {
+                personalMessage = personalMessageService.queryLatest();
+            } else {
+                data.put("chatId", personalMessage.getFriendsId());
+                data.put("userId", personalMessage.getSenderId());
+                data.put("msg", personalMessage.getMessage());
+                data.put("msgFromName", senderNickName);
+                data.put("msgFromAvatar", sender.getPhoto());
+                data.put("time", personalMessage.getSendtime());
+            }
+            int index = 0;
+            Date recent = new Date(System.currentTimeMillis());
+            if (personalMessage != null) {
+                index = personalMessage.getId();
+                recent = personalMessage.getSendtime();
+            }
+            res.put("index", index);
+            res.put("recent", recent);
+            res.put("data", data);
+            messagingTemplate.convertAndSend("/user/contact/" + acceptor.getId(), res);
+            /*下面发送给请求方*/
+            res.put("chatName", accNickName);
+            res.put("chatAvatar", acceptor.getPhoto());
+            messagingTemplate.convertAndSend("/user/contact/" + sender.getId(), res);
+        }
     }
 }
