@@ -281,6 +281,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.friendAns[index].show = false
+        //todo: 用户发一句“你好”给被同意者
       })
     },
 

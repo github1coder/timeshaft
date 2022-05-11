@@ -546,6 +546,9 @@ export default {
         if (this.allPageG == 0) {
           this.pageG = 0;
         }
+        else {
+          this.pageG = 1;
+        }
       });
     },
   },
@@ -600,6 +603,9 @@ export default {
         this.allPageF = Math.ceil(this.friends.length / this.num);
         if (this.allPageF == 0) {
           this.pageF = 0;
+        }
+        else {
+          this.pageF = 1;
         }
         // console.log(this.friends)
         // this.friends = [{
