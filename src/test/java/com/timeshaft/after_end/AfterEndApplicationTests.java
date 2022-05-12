@@ -37,6 +37,6 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-
+        System.out.println(3*0.1/2);
     }
 }

@@ -1,10 +1,12 @@
 package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
+import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.MessageStateService;
 import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -41,6 +43,10 @@ public class MessageController {
     private GroupUserServiceImpl groupUserService;
     @Autowired
     private FriendsServiceImpl friendsService;
+    @Autowired
+    private GroupHeatService groupHeatService;
+    @Value("${type.groupType}")
+    private String GROUP;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -102,6 +108,14 @@ public class MessageController {
             groupMessageState.setUserId(user.getUserId());
             groupMessageStateService.insert(groupMessageState);
         }
+
+        //群热度
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(groupId, null, null, GROUP));
+        for(GroupHeat groupHeat : groupHeats) {
+            groupHeat.upMessageCount();
+            groupHeatService.update(groupHeat);
+        }
+
         messagingTemplate.convertAndSend("/group/" + groupId, payload);
     }
 

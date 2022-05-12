@@ -1,24 +1,24 @@
 package com.timeshaft.after_end.service;
 
-import com.timeshaft.after_end.entity.GroupMessageState;
-
+import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.GroupHeat;
 import java.util.List;
 
 /**
- * (GroupMessageState)表服务接口
+ * (GroupHeat)表服务接口
  *
  * @author makejava
- * @since 2022-04-12 14:24:48
+ * @since 2022-05-11 20:05:43
  */
-public interface GroupMessageStateService {
+public interface GroupHeatService {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 实例对象
      */
-    GroupMessageState queryById(Integer id);
+    GroupHeat queryById(Integer id);
 
     /**
      * 查询多条数据
@@ -27,30 +27,32 @@ public interface GroupMessageStateService {
      * @param limit 查询条数
      * @return 对象列表
      */
-    List<GroupMessageState> queryAllByLimit(int offset, int limit);
+    List<GroupHeat> queryAllByLimit(int offset, int limit);
 
     /**
      * 新增数据
      *
-     * @param groupMessageState 实例对象
+     * @param groupHeat 实例对象
      * @return 实例对象
      */
-    GroupMessageState insert(GroupMessageState groupMessageState);
+    GroupHeat insert(GroupHeat groupHeat);
 
     /**
      * 修改数据
      *
-     * @param groupMessageState 实例对象
+     * @param groupHeat 实例对象
      * @return 实例对象
      */
-    GroupMessageState update(GroupMessageState groupMessageState);
+    GroupHeat update(GroupHeat groupHeat);
 
     /**
      * 通过主键删除数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+
+    List<GroupHeat> queryAll(GroupHeat groupHeat);
 
 }

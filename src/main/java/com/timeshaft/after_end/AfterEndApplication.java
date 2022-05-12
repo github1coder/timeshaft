@@ -4,6 +4,7 @@ import com.timeshaft.after_end.service.ResponseService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.Map;
 @MapperScan("com.timeshaft.after_end.mapper")
 @RestController
 @CrossOrigin
+//@EnableScheduling  //开启定时任务
 public class AfterEndApplication {
 
     public static void main(String[] args) {

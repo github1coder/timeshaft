@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 public class GroupMessageState implements Serializable {
     private static final long serialVersionUID = 421119925421190184L;
+
+    private Integer id;
     
     private Integer messageId;
     
@@ -17,6 +19,23 @@ public class GroupMessageState implements Serializable {
     
     private String state;
 
+    public GroupMessageState() {
+
+    }
+
+    public GroupMessageState(Integer messageId, Integer userId, String state) {
+        this.messageId = messageId;
+        this.userId = userId;
+        this.state = state;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getMessageId() {
         return messageId;
