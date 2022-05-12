@@ -522,6 +522,8 @@ export default {
       this.$store.commit("setMaster", this.groups[index].master_id)
       // this.$store.commit("changeSiderState", 4)
       this.$store.commit("setAbout", 1)
+      this.$parent.$refs.infoTool.$refs.infoG.memberShow = false
+      this.$parent.$refs.infoTool.$refs.infoG.iShowTrue()
       // this.$parent.$parent.$refs.sider4[0].$el.click()
       // this.$router.push({
       //   path: "/home"

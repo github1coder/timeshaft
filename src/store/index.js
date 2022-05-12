@@ -18,6 +18,7 @@ export default new Vuex.Store({
         infoEmail: null,
         infoName: null,
         infoNick: null,
+        infoNotice: null,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
         currentChannelIdx: -1,
@@ -275,8 +276,8 @@ export default new Vuex.Store({
             }
         },
 
-        WEBSOCKET_DISCONNECT(state){
-            state.stompClient.disconnect(function (){
+        WEBSOCKET_DISCONNECT(state) {
+            state.stompClient.disconnect(function() {
                 console.log("断开连接")
             })
         },

@@ -49,41 +49,39 @@
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
-          <!-- <v-btn
+          <v-btn
             color="blue"
             class="mx-2"
-            v-show="!iShow"
-            @click="iShowChange"
+            v-show="iShow"
+            @click="iShowFalse"
           >
             修改群公告
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="success"
             width="40%"
-            @click="method1"
+            @click="iShowTrue"
           >
             确认
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="error"
             width="40%"
-            @click="method1"
+            @click="iShowTrue"
           >
             取消
-          </v-btn> -->
+          </v-btn>
         </v-navigation-drawer>
         <v-col style="width: 50%; height:100%; float: right">
-          <v-list
-            style="width: 100%; height:90%;"
-            value="false"
-          >
+          <v-list style="width: 100%; height:90%;">
             <v-list-group
               prepend-icon="mdi-account-supervisor-circle"
               @click="getMember"
+              :value="memberShow"
             >
               <template v-slot:activator>
                 <v-list-item-content>
@@ -255,6 +253,7 @@ import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, 
 export default {
   data () {
     return {
+      memberShow: false,
       name: "",
       iShow: true,
       kill: false,
@@ -327,6 +326,7 @@ export default {
           });
           this.friends = JSON.parse(JSON.stringify(this.friends))
           this.allPageF = Math.ceil(this.friends.length / this.num);
+          this.memberShow = !this.memberShow
           // console.log(this.friends)
           // this.friends = [{
           //   'id': 1,
@@ -355,8 +355,8 @@ export default {
         this.pageF += 1
       }
     },
-    iShowC () {
-      this.iShow = !this.iShow
+    iShowTrue () {
+      this.iShow = true
     },
     showTextField (j) {
       if (this.friendsIndex != null) {
@@ -456,8 +456,8 @@ export default {
       })
     },
 
-    iShowChange () {
-      this.iShow = true
+    iShowFalse () {
+      this.iShow = false
     }
   }
 }

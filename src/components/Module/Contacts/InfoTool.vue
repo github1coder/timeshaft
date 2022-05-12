@@ -4,9 +4,16 @@
       dark
       style="height: 100%; width: 100%; border-radius:0px;"
       v-if="this.$store.getters.about == -1"
+      ref="infoMe"
     ></info-me>
-    <info-f v-if="this.$store.getters.about == 0"></info-f>
-    <info-g v-else-if="this.$store.getters.about == 1"></info-g>
+    <info-f
+      v-if="this.$store.getters.about == 0"
+      ref="infoF"
+    ></info-f>
+    <info-g
+      v-else-if="this.$store.getters.about == 1"
+      ref="infoG"
+    ></info-g>
   </v-card>
 </template>
 
