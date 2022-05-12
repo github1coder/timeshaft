@@ -20,61 +20,25 @@
         </v-list>
       </div>
     </div>
-    <div class="chat-form">
-      <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
-
-        <v-text-field
-            class="mx-5 my-3 chat-form-tf"
-            label="这边输入消息捏~"
-            solo
-            flat
-            clearable
-            v-model="inputMsg"
-            autocomplete="off"
-            @keyup.enter="sendChat(chatUrl, inputMsg)"
-        >
-        </v-text-field>
-      </div>
-    </div>
+    <ChatForm :draw="draw"></ChatForm>
   </div>
 </template>
 
 <script>
 import {getHistoryMessage} from "@/api/message";
+import ChatForm from "@/components/Module/ChatsModule/ChatForm";
 
 export default {
   name: "ChatMessages",
+  components: {ChatForm},
   props: ['draw'],
   data() {
     return {
       refreshed: true,
-      chatUrl: "/app/personalMessage",
-      inputMsg: "",
       cache: 0,
     }
   },
   methods: {
-    sendChat (url, message) {
-      let name = this.$store.state.myNick
-      let avatar = this.$store.state.myIcon
-      const msgForm = {
-        msgFromName: name,
-        msgFromAvatar: avatar,
-        msg: message,
-        time: this.getDate(),
-        userId: this.$store.state.userId,
-        chatId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
-      }
-      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
-      this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
-      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
-      this.clearMsg()
-      this.$store.commit("WEBSOCKET_SEND", {
-        url: url,
-        data: msgForm,
-      })
-      this.$store.state.messageList[this.$store.state.currentChannelIdx].haveRead += 1
-    },
     onScroll() {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {

@@ -260,7 +260,7 @@ body {
         display: flex;
         flex: 1 1 auto;
         text-align: left;
-        height: calc(100% - 68px);
+        height: calc(100% - 100px);
         width: calc(100% - 50px);
         background: #1e1e1e !important;
         color: white;
@@ -296,7 +296,7 @@ body {
         flex: 0 0 auto;
         position: absolute;
         bottom: 0;
-        height: 68px;
+        height: 100px;
         width: 100%;
         align-items: stretch;
         background: #1e1e1e !important;
@@ -304,7 +304,7 @@ body {
             color: white !important;
         }
         .v-input__slot {
-            background: #4d4d4d !important;
+            background: #323335 !important;
             border-radius: 10px;
         }
         label {
