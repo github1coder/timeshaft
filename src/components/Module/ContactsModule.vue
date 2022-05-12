@@ -11,7 +11,7 @@
         ></member-list>
       </div>
       <div style="height:100%; width: 80%;">
-        <info-tool></info-tool>
+        <info-tool ref="infoTool"></info-tool>
       </div>
     </v-row>
     <add-tool

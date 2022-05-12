@@ -279,8 +279,8 @@ export default new Vuex.Store({
             }
         },
 
-        WEBSOCKET_DISCONNECT(state){
-            state.stompClient.disconnect(function (){
+        WEBSOCKET_DISCONNECT(state) {
+            state.stompClient.disconnect(function() {
                 console.log("断开连接")
             })
         },

@@ -49,41 +49,39 @@
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
-          <!-- <v-btn
+          <v-btn
             color="blue"
             class="mx-2"
-            v-show="!iShow"
-            @click="iShowChange"
+            v-show="iShow"
+            @click="iShowFalse"
           >
             修改群公告
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="success"
             width="40%"
-            @click="method1"
+            @click="changeNotice"
           >
             确认
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="error"
             width="40%"
-            @click="method1"
+            @click="iShowTrue"
           >
             取消
-          </v-btn> -->
+          </v-btn>
         </v-navigation-drawer>
         <v-col style="width: 50%; height:100%; float: right">
-          <v-list
-            style="width: 100%; height:90%;"
-            value="false"
-          >
+          <v-list style="width: 100%; height:90%;">
             <v-list-group
               prepend-icon="mdi-account-supervisor-circle"
               @click="getMember"
+              :value="memberShow"
             >
               <template v-slot:activator>
                 <v-list-item-content>
@@ -168,13 +166,13 @@
                         <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && !isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
@@ -251,14 +249,15 @@
 </template>
 
 <script>
-import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup } from '../../../../api/addresslist/index'
+import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../api/addresslist/index'
 export default {
   data () {
     return {
+      memberShow: false,
       name: "",
       iShow: true,
       kill: false,
-      introduction: "团队介绍",
+      introduction: "",
       num: 10,
       pageF: 1,
       allPageF: 1,
@@ -311,8 +310,32 @@ export default {
 
     },
 
+    changeNotice () {
+      const here = this
+      console.log(this.introduction)
+      updateGroup({
+        "id": this.$store.getters.infoId,
+        "notice": this.introduction
+      }).then(res => {
+        console.log("修改群公告成功")
+        console.log(res)
+        if (res == null) {
+          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
+          for (this.i = 0; this.i < that.length; this.i++) {
+            if (that[this.i].group_id == here.$store.getters.infoId) {
+              that[this.i].notice = here.introduction
+              break
+            }
+          }
+          here.iShowTrue()
+        }
+      })
+
+    },
+
     getMember () {
-      if (this.$store.getters.infoId != -1) {
+      if (this.$store.getters.infoId != -1 && !this.memberShow) {
+        const that = this
         getGroupMember({
           "id": this.$store.getters.infoId,
           "ACCESS_TOKEN": null
@@ -324,9 +347,17 @@ export default {
             if (item.nick && item.nick != "") {
               item.name = item.nick
             }
+            if (item.id == that.$store.getters.userId) {
+              item.name = item.name + "（群主）"
+            }
+            else if (item.type == "manager") {
+              item.nick = item.name
+              item.name = item.name + "（管理员）"
+            }
           });
           this.friends = JSON.parse(JSON.stringify(this.friends))
           this.allPageF = Math.ceil(this.friends.length / this.num);
+          this.memberShow = !this.memberShow
           // console.log(this.friends)
           // this.friends = [{
           //   'id': 1,
@@ -355,8 +386,8 @@ export default {
         this.pageF += 1
       }
     },
-    iShowC () {
-      this.iShow = !this.iShow
+    iShowTrue () {
+      this.iShow = true
     },
     showTextField (j) {
       if (this.friendsIndex != null) {
@@ -400,6 +431,10 @@ export default {
       return this.$store.getters.userId == this.friends[index].id
     },
 
+    isManager (index) {
+      return this.friends[index].type == "manager"
+    },
+
     changeName (index) {
       changeGroupNickname({
         "nickname": this.name,
@@ -414,6 +449,7 @@ export default {
     },
 
     addSubMaster (index) {
+      const that = this
       addGroupManager({
         "group_id": this.$store.getters.infoId,
         "user_id": this.friends[index].id,
@@ -421,16 +457,25 @@ export default {
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
+        if (res == null) {
+          that.friends[index].name = that.friends[index].name + "（管理员）"
+          that.friends[index].type = "manager"
+        }
       })
     },
 
     subSubMaster (index) {
+      const that = this
       delGroupManager({
         "group_id": this.$store.getters.infoId,
         "user_id": this.friends[index].id,
         "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
+        if (res == null) {
+          that.friends[index].name = that.friends[index].nick
+          that.friends[index].type = "normal"
+        }
       })
     },
 
@@ -456,8 +501,8 @@ export default {
       })
     },
 
-    iShowChange () {
-      this.iShow = true
+    iShowFalse () {
+      this.iShow = false
     }
   }
 }
