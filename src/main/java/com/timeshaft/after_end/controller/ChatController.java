@@ -214,10 +214,13 @@ public class ChatController {
         int index = (Integer) requestMap.get("index");
         String type = (String) requestMap.get("type");
         HashMap<String, Object> res = new HashMap<>();
-        if (type.equals(GROUP)) {
+        if (type != null && type.equals(GROUP)) {
             Group group = groupService.queryById(chatId);
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, index);
+            User sender = userService.queryById(srcId);
+            if (groupMessageList == null || groupMessageList.size() == 0) {
 
+            }
         } else {
             Friends friends = friendsService.queryById(chatId);
             int dstId = friends.getUserId1() == srcId ? friends.getUserId2() : friends.getUserId1();
