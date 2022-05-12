@@ -1,8 +1,8 @@
 import request from "../request"
 
-export function getTimeLine(param) {
+export function addTimeLine(param) {
     return request({
-        url: '/message/getSubscribeUrlList',
+        url: '/timeshaft/beginTimeShaftSingle',
         method: 'post',
         data: param
     })

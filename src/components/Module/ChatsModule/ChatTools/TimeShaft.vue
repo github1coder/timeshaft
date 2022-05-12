@@ -1,7 +1,7 @@
 <template>
   <v-card
       class="mx-auto"
-      height="100%"
+      height="85%"
   >
     <v-card
         dark
@@ -41,6 +41,7 @@
               >
                 <v-text-field
                     label="事件主题"
+                    v-model="title"
                     required
                 ></v-text-field>
               </v-col>
@@ -52,12 +53,14 @@
                 <v-text-field
                     label="打上标签"
                     required
+                    v-model="lable"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
                     label="事件描述"
                     required
+                    v-model="description"
                 ></v-text-field>
               </v-col>
 <!--              <v-col-->
@@ -100,16 +103,30 @@
               text
               style="
               margin-right: 10%;
-              font-size: 20px;
-"
-              @click="dialog = false"
+              font-size: 20px;"
+              @click="snackbar=true; setTimeline(); dialog = false;"
           >
             添加
           </v-btn>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+      <v-snackbar
+          v-model="snackbar"
+      >
+        已开启事件{{title}}!
+        <template v-slot="{ attrs }">
+          <v-btn
+              color="blue"
+              text
+              v-bind="attrs"
+              @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
 
       <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
@@ -133,11 +150,12 @@
 
     <v-card
         class="overflow-x-auto overflow-y-auto"
-        max-height="65vh"
+        max-height="80%"
     >
       <v-timeline
           align-top
           dense
+
       >
         <v-timeline-item
             small
@@ -173,13 +191,21 @@
 </template>
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
+import {addTimeLine} from "../../../../api/timeShaft";
+
 export default {
   name: "TimeShaft",
   data() {
     return {
       //显示时间
+      snackbar: false,
+      timeout: 2000,
+      dialog: null,
       time: '',
       start_time: null,
+      title: '',
+      lable: '',
+      description:'',
       timecolor: [
           'deep-orange','deep-orange lighten-5','deep-orange lighten-4', 'deep-orange lighten-3',
           'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1','deep-orange darken-2',
@@ -226,12 +252,25 @@ export default {
     // },
   },
   methods: {
-    // getTimeline() {
-    //   getTimeLine(param).then(res => {
-    //     this.checkCode = res.checkCode
-    //     console.log(this.checkCode)
-    //   })
-    // },
+    setTimeline() {
+      console.log(this.titel)
+      console.log(this.lable)
+      console.log(this.description)
+      console.log(this.time)
+      console.log(this.$store.state.currentChannelIdx)
+      let para = {
+        group_id: this.$store.state.currentChannelIdx,
+        creator_id: this.$store.state.userId,
+        title: this.title,
+        tag: [this.lable],
+        conclude: this.description,
+        type: 'friend'
+      }
+      console.log(para)
+      addTimeLine(para).then(res => {
+        console.log(res.data.timesshaft_id)
+      })
+    },
     dataDestroy() {
       if (this.timer) {
         clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
