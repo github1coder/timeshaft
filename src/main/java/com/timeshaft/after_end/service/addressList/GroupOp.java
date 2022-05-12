@@ -1,9 +1,12 @@
 package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.entity.Group;
+import com.timeshaft.after_end.entity.GroupHeat;
 import com.timeshaft.after_end.entity.GroupUser;
+import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +19,10 @@ import java.util.List;
 public class GroupOp {
     @Resource(name = "GroupService")
     private GroupService groupService;
-
     @Resource(name = "GroupUserService")
     private GroupUserService groupUserService;
+    @Autowired
+    private GroupHeatService groupHeatService;
 
     @Value("${groupIdentity.manager}")
     private String MANAGER;
@@ -28,6 +32,8 @@ public class GroupOp {
     private String NEW;
     @Value("${friendState.acceptt}")
     private String ACCEPT;
+    @Value("${type.groupType}")
+    private String GROUP;
 
 
     public void createGroup(String name, String photo,
@@ -36,6 +42,8 @@ public class GroupOp {
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", ACCEPT);
         groupUserService.insert(groupUser);
+
+        groupHeatService.insert(new GroupHeat(group.getId(), 0, 0, GROUP));
     }
 
     public void deleteGroup(int id) {
@@ -44,6 +52,11 @@ public class GroupOp {
             groupUserService.deleteById(groupUser.getId());
         }
         groupService.deleteById(id);
+
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(id, null, null, GROUP));
+        for(GroupHeat groupHeat : groupHeats) {
+            groupHeatService.deleteById(groupHeat.getId());
+        }
     }
 
     public void updateGroup(int id, String name, String photo, String notice) {

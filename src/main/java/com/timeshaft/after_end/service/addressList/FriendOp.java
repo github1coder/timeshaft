@@ -5,7 +5,6 @@ import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
-import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,13 +43,15 @@ public class FriendOp {
     private String NEW;
     @Value("${friendState.acceptt}")
     private String ACCEPT;
+    @Value("${type.messageRead}")
+    private String READ;
+    @Value("${type.messageNotRead}")
+    private String UNREAD;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
     @Autowired
     private PersonalMessageServiceImpl personalMessageService;
-    @Autowired
-    private MessageStateServiceImpl messageStateService;
 
     public List<Friends> getFriends(Integer id) {
         Friends friend1 = new Friends(id, null, null, null, ACCEPT, null);
@@ -252,6 +253,17 @@ public class FriendOp {
             List<Friends> friends = friendsService.queryAll(friend1);
             friends.addAll(friendsService.queryAll(friend2));
             Friends friendsRelation = friends.get(0);
+            //设置打招呼消息
+            Date date = new Date(System.currentTimeMillis());
+            PersonalMessage helloMessage = new PersonalMessage();
+            helloMessage.setSendtime(date);
+            String senderNickname = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ?
+                    friendsRelation.getNickname1():friendsRelation.getNickname2();
+            helloMessage.setMessage("你好，我是" + senderNickname);
+            helloMessage.setFriendsId(friendsRelation.getId());
+            helloMessage.setSenderId(sender.getId());
+            helloMessage.setState(UNREAD);
+            personalMessageService.insert(helloMessage);
             HashMap<String, Object> res = new HashMap<>();
             res.put("id", friendsRelation.getId());
             String senderNickName = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();

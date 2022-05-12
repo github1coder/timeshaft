@@ -1,15 +1,15 @@
 package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
-import com.timeshaft.after_end.service.MessageStateService;
+import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -34,13 +34,19 @@ public class MessageController {
     @Autowired
     private GroupMessageServiceImpl groupMessageService;
     @Autowired
-    private MessageStateServiceImpl messageStateService;
-    @Autowired
     private GroupMessageStateServiceImpl groupMessageStateService;
     @Autowired
     private GroupUserServiceImpl groupUserService;
     @Autowired
     private FriendsServiceImpl friendsService;
+    @Autowired
+    private GroupHeatService groupHeatService;
+    @Value("${type.groupType}")
+    private String GROUP;
+    @Value("${type.messageRead}")
+    private String READ;
+    @Value("${type.messageNotRead}")
+    private String UNREAD;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -55,8 +61,7 @@ public class MessageController {
         personalMessage.setMessage((String) payload.get("msg"));
         personalMessage.setFriendsId(Integer.valueOf(payload.get("chatId").toString()));
         personalMessage.setSenderId(Integer.valueOf(payload.get("userId").toString()));
-        MessageStateType state = MessageStateType.UNREAD;
-        personalMessage.setState(messageStateService.EnumToString(state));
+        personalMessage.setState(UNREAD);
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
         Friends friends = friendsService.queryById(friendId);
@@ -91,18 +96,24 @@ public class MessageController {
         List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
         GroupMessageState groupMessageState = new GroupMessageState();
         groupMessageState.setMessageId(messageId);
-        String read = messageStateService.EnumToString(MessageStateType.READ);
-        String unread = messageStateService.EnumToString(MessageStateType.UNREAD);
         for (GroupUser user : userInGroup) {
             if (user.getUserId().equals(groupMessage.getSenderId())) {
-                groupMessageState.setState(read);
+                groupMessageState.setState(READ);
             } else {
-                groupMessageState.setState(unread);
+                groupMessageState.setState(UNREAD);
+                messagingTemplate.convertAndSend("/group/" + user.getUserId(), payload);
             }
             groupMessageState.setUserId(user.getUserId());
             groupMessageStateService.insert(groupMessageState);
         }
-        messagingTemplate.convertAndSend("/group/" + groupId, payload);
+
+        //群热度
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(groupId, null, null, GROUP));
+        for(GroupHeat groupHeat : groupHeats) {
+            groupHeat.upMessageCount();
+            groupHeatService.update(groupHeat);
+        }
+
     }
 
 }

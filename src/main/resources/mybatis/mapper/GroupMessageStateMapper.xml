@@ -4,6 +4,7 @@
 
     <resultMap id="BaseResultMap" type="GroupMessageState">
         <!--@Table group_message_state-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="messageId" column="message_id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="state" column="state" jdbcType="VARCHAR"/>
@@ -12,15 +13,15 @@
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          message_id, user_id, state
+          id, message_id, user_id, state
         from timeshaft.group_message_state
-        where message_id = #{messageId}
+        where id = #{id}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select
-          message_id, user_id, state
+          id, message_id, user_id, state
         from timeshaft.group_message_state
         limit #{offset}, #{limit}
     </select>
@@ -28,9 +29,12 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          message_id, user_id, state
+          id, message_id, user_id, state
         from timeshaft.group_message_state
         <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
             <if test="messageId != null">
                 and message_id = #{messageId}
             </if>
@@ -45,14 +49,17 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="messageId" useGeneratedKeys="true">
-        insert into timeshaft.group_message_state(user_id, state)
-        values (#{userId}, #{state})
+        insert into timeshaft.group_message_state(message_id, user_id, state)
+        values (#{message_id}, #{userId}, #{state})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
         update timeshaft.group_message_state
         <set>
+            <if test="message_id != null">
+                message_id = #{message_id},
+            </if>
             <if test="userId != null">
                 user_id = #{userId},
             </if>
@@ -60,12 +67,12 @@
                 state = #{state},
             </if>
         </set>
-        where message_id = #{messageId}
+        where id = #{id}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from timeshaft.group_message_state where message_id = #{messageId}
+        delete from timeshaft.group_message_state where id = #{id}
     </delete>
 
 </mapper>

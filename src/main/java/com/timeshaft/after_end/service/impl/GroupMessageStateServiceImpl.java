@@ -22,12 +22,12 @@ public class GroupMessageStateServiceImpl implements GroupMessageStateService {
     /**
      * 通过ID查询单条数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 实例对象
      */
     @Override
-    public GroupMessageState queryById(Integer messageId) {
-        return this.groupMessageStateMapper.queryById(messageId);
+    public GroupMessageState queryById(Integer id) {
+        return this.groupMessageStateMapper.queryById(id);
     }
 
     /**
@@ -63,17 +63,17 @@ public class GroupMessageStateServiceImpl implements GroupMessageStateService {
     @Override
     public GroupMessageState update(GroupMessageState groupMessageState) {
         this.groupMessageStateMapper.update(groupMessageState);
-        return this.queryById(groupMessageState.getMessageId());
+        return this.queryById(groupMessageState.getId());
     }
 
     /**
      * 通过主键删除数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Integer messageId) {
-        return this.groupMessageStateMapper.deleteById(messageId) > 0;
+    public boolean deleteById(Integer id) {
+        return this.groupMessageStateMapper.deleteById(id) > 0;
     }
 }
