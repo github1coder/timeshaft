@@ -1,7 +1,7 @@
 <template>
   <v-card
       class="mx-auto"
-      height="85%"
+      height="90%"
   >
     <v-card
         dark
@@ -20,10 +20,12 @@
             fab
             v-bind="attrs"
             v-on="on"
+            v-if="snackbar === false"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
+
       <v-card
 
           class="overflow-y-auto"
@@ -51,7 +53,7 @@
                   md="4"
               >
                 <v-text-field
-                    label="打上标签"
+                    label="打上标签(5个字以内)"
                     required
                     v-model="lable"
                 ></v-text-field>
@@ -63,16 +65,7 @@
                     v-model="description"
                 ></v-text-field>
               </v-col>
-<!--              <v-col-->
-<!--                  cols="12"-->
-<!--                  sm="6"-->
-<!--              >-->
-<!--                <v-select-->
-<!--                    :items="['0-17', '18-29', '30-54', '54+']"-->
-<!--                    label="Age*"-->
-<!--                    required-->
-<!--                ></v-select>-->
-<!--              </v-col>-->
+
                   <v-col>
                     <h1 class="h1" style="font-size: 20px;">开始时间</h1>
                     <v-time-picker
@@ -104,29 +97,32 @@
               style="
               margin-right: 10%;
               font-size: 20px;"
-              @click="snackbar=true; setTimeline(); dialog = false;"
+              @click="setTimeline();"
           >
             添加
           </v-btn>
 
+
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <div>
       <v-snackbar
           v-model="snackbar"
+          light
+          :timeout="0"
+          top
       >
-        已开启事件{{title}}!
-        <template v-slot="{ attrs }">
+        已开启事件: <label class="red--text">{{title}}</label>
           <v-btn
               color="blue"
               text
-              v-bind="attrs"
-              @click="snackbar = false"
+              @click="snackbar = false; overTimeShaft()"
           >
             Close
           </v-btn>
-        </template>
       </v-snackbar>
+    </div>
 
       <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
@@ -136,10 +132,20 @@
         <v-container class="fill-height">
           <v-row align="center">
             <v-row justify="end">
-              <div class="text-h5 font-weight-light" style="font-size: 30px">
-                Time Shaft
-              </div>
-              <div class="text-uppercase font-weight-light" style="font-size: 15px">
+              <h1 style="
+                      color: white;
+                      text-transform: uppercase;
+                      position: absolute;
+                      top: 65%;
+                      left: 20%;
+                      transform: translateY(-50%);
+                      margin: 0;
+                      padding: 0;
+                      font-size: 30px;
+                    ">
+                事件·Time Shaft
+              </h1>
+              <div class="text-uppercase font-weight-light" style="font-size: 15px; margin-top: 0">
                 {{$data.time}}
               </div>
             </v-row>
@@ -147,11 +153,30 @@
         </v-container>
       </v-img>
     </v-card>
-
+    <h1 style="
+      color: #4d4d4d;
+      text-transform: uppercase;
+      position: absolute;
+      top: 60%;
+      left: 15%;
+      transform: translateY(-50%);
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      text-align: center;
+      /*text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);*/
+      mix-blend-mode: overlay;
+    "
+        v-if="items.length === 0"
+    >
+      您还没有和该好友添加事件呢~
+    </h1>
     <v-card
         class="overflow-x-auto overflow-y-auto"
-        max-height="80%"
+        height="77%"
+        v-if="items.length !== 0"
     >
+
       <v-timeline
           align-top
           dense
@@ -166,12 +191,12 @@
         >
           <v-row class="pt-1">
             <v-col cols="4" style="width: 50px">
-              <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.date}}</strong>
+              <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} - {{item.end_date}}</strong>
             </v-col>
             <v-col>
-              <strong>会议主题：{{item.title}}</strong>
+              <strong>事件主题：{{item.title}}</strong>
               <div class="text-caption">
-                会议摘要：{{ item.conclude }}
+                事件摘要：{{ item.conclude }}
               </div>
               <v-row>
                 <v-avatar>
@@ -179,7 +204,7 @@
                       :src="item.img"
                   ></v-img>
                 </v-avatar>
-                <a style="color: #78909C; margin-top: 5%">会议发起者：{{item.host}}</a>
+                <a style="color: #78909C; margin-top: 5%">事件发起者：{{item.host}}</a>
               </v-row>
             </v-col>
           </v-row>
@@ -192,6 +217,8 @@
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
 import {addTimeLine} from "../../../../api/timeShaft";
+import {getTimeLine} from "../../../../api/timeShaft";
+import {endTimeShaft} from "../../../../api/timeShaft";
 
 export default {
   name: "TimeShaft",
@@ -199,7 +226,7 @@ export default {
     return {
       //显示时间
       snackbar: false,
-      timeout: 2000,
+      timeout: -1,
       dialog: null,
       time: '',
       start_time: null,
@@ -215,21 +242,8 @@ export default {
         'user1': -1,
         'user2': -1
       },
-      items: [
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 16:23-17:30', conclude: '1111', host: 'zzy'},
-        {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 16:23-17:30', conclude: '1111', host: 'zzy'},
-        {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 16:23-17:30', conclude: '1111', host: 'zzy'},
-        {title: 'Ahhaha', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 16:23-17:30', conclude: '1111', host: 'zzy'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-        {title: 'GOGOGO', img: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned", date: '2022.5.3 11:20-14:25', conclude: 'vue标签属性绑定中的字符串拼接：写法有两种：:title="`字符串${xx}`"   或   :title="\'字符串\' + xx"  都可以。其中，{}里面可以写js方法', host: 'hw'},
-
-      ]
+      timeshaft_id : -1,
+      items: []
     }
   },
   mounted() {
@@ -238,38 +252,54 @@ export default {
   },
   created() {
     this.dateFormat();
+    this.getShaft()
+
   },
   beforeDestroy() {
     this.dataDestroy();
   },
   computed: {
-    // timeline() {
-    //   if (this.$store.state.currentChannelIdx === -1) {
-    //     this.chatid['user1'] = ''
-    //   } else {
-    //     return this.$store.state.messageList[this.$store.state.currentChannelIdx].data
-    //   }
-    // },
+
   },
   methods: {
-    setTimeline() {
-      console.log(this.titel)
-      console.log(this.lable)
-      console.log(this.description)
-      console.log(this.time)
-      console.log(this.$store.state.currentChannelIdx)
+    getShaft() {
       let para = {
         group_id: this.$store.state.currentChannelIdx,
-        creator_id: this.$store.state.userId,
-        title: this.title,
-        tag: [this.lable],
-        conclude: this.description,
         type: 'friend'
       }
-      console.log(para)
-      addTimeLine(para).then(res => {
-        console.log(res.data.timesshaft_id)
+      getTimeLine(para).then(res => {
+        this.items = res.items
       })
+    },
+    overTimeShaft() {
+      let para = {
+        timeshaft_id: this.timeshaft_id
+      }
+      endTimeShaft(para)
+      this.timeshaft_id = -1
+      this.$router.go(0)
+    },
+    setTimeline() {
+      if (this.title === '' || this.lable === '' || this.time === ''){
+        alert("请先补充完信息哦~");
+      }
+      else{
+        let para = {
+          group_id: this.$store.state.currentChannelIdx,
+          creator_id: this.$store.state.userId,
+          title: this.title,
+          tag: [this.lable],
+          conclude: this.description,
+          type: 'friend'
+        }
+        console.log(para)
+        addTimeLine(para).then(res => {
+          this.timeshaft_id = res.timeshaft_id
+        })
+        this.dialog = false
+        this.snackbar = true
+      }
+
     },
     dataDestroy() {
       if (this.timer) {
