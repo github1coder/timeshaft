@@ -277,6 +277,7 @@ export default {
   },
 
   mounted () {
+    this.introduction = this.$parent.$parent.$parent.$refs.MemberList.introduction
     // if (this.$store.getters.infoId != -1) {
     //   getGroupMember({
     //     "id": this.$store.getters.infoId,
