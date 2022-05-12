@@ -273,7 +273,7 @@ export default {
         this.textG = ""
         this.labelG = "创建成功"
         console.log(res)
-        this.$parent.$parent.$parent.$children[1].getG()
+        this.$parent.$parent.$parent.$refs.MemberList.getG()
       })
       // getGroups({
       //   "user_id": this.$store.getters.userId,

@@ -268,6 +268,7 @@ export default {
       allPageF: 1,
       pageG: 1,
       allPageG: 1,
+      introduction: "",
       channelLabels: [
         {
           action: 'mdi-account-multiple',
@@ -522,6 +523,9 @@ export default {
       this.$store.commit("setMaster", this.groups[index].master_id)
       // this.$store.commit("changeSiderState", 4)
       this.$store.commit("setAbout", 1)
+      //用来解决第一次点击不显示bug
+      this.introduction = this.groups[index].notice
+      //
       this.$parent.$refs.infoTool.$refs.infoG.introduction = this.groups[index].notice
       this.$parent.$refs.infoTool.$refs.infoG.memberShow = false
       this.$parent.$refs.infoTool.$refs.infoG.iShowTrue()

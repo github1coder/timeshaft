@@ -72,7 +72,7 @@
           <v-list-item
             v-for="(item, i) in navs"
             :key="i"
-            @click="$store.commit('changeSiderState', i)"
+            @click="$store.commit('changeSiderState', i);$store.commit('setAbout', -1)"
             :ref="`sider` + i"
             :id="'nav-'+i"
           >
