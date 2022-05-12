@@ -3,6 +3,7 @@ package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.FriendsService;
+import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
@@ -26,6 +27,8 @@ public class AddressListController {
     private UserService userService;
     @Autowired
     private FriendsService friendsService;
+    @Autowired
+    private GroupUserService groupUserService;
 
     @RequestMapping(value = "/getFriends")
     public ResponseService getFriends(@RequestParam("user_id") Integer user_id) {
@@ -81,6 +84,7 @@ public class AddressListController {
             map.put("group_name", group.getName());
             map.put("group_photo", group.getPhoto());
             map.put("master_id", group.getMasterId().toString());
+            map.put("notice", group.getNotice());
             res.add(map);
         }
         return new ResponseService(res);
@@ -164,6 +168,12 @@ public class AddressListController {
             ans.put("photo", user.getPhoto());
             ans.put("nick", users.get(user));
             ans.put("mail", user.getEmail());
+            List<GroupUser> groupUser = groupUserService.queryAll(new GroupUser(id, user.getId(), null, null, null));
+            if(groupUser.get(0).getIdentity().equals("manager") || groupUser.get(0).getIdentity().equals("master")) {
+                ans.put("type", "manager");
+            } else {
+                ans.put("type", "normal");
+            }
             Friends friend1 = new Friends(id, user.getId(), null, null, null, "accept");
             Friends friend2 = new Friends(user.getId(), id, null, null, null, "accept");
             List<Friends> friends = friendsService.queryAll(friend1);
