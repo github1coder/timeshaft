@@ -7,6 +7,7 @@ import com.timeshaft.after_end.service.addressList.GroupOp;
 import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -30,8 +31,6 @@ public class ChatController {
     @Autowired
     private PersonalMessageServiceImpl personalMessageService;
     @Autowired
-    private MessageStateServiceImpl messageStateService;
-    @Autowired
     private UserServiceImpl userService;
     @Autowired
     private FriendsServiceImpl friendsService;
@@ -41,6 +40,10 @@ public class ChatController {
     private GroupMessageServiceImpl groupMessageService;
     @Autowired
     private GroupUserServiceImpl groupUserService;
+    @Value("${type.messageRead}")
+    private String READ;
+    @Value("${type.messageNotRead}")
+    private String UNREAD;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -62,8 +65,7 @@ public class ChatController {
             //拉取所有未读消息
             List<HashMap<String, Object>> data = new ArrayList<>();
             PersonalMessage messageQuery = new PersonalMessage();
-            MessageStateType state = MessageStateType.UNREAD;
-            messageQuery.setState(messageStateService.EnumToString(state));
+            messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
             messageQuery.setFriendsId(friendId);
             List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
@@ -130,8 +132,7 @@ public class ChatController {
             //拉取所有未读消息
             Date recent = null;
             List<HashMap<String, Object>> data = new ArrayList<>();
-            String state = messageStateService.EnumToString(MessageStateType.UNREAD);
-            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), state);
+            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
             int index = -1;
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
@@ -257,15 +258,14 @@ public class ChatController {
         int userId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
         PersonalMessage messageQuery = new PersonalMessage();
-        MessageStateType state = MessageStateType.UNREAD;
-        messageQuery.setState(messageStateService.EnumToString(state));
+        messageQuery.setState(UNREAD);
         Friends friends = friendsService.queryById(chatId);
         int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
         messageQuery.setFriendsId(chatId);
         messageQuery.setSenderId(senderId);
         List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
         PersonalMessage messageToSet = new PersonalMessage();
-        messageToSet.setState(messageStateService.EnumToString(MessageStateType.READ));
+        messageToSet.setState(READ);
         for (PersonalMessage message : notReadMessages) {
             int id = message.getId();
             messageToSet.setId(id);
