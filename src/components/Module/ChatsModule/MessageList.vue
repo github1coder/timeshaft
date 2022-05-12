@@ -193,7 +193,7 @@ export default {
         if (this.$store.state.messageList[i].data.length < 10) {
           getHistoryMessage({
             userId: this.$store.state.userId,
-            type: this.$store.state.messageList[this.$store.state.currentChannelIdx].type,
+            type: this.$store.state.messageList[i].type,
             chatId: this.$store.state.messageList[i].id,
             index: this.$store.state.messageList[i].index,
           }).then(res => {

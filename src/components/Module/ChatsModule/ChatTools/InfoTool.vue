@@ -11,12 +11,12 @@
 
 <script>
 import InfoF from "./Info/InfoFriend.vue"
-// import InfoG from "./Info/InfoGroup.vue"
+import InfoG from "./Info/InfoGroup.vue"
 
 export default {
   components: {
     InfoF,
-    // InfoG
+    InfoG
   },
 
   data () {
