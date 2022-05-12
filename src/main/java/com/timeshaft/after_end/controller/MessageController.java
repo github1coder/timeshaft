@@ -104,6 +104,7 @@ public class MessageController {
                 groupMessageState.setState(read);
             } else {
                 groupMessageState.setState(unread);
+                messagingTemplate.convertAndSend("/group/" + user.getUserId(), payload);
             }
             groupMessageState.setUserId(user.getUserId());
             groupMessageStateService.insert(groupMessageState);
@@ -116,7 +117,6 @@ public class MessageController {
             groupHeatService.update(groupHeat);
         }
 
-        messagingTemplate.convertAndSend("/group/" + groupId, payload);
     }
 
 }

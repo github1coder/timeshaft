@@ -185,12 +185,16 @@ public class ChatController {
         List<HashMap<String, Object>> data = new ArrayList<>();
         HashMap<String, Object> mapChat = new HashMap<>();
         HashMap<String, Object> mapContact = new HashMap<>();
+        HashMap<String, Object> mapGroup = new HashMap<>();
         String chatUrl = "/user/" + sourceId;
         String contactUrl = "/user/contact/" + sourceId;
+        String groupUrl = "/group/" + sourceId;
         mapChat.put("type", 0);
         mapChat.put("url", chatUrl);
         mapContact.put("type", 1);
         mapContact.put("url", contactUrl);
+        mapGroup.put("type", 2);
+        mapGroup.put("url", groupUrl);
         data.add(mapChat);
         data.add(mapContact);
         return new ResponseService(data);
