@@ -170,6 +170,7 @@ export default {
       if (item.data.length !== 0) {
         item.haveRead = item.data.length - 1
         haveRead({
+          type: this.$store.state.messageList[this.$store.state.currentChannelIdx].type,
           chatId: this.$store.state.currentChannelId,
           userId: this.$store.state.userId,
           time: item.data[item.data.length - 1].time,
@@ -186,6 +187,7 @@ export default {
         if (this.$store.state.messageList[i].data.length < 10) {
           getHistoryMessage({
             userId: this.$store.state.userId,
+            type: this.$store.state.messageList[this.$store.state.currentChannelIdx].type,
             chatId: this.$store.state.messageList[i].id,
             index: this.$store.state.messageList[i].index,
           }).then(res => {

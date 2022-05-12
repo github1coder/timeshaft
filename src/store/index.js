@@ -226,6 +226,10 @@ export default new Vuex.Store({
                                 console.log("添加好友服务收到消息")
                                 state.messageList.push(json)
                                 console.log(json)
+                            } else if(state.listenerList[listener].type === 2) {
+                                console.log("添加群聊服务收到消息")
+                                state.messageList.push(json)
+                                console.log(json)
                             } else {
                                 console.log("未知url类型:" + state.listenerList[listener].type.toString())
                             }

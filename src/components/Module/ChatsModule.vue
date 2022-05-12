@@ -3,7 +3,7 @@
     <MessageList></MessageList>
     <div class="chat">
       <ChatHeader></ChatHeader>
-      <div class="chat-screen">
+      <div class="chat-screen" v-if="$store.state.currentChannelIdx !== -1">
         <ChatMessages :draw="toolsDrawer"></ChatMessages>
         <div
           class="moveBand"

@@ -48,28 +48,7 @@ export default {
       }
       console.log(this.refreshed)
     },
-    getDate () {
-      const date = new Date();//当前时间
-      const year = date.getFullYear(); //返回指定日期的年份
-      const month = this.repair(date.getMonth() + 1);//月
-      const day = this.repair(date.getDate());//日
-      const hour = this.repair(date.getHours());//时
-      const minute = this.repair(date.getMinutes());//分
-      const second = this.repair(date.getSeconds());//秒
-      //当前时间
-      return year + "-" + month + "-" + day
-          + " " + hour + ":" + minute + ":" + second
-    },
-    repair (i) {
-      if (i >= 0 && i <= 9) {
-        return "0" + i;
-      } else {
-        return i;
-      }
-    },
-    clearMsg () {
-      this.inputMsg = ""
-    },
+
     scrollToBottom() {
       this.$nextTick(()=>{
         const list = this.$el.querySelector(".messages");
@@ -98,6 +77,7 @@ export default {
         if (this.$store.state.more) {
           getHistoryMessage({
             userId: this.$store.state.userId,
+            type: this.$store.state.messageList[this.$store.state.currentChannelIdx].type,
             chatId: this.$store.state.currentChannelId,
             index: this.$store.state.messageList[this.$store.state.currentChannelIdx].index,
           }).then(res => {
