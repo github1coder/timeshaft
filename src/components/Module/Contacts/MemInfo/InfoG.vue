@@ -351,6 +351,7 @@ export default {
               item.name = item.name + "（群主）"
             }
             else if (item.type == "manager") {
+              item.nick = item.name
               item.name = item.name + "（管理员）"
             }
           });
@@ -448,6 +449,7 @@ export default {
     },
 
     addSubMaster (index) {
+      const that = this
       addGroupManager({
         "group_id": this.$store.getters.infoId,
         "user_id": this.friends[index].id,
@@ -455,16 +457,25 @@ export default {
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
+        if (res == null) {
+          that.friends[index].name = that.friends[index].name + "（管理员）"
+          that.friends[index].type = "manager"
+        }
       })
     },
 
     subSubMaster (index) {
+      const that = this
       delGroupManager({
         "group_id": this.$store.getters.infoId,
         "user_id": this.friends[index].id,
         "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
+        if (res == null) {
+          that.friends[index].name = that.friends[index].nick
+          that.friends[index].type = "normal"
+        }
       })
     },
 
