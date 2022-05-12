@@ -4,10 +4,7 @@ import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
-import com.timeshaft.after_end.service.impl.FriendsServiceImpl;
-import com.timeshaft.after_end.service.impl.MessageStateServiceImpl;
-import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
-import com.timeshaft.after_end.service.impl.UserServiceImpl;
+import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +35,17 @@ public class ChatController {
     private UserServiceImpl userService;
     @Autowired
     private FriendsServiceImpl friendsService;
+    @Autowired
+    private GroupMessageStateServiceImpl groupMessageStateService;
+    @Autowired
+    private GroupMessageServiceImpl groupMessageService;
+    @Autowired
+    private GroupUserServiceImpl groupUserService;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
         int sourceId = (Integer) requestMap.get("srcId");
+        //获取私聊相关信息
         List<Friends> friendsList = friendOp.getFriends(sourceId);
         List<HashMap<String, Object>> res = new ArrayList<>();
         for (Friends friends : friendsList) {
@@ -53,6 +57,7 @@ public class ChatController {
             map.put("id", friendId);
             map.put("chatName", chatName);
             map.put("chatAvatar", chatAvatar);
+            map.put("type", "private");
             Date recent = null;
             //拉取所有未读消息
             List<HashMap<String, Object>> data = new ArrayList<>();
@@ -114,12 +119,63 @@ public class ChatController {
             map.put("recent", recent);
             res.add(map);
         }
-        /*
+        //获取群聊相关信息
         List<Group> groupList = groupOp.getGroup(sourceId);
         for (Group group : groupList) {
-
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", group.getId());
+            map.put("chatName", group.getName());
+            map.put("chatAvatar", group.getPhoto());
+            map.put("type", "group");
+            //拉取所有未读消息
+            Date recent = null;
+            List<HashMap<String, Object>> data = new ArrayList<>();
+            String state = messageStateService.EnumToString(MessageStateType.UNREAD);
+            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), state);
+            int index = -1;
+            if (notReadMessages != null && !notReadMessages.isEmpty()) {
+                index = notReadMessages.get(0).getId();
+            }
+            if (notReadMessages != null && notReadMessages.size() > 0) {
+                for (GroupMessage message : notReadMessages) {
+                    HashMap<String, Object> dataMap = new HashMap<>();
+                    User user = userService.queryById(message.getSenderId());
+                    GroupUser queryGroupUser = new GroupUser();
+                    queryGroupUser.setGroupId(group.getId());
+                    queryGroupUser.setUserId(user.getId());
+                    List<GroupUser> groupUserList = groupUserService.queryAll(queryGroupUser);
+                    //用户已经退群则跳过此条消息
+                    if (groupUserList == null || groupUserList.size() == 0) {
+                        continue;
+                    }
+                    GroupUser groupUser = groupUserList.get(0);
+                    dataMap.put("msgFromName", groupUser.getUserNickname());
+                    dataMap.put("msgFromAvatar", user.getPhoto());
+                    dataMap.put("msg", message.getMessage());
+                    dataMap.put("time", message.getSendtime());
+                    dataMap.put("userId", message.getSenderId());
+                    dataMap.put("chatId", group.getId());
+                    data.add(dataMap);
+                }
+                recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
+                index = notReadMessages.get(0).getId();
+            }
+            //若没有已读消息，index应该为群聊最近的一条消息+1 (因为索引的时候是使用 < 查询)
+            if (index == -1) {
+                GroupMessage latest = groupMessageService.queryLatestById(group.getId());
+                if (latest == null) {
+                    recent = new Date(System.currentTimeMillis());
+                } else {
+                    index = latest.getId();
+                    recent = latest.getSendtime();
+                }
+            }
+            //若没聊过天，index为-1(其实好像不影响，因为反正没有聊过天history就是空[手动狗头])
+            map.put("data", data);
+            map.put("index", index);
+            map.put("recent", recent);
+            res.add(map);
         }
-         */
         return new ResponseService(res);
     }
 
