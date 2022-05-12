@@ -7,3 +7,19 @@ export function addTimeLine(param) {
         data: param
     })
 }
+
+export function getTimeLine(param) {
+    return request({
+        url: '/timeshaft/getTimeshaft',
+        method: 'post',
+        data: param
+    })
+}
+
+export function endTimeShaft(param) {
+    return request({
+        url: '/timeshaft/endTimeShaft',
+        method: 'post',
+        data: param
+    })
+}
