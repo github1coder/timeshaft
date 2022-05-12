@@ -214,7 +214,10 @@ export default new Vuex.Store({
                             console.log(json)
                             if (state.listenerList[listener].type === 0) {
                                 console.log("即时通信服务收到消息")
-                                const idx = state.messageList.findIndex(json.chatId)
+                                const idx = state.messageList.findIndex(
+                                    message => {
+                                    return json.chatId === message.id
+                                })
                                 if (idx !== -1) {
                                     state.messageList[idx].data.push(json)
                                     console.log("收到 chat:" + json.chatId.toString() + " 消息:")

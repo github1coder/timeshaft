@@ -23,7 +23,7 @@
           solo
           v-model="inputMsg"
           autocomplete="off"
-          @keyup.enter="sendChat(chatUrl, inputMsg)"
+          @keyup.enter="sendChat(inputMsg)"
       >
       </v-textarea>
     </div>
@@ -36,7 +36,8 @@ export default {
   props: ['draw'],
   data() {
     return {
-      chatUrl: "/app/personalMessage",
+      chatUrlPrivate: "/app/personalMessage",
+      chatUrlGroup: "/app/groupMessage",
       inputMsg: "",
       icons: [
         'mdi-home',
@@ -54,7 +55,7 @@ export default {
     }
   },
   methods: {
-    sendChat(url, message) {
+    sendChat(message) {
       let name = this.$store.state.myNick
       let avatar = this.$store.state.myIcon
       const msgForm = {
@@ -69,6 +70,7 @@ export default {
       this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
       console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       this.clearMsg()
+      const url = this.$store.state.messageList[this.$store.state.currentChannelIdx].type === 'private' ? this.chatUrlPrivate : this.chatUrlGroup;
       this.$store.commit("WEBSOCKET_SEND", {
         url: url,
         data: msgForm,
