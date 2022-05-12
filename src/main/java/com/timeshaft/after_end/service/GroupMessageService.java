@@ -74,4 +74,13 @@ public interface GroupMessageService {
      */
     GroupMessage queryLatestById(int groupId);
 
+    /**
+     * 查询群聊历史消息
+     *
+     * @param groupId 群聊Id
+     * @param index 索引id
+     * @return 群聊消息列表
+     */
+    List<GroupMessage> queryHistoryById(int groupId, int index);
+
 }

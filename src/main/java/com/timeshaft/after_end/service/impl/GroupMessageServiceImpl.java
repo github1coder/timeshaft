@@ -107,4 +107,16 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     public GroupMessage queryLatestById(int groupId) {
         return this.groupMessageMapper.queryLatestById(groupId);
     }
+
+    /**
+     * 查询群聊历史消息
+     *
+     * @param groupId 群聊Id
+     * @param index 索引id
+     * @return 群聊消息列表
+     */
+    @Override
+    public List<GroupMessage> queryHistoryById(int groupId, int index) {
+        return this.groupMessageMapper.queryHistoryById(groupId, index);
+    }
 }

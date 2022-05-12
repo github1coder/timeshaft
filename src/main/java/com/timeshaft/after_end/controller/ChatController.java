@@ -40,10 +40,15 @@ public class ChatController {
     private GroupMessageServiceImpl groupMessageService;
     @Autowired
     private GroupUserServiceImpl groupUserService;
+    @Autowired
+    private GroupServiceImpl groupService;
+
     @Value("${type.messageRead}")
     private String READ;
     @Value("${type.messageNotRead}")
     private String UNREAD;
+    @Value("${type.groupType}")
+    private String GROUP;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -167,7 +172,7 @@ public class ChatController {
                 if (latest == null) {
                     recent = new Date(System.currentTimeMillis());
                 } else {
-                    index = latest.getId();
+                    index = latest.getId() + 1;
                     recent = latest.getSendtime();
                 }
             }
@@ -198,6 +203,7 @@ public class ChatController {
         mapGroup.put("url", groupUrl);
         data.add(mapChat);
         data.add(mapContact);
+        data.add(mapGroup);
         return new ResponseService(data);
     }
 
@@ -206,49 +212,56 @@ public class ChatController {
         int srcId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示来自群聊还是私聊
         int index = (Integer) requestMap.get("index");
-        Friends friends = friendsService.queryById(chatId);
-        int dstId = friends.getUserId1() == srcId? friends.getUserId2():friends.getUserId1();
-        String srcNickName = friends.getUserId1() == srcId? friends.getNickname1():friends.getNickname2();
-        String dstNickName = friends.getUserId1() == dstId? friends.getNickname1():friends.getNickname2();
-        User userSrc = userService.queryById(srcId);
-        User userDst = userService.queryById(dstId);
-        List<PersonalMessage> historyMessage = new ArrayList<>();
-        historyMessage.addAll(personalMessageService.queryHistoryById(chatId, srcId, index));
-        historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, index));
-        historyMessage.sort(new Comparator<PersonalMessage>() {
-            @Override
-            public int compare(PersonalMessage o1, PersonalMessage o2) {
-                return o2.getId().compareTo(o1.getId());
-            }
-        });
-        int length = Math.min(historyMessage.size(), 20);
-        boolean more = (length != 0);
-        List<HashMap<String, Object>> data = new ArrayList<>();
-        for (int i = length - 1; i >= 0; i--) {
-            HashMap<String, Object> messageMap = new HashMap<>();
-            PersonalMessage message = historyMessage.get(i);
-            messageMap.put("userId", message.getSenderId());
-            messageMap.put("chatId", message.getFriendsId());
-            messageMap.put("msg", message.getMessage());
-            if (message.getSenderId() == srcId) {
-                messageMap.put("msgFromName", srcNickName);
-                messageMap.put("msgFromAvatar", userSrc.getPhoto());
-            } else {
-                messageMap.put("msgFromName", dstNickName);
-                messageMap.put("msgFromAvatar", userDst.getPhoto());
-            }
-            messageMap.put("time", message.getSendtime());
-            data.add(messageMap);
-        }
+        String type = (String) requestMap.get("type");
         HashMap<String, Object> res = new HashMap<>();
-        res.put("data", data);
-        int newIndex = index;
-        //若还有剩余的历史消息，则更新index
-        if (more) {
-            newIndex = historyMessage.get(length-1).getId();
+        if (type.equals(GROUP)) {
+            Group group = groupService.queryById(chatId);
+            List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, index);
+
+        } else {
+            Friends friends = friendsService.queryById(chatId);
+            int dstId = friends.getUserId1() == srcId ? friends.getUserId2() : friends.getUserId1();
+            String srcNickName = friends.getUserId1() == srcId ? friends.getNickname1() : friends.getNickname2();
+            String dstNickName = friends.getUserId1() == dstId ? friends.getNickname1() : friends.getNickname2();
+            User userSrc = userService.queryById(srcId);
+            User userDst = userService.queryById(dstId);
+            List<PersonalMessage> historyMessage = new ArrayList<>();
+            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, srcId, index));
+            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, index));
+            historyMessage.sort(new Comparator<PersonalMessage>() {
+                @Override
+                public int compare(PersonalMessage o1, PersonalMessage o2) {
+                    return o2.getId().compareTo(o1.getId());
+                }
+            });
+            int length = Math.min(historyMessage.size(), 20);
+            boolean more = (length != 0);
+            List<HashMap<String, Object>> data = new ArrayList<>();
+            for (int i = length - 1; i >= 0; i--) {
+                HashMap<String, Object> messageMap = new HashMap<>();
+                PersonalMessage message = historyMessage.get(i);
+                messageMap.put("userId", message.getSenderId());
+                messageMap.put("chatId", message.getFriendsId());
+                messageMap.put("msg", message.getMessage());
+                if (message.getSenderId() == srcId) {
+                    messageMap.put("msgFromName", srcNickName);
+                    messageMap.put("msgFromAvatar", userSrc.getPhoto());
+                } else {
+                    messageMap.put("msgFromName", dstNickName);
+                    messageMap.put("msgFromAvatar", userDst.getPhoto());
+                }
+                messageMap.put("time", message.getSendtime());
+                data.add(messageMap);
+            }
+            res.put("data", data);
+            int newIndex = index;
+            //若还有剩余的历史消息，则更新index
+            if (more) {
+                newIndex = historyMessage.get(length - 1).getId();
+            }
+            res.put("index", newIndex);
+            res.put("more", more);
         }
-        res.put("index", newIndex);
-        res.put("more", more);
         return new ResponseService(res);
     }
 
@@ -257,6 +270,7 @@ public class ChatController {
         String time = (String) requestMap.get("time");
         int userId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
+        String type = (String) requestMap.get("type");
         PersonalMessage messageQuery = new PersonalMessage();
         messageQuery.setState(UNREAD);
         Friends friends = friendsService.queryById(chatId);
