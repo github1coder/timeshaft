@@ -52,8 +52,9 @@ public class TimeShaftController {
     @RequestMapping("/endTimeShaft")
     public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap) throws Exception {
         log.info("结束时间轴开始");
-        Integer timeshaft_id = (Integer) requestMap.get("timeshaft_id");
-        timeShaftOp.endTimeShaft(timeshaft_id);
+        Integer group_id = (Integer) requestMap.get("group_id");
+        String type = (String) requestMap.get("type");
+        timeShaftOp.endTimeShaft(group_id, type);
         log.info("结束时间轴成功");
         return new ResponseService();
     }

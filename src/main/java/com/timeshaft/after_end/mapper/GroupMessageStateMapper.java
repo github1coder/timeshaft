@@ -15,7 +15,7 @@ public interface GroupMessageStateMapper {
     /**
      * 通过ID查询单条数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 实例对象
      */
     GroupMessageState queryById(Integer id);
@@ -57,7 +57,7 @@ public interface GroupMessageStateMapper {
     /**
      * 通过主键删除数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 影响行数
      */
     int deleteById(Integer id);
