@@ -89,4 +89,30 @@
         where group_id = #{group_id} and sendtime between #{startTime} and #{endTime}
     </select>
 
+    <!--查询某人在群聊内的未读消息-->
+    <select id="queryNotReadMessage" resultMap="BaseResultMap">
+        select
+            g.id, g.group_id, g.sender_id, g.message, g.sendtime
+        from timeshaft.group_message g, timeshaft.group_message_state s
+        where g.group_id = #{groupId} and g.id = s.message_id and s.user_id = #{userId} and s.state = #{state}
+    </select>
+
+    <!--查询某群最近的一条消息-->
+    <select id="queryLatestById" resultMap="BaseResultMap">
+        select
+            id, group_id, sender_id, message, sendtime
+        from timeshaft.group_message
+        where group_id = #{groupId}
+        order by id desc
+        limit 0, 1
+    </select>
+
+    <!--查询历史消息-->
+    <select id="queryHistoryById" resultMap="BaseResultMap">
+        select
+            id, group_id, sender_id, message, sendtime from timeshaft.group_message
+        where group_id = #{groupId} and id &lt; #{index}
+        order by id desc
+        limit 0, 20
+    </select>
 </mapper>

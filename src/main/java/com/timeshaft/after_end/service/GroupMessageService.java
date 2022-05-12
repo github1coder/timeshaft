@@ -55,4 +55,32 @@ public interface GroupMessageService {
     boolean deleteById(Integer id);
 
     List<GroupMessage> queryTimeshaft(Timeshaft timeshaft);
+
+    /**
+     * 查询用户在群聊中的消息
+     *
+     * @param userId 用户Id
+     * @param groupId 群聊Id
+     * @param state 消息状态
+     * @return 群聊消息列表
+     */
+    List<GroupMessage> queryNotReadMessage(int userId, int groupId, String state);
+
+    /**
+     * 查询群聊中的最新消息
+     *
+     * @param groupId 群聊Id
+     * @return 群聊消息列表
+     */
+    GroupMessage queryLatestById(int groupId);
+
+    /**
+     * 查询群聊历史消息
+     *
+     * @param groupId 群聊Id
+     * @param index 索引id
+     * @return 群聊消息列表
+     */
+    List<GroupMessage> queryHistoryById(int groupId, int index);
+
 }
