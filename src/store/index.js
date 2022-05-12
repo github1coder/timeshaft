@@ -18,7 +18,6 @@ export default new Vuex.Store({
         infoEmail: null,
         infoName: null,
         infoNick: null,
-        infoNotice: null,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
         currentChannelIdx: -1,

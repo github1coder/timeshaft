@@ -62,7 +62,7 @@
             class="mx-2"
             color="success"
             width="40%"
-            @click="iShowTrue"
+            @click="changeNotice"
           >
             确认
           </v-btn>
@@ -166,13 +166,13 @@
                         <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && !isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
@@ -249,7 +249,7 @@
 </template>
 
 <script>
-import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup } from '../../../../api/addresslist/index'
+import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../api/addresslist/index'
 export default {
   data () {
     return {
@@ -257,7 +257,7 @@ export default {
       name: "",
       iShow: true,
       kill: false,
-      introduction: "团队介绍",
+      introduction: "",
       num: 10,
       pageF: 1,
       allPageF: 1,
@@ -310,8 +310,32 @@ export default {
 
     },
 
+    changeNotice () {
+      const here = this
+      console.log(this.introduction)
+      updateGroup({
+        "id": this.$store.getters.infoId,
+        "notice": this.introduction
+      }).then(res => {
+        console.log("修改群公告成功")
+        console.log(res)
+        if (res == null) {
+          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
+          for (this.i = 0; this.i < that.length; this.i++) {
+            if (that[this.i].group_id == here.$store.getters.infoId) {
+              that[this.i].notice = here.introduction
+              break
+            }
+          }
+          here.iShowTrue()
+        }
+      })
+
+    },
+
     getMember () {
-      if (this.$store.getters.infoId != -1) {
+      if (this.$store.getters.infoId != -1 && !this.memberShow) {
+        const that = this
         getGroupMember({
           "id": this.$store.getters.infoId,
           "ACCESS_TOKEN": null
@@ -322,6 +346,12 @@ export default {
             item["quit"] = false;
             if (item.nick && item.nick != "") {
               item.name = item.nick
+            }
+            if (item.id == that.$store.getters.userId) {
+              item.name = item.name + "（群主）"
+            }
+            else if (item.type == "manager") {
+              item.name = item.name + "（管理员）"
             }
           });
           this.friends = JSON.parse(JSON.stringify(this.friends))
@@ -398,6 +428,10 @@ export default {
 
     isSelf (index) {
       return this.$store.getters.userId == this.friends[index].id
+    },
+
+    isManager (index) {
+      return this.friends[index].type == "manager"
     },
 
     changeName (index) {
