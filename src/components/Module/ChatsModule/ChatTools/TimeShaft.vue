@@ -264,7 +264,7 @@ export default {
   methods: {
     getShaft() {
       let para = {
-        group_id: this.$store.state.currentChannelIdx,
+        group_id: this.$store.state.currentChannelId,
         type: 'friend'
       }
       getTimeLine(para).then(res => {
@@ -285,7 +285,7 @@ export default {
       }
       else{
         let para = {
-          group_id: this.$store.state.currentChannelIdx,
+          group_id: this.$store.state.currentChannelId,
           creator_id: this.$store.state.userId,
           title: this.title,
           tag: [this.lable],
