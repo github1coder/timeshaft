@@ -215,12 +215,27 @@ public class ChatController {
         String type = (String) requestMap.get("type");
         HashMap<String, Object> res = new HashMap<>();
         if (type != null && type.equals(GROUP)) {
-            Group group = groupService.queryById(chatId);
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, index);
-            User sender = userService.queryById(srcId);
-            if (groupMessageList == null || groupMessageList.size() == 0) {
-
+            int length = Math.min(groupMessageList.size(), 20);
+            boolean more = (length != 0);
+            List<HashMap<String, Object>> data = new ArrayList<>();
+            for (int i = length - 1; i >= 0; i--) {
+                HashMap<String, Object> messageMap = new HashMap<>();
+                GroupMessage message = groupMessageList.get(i);
+                messageMap.put("userId", message.getSenderId());
+                messageMap.put("chatId", message.getGroupId());
+                messageMap.put("msg", message.getMessage());
+                messageMap.put("time", message.getSendtime());
+                data.add(messageMap);
             }
+            res.put("data", data);
+            int newIndex = index;
+            //若还有剩余的历史消息，则更新index
+            if (more) {
+                newIndex = groupMessageList.get(length - 1).getId();
+            }
+            res.put("index", newIndex);
+            res.put("more", more);
         } else {
             Friends friends = friendsService.queryById(chatId);
             int dstId = friends.getUserId1() == srcId ? friends.getUserId2() : friends.getUserId1();
@@ -274,19 +289,34 @@ public class ChatController {
         int userId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
         String type = (String) requestMap.get("type");
-        PersonalMessage messageQuery = new PersonalMessage();
-        messageQuery.setState(UNREAD);
-        Friends friends = friendsService.queryById(chatId);
-        int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
-        messageQuery.setFriendsId(chatId);
-        messageQuery.setSenderId(senderId);
-        List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
-        PersonalMessage messageToSet = new PersonalMessage();
-        messageToSet.setState(READ);
-        for (PersonalMessage message : notReadMessages) {
-            int id = message.getId();
-            messageToSet.setId(id);
-            personalMessageService.update(messageToSet);
+        if (type != null && type.equals(GROUP)) {
+            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(userId, chatId, UNREAD);
+            GroupMessageState groupMessageState = new GroupMessageState();
+            groupMessageState.setState(UNREAD);
+            groupMessageState.setUserId(userId);
+            for (GroupMessage message : notReadMessages) {
+                groupMessageState.setMessageId(message.getId());
+                List<GroupMessageState> updateList = groupMessageStateService.queryAll(groupMessageState);
+                for (GroupMessageState messageState : updateList) {
+                    messageState.setState(READ);
+                    groupMessageStateService.update(messageState);
+                }
+            }
+        } else {
+            PersonalMessage messageQuery = new PersonalMessage();
+            messageQuery.setState(UNREAD);
+            Friends friends = friendsService.queryById(chatId);
+            int senderId = friends.getUserId1() == userId? friends.getUserId2():friends.getUserId1();
+            messageQuery.setFriendsId(chatId);
+            messageQuery.setSenderId(senderId);
+            List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+            PersonalMessage messageToSet = new PersonalMessage();
+            messageToSet.setState(READ);
+            for (PersonalMessage message : notReadMessages) {
+                int id = message.getId();
+                messageToSet.setId(id);
+                personalMessageService.update(messageToSet);
+            }
         }
         return new ResponseService();
     }
