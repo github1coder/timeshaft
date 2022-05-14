@@ -38,11 +38,11 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeshaft")
-    public ResponseService getTimeshaft(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseService getTimeshaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("获取时间轴开始");
         Integer group_id = (Integer) requestMap.get("group_id");
         String type = (String) requestMap.get("type");
-        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshaft(group_id, type);
+        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshaft(group_id, type, user_id);
         log.info("获取时间轴成功");
         Map<String, Object> res = new HashMap<>();
         res.put("items", timeshaftsRes);
@@ -50,11 +50,11 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/endTimeShaft")
-    public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("结束时间轴开始");
         Integer group_id = (Integer) requestMap.get("group_id");
         String type = (String) requestMap.get("type");
-        timeShaftOp.endTimeShaft(group_id, type);
+        timeShaftOp.endTimeShaft(group_id, type, user_id);
         log.info("结束时间轴成功");
         return new ResponseService();
     }

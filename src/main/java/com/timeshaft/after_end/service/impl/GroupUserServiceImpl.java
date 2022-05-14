@@ -23,6 +23,8 @@ public class GroupUserServiceImpl implements GroupUserService {
     private String MANAGER;
     @Value("${groupIdentity.master}")
     private String MASTER;
+    @Value("${groupIdentity.member}")
+    private String MEMBER;
     @Resource
     private GroupUserMapper groupUserMapper;
 
@@ -99,13 +101,18 @@ public class GroupUserServiceImpl implements GroupUserService {
         boolean flag = false;
         List<GroupUser> groupUsers = groupUserMapper.queryAll(groupUser);
         if (groupUsers!=null && groupUsers.size()>0) {
-            if (level == 2) {
+            if (level == 1) {
+                if (MASTER.equals(groupUsers.get(0).getIdentity())) {
+                    flag = true;
+                }
+            }
+            else if (level == 2) {
                 if (MASTER.equals(groupUsers.get(0).getIdentity()) || MANAGER.equals(groupUsers.get(0).getIdentity())) {
                     flag = true;
                 }
             }
-            else if (level == 1) {
-                if (MASTER.equals(groupUsers.get(0).getIdentity())) {
+            else if (level == 3) {
+                if (MASTER.equals(groupUsers.get(0).getIdentity()) || MANAGER.equals(groupUsers.get(0).getIdentity()) || MEMBER.equals(groupUsers.get(0).getIdentity())) {
                     flag = true;
                 }
             }

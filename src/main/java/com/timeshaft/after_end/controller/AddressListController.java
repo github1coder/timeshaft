@@ -104,7 +104,7 @@ public class AddressListController {
 
     @RequestMapping(value = "/joinGroup")
     public ResponseService joinGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
-        groupOp.joinGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("join_user_id")));
+        groupOp.joinGroup(user_id, Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("join_user_id")));
         return new ResponseService();
     }
 

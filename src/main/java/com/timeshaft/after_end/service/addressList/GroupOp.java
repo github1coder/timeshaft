@@ -80,14 +80,15 @@ public class GroupOp {
         return groups;
     }
 
-    @PermissionAnnotation(level=2)
-    public void joinGroup(int group_id, int join_user_id) {
+    @PermissionAnnotation(level=3)
+    public void joinGroup(int user_id, int group_id, int join_user_id) {
         GroupUser groupUser = new GroupUser(group_id, join_user_id, null, MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
     }
 
-    public void quitGroup(int group_id, int quit_user_id) {
-        GroupUser groupUser = new GroupUser(group_id, quit_user_id, null, null, null);
+    @PermissionAnnotation(level=3)
+    public void quitGroup(int group_id, int user_id) {
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             groupUserService.deleteById(tmp.getId());
@@ -114,6 +115,7 @@ public class GroupOp {
         }
     }
 
+    @PermissionAnnotation(level=3)
     public void changeNickname(int group_id, String name, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
