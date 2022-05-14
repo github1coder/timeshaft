@@ -2,6 +2,7 @@
  * ajax请求配置
  */
 import axios from 'axios'
+import store from '../store/index'
 // import { Message } from 'element-ui'
 
 const DEBUG = false;
@@ -15,7 +16,10 @@ const service = axios.create({
 
 service.interceptors.request.use(
     config => {
-        //config.headers["ACCESS_TOKEN"] = this.$store.getters.accessToken
+        if (store.state.userId != -1) {
+            config.headers['user_id'] = store.state.userId
+            config.headers['ACCESS_TOKEN'] = store.state.accessToken
+        }
         config.headers["Content-Type"] = 'application/json'
         return config
     },

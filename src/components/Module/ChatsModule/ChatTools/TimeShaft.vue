@@ -1,18 +1,19 @@
 <template>
   <v-card
-      class="mx-auto"
-      height="90%"
+    class="mx-auto"
+    height="90%"
   >
     <v-card
-        dark
-        flat
-    ><v-dialog
+      dark
+      flat
+    >
+      <v-dialog
         v-model="dialog"
         persistent
         max-width="600px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
             absolute
             bottom
             color="blue-grey darken-4"
@@ -21,65 +22,65 @@
             v-bind="attrs"
             v-on="on"
             v-if="snackbar === false"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </template>
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
 
-      <v-card
-
-          class="overflow-y-auto"
-      >
-        <v-card-title>
-          <span class="text-h5">添加事件</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
+        <v-card class="overflow-y-auto">
+          <v-card-title>
+            <span class="text-h5">添加事件</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
                   cols="12"
                   sm="6"
                   md="4"
-              >
-                <v-text-field
+                >
+                  <v-text-field
                     label="事件主题"
                     v-model="title"
                     required
-                ></v-text-field>
-              </v-col>
-              <v-col
+                  ></v-text-field>
+                </v-col>
+                <v-col
                   cols="12"
                   sm="6"
                   md="4"
-              >
-                <v-text-field
+                >
+                  <v-text-field
                     label="打上标签(5个字以内)"
                     required
                     v-model="lable"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
                     label="事件描述"
                     required
                     v-model="description"
-                ></v-text-field>
-              </v-col>
+                  ></v-text-field>
+                </v-col>
 
-                  <v-col>
-                    <h1 class="h1" style="font-size: 20px;">开始时间</h1>
-                    <v-time-picker
-                        v-model="start_time"
-                        format="24hr"
-                        header-color="#777777"
-                    ></v-time-picker>
-                  </v-col>
-            </v-row>
-          </v-container>
-          <small>*滑动鼠标选择事件开始时间</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
+                <v-col>
+                  <h1
+                    class="h1"
+                    style="font-size: 20px;"
+                  >开始时间</h1>
+                  <v-time-picker
+                    v-model="start_time"
+                    format="24hr"
+                    header-color="#777777"
+                  ></v-time-picker>
+                </v-col>
+              </v-row>
+            </v-container>
+            <small>*滑动鼠标选择事件开始时间</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
               color="gray darken-1"
               text
               style="
@@ -87,47 +88,46 @@
               margin-left: 10%;
 "
               @click="dialog = false"
-          >
-            关闭
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
+            >
+              关闭
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
               color="gray darken-1"
               text
               style="
               margin-right: 10%;
               font-size: 20px;"
               @click="setTimeline();"
-          >
-            添加
-          </v-btn>
+            >
+              添加
+            </v-btn>
 
-
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <div>
-      <v-snackbar
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <div>
+        <v-snackbar
           v-model="snackbar"
           light
           :timeout="0"
           top
-      >
-        已开启事件: <label class="red--text">{{title}}</label>
+        >
+          已开启事件: <label class="red--text">{{title}}</label>
           <v-btn
-              color="blue"
-              text
-              @click="snackbar = false; overTimeShaft()"
+            color="blue"
+            text
+            @click="snackbar = false; overTimeShaft()"
           >
             Close
           </v-btn>
-      </v-snackbar>
-    </div>
+        </v-snackbar>
+      </div>
 
       <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
-          gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
-          height="150px"
+        src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
+        gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
+        height="150px"
       >
         <v-container class="fill-height">
           <v-row align="center">
@@ -145,7 +145,10 @@
                     ">
                 事件·Time Shaft
               </h1>
-              <div class="text-uppercase font-weight-light" style="font-size: 15px; margin-top: 0">
+              <div
+                class="text-uppercase font-weight-light"
+                style="font-size: 15px; margin-top: 0"
+              >
                 {{$data.time}}
               </div>
             </v-row>
@@ -153,7 +156,8 @@
         </v-container>
       </v-img>
     </v-card>
-    <h1 style="
+    <h1
+      style="
       color: #4d4d4d;
       text-transform: uppercase;
       position: absolute;
@@ -167,30 +171,31 @@
       /*text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);*/
       mix-blend-mode: overlay;
     "
-        v-if="items.length === 0"
+      v-if="items.length === 0"
     >
       您还没有和该好友添加事件呢~
     </h1>
     <v-card
-        class="overflow-x-auto overflow-y-auto"
-        height="77%"
-        v-if="items.length !== 0"
+      class="overflow-x-auto overflow-y-auto"
+      height="77%"
+      v-if="items.length !== 0"
     >
 
       <v-timeline
-          align-top
-          dense
-
+        align-top
+        dense
       >
         <v-timeline-item
-            small
-            v-for="(item, i) in items"
-            :key="i"
-            :color="timecolor[i % 10]"
-
+          small
+          v-for="(item, i) in items"
+          :key="i"
+          :color="timecolor[i % 10]"
         >
           <v-row class="pt-1">
-            <v-col cols="4" style="width: 50px">
+            <v-col
+              cols="4"
+              style="width: 50px"
+            >
               <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} - {{item.end_date}}</strong>
             </v-col>
             <v-col>
@@ -200,9 +205,7 @@
               </div>
               <v-row>
                 <v-avatar>
-                  <v-img
-                      :src="item.img"
-                  ></v-img>
+                  <v-img :src="item.img"></v-img>
                 </v-avatar>
                 <a style="color: #78909C; margin-top: 5%">事件发起者：{{item.host}}</a>
               </v-row>
@@ -216,13 +219,13 @@
 </template>
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
-import {addTimeLine} from "../../../../api/timeShaft";
-import {getTimeLine} from "../../../../api/timeShaft";
-import {endTimeShaft} from "../../../../api/timeShaft";
+import { addTimeLine } from "../../../../api/timeShaft";
+import { getTimeLine } from "../../../../api/timeShaft";
+import { endTimeShaft } from "../../../../api/timeShaft";
 
 export default {
   name: "TimeShaft",
-  data() {
+  data () {
     return {
       //显示时间
       snackbar: false,
@@ -232,37 +235,37 @@ export default {
       start_time: null,
       title: '',
       lable: '',
-      description:'',
+      description: '',
       timecolor: [
-          'deep-orange','deep-orange lighten-5','deep-orange lighten-4', 'deep-orange lighten-3',
-          'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1','deep-orange darken-2',
-          'deep-orange darken-3', 'deep-orange darken-4'
+        'deep-orange', 'deep-orange lighten-5', 'deep-orange lighten-4', 'deep-orange lighten-3',
+        'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1', 'deep-orange darken-2',
+        'deep-orange darken-3', 'deep-orange darken-4'
       ],
       chatid: {
         'user1': -1,
         'user2': -1
       },
-      timeshaft_id : -1,
+      timeshaft_id: -1,
       items: []
     }
   },
-  mounted() {
+  mounted () {
     this.dateShow();
 
   },
-  created() {
+  created () {
     this.dateFormat();
     this.getShaft()
 
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.dataDestroy();
   },
   computed: {
 
   },
   methods: {
-    getShaft() {
+    getShaft () {
       let para = {
         group_id: this.$store.state.currentChannelId,
         type: 'friend'
@@ -271,7 +274,7 @@ export default {
         this.items = res.items
       })
     },
-    overTimeShaft() {
+    overTimeShaft () {
       let para = {
         timeshaft_id: this.timeshaft_id
       }
@@ -279,11 +282,11 @@ export default {
       this.timeshaft_id = -1
       this.$router.go(0)
     },
-    setTimeline() {
-      if (this.title === '' || this.lable === '' || this.time === ''){
+    setTimeline () {
+      if (this.title === '' || this.lable === '' || this.time === '') {
         alert("请先补充完信息哦~");
       }
-      else{
+      else {
         let para = {
           group_id: this.$store.state.currentChannelId,
           creator_id: this.$store.state.userId,
@@ -301,19 +304,19 @@ export default {
       }
 
     },
-    dataDestroy() {
+    dataDestroy () {
       if (this.timer) {
         clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
       }
 
     },
-    dateShow() {
+    dateShow () {
       this.timer = setInterval(() => {
         this.dateFormat()
       }, 1000)
 
     },
-    dateFormat() {
+    dateFormat () {
       let date = new Date();
       let year = date.getFullYear();
       let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
@@ -328,5 +331,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

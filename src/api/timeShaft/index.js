@@ -23,3 +23,12 @@ export function endTimeShaft(param) {
         data: param
     })
 }
+
+
+export function beginTimeShaftSingle(param) {
+    return request({
+        url: '/timeshaft/beginTimeShaftSingle',
+        method: 'post',
+        data: param
+    })
+}
