@@ -191,6 +191,7 @@ export default {
               this.$store.commit("setMyNick", res.username)
               this.$store.commit("setEmail", res.email)
               this.$store.commit("setLogin", true)
+              this.$store.state.accessToken = res.ACCESS_TOKEN
               this.$router.push({
                 path: '/home',
               })
