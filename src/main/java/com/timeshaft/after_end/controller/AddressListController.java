@@ -31,7 +31,7 @@ public class AddressListController {
     private GroupUserService groupUserService;
 
     @RequestMapping(value = "/getFriends")
-    public ResponseService getFriends(@RequestParam("user_id") Integer user_id) {
+    public ResponseService getFriends(@RequestHeader("user_id") Integer user_id) {
         List<Friends> friends = friendOp.getFriends(user_id);
         List<Map<String, String>> res = new ArrayList<>();
         for(Friends f : friends) {
@@ -57,25 +57,25 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/addFriend")
-    public ResponseService addFriend(@RequestParam("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
+    public ResponseService addFriend(@RequestHeader("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.addFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/delFriend")
-    public ResponseService delFriend(@RequestParam("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
+    public ResponseService delFriend(@RequestHeader("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.delFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changeNickname")
-    public ResponseService changeNickname(@RequestBody Map<String, String> map) {
-        friendOp.changeNickname(Integer.parseInt(map.get("user_id")), Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
+    public ResponseService changeNickname(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        friendOp.changeNickname(user_id, Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getGroups")
-    public ResponseService getGroups(@RequestParam("user_id") Integer user_id) {
+    public ResponseService getGroups(@RequestHeader("user_id") Integer user_id) {
         List<Group> groups = groupOp.getGroup(user_id);
         List<Map<String, String>> res = new ArrayList<>();
         for(Group group : groups) {
@@ -91,7 +91,7 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/addGroup")
-    public ResponseService addGroup(@RequestBody Map<String, String> map) {
+    public ResponseService addGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), Integer.parseInt(map.get("master_id")));
         return new ResponseService();
     }
@@ -103,14 +103,14 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/joinGroup")
-    public ResponseService joinGroup(@RequestBody Map<String, String> map) {
+    public ResponseService joinGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.joinGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("join_user_id")));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/quitGroup")
-    public ResponseService quitGroup(@RequestBody Map<String, String> map) {
-        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("user_id")));
+    public ResponseService quitGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.quitGroup(Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
@@ -121,38 +121,38 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/delGroupManager")
-    public ResponseService delGroupManager(@RequestBody Map<String, String> map) {
-        groupOp.delManager(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("user_id")));
+    public ResponseService delGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.delManager(Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/addGroupManager")
-    public ResponseService addGroupManager(@RequestBody Map<String, String> map) {
-        groupOp.addManager(Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("user_id")));
+    public ResponseService addGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.addManager(Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changeGroupNickname")
-    public ResponseService changeGroupNickname(@RequestBody Map<String, String> map) {
-        groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), Integer.parseInt(map.get("user_id")));
+    public ResponseService changeGroupNickname(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/searchByNick")
-    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
+    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.searchByNick(name, type, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/apply")
-    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestParam("user_id") Integer user_id) {
+    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) {
         friendOp.apply(user_id, type, action, id);
         friendOp.sendNotification(type, action, id, user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getApplyList")
-    public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestParam("user_id") Integer user_id) {
+    public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
         return new ResponseService(res);
     }
@@ -189,7 +189,7 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getInfoMsg")
-    public ResponseService getInfoMsg(@RequestParam(value = "type") String type, @RequestParam("info_id") Integer info_id, @RequestParam("user_id") Integer user_id) {
+    public ResponseService getInfoMsg(@RequestParam(value = "type") String type, @RequestParam("info_id") Integer info_id, @RequestHeader("user_id") Integer user_id) {
         Map<String, String> res = friendOp.getInfoMsg(type, info_id, user_id);
         return new ResponseService(res);
     }

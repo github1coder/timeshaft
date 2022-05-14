@@ -66,9 +66,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/changePwd")
-    public ResponseService changePwd(@RequestBody Map<String, String> map) throws Exception {
+    public ResponseService changePwd(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) throws Exception {
         //Integer uid = (Integer) session.getAttribute(Const.SESSION_UID);
-        userOp.changePwd(Integer.parseInt(map.get("user_id")), map.get("oldPassword"), map.get("newPassword"));
+        userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"));
         return new ResponseService();
     }
 }
