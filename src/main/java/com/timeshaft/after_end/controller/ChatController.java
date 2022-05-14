@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
+import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
@@ -207,11 +208,10 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/getHistoryMessage")
-    public ResponseService getHistoryMessage(@RequestBody Map<String, Object> requestMap) {
-        int srcId = (Integer) requestMap.get("userId");
-        int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示来自群聊还是私聊
-        int index = (Integer) requestMap.get("index");
-        String type = (String) requestMap.get("type");
+    public ResponseService getHistoryMessage(@RequestParam("userId") Integer userId,
+                                             @RequestParam("index") Integer index,
+                                             @RequestParam("chatId") Integer chatId,
+                                             @RequestParam("type") String type) {
         HashMap<String, Object> res = new HashMap<>();
         if (type != null && type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, index);
@@ -223,6 +223,14 @@ public class ChatController {
                 GroupMessage message = groupMessageList.get(i);
                 messageMap.put("userId", message.getSenderId());
                 messageMap.put("chatId", message.getGroupId());
+                User user = userService.queryById(message.getSenderId());
+                GroupUser queryGroupUser = new GroupUser();
+                queryGroupUser.setGroupId(chatId);
+                queryGroupUser.setUserId(message.getSenderId());
+                List<GroupUser> groupUserList = groupUserService.queryAll(queryGroupUser);
+                GroupUser groupUser = groupUserList.get(0);
+                messageMap.put("msgFromName", groupUser.getUserNickname());
+                messageMap.put("msgFromAvatar", user.getPhoto());
                 messageMap.put("msg", message.getMessage());
                 messageMap.put("time", message.getSendtime());
                 data.add(messageMap);
@@ -237,13 +245,13 @@ public class ChatController {
             res.put("more", more);
         } else {
             Friends friends = friendsService.queryById(chatId);
-            int dstId = friends.getUserId1() == srcId ? friends.getUserId2() : friends.getUserId1();
-            String srcNickName = friends.getUserId1() == srcId ? friends.getNickname1() : friends.getNickname2();
+            int dstId = Objects.equals(friends.getUserId1(), userId) ? friends.getUserId2() : friends.getUserId1();
+            String srcNickName = Objects.equals(friends.getUserId1(), userId) ? friends.getNickname1() : friends.getNickname2();
             String dstNickName = friends.getUserId1() == dstId ? friends.getNickname1() : friends.getNickname2();
-            User userSrc = userService.queryById(srcId);
+            User userSrc = userService.queryById(userId);
             User userDst = userService.queryById(dstId);
             List<PersonalMessage> historyMessage = new ArrayList<>();
-            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, srcId, index));
+            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, userId, index));
             historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, index));
             historyMessage.sort(new Comparator<PersonalMessage>() {
                 @Override
@@ -260,7 +268,7 @@ public class ChatController {
                 messageMap.put("userId", message.getSenderId());
                 messageMap.put("chatId", message.getFriendsId());
                 messageMap.put("msg", message.getMessage());
-                if (message.getSenderId() == srcId) {
+                if (Objects.equals(message.getSenderId(), userId)) {
                     messageMap.put("msgFromName", srcNickName);
                     messageMap.put("msgFromAvatar", userSrc.getPhoto());
                 } else {
