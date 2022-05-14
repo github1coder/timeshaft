@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class MyHandlerIntercepter implements HandlerInterceptor {
+public class TokenIntercepter implements HandlerInterceptor {
     @Autowired
     private UserTokenService userTokenService;
     @Override
@@ -32,7 +32,6 @@ public class MyHandlerIntercepter implements HandlerInterceptor {
         String token = request.getHeader("ACCESS_TOKEN");
         boolean flag = userTokenService.isLogin(user_id, token);
         if(!flag){
-//            request.getRequestDispatcher("/signin").forward(request, response);
             log.info("ACCESS_TOKEN不对哦");
             response.setStatus(200);
             response.setContentType("application/json");

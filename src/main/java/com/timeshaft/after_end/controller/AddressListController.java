@@ -97,8 +97,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/updateGroup")
-    public ResponseService updateGroup(@RequestBody Map<String, String> map) {
-        groupOp.updateGroup(Integer.parseInt(map.get("id")), map.get("name"), map.get("static/photo"), map.get("notice"));
+    public ResponseService updateGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.updateGroup(user_id, Integer.parseInt(map.get("id")), map.get("name"), map.get("static/photo"), map.get("notice"));
         return new ResponseService();
     }
 
@@ -115,8 +115,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/delGroup")
-    public ResponseService delGroup(@RequestParam(value = "group_id") Integer group_id) {
-        groupOp.deleteGroup(group_id);
+    public ResponseService delGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
+        groupOp.deleteGroup(user_id, Integer.parseInt(map.get("group_id")));
         return new ResponseService();
     }
 

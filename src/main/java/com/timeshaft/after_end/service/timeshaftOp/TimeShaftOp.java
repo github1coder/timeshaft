@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.service.timeshaftOp;
 
 
+import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
+    @PermissionAnnotation(level=2)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer creator_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, creator_id, title, new Date(), null, conclude, type);
         timeshaft = timeshaftService.insert(timeshaft);
@@ -79,6 +81,7 @@ public class TimeShaftOp {
         return timeshaftsRes;
     }
 
+    @PermissionAnnotation(level=2)
     public void endTimeShaft(Integer group_id, String type) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null,type));
         for (Timeshaft timeshaft : timeshafts) {

@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.service.addressList;
 
+import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.Group;
 import com.timeshaft.after_end.entity.GroupHeat;
 import com.timeshaft.after_end.entity.GroupUser;
@@ -46,21 +47,23 @@ public class GroupOp {
         groupHeatService.insert(new GroupHeat(group.getId(), 0, 0, GROUP));
     }
 
-    public void deleteGroup(int id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, null));
+    @PermissionAnnotation(level=1)
+    public void deleteGroup(int user_id, int group_id) {
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, null, null, null, null));
         for(GroupUser groupUser : groupUsers) {
             groupUserService.deleteById(groupUser.getId());
         }
-        groupService.deleteById(id);
+        groupService.deleteById(group_id);
 
-        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(id, null, null, GROUP));
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(group_id, null, null, GROUP));
         for(GroupHeat groupHeat : groupHeats) {
             groupHeatService.deleteById(groupHeat.getId());
         }
     }
 
-    public void updateGroup(int id, String name, String photo, String notice) {
-        Group group = groupService.queryById(id);
+    @PermissionAnnotation(level=2)
+    public void updateGroup(Integer user_id, int group_id, String name, String photo, String notice) {
+        Group group = groupService.queryById(group_id);
         group.setName(name);
         group.setNotice(notice);
         group.setPhoto(photo);
@@ -77,6 +80,7 @@ public class GroupOp {
         return groups;
     }
 
+    @PermissionAnnotation(level=2)
     public void joinGroup(int group_id, int join_user_id) {
         GroupUser groupUser = new GroupUser(group_id, join_user_id, null, MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
@@ -90,6 +94,7 @@ public class GroupOp {
         }
     }
 
+    @PermissionAnnotation(level=1)
     public void addManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
@@ -99,6 +104,7 @@ public class GroupOp {
         }
     }
 
+    @PermissionAnnotation(level=1)
     public void delManager(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, MANAGER, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);

@@ -56,4 +56,6 @@ public interface GroupUserService {
     List<GroupUser> queryAll(GroupUser groupUser);
 
     int count();
+
+    void hasPower(GroupUser groupUser, Integer level) throws Exception;
 }

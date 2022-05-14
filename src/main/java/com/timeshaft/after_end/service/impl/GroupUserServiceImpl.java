@@ -3,6 +3,8 @@ package com.timeshaft.after_end.service.impl;
 import com.timeshaft.after_end.entity.GroupUser;
 import com.timeshaft.after_end.mapper.GroupUserMapper;
 import com.timeshaft.after_end.service.GroupUserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,7 +17,12 @@ import java.util.List;
  * @since 2022-04-12 14:24:48
  */
 @Service("GroupUserService")
+@Slf4j
 public class GroupUserServiceImpl implements GroupUserService {
+    @Value("${groupIdentity.manager}")
+    private String MANAGER;
+    @Value("${groupIdentity.master}")
+    private String MASTER;
     @Resource
     private GroupUserMapper groupUserMapper;
 
@@ -86,4 +93,27 @@ public class GroupUserServiceImpl implements GroupUserService {
     public int count() {
         return groupUserMapper.count();
     }
+
+    @Override
+    public void hasPower(GroupUser groupUser, Integer level) throws Exception {   //1为群主，2为群主或管理员
+        boolean flag = false;
+        List<GroupUser> groupUsers = groupUserMapper.queryAll(groupUser);
+        if (groupUsers!=null && groupUsers.size()>0) {
+            if (level == 2) {
+                if (MASTER.equals(groupUsers.get(0).getIdentity()) || MANAGER.equals(groupUsers.get(0).getIdentity())) {
+                    flag = true;
+                }
+            }
+            else if (level == 1) {
+                if (MASTER.equals(groupUsers.get(0).getIdentity())) {
+                    flag = true;
+                }
+            }
+        }
+        if (!flag) {
+            throw new Exception("你没有权限哦");
+        }
+    }
+
+
 }
