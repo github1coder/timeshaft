@@ -66,15 +66,42 @@ public class ChatController {
             map.put("chatName", chatName);
             map.put("chatAvatar", chatAvatar);
             map.put("type", "private");
-            Date recent = null;
-            //拉取所有未读消息
-            List<HashMap<String, Object>> data = new ArrayList<>();
+            PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
+            PersonalMessage messageFrom = personalMessageService.queryLatestById(friendId, friendUserId);
+            //拉取最近一条消息
+            HashMap<String, Object> lastMessage = new HashMap<>();
+            PersonalMessage last = null;
+            int index = -1;
+            if (messageTo == null) {
+                if (messageFrom != null) {
+                    last = messageFrom;
+                }
+            } else {
+                if (messageFrom == null) {
+                    last = messageTo;
+                } else {
+                    if (messageFrom.getId() < messageTo.getId()) {
+                        last = messageTo;
+                    } else {
+                        last = messageFrom;
+                    }
+                }
+            }
+            String msg = null;
+            Date time = null;
+            if (last != null) {
+                msg = last.getMessage();
+                time = last.getSendtime();
+                index = last.getId();
+            }
+            lastMessage.put("msg", msg);
+            lastMessage.put("time", time);
+            /*
             PersonalMessage messageQuery = new PersonalMessage();
             messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
             messageQuery.setFriendsId(friendId);
-            List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
-            int index = -1;
+            //List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
@@ -92,38 +119,10 @@ public class ChatController {
                 recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
                 index = notReadMessages.get(0).getId();
             }
-            //若没有已读消息，index应该为双方最近的一条消息+1 (因为索引的时候是使用 < 查询)
-            if (index == -1) {
-                PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
-                PersonalMessage messageFrom = personalMessageService.queryLatestById(friendId, friendUserId);
-                if (messageTo == null) {
-                    if (messageFrom != null) {
-                        index = messageFrom.getId() + 1;
-                        recent = messageFrom.getSendtime();
-                    } else {
-                        PersonalMessage messageRecent = personalMessageService.queryLatest();
-                        if (messageRecent == null) {
-                            index = 0;
-                            recent = new Date(System.currentTimeMillis());
-                        } else {
-                            index = messageRecent.getId() + 1;
-                            recent = messageRecent.getSendtime();
-                        }
-                    }
-                } else {
-                    if (messageFrom == null) {
-                        index = messageTo.getId() + 1;
-                        recent = messageTo.getSendtime();
-                    } else {
-                        index = Math.max(messageFrom.getId(), messageTo.getId()) + 1;
-                        recent = messageFrom.getId() > messageTo.getId() ? messageFrom.getSendtime() : messageTo.getSendtime();
-                    }
-                }
-            }
+             */
             //若没聊过天，index为-1——加好友会打招呼，此种情况不会发生
-            map.put("data", data);
+            map.put("lastMessage", lastMessage);
             map.put("index", index);
-            map.put("recent", recent);
             res.add(map);
         }
         //获取群聊相关信息
@@ -134,11 +133,23 @@ public class ChatController {
             map.put("chatName", group.getName());
             map.put("chatAvatar", group.getPhoto());
             map.put("type", "group");
+            GroupMessage latest = groupMessageService.queryLatestById(group.getId());
+            int index = -1;
+            HashMap<String, Object> lastMessage = new HashMap<>();
+            String msg = null;
+            Date time = null;
+            if (latest != null) {
+                msg = latest.getMessage();
+                time = latest.getSendtime();
+                index = latest.getId();
+            }
+            lastMessage.put("msg", msg);
+            lastMessage.put("time", time);
+            /*
             //拉取所有未读消息
             Date recent = null;
             List<HashMap<String, Object>> data = new ArrayList<>();
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
-            int index = -1;
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
@@ -166,44 +177,28 @@ public class ChatController {
                 recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
                 index = notReadMessages.get(0).getId();
             }
-            //若没有已读消息，index应该为群聊最近的一条消息+1 (因为索引的时候是使用 < 查询)
-            if (index == -1) {
-                GroupMessage latest = groupMessageService.queryLatestById(group.getId());
-                if (latest == null) {
-                    recent = new Date(System.currentTimeMillis());
-                } else {
-                    index = latest.getId() + 1;
-                    recent = latest.getSendtime();
-                }
-            }
-            //若没聊过天，index为-1(其实好像不影响，因为反正没有聊过天history就是空[手动狗头])
-            map.put("data", data);
+            */
+            map.put("lastMessage", lastMessage);
             map.put("index", index);
-            map.put("recent", recent);
             res.add(map);
         }
         return new ResponseService(res);
     }
 
-    @RequestMapping(value = "/getSubscribeUrlList")
-    public ResponseService getSubscribeUrlList(@RequestBody Map<String, Object> requestMap) {
-        int sourceId = (Integer) requestMap.get("srcId");
-        List<HashMap<String, Object>> data = new ArrayList<>();
-        HashMap<String, Object> mapChat = new HashMap<>();
-        HashMap<String, Object> mapContact = new HashMap<>();
-        HashMap<String, Object> mapGroup = new HashMap<>();
-        String chatUrl = "/user/" + sourceId;
-        String contactUrl = "/user/contact/" + sourceId;
-        String groupUrl = "/group/" + sourceId;
-        mapChat.put("type", 0);
-        mapChat.put("url", chatUrl);
-        mapContact.put("type", 1);
-        mapContact.put("url", contactUrl);
-        mapGroup.put("type", 2);
-        mapGroup.put("url", groupUrl);
-        data.add(mapChat);
-        data.add(mapContact);
-        data.add(mapGroup);
+    @RequestMapping(value = "/chatUrl")
+    public ResponseService getChatUrl(@RequestParam("userId") Integer userId) {
+        String chatUrl = "/user/" + userId;
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("url", chatUrl);
+        return new ResponseService(data);
+    }
+
+    @RequestMapping(value = "/contactUrl")
+    public ResponseService getContactUrl(@RequestParam("userId") Integer userId) {
+        HashMap<String, Object> data = new HashMap<>();
+        String contactUrl = "/user/contact/" + userId;
+        data.put("url", contactUrl);
+        data.put("type", "private");
         return new ResponseService(data);
     }
 
