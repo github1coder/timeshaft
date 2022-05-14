@@ -96,12 +96,14 @@ public class ChatController {
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
-            /*
             PersonalMessage messageQuery = new PersonalMessage();
             messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
             messageQuery.setFriendsId(friendId);
-            //List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+            List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
+            int number = notReadMessages.size();
+            map.put("number", number);
+            /*
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
@@ -145,11 +147,13 @@ public class ChatController {
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
+            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
+            int number = notReadMessages.size();
+            map.put("number", number);
             /*
             //拉取所有未读消息
             Date recent = null;
             List<HashMap<String, Object>> data = new ArrayList<>();
-            List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
             if (notReadMessages != null && !notReadMessages.isEmpty()) {
                 index = notReadMessages.get(0).getId();
             }
