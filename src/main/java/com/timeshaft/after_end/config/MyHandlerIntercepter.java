@@ -30,8 +30,7 @@ public class MyHandlerIntercepter implements HandlerInterceptor {
 
         Integer user_id = Integer.parseInt(request.getHeader("user_id"));
         String token = request.getHeader("ACCESS_TOKEN");
-        List<UserToken> tokens = userTokenService.queryAll(new UserToken(user_id, token));
-        boolean flag = tokens.size() > 0;
+        boolean flag = userTokenService.isLogin(user_id, token);
         if(!flag){
 //            request.getRequestDispatcher("/signin").forward(request, response);
             log.info("ACCESS_TOKEN不对哦");

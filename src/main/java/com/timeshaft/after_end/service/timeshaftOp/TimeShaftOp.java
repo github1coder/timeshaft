@@ -60,7 +60,7 @@ public class TimeShaftOp {
                 timeshaftRes.put("title", timeshaft.getName());
                 timeshaftRes.put("img", user.getPhoto());
                 timeshaftRes.put("begin_date", timeshaft.getBeginTime());
-                timeshaftRes.put("end_date", timeshaft.getEndTime());
+                timeshaftRes.put("last_time", (timeshaft.getEndTime().getTime()-timeshaft.getBeginTime().getTime())/1000/60);
                 timeshaftRes.put("conclude", timeshaft.getConclude());
                 timeshaftRes.put("host", user.getUsername());
 

@@ -53,6 +53,7 @@ public interface UserTokenService {
      */
     boolean deleteById(Integer id);
 
-    List<UserToken> queryAll(UserToken userToken);
+    boolean isLogin(Integer user_id, String token);
 
+    List<UserToken> queryAll(UserToken userToken);
 }
