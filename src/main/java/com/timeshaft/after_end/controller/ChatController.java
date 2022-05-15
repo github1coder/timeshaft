@@ -93,7 +93,7 @@ public class ChatController {
             if (last != null) {
                 msg = last.getMessage();
                 time = last.getSendtime();
-                index = last.getId();
+                index = last.getId() + 1;
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
@@ -144,7 +144,7 @@ public class ChatController {
             if (latest != null) {
                 msg = latest.getMessage();
                 time = latest.getSendtime();
-                index = latest.getId();
+                index = latest.getId() + 1;
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
