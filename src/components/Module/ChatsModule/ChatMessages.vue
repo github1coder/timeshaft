@@ -65,13 +65,16 @@ export default {
     },
     socketSend(payload) {
       // TODO 改成传参
-      console.log(this.$store.state.stompClient)
-      this.messages.push(payload)
-      this.$store.state.stompClient.send(payload.url, {}, JSON.stringify(payload.data));
+      console.log(this.$store.state.chatClient)
+      console.log(payload)
+      this.messages.push(payload.data)
+      this.$store.state.chatClient.send(payload.url, {}, JSON.stringify(payload.data));
       console.log("send + " + JSON.stringify(payload.data) + " to " + payload.url)
     },
     socketInit() {
       console.log("初始化聊天列表socket")
+      this.chatClient = this.$store.state.chatClient
+      this.chatSocket = this.$store.state.chatSocket
       if (this.chatClient == null || !this.chatClient.connected) {
         this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
         if (this.chatClient != null && this.chatSocket.readyState === SockJS.OPEN) {
@@ -103,6 +106,8 @@ export default {
       } else {
         console.log("连接已建立成功，不再执行")
       }
+      this.$store.state.chatSocket = this.chatSocket
+      this.$store.state.chatClient = this.chatClient
     },
 
     socketConnect() {
@@ -119,13 +124,14 @@ export default {
             chatUrl({
               userId: this.$store.state.userId
             }).then(res => {
-              this.chatClient.subscribe(res.data.url, payload => {
+              this.chatClient.subscribe(res.url, payload => {
                 let json = JSON.parse(payload.body)
                 console.log("收到的json:")
                 console.log(json)
                 if (res.data.type === 0) {
                   console.log("即时通讯服务收到消息")
                   //TODO 具体逻辑
+                  this.$emit("receive")
                   this.messages.push(json)
                   console.log(json)
                 } else {
@@ -143,6 +149,34 @@ export default {
       );
       this.$store.state.contactSocket = this.contactSocket
       this.$store.state.contactClient = this.contactClient
+    },
+    clearMessages() {
+      this.messages = []
+    },
+    init() {
+      this.clearMessages()
+      this.socketInit()
+      setTimeout(() => {
+        getHistoryMessage({
+          userId: this.$store.state.userId,
+          type: this.$store.state.currentChatType,
+          chatId: this.$store.state.currentChannelId,
+          index: this.$store.state.currentChatIndex,
+        }).then(res => {
+          console.log("拉取 " + res.data.length + " 条历史消息")
+          console.log(res)
+          this.$store.state.currentChatMore = res.more
+          if (this.$store.state.currentChannelIdx !== -1) {
+            this.$store.state.currentChatIndex = res.index
+            console.log(this.messages)
+            for (let i = res.data.length-1; i >= 0; i--) {
+              this.messages.unshift(res.data[i])
+            }
+            this.$store.state.currentChatHaveRead += res.data.length
+            console.log(this.messages)
+          }
+        })
+      }, 100)
     }
   },
   computed: {
@@ -152,11 +186,11 @@ export default {
     refreshed(newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
-        console.log("more: " + this.$store.state.more)
+        console.log("more: " + this.$store.state.currentChatMore)
         if (this.$store.state.currentChatMore) {
           getHistoryMessage({
             userId: this.$store.state.userId,
-            type: this.$store.state.type,
+            type: this.$store.state.currentChatType,
             chatId: this.$store.state.currentChannelId,
             index: this.$store.state.currentChatIndex,
           }).then(res => {
@@ -176,37 +210,16 @@ export default {
         }
       }
     },
-
     messages(newVal, oldVal) {
       newVal
       oldVal
       this.scrollToBottom()
-    }
+    },
+
   },
 
   created() {
-    this.socketInit()
-    setTimeout(() => {
-      getHistoryMessage({
-        userId: this.$store.state.userId,
-        type: this.$store.state.currentChatType,
-        chatId: this.$store.state.currentChannelId,
-        index: this.$store.state.currentChatIndex,
-      }).then(res => {
-        console.log("拉取 " + res.data.length + " 条历史消息")
-        console.log(res)
-        this.$store.state.currentChatMore = res.more
-        if (this.$store.state.currentChannelIdx !== -1) {
-          this.$store.state.currentChatIndex = res.index
-          console.log(this.$store.state.messages)
-          for (let i = res.data.length-1; i >= 0; i--) {
-            this.$store.state.messages.unshift(res.data[i])
-          }
-          this.$store.state.currentChatHaveRead += res.data.length
-          console.log(this.$store.state.messages)
-        }
-      })
-    }, 1000)
+    this.init()
   }
 
 }

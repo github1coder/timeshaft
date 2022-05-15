@@ -34,7 +34,6 @@ export default new Vuex.Store({
         currentChatType: null,
         currentChatIndex: null,
         currentChatMore: null,
-        currentChatHaveRead: null,
         currentChatName: null,
     },
     getters: {
@@ -102,6 +101,8 @@ export default new Vuex.Store({
             store.currentChannelId = data.id;
             store.currentChannelIdx = data.idx;
             store.more = true
+            store.currentChatType = data.type;
+            store.currentChatIndex = data.index;
                 // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {

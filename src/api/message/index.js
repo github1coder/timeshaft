@@ -19,8 +19,8 @@ export function haveRead(param) {
 export function getHistoryMessage(param) {
     return request({
         url: '/message/getHistoryMessage',
-        method: 'post',
-        data: param
+        method: 'get',
+        params: param
     })
 }
 
@@ -28,7 +28,7 @@ export function chatUrl(param) {
     return request({
         url: '/message/chatUrl',
         method: 'get',
-        data: param
+        params: param
     })
 }
 
@@ -36,6 +36,6 @@ export function contactUrl(param) {
     return request({
         url: '/message/contactUrl',
         method: 'get',
-        data: param
+        params: param
     })
 }
