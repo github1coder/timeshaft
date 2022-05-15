@@ -103,7 +103,7 @@
     <div class="chat">
       <ChatHeader></ChatHeader>
       <div class="chat-screen" v-if="$store.state.currentChannelIdx !== -1">
-        <ChatMessages @receive="receiveMessage" ref="chatMessage" :draw="toolsDrawer"></ChatMessages>
+        <ChatMessages @send="sendMessage" @receive="receiveMessage" ref="chatMessage" :draw="toolsDrawer"></ChatMessages>
         <div
           class="moveBand"
           v-if="toolsDrawer"
@@ -160,6 +160,30 @@ export default {
     }
   },
   methods: {
+    sendMessage(payload) {
+      payload.type = this.$store.state.currentChatType
+      console.log(this.messages)
+      console.log(payload)
+      const idx = this.messages.findIndex(message => {
+        return message.id === payload.chatId && message.type === payload.type
+      })
+      console.log("idx: " + idx)
+      if (idx !== -1) {
+        console.log("in")
+        this.messages[idx].lastMessage = {
+          msg: payload.msg,
+          time: payload.time
+        }
+        if (this.$refs.chatMessage !== undefined) {
+          console.log(this.$refs.chatMessage)
+          this.$refs.chatMessage.messages.push(payload)
+        }
+
+      } else {
+        console.log("没有对应的聊天框" + payload.id + " " + payload.type)
+      }
+    }
+    ,
     receiveMessage(payload) {
       console.log(this.messages)
       const idx = this.messages.findIndex(message => {

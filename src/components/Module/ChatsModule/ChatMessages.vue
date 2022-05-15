@@ -66,6 +66,7 @@ export default {
       this.messages.push(payload.data)
       this.$store.state.chatClient.send(payload.url, {}, JSON.stringify(payload.data));
       console.log("send + " + JSON.stringify(payload.data) + " to " + payload.url)
+      this.$emit("send", payload.data)
     },
 
     clearMessages() {
