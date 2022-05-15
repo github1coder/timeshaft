@@ -3,7 +3,10 @@
     <Navigations></Navigations>
     <div class="base">
       <ChatsModule v-if="$store.state.siderState === 0"></ChatsModule>
-      <ContractsModule v-else-if="$store.state.siderState === 1"></ContractsModule>
+      <ContractsModule
+        v-else-if="$store.state.siderState === 1"
+        ref="contractsModule"
+      ></ContractsModule>
       <Empty v-else-if="$store.state.siderState === 2"></Empty>
       <CalendarModule v-else-if="$store.state.siderState === 3"></CalendarModule>
 
@@ -31,7 +34,7 @@ export default {
     ContractsModule,
     Empty,
   },
-  created() {
+  created () {
     window.onbeforeunload = () => {
       console.log(this.$store.state)
       this.$store.commit("WEBSOCKET_DISCONNECT")

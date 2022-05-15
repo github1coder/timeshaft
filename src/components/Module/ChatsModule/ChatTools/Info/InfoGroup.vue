@@ -262,7 +262,7 @@ export default {
       num: 10,
       pageF: 1,
       allPageF: 1,
-      friendsIndex: null,
+      friendsIndex: -1,
       friends: [],
       friendsBtns: [{
         title: '修改群昵称',
@@ -358,7 +358,7 @@ export default {
       this.iShow = !this.iShow
     },
     showTextField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].show = false;
           this.friends[this.friendsIndex].quit = false;
@@ -375,7 +375,7 @@ export default {
     },
 
     showQuitField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].quit = false;
           this.friends[this.friendsIndex].show = false;
