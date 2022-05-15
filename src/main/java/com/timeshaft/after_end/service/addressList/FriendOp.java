@@ -266,6 +266,7 @@ public class FriendOp {
             personalMessageService.insert(helloMessage);
             HashMap<String, Object> res = new HashMap<>();
             res.put("id", friendsRelation.getId());
+            res.put("type", "private");
             String senderNickName = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();
             String accNickName = Objects.equals(friendsRelation.getUserId1(), acceptor.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();
             res.put("chatName", senderNickName);
