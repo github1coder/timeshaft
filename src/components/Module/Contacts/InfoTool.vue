@@ -31,6 +31,11 @@ export default {
 
   data () {
     return {
+      infoId: -1,
+      infoPhoto: null,
+      infoEmail: null,
+      infoName: null,
+      infoNick: null,
     }
   },
   methods: {

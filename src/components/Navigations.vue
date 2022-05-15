@@ -116,7 +116,6 @@ export default {
   methods: {
     disconnect () {
       logout({
-        "user_id": this.$store.state.userId,
       }).then(res => {
         console.log(res)
         this.$store.commit("setMyIcon", "guest.png")

@@ -2,24 +2,30 @@
  * ajax请求配置
  */
 import axios from 'axios'
+import store from '../store/index'
 // import { Message } from 'element-ui'
 
 const DEBUG = false;
+// axios.defaults.withCredentials = true;
 
 const service = axios.create({
     baseURL: DEBUG ? 'http://localhost:8080' : 'http://182.92.163.68:8080',
     timeout: 20000,
 })
 
-//service.defaults.withCredentials = true  是否携带cookie
+// service.defaults.withCredentials = true //是否携带cookie
 
 service.interceptors.request.use(
     config => {
-        //config.headers["ACCESS_TOKEN"] = this.$store.getters.accessToken
+        if (store.state.userId != -1) {
+            config.headers['user_id'] = store.state.userId
+            config.headers['ACCESS_TOKEN'] = store.state.accessToken
+        }
         config.headers["Content-Type"] = 'application/json'
         return config
     },
     error => {
+        console.log(error)
         return Promise.reject(error)
     }
 )
@@ -32,7 +38,7 @@ service.interceptors.response.use(
         if (response.data.code === 0) {
             return response.data.data
         } else {
-            return response.data.msg
+            return { "error": response.data.msg }
         }
 
 

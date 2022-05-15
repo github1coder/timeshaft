@@ -79,8 +79,8 @@ export function quitGroup(param) {
 export function delGroup(param) {
     return request({
         url: '/addresslist/delGroup',
-        method: 'get',
-        params: param
+        method: 'post',
+        data: param
     })
 }
 

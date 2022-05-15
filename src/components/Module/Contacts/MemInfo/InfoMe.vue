@@ -181,7 +181,7 @@ export default {
         ],
         inputCheckCode: [
           (inputCheckCode) => !!inputCheckCode || "验证码不能为空",
-          (inputCheckCode) => (inputCheckCode && this.inputCheckCode === this.checkCode) || "验证码错误",
+          // (inputCheckCode) => (inputCheckCode && this.inputCheckCode === this.checkCode) || "验证码错误",
         ]
       }
     };
@@ -215,14 +215,13 @@ export default {
     },
 
     newCheckCode () {
-      const param = {
+      getCheckCode({
         'email': this.$store.getters.email
-      }
-      console.say(param)
-      getCheckCode(param).then(res => {
-        this.checkCode = res.checkCode
-        // console.log(this.checkCode)
       })
+      // .then(res => {
+      // this.checkCode = res.checkCode
+      // console.log(this.checkCode)
+      // })
       if (!this.timer) {
         this.count = 60
         this.loadingCheckCode = true
@@ -246,9 +245,9 @@ export default {
         return
       }
       changePwd({
-        'user_id': this.$store.getters.userId,
         'oldPassword': this.password,
         'newPassword': this.passwordN,
+        'checkCode': this.inputCheckCode,
       }).then(res => {
         this.password = ""
         this.passwordN = ""
