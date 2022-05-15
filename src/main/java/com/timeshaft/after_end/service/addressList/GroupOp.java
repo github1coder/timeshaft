@@ -96,8 +96,8 @@ public class GroupOp {
     }
 
     @PermissionAnnotation(level=1)
-    public void addManager(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
+    public void addManager(int id, int group_id, int user_id) {
+        GroupUser groupUser = new GroupUser(group_id, id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             tmp.setIdentity(MANAGER);
@@ -106,8 +106,8 @@ public class GroupOp {
     }
 
     @PermissionAnnotation(level=1)
-    public void delManager(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, MANAGER, null);
+    public void delManager(int id, int group_id, int user_id) {
+        GroupUser groupUser = new GroupUser(group_id, id, null, MANAGER, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity(MEMBER);

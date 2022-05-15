@@ -122,13 +122,13 @@ public class AddressListController {
 
     @RequestMapping(value = "/delGroupManager")
     public ResponseService delGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
-        groupOp.delManager(Integer.parseInt(map.get("group_id")), user_id);
+        groupOp.delManager(Integer.parseInt(map.get("id")), Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/addGroupManager")
     public ResponseService addGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
-        groupOp.addManager(Integer.parseInt(map.get("group_id")), user_id);
+        groupOp.addManager(Integer.parseInt(map.get("id")), Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
