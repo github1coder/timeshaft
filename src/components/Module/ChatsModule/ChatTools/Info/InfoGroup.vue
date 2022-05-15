@@ -315,7 +315,6 @@ export default {
       if (this.$store.getters.infoId != -1) {
         getGroupMember({
           "id": this.$store.getters.infoId,
-          "ACCESS_TOKEN": null
         }).then(res => {
           this.friends = res
           this.friends.forEach(function (item) {
@@ -404,8 +403,6 @@ export default {
       changeGroupNickname({
         "nickname": this.name,
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
         this.friends[index].name = this.name
@@ -416,19 +413,15 @@ export default {
     addSubMaster (index) {
       addGroupManager({
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
       })
     },
 
-    subSubMaster (index) {
+    subSubMaster () {
       delGroupManager({
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
       })
@@ -440,8 +433,6 @@ export default {
 
     subGroup () {
       delGroup({
-        "user_id": this.$store.getters.infoId,
-        "ACCESS_TOKEN": null,
         "group_id": this.$store.getters.infoId
       }).then(res => {
         console.log(res)

@@ -6,13 +6,14 @@ import store from '../store/index'
 // import { Message } from 'element-ui'
 
 const DEBUG = false;
+// axios.defaults.withCredentials = true;
 
 const service = axios.create({
     baseURL: DEBUG ? 'http://localhost:8080' : 'http://182.92.163.68:8080',
     timeout: 20000,
 })
 
-//service.defaults.withCredentials = true  是否携带cookie
+// service.defaults.withCredentials = true //是否携带cookie
 
 service.interceptors.request.use(
     config => {
@@ -24,6 +25,7 @@ service.interceptors.request.use(
         return config
     },
     error => {
+        console.log(error)
         return Promise.reject(error)
     }
 )
@@ -36,7 +38,7 @@ service.interceptors.response.use(
         if (response.data.code === 0) {
             return response.data.data
         } else {
-            return response.data.msg
+            return { "error": response.data.msg }
         }
 
 

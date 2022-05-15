@@ -119,7 +119,7 @@
             text
             @click="snackbar = false; overTimeShaft()"
           >
-            Close
+            结束
           </v-btn>
         </v-snackbar>
       </div>
@@ -219,9 +219,7 @@
 </template>
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
-import { addTimeLine } from "../../../../api/timeShaft";
-import { getTimeLine } from "../../../../api/timeShaft";
-import { endTimeShaft } from "../../../../api/timeShaft";
+import { beginTimeShaftSingle, getTimeLine, endTimeShaft } from "../../../../api/timeShaft";
 
 export default {
   name: "TimeShaft",
@@ -275,34 +273,31 @@ export default {
       })
     },
     overTimeShaft () {
-      let para = {
+      endTimeShaft({
         timeshaft_id: this.timeshaft_id
-      }
-      endTimeShaft(para)
+      })
       this.timeshaft_id = -1
-      this.$router.go(0)
+      // this.$router.go(0)
     },
     setTimeline () {
       if (this.title === '' || this.lable === '' || this.time === '') {
         alert("请先补充完信息哦~");
       }
       else {
-        let para = {
+        const that = this
+        beginTimeShaftSingle({
           group_id: this.$store.state.currentChannelId,
           creator_id: this.$store.state.userId,
           title: this.title,
-          tag: [this.lable],
+          tags: [this.lable],
           conclude: this.description,
           type: 'friend'
-        }
-        console.log(para)
-        addTimeLine(para).then(res => {
-          this.timeshaft_id = res.timeshaft_id
+        }).then(res => {
+          that.timeshaft_id = res.timeshaft_id
+          that.dialog = false
+          that.snackbar = true
         })
-        this.dialog = false
-        this.snackbar = true
       }
-
     },
     dataDestroy () {
       if (this.timer) {

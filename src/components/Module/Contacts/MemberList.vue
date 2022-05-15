@@ -458,8 +458,6 @@ export default {
       if (this.name && this.name != "") {
         this.friends[j].friend_nick = this.name;
         changeNickname({
-          "user_id": this.$store.getters.userId,
-          "ACCESS_TOKEN": null,
           "friend_id": parseInt(this.friends[j].friend_id),
           "friend_nickname": this.name
         });
@@ -472,8 +470,6 @@ export default {
       if (this.name && this.name != "") {
         this.groups[j].group_name = this.name;
         changeGroupNickname({
-          "user_id": this.$store.getters.userId,
-          "ACCESS_TOKEN": null,
           "group_id": parseInt(this.groups[j].group_id),
           "group_nickname": this.name
         });
@@ -484,8 +480,6 @@ export default {
 
     killFriend (j) {
       delFriend({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null,
         "friend_id": parseInt(this.friends[j].friend_id)
       });
       this.friends.splice(j, 1);
@@ -494,8 +488,6 @@ export default {
 
     killGroup (j) {
       quitGroup({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null,
         "group_id": parseInt(this.groups[j].group_id)
       });
       this.groups.splice(j, 1);
@@ -539,8 +531,6 @@ export default {
     //解散、创建群聊后调用
     getG () {
       getGroups({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null
       }).then(res => {
         // this.$store.commit("channels", res)
         this.groups = res
@@ -564,8 +554,6 @@ export default {
     if (this.$store.getters.userId != -1) {
       console.log(this.$store.getters.userId)
       getGroups({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null
       }).then(res => {
         // this.$store.commit("channels", res)
         this.groups = res
@@ -594,8 +582,6 @@ export default {
       });
 
       getFriends({
-        "user_id": this.$store.getters.userId,
-        "ACCESS_TOKEN": null
       }).then(res => {
         // this.$store.commit("channels", res)
         this.friends = res

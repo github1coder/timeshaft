@@ -52,7 +52,7 @@
           <v-btn
             color="blue"
             class="mx-2"
-            v-show="iShow"
+            v-show="iShow && this.$store.getters.infoName == this.$store.getters.infoId"
             @click="iShowFalse"
           >
             修改群公告
@@ -339,7 +339,6 @@ export default {
         const that = this
         getGroupMember({
           "id": this.$store.getters.infoId,
-          "ACCESS_TOKEN": null
         }).then(res => {
           this.friends = res
           this.friends.forEach(function (item) {
@@ -429,19 +428,19 @@ export default {
     },
 
     isSelf (index) {
-      return this.$store.getters.userId == this.friends[index].id
+      return this.friends[index].id == this.friends[index].id
     },
 
     isManager (index) {
       return this.friends[index].type == "manager"
     },
 
+    //以下三个方法，由于只有isself成立的时候才会调用，因此this.friends[index].id=this.friends[index].id
+
     changeName (index) {
       changeGroupNickname({
         "nickname": this.name,
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
         this.friends[index].name = this.name
@@ -453,8 +452,6 @@ export default {
       const that = this
       addGroupManager({
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
@@ -469,8 +466,6 @@ export default {
       const that = this
       delGroupManager({
         "group_id": this.$store.getters.infoId,
-        "user_id": this.friends[index].id,
-        "ACCESS_TOKEN": null,
       }).then(res => {
         console.log(res)
         if (res == null) {
@@ -486,8 +481,6 @@ export default {
 
     subGroup () {
       delGroup({
-        "user_id": this.$store.getters.infoId,
-        "ACCESS_TOKEN": null,
         "group_id": this.$store.getters.infoId
       }).then(res => {
         console.log(res)

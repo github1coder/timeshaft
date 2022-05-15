@@ -55,9 +55,7 @@ export default {
   mounted () {
     getInfoMsg({
       "info_id": this.$store.state.currentChannelId,
-      "type": "friend",
-      "ACCESS_TOKEN": this.$store.getters.accessToken,
-      "user_id": this.$store.getters.userId
+      "type": "friend"
     }).then(res => {
       console.log("获取好友信息成功:" + this.$store.state.currentChannelId)
       this.res = res

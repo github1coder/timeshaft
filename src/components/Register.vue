@@ -147,7 +147,7 @@ export default {
         ],
         inputCheckCode: [
           (inputCheckCode) => !!inputCheckCode || "验证码不能为空",
-          (inputCheckCode) => (inputCheckCode && this.inputCheckCode === this.checkCode) || "验证码错误",
+          // (inputCheckCode) => (inputCheckCode && this.inputCheckCode === this.checkCode) || "验证码错误",
         ]
       }
     };
@@ -170,7 +170,8 @@ export default {
       const param = {
         'username': this.username,
         'password': this.password,
-        'email': this.email
+        'email': this.email,
+        'checkCode': this.inputCheckCode
       }
       if (this.valid) {
         //
@@ -213,14 +214,13 @@ export default {
         if (!(this.email && (/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(this.email))) {
           this.$message({ showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error' })
         } else {
-          const param = {
+          getCheckCode({
             'email': this.email
-          }
-          console.say(param)
-          getCheckCode(param).then(res => {
-            this.checkCode = res.checkCode
-            // console.log(this.checkCode)
           })
+          // .then(res => {
+          // this.checkCode = res.checkCode
+          // console.log(this.checkCode)
+          // })
         }
         // console.log(this.checkCode)
         // 验证码倒计时, 60s后重新发送，并且验证码为空

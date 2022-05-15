@@ -206,9 +206,7 @@ export default {
 
   mounted () {
     getApplyList({
-      "user_id": this.$store.getters.userId,
       "type": "friend",
-      "ACCESS_TOKEN": null,
     }).then(res => {
       this.friendAns = res
       this.allPageF = Math.ceil(this.friendAns.length / this.num)
@@ -223,9 +221,7 @@ export default {
       }
     })
     getApplyList({
-      "user_id": this.$store.getters.userId,
       "type": "group",
-      "ACCESS_TOKEN": null,
     }).then(res => {
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
@@ -272,11 +268,9 @@ export default {
 
     acF (index) {
       apply({
-        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "accept",
         "id": this.friendAns[index].id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
@@ -287,11 +281,9 @@ export default {
 
     reF (index) {
       apply({
-        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "refuse",
         "id": this.friendAns[index].id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
@@ -301,11 +293,9 @@ export default {
 
     acG (index) {
       apply({
-        "user_id": this.groupAns[index].id,
         "type": "group",
         "action": "accept",
         "id": this.groupAns[index].group_id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
@@ -315,11 +305,9 @@ export default {
 
     reG (index) {
       apply({
-        "user_id": this.groupAns[index].id,
         "type": "group",
         "action": "refuse",
         "id": this.groupAns[index].group_id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)

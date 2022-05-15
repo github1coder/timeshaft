@@ -257,10 +257,8 @@ export default {
       }
       search(
         {
-          "user_id": this.$store.getters.userId,
           "name": this.textF,
           "type": "friend",
-          "ACCESS_TOKEN": null,
         }
       ).then(res => {
         this.friendAns = res
@@ -285,10 +283,8 @@ export default {
       }
       search(
         {
-          "user_id": this.$store.getters.userId,
           "name": this.textG,
           "type": "group",
-          "ACCESS_TOKEN": null,
         }
       ).then(res => {
         this.groupAns = res
@@ -310,11 +306,9 @@ export default {
 
     newApplyF (index) {
       apply({
-        "user_id": this.$store.getters.userId,
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
@@ -323,11 +317,9 @@ export default {
     },
     newApplyG (index) {
       apply({
-        "user_id": this.$store.getters.userId,
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
-        "ACCESS_TOKEN": null,
       }
       ).then(res => {
         console.log(res)
