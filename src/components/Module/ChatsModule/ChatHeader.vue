@@ -5,13 +5,12 @@
   >
     <div
         class="ch"
-        v-if="$store.state.listenerList.length > 0 && $store.state.currentChannelId !== -1"
+        v-if="$store.state.currentChannelId !== -1"
     >
       <div
           class="ch"
-          v-if="$store.state.messageList.length > 0"
       >
-        {{ $store.state.messageList[getCh()].chatName }}
+        {{ $store.state.currentChatName }}
       </div>
       <div class="head-tools">
         <div class="tool-icons-container">
@@ -48,7 +47,6 @@
             <v-btn icon>
               <v-icon
                   color="white"
-                  @click="drawer = !drawer"
               >mdi-account-group</v-icon>
             </v-btn>
           </div>

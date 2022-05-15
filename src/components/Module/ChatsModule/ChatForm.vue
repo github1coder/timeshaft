@@ -64,18 +64,15 @@ export default {
         msg: message,
         time: this.getDate(),
         userId: this.$store.state.userId,
-        chatId: this.$store.state.messageList[this.$store.state.currentChannelIdx].id,
+        chatId: this.$store.state.currentChannelId,
       }
-      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
-      this.$store.state.messageList[this.$store.state.currentChannelIdx].data.push(msgForm)
-      console.log(this.$store.state.messageList[this.$store.state.currentChannelIdx].data)
       this.clearMsg()
-      const url = this.$store.state.messageList[this.$store.state.currentChannelIdx].type === 'private' ? this.chatUrlPrivate : this.chatUrlGroup;
-      this.$store.commit("WEBSOCKET_SEND", {
+      const url = this.$store.state.currentChatType === 'private' ? this.chatUrlPrivate : this.chatUrlGroup;
+      this.$emit("send", {
         url: url,
         data: msgForm,
       })
-      this.$store.state.messageList[this.$store.state.currentChannelIdx].haveRead += 1
+      this.$store.state.currentChatHaveRead += 1
     },
     getDate() {
       const date = new Date();//当前时间

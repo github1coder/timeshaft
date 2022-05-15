@@ -58,7 +58,7 @@
           >
             <v-list-item-group color="primary">
               <v-list-item
-                v-for="(item, i) in this.chats"
+                v-for="(item, i) in this.messages"
                 @click="selectChannel(item.id, i, item)"
                 :id="'message-'+item.id.toString()"
                 :key="i"
@@ -92,9 +92,7 @@
                 >
                   {{item.data[item.data.length-1].time}}
                 </v-list-item-content>
-                <!--                <v-list-item-content>-->
-                <!--                  1-->
-                <!--                </v-list-item-content>-->
+
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -105,7 +103,9 @@
 </template>
 
 <script>
-import { getHistoryMessage, haveRead } from "@/api/message";
+import {chatUrl, getMessagesList, haveRead} from "@/api/message";
+import Stomp from "stompjs";
+import SockJS from 'sockjs-client'
 
 export default {
   name: "MessageList",
@@ -114,6 +114,11 @@ export default {
       text: '',
       showSelect: true,
       searchResult: [],
+      messageList: [],
+      chatClient: null,
+      chatSocket: null,
+      socketUrl: null,
+      checkInterval: null,
     }
   },
   methods: {
@@ -122,47 +127,9 @@ export default {
       this.$refs.search.blur()
       // this.$router.push()
     },
-    inputHandle (text) {
-      if (text.trim() !== '') {
-        this.showSelect = true
-        setTimeout(() => {
-          this.getEntity()
-        }, 300)
-      }
-    },
-    getEntity () {
-      // 请求接口更新 items 数据
-      this.searchResult = [
-        {
-          key: '1234',
-          name: '1234'
-        },
-        {
-          key: 'abc',
-          name: 'abc'
-        },
-        {
-          key: 'def',
-          name: 'def'
-        },
-        {
-          key: 'ccc',
-          name: 'ccc'
-        },
-        {
-          key: 'ccc',
-          name: 'ccc'
-        },
-        {
-          key: 'ccc',
-          name: 'ccc'
-        }
-      ]
-    },
     search () {
       this.$refs.search.blur()
       console.log(this.text)
-      // this.$router.push()
     },
     toggleAC () {
       this.$store.commit("toggleAC");
@@ -172,14 +139,14 @@ export default {
       this.$parent.toolsDrawer = false
       console.log(id)
       console.log(item)
-      this.$store.commit("changeChannel", { id: id, idx: idx });
+      this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type });
       if (item.data.length !== 0) {
-        item.haveRead = item.data.length - 1
+        item.haveRead = this.$parent[0].$children[2].messages.length-1
         haveRead({
-          type: this.$store.state.messageList[this.$store.state.currentChannelIdx].type,
-          chatId: this.$store.state.currentChannelId,
+          type: item.type,
+          chatId: item.id,
           userId: this.$store.state.userId,
-          time: item.data[item.data.length - 1].time,
+          time: item.time,
         }).then(res => {
           res
           console.log("have read this msg")
@@ -187,43 +154,114 @@ export default {
       }
     },
 
-    pull () {
-      console.log("pull from server " + this.$store.state.messageList.length + " " + this.chats.length)
-      for (let i in this.$store.state.messageList) {
-        if (this.$store.state.messageList[i].data.length < 10) {
-          getHistoryMessage({
-            userId: this.$store.state.userId,
-            type: this.$store.state.messageList[i].type,
-            chatId: this.$store.state.messageList[i].id,
-            index: this.$store.state.messageList[i].index,
-          }).then(res => {
-            console.log("get history message of " + i.toString())
-            this.$store.state.more = res.more
-            this.$store.state.messageList[i].index = res.index
-            console.log(this.$store.state.messageList[i].data)
-            for (let j = res.data.length - 1; j >= 0; j--) {
-              this.$store.state.messageList[i].data.unshift(res.data[j])
-            }
-            this.$store.state.messageList[i].haveRead += res.data.length
-            console.log(this.$store.state.messageList[i].data)
+    socketInit() {
+      console.log("初始化聊天列表socket")
+      if (this.chatClient == null || !this.chatClient.connected) {
+        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
+        if (this.chatClient != null && this.chatSocket.readyState === SockJS.OPEN) {
+          this.chatClient.disconnect(() => {
+            this.socketConnect()
           })
+        } else if (this.chatClient != null && this.chatSocket.readyState === SockJS.CONNECTING) {
+          console.log("连接正在建立")
+          return;
+        } else {
+          console.log("第一次建立")
+          this.socketConnect()
         }
+        if (!this.checkInterval) {
+          this.checkInterval = setInterval(() => {
+            console.log("检测连接：" + this.chatSocket.readyState)
+            if (this.chatClient != null &&this.chatClient.connected) {
+              clearInterval(this.checkInterval)
+              this.checkInterval = null
+              console.log('重连成功')
+            } else if (this.chatClient != null && this.chatSocket.readyState !== SockJS.CONNECTING) {
+              //经常会遇到websocket的状态为open 但是stompClient的状态却是未连接状态，故此处需要把连接断掉 然后重连
+              this.chatClient.disconnect(() => {
+                this.socketConnect()
+              })
+            }
+          }, 2000)
+        }
+      } else {
+        console.log("连接已建立成功，不再执行")
       }
     },
+
+    socketConnect() {
+      this.chatSocket = new SockJS(this.socketUrl)
+      this.chatClient = Stomp.over(this.chatSocket);
+      this.chatClient.debug = null //关闭控制台打印
+      this.chatClient.heartbeat.outgoing = 20000;
+      this.chatClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
+      // 向服务器发起websocket连接
+      this.chatClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
+          frame => { // eslint-disable-line no-unused-vars
+            console.log('链接成功！')
+            console.log(this.chatClient)
+            // TODO url合并？
+            chatUrl({
+              userId: this.$store.state.userId
+            }).then(res => {
+              this.chatClient.subscribe(res.data.url, payload => {
+                let json = JSON.parse(payload.body)
+                console.log("收到的json:")
+                console.log(json)
+                if (res.data.type === 1) {
+                  console.log("添加好友服务收到消息")
+                  //TODO 具体逻辑
+                  this.messages.push(json)
+                  console.log(json)
+                } else if(res.data.type === 2) {
+                  console.log("添加群聊服务收到消息")
+                  //TODO 具体逻辑
+                  this.messages.push(json)
+                  console.log(json)
+                } else {
+                  console.log("不合法的消息类型:" + res.data.type.toString())
+                }
+              })
+            })
+          },
+          err => { // eslint-disable-line no-unused-vars
+            setTimeout(() => {
+              console.log("reconnecting...")
+              this.socketInit()
+            }, 20000)
+          }
+      );
+      this.$store.state.chatSocket = this.chatSocket
+      this.$store.state.chatClient = this.chatClient
+    }
   },
   updated () {
 
   },
   computed: {
-    chats () {
-      return this.$store.state.messageList
+    messages () {
+      return this.messageList
     },
   },
   mounted () {
-    setTimeout(this.pull, 500)
+
   },
   created () {
-
+    this.socketInit()
+    setTimeout(
+        () => {
+          getMessagesList({
+            srcId: this.$store.state.userId,
+          }).then(res => {
+            console.log("收到联系人列表")
+            console.log(this.messageList)
+            for (let d in res) {
+              this.messageList.push(res[d])
+            }
+            console.log(this.messageList)
+          })
+        }, 1000
+    )
   }
 
 }

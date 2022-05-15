@@ -8,14 +8,6 @@ export function getMessagesList(param) {
     })
 }
 
-export function getSubscribeUrlList(param) {
-    return request({
-        url: '/message/getSubscribeUrlList',
-        method: 'post',
-        data: param
-    })
-}
-
 export function haveRead(param) {
     return request({
         url: '/message/haveRead',
@@ -28,6 +20,22 @@ export function getHistoryMessage(param) {
     return request({
         url: '/message/getHistoryMessage',
         method: 'post',
+        data: param
+    })
+}
+
+export function chatUrl(param) {
+    return request({
+        url: '/message/chatUrl',
+        method: 'get',
+        data: param
+    })
+}
+
+export function contactUrl(param) {
+    return request({
+        url: '/message/contactUrl',
+        method: 'get',
         data: param
     })
 }

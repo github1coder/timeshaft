@@ -82,8 +82,6 @@
 <script>
 import { login } from '../api/user/index'
 
-import { getMessagesList, getSubscribeUrlList } from "@/api/message";
-
 export default {
   data () {
     return {
@@ -121,10 +119,10 @@ export default {
     this.$store.commit("setMaster", -1)
     this.$store.commit("changeSiderState", 0)
     this.$store.commit("setAbout", -1)
-    this.$store.state.messageList = []
-    this.$store.state.listenerList = []
-    this.$store.state.stompClient = null
-    this.$store.state.websocket = null
+    this.$store.state.chatClient = null
+    this.$store.state.contactClient = null
+    this.$store.state.chatSocket = null
+    this.$store.state.contactSocket = null
     this.$store.state.checkInterval = null
     this.$store.state.siderState = 0
     this.$store.state.currentChannelId = -1
@@ -166,20 +164,6 @@ export default {
             this.show = true
             this.loading = false
           }
-          getMessagesList({
-            srcId: this.$store.state.userId,
-          }).then(res => {
-            console.log("收到联系人列表")
-            this.$store.commit("initMessageList", res)
-            getSubscribeUrlList({
-              srcId: this.$store.state.userId,
-            }).then(res => {
-              console.log("收到聊天订阅列表")
-              this.$store.commit("initListenerList", res)
-              this.$store.commit("WEBSOCKET_INIT")
-            })
-          })
-
         })
 
       }

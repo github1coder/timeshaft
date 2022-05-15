@@ -34,7 +34,6 @@ export default {
   created() {
     window.onbeforeunload = () => {
       console.log(this.$store.state)
-      this.$store.commit("WEBSOCKET_DISCONNECT")
       sessionStorage.setItem("data", JSON.stringify(this.$store.state))
       console.log("save")
       console.log(sessionStorage.getItem("data"))
@@ -45,7 +44,6 @@ export default {
       console.log(JSON.parse(sessionStorage.getItem("data")))
       this.$store.replaceState(JSON.parse(sessionStorage.getItem("data")))
       console.log(JSON.parse(sessionStorage.getItem("data")))
-      this.$store.commit("WEBSOCKET_INIT")
       setTimeout(function () {
         sessionStorage.removeItem("data");
       }, 300)
