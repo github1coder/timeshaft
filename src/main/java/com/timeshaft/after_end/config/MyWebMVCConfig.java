@@ -17,6 +17,6 @@ public class MyWebMVCConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TokenIntercepter())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/loginn", "/user/register", "/user/getCheckCode");
+                .excludePathPatterns("/user/loginn", "/user/register", "/user/getCheckCode", "/photo/*", "/favicon.ico");
     }
 }
