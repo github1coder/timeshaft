@@ -174,11 +174,6 @@ export default {
           msg: payload.msg,
           time: payload.time
         }
-        if (this.$refs.chatMessage !== undefined) {
-          console.log(this.$refs.chatMessage)
-          this.$refs.chatMessage.messages.push(payload)
-        }
-
       } else {
         console.log("没有对应的聊天框" + payload.id + " " + payload.type)
       }
