@@ -33,6 +33,16 @@ export default {
   },
   created() {
     window.onbeforeunload = () => {
+      this.$store.state.chatClient = null
+      this.$store.state.contactClient = null
+      this.$store.state.chatSocket = null
+      this.$store.state.contactSocket = null
+      this.$store.state.currentChatType =  null,
+      this.$store.state.currentChatIndex= null,
+      this.$store.state.currentChatMore= null,
+      this.$store.state.currentChatName= null,
+      this.$store.state.currentChannelIdx = -1,
+      this.$store.state.currentChannelId= -1,
       console.log(this.$store.state)
       sessionStorage.setItem("data", JSON.stringify(this.$store.state))
       console.log("save")

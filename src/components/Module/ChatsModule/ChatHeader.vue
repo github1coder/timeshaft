@@ -31,16 +31,6 @@
               </v-btn>
             </div>
           </div>
-          <div class="tool-icon">
-            <v-btn icon>
-              <v-icon color="white">mdi-cloud</v-icon>
-            </v-btn>
-          </div>
-          <div class="tool-icon">
-            <v-btn icon>
-              <v-icon color="white">mdi-account-supervisor-circle</v-icon>
-            </v-btn>
-          </div>
         </div>
         <div class="hidden-md-and-up">
           <div class="tool-icon mr-n4">

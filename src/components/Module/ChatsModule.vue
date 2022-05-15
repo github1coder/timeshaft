@@ -103,7 +103,7 @@
     <div class="chat">
       <ChatHeader></ChatHeader>
       <div class="chat-screen" v-if="$store.state.currentChannelIdx !== -1">
-        <ChatMessages ref="chatMessage" :draw="toolsDrawer"></ChatMessages>
+        <ChatMessages @receive="receiveMessage" ref="chatMessage" :draw="toolsDrawer"></ChatMessages>
         <div
           class="moveBand"
           v-if="toolsDrawer"
@@ -116,6 +116,7 @@
     <ChatTools
       :draw="toolsDrawer"
       :tools="tools"
+      v-if="$store.state.currentChannelIdx !== -1"
       @callback="callback"
     ></ChatTools>
   </div>
@@ -127,7 +128,7 @@ import ChatHeader from "@/components/Module/ChatsModule/ChatHeader";
 import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoTool from "@/components/Module/ChatsModule/ChatTools/InfoTool"
-import {contactUrl, getMessagesList, haveRead} from "@/api/message";
+import {chatUrl, contactUrl, getMessagesList, haveRead} from "@/api/message";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -153,14 +154,34 @@ export default {
       text: '',
       showSelect: true,
       searchResult: [],
-      messageList: [],
-      contactClient: null,
-      contactSocket: null,
+      messagesList: [],
       socketUrl: null,
       checkInterval: null,
     }
   },
   methods: {
+    receiveMessage(payload) {
+      console.log(this.messages)
+      const idx = this.messages.findIndex(message => {
+        return message.id === payload.chatId && message.type === payload.type
+      })
+      console.log("idx: " + idx)
+      if (idx !== -1) {
+        console.log("in")
+        this.messages[idx].number += 1
+        this.messages[idx].lastMessage = {
+          msg: payload.msg,
+          time: payload.time
+        }
+        if (this.$refs.chatMessage !== undefined) {
+          console.log(this.$refs.chatMessage)
+          this.$refs.chatMessage.messages.push(payload)
+        }
+
+      } else {
+        console.log("没有对应的聊天框" + payload.id + " " + payload.type)
+      }
+    },
     callback (flag) {
       this.toolsDrawer = flag
     },
@@ -203,17 +224,13 @@ export default {
 
     socketInit() {
       console.log("初始化聊天列表socket")
-      console.log(this.contactClient)
-      console.log(this.$store.state.contactClient)
-      this.chatClient = this.$store.state.contactClient
-      this.chatSocket = this.$store.state.contactSocket
-      if (this.contactClient == null || !this.contactClient.connected) {
+      if (this.$store.state.contactClient == null || !this.$store.state.contactClient.connected) {
         this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
-        if (this.contactClient != null && this.contactSocket.readyState === SockJS.OPEN) {
-          this.contactClient.disconnect(() => {
+        if (this.$store.state.contactClient != null && this.$store.state.contactSocket.readyState === SockJS.OPEN) {
+          this.$store.state.contactClient.disconnect(() => {
             this.socketConnect()
           })
-        } else if (this.contactClient != null && this.contactSocket.readyState === SockJS.CONNECTING) {
+        } else if (this.$store.state.contactClient != null && this.$store.state.contactSocket.readyState === SockJS.CONNECTING) {
           console.log("连接正在建立")
           return;
         } else {
@@ -222,14 +239,14 @@ export default {
         }
         if (!this.checkInterval) {
           this.checkInterval = setInterval(() => {
-            console.log("检测连接：" + this.contactSocket.readyState)
-            if (this.contactClient != null &&this.contactClient.connected) {
+            console.log("检测连接：" + this.$store.state.contactSocket.readyState)
+            if (this.$store.state.contactClient != null &&this.$store.state.contactClient.connected) {
               clearInterval(this.checkInterval)
               this.checkInterval = null
               console.log('重连成功')
-            } else if (this.contactClient != null && this.contactSocket.readyState !== SockJS.CONNECTING) {
+            } else if (this.$store.state.contactClient != null && this.$store.state.contactSocket.readyState !== SockJS.CONNECTING) {
               //经常会遇到websocket的状态为open 但是stompClient的状态却是未连接状态，故此处需要把连接断掉 然后重连
-              this.contactClient.disconnect(() => {
+              this.$store.state.contactClient.disconnect(() => {
                 this.socketConnect()
               })
             }
@@ -241,37 +258,26 @@ export default {
     },
 
     socketConnect() {
-      this.contactSocket = new SockJS(this.socketUrl)
-      this.contactClient = Stomp.over(this.contactSocket);
-      this.contactClient.debug = null //关闭控制台打印
-      this.contactClient.heartbeat.outgoing = 20000;
-      this.contactClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
+      this.$store.state.contactSocket = new SockJS(this.socketUrl)
+      this.$store.state.contactClient = Stomp.over(this.$store.state.contactSocket);
+      this.$store.state.contactClient.debug = null //关闭控制台打印
+      this.$store.state.contactClient.heartbeat.outgoing = 20000;
+      this.$store.state.contactClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
       // 向服务器发起websocket连接
-      this.contactClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
+      this.$store.state.contactClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
           frame => { // eslint-disable-line no-unused-vars
             console.log('链接成功！')
-            console.log(this.contactClient)
+            console.log(this.$store.state.contactClient)
             // TODO url合并？
             contactUrl({
               userId: this.$store.state.userId
             }).then(res => {
-              this.contactClient.subscribe(res.url, payload => {
+              this.$store.state.contactClient.subscribe(res.url, payload => {
                 let json = JSON.parse(payload.body)
                 console.log("收到的json:")
                 console.log(json)
-                if (res.data.type === 1) {
-                  console.log("添加好友服务收到消息")
-                  //TODO 具体逻辑
-                  this.messages.push(json)
-                  console.log(json)
-                } else if(res.data.type === 2) {
-                  console.log("添加群聊服务收到消息")
-                  //TODO 具体逻辑
-                  this.messages.push(json)
-                  console.log(json)
-                } else {
-                  console.log("不合法的消息类型:" + res.data.type.toString())
-                }
+                console.log("通讯录服务收到消息")
+                this.messages.push(json)
               })
             })
           },
@@ -282,31 +288,98 @@ export default {
             }, 20000)
           }
       );
-      this.$store.state.contactSocket = this.contactSocket
-      this.$store.state.contactClient = this.contactClient
-    }
+    },
+    chatSocketInit() {
+      console.log("初始化聊天列表socket")
+      if (this.$store.state.chatClient == null || !this.$store.state.chatClient.connected) {
+        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
+        if (this.$store.state.chatClient != null && this.$store.state.chatSocket.readyState === SockJS.OPEN) {
+          this.$store.state.chatClient.disconnect(() => {
+            this.chatSocketConnect()
+          })
+        } else if (this.$store.state.chatClient != null && this.$store.state.chatSocket.readyState === SockJS.CONNECTING) {
+          console.log("连接正在建立")
+          return;
+        } else {
+          console.log("第一次建立")
+          this.chatSocketConnect()
+        }
+        if (!this.checkInterval) {
+          this.checkInterval = setInterval(() => {
+            console.log("检测连接：" + this.$store.state.chatSocket.readyState)
+            if (this.$store.state.chatClient != null &&this.$store.state.chatClient.connected) {
+              clearInterval(this.checkInterval)
+              this.checkInterval = null
+              console.log('重连成功')
+            } else if (this.$store.state.chatClient != null && this.$store.state.chatSocket.readyState !== SockJS.CONNECTING) {
+              //经常会遇到websocket的状态为open 但是stompClient的状态却是未连接状态，故此处需要把连接断掉 然后重连
+              this.$store.state.chatClient.disconnect(() => {
+                this.chatSocketConnect()
+              })
+            }
+          }, 2000)
+        }
+      } else {
+        console.log("连接已建立成功，不再执行")
+      }
+    },
+
+    chatSocketConnect() {
+      this.$store.state.chatSocket = new SockJS(this.socketUrl)
+      this.$store.state.chatClient = Stomp.over(this.$store.state.chatSocket);
+      this.$store.state.chatClient.debug = null //关闭控制台打印
+      this.$store.state.chatClient.heartbeat.outgoing = 20000;
+      this.$store.state.chatClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
+      // 向服务器发起websocket连接
+      this.$store.state.chatClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
+          frame => { // eslint-disable-line no-unused-vars
+            console.log('链接成功！')
+            console.log(this.$store.state.chatClient)
+            chatUrl({
+              userId: this.$store.state.userId
+            }).then(res => {
+              this.$store.state.chatClient.subscribe(res.url, payload => {
+                let json = JSON.parse(payload.body)
+                console.log("收到的json:")
+                console.log(json)
+                console.log("即时通讯服务收到消息")
+                this.receiveMessage(json)
+              })
+            })
+          },
+          err => { // eslint-disable-line no-unused-vars
+            setTimeout(() => {
+              console.log("reconnecting...")
+              this.socketInit()
+            }, 20000)
+          }
+      );
+    },
   },
+
   created() {
     this.socketInit()
+    this.chatSocketInit()
+    this.$store.state.currentChannelIdx = -1
     setTimeout(
         () => {
           getMessagesList({
             srcId: this.$store.state.userId,
           }).then(res => {
             console.log("收到联系人列表")
-            console.log(this.messageList)
+            console.log(this.messages)
             for (let d in res) {
-              this.messageList.push(res[d])
+              this.messages.push(res[d])
             }
-            console.log(this.messageList)
+            console.log(this.messages)
           })
         }, 100
     )
   },
   computed: {
-    messages () {
-      return this.messageList
-    },
+    messages() {
+      return this.messagesList
+    }
   }
 }
 </script>
