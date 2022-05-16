@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 @Aspect
 @Component
