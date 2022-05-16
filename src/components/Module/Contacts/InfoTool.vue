@@ -3,15 +3,15 @@
     <info-me
       dark
       style="height: 100%; width: 100%; border-radius:0px;"
-      v-if="this.$store.getters.about == -1"
+      v-show="about == -1"
       ref="infoMe"
     ></info-me>
     <info-f
-      v-if="this.$store.getters.about == 0"
+      v-show="about == 0"
       ref="infoF"
     ></info-f>
     <info-g
-      v-else-if="this.$store.getters.about == 1"
+      v-show="about == 1"
       ref="infoG"
     ></info-g>
   </v-card>
@@ -31,11 +31,8 @@ export default {
 
   data () {
     return {
-      infoId: -1,
-      infoPhoto: null,
-      infoEmail: null,
-      infoName: null,
-      infoNick: null,
+      id: -1,
+      about: -1,
     }
   },
   methods: {

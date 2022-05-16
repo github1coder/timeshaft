@@ -5,7 +5,6 @@
       dark
       flat
       tile
-      v-show="this.$store.getters.infoId != -1"
     >
       <v-card
         tile
@@ -37,7 +36,7 @@
               </v-btn>
             </v-list-item> -->
           <v-card style="font-size: 50px;">
-            {{this.$store.getters.infoName}}
+            {{this.nameG}}
           </v-card>
           <v-textarea
             :disabled="iShow"
@@ -45,14 +44,14 @@
             auto-grow
             rows="4"
             black
-            v-model="introduction"
+            v-model="notice"
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
           <v-btn
             color="blue"
             class="mx-2"
-            v-show="iShow && this.$store.getters.infoName == this.$store.getters.infoId"
+            v-show="iShow && this.$store.getters.userId == this.master"
             @click="iShowFalse"
           >
             修改群公告
@@ -237,13 +236,6 @@
         <!-- </v-row> -->
       </v-card>
     </v-card>
-    <!-- <v-card
-      dark
-      style="margin-top: 200px"
-      v-show="this.$store.getters.infoId == -1"
-    >
-      从通讯录“我的团队”点击“详情”可在此页面查看团队信息
-    </v-card> -->
   </div>
 
 </template>
@@ -253,15 +245,19 @@ import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, 
 export default {
   data () {
     return {
+      photo: "",
+      nameG: "",//群聊名称
+      email: "",
+      master: -1,
       memberShow: false,
-      name: "",
+      name: "",//群昵称
       iShow: true,
       kill: false,
-      introduction: "",
+      notice: "",
       num: 10,
       pageF: 1,
       allPageF: 1,
-      friendsIndex: null,
+      friendsIndex: -1,
       friends: [],
       friendsBtns: [{
         title: '修改群昵称',
@@ -277,33 +273,6 @@ export default {
   },
 
   mounted () {
-    this.introduction = this.$parent.$parent.$parent.$refs.MemberList.introduction
-    // if (this.$store.getters.infoId != -1) {
-    //   getGroupMember({
-    //     "id": this.$store.getters.infoId,
-    //     "ACCESS_TOKEN": null
-    //   }).then(res => {
-    //     this.friends = res
-    //     this.friends.forEach(function (item) {
-    //       item["show"] = false;
-    //       item["quit"] = false;
-    //       if (item.nick && item.nick != "") {
-    //         item.name = item.nick
-    //       }
-    //     });
-    //     this.friends = JSON.parse(JSON.stringify(this.friends))
-    //     this.allPageF = Math.ceil(this.friends.length / this.num);
-    //     // console.log(this.friends)
-    //     // this.friends = [{
-    //     //   'id': 1,
-    //     //   'name': "1",
-    //     //   'photo': "",
-    //     //   "quit": false,
-    //     //   "show": false,
-    //     // }]
-    //     // console.log(this.friends)
-    //   })
-    // }
   },
 
   methods: {
@@ -311,20 +280,28 @@ export default {
 
     },
 
+    init (photo, nameG, master, notice) {
+      this.photo = photo
+      this.nameG = nameG
+      this.master = master
+      this.notice = notice
+    },
+
+
     changeNotice () {
       const here = this
-      console.log(this.introduction)
+      console.log(this.notice)
       updateGroup({
-        "id": this.$store.getters.infoId,
-        "notice": this.introduction
+        "id": this.$parent.$parent.id,
+        "notice": this.notice
       }).then(res => {
         console.log("修改群公告成功")
         console.log(res)
-        if (res == null) {
+        if (!res) {
           const that = here.$parent.$parent.$parent.$refs.MemberList.groups
           for (this.i = 0; this.i < that.length; this.i++) {
-            if (that[this.i].group_id == here.$store.getters.infoId) {
-              that[this.i].notice = here.introduction
+            if (that[this.i].group_id == here.$parent.id) {
+              that[this.i].notice = here.notice
               break
             }
           }
@@ -335,10 +312,10 @@ export default {
     },
 
     getMember () {
-      if (this.$store.getters.infoId != -1 && !this.memberShow) {
+      if (this.$parent.$parent.id != -1 && !this.memberShow) {
         const that = this
         getGroupMember({
-          "id": this.$store.getters.infoId,
+          "id": this.$parent.$parent.id,
         }).then(res => {
           this.friends = res
           this.friends.forEach(function (item) {
@@ -347,7 +324,7 @@ export default {
             if (item.nick && item.nick != "") {
               item.name = item.nick
             }
-            if (item.id == that.$store.getters.userId) {
+            if (item.id == that.master) {
               item.name = item.name + "（群主）"
             }
             else if (item.type == "manager") {
@@ -358,15 +335,6 @@ export default {
           this.friends = JSON.parse(JSON.stringify(this.friends))
           this.allPageF = Math.ceil(this.friends.length / this.num);
           this.memberShow = !this.memberShow
-          // console.log(this.friends)
-          // this.friends = [{
-          //   'id': 1,
-          //   'name': "1",
-          //   'photo': "",
-          //   "quit": false,
-          //   "show": false,
-          // }]
-          // console.log(this.friends)
         })
       }
     },
@@ -390,7 +358,7 @@ export default {
       this.iShow = true
     },
     showTextField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].show = false;
           this.friends[this.friendsIndex].quit = false;
@@ -407,7 +375,7 @@ export default {
     },
 
     showQuitField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].quit = false;
           this.friends[this.friendsIndex].show = false;
@@ -424,11 +392,11 @@ export default {
     },
 
     isMaster () {
-      return this.$store.getters.userId == this.$store.getters.master
+      return this.$store.getters.userId == this.master
     },
 
     isSelf (index) {
-      return this.friends[index].id == this.friends[index].id
+      return this.friends[index].id == this.$store.getters.userId
     },
 
     isManager (index) {
@@ -451,11 +419,12 @@ export default {
     addSubMaster (index) {
       const that = this
       addGroupManager({
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
+        "id": that.friends[index].id
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
-        if (res == null) {
+        if (!res) {
           that.friends[index].name = that.friends[index].name + "（管理员）"
           that.friends[index].type = "manager"
         }
@@ -465,10 +434,11 @@ export default {
     subSubMaster (index) {
       const that = this
       delGroupManager({
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
+        "id": that.friends[index].id
       }).then(res => {
         console.log(res)
-        if (res == null) {
+        if (!res) {
           that.friends[index].name = that.friends[index].nick
           that.friends[index].type = "normal"
         }
@@ -480,18 +450,20 @@ export default {
     },
 
     subGroup () {
+      const here = this.$parent.$parent
       delGroup({
-        "group_id": this.$store.getters.infoId
+        "group_id": this.$parent.$parent.id
       }).then(res => {
         console.log(res)
-        this.$store.commit("setInfoId", -1)
-        this.$store.commit("setInfoName", "")
-        this.$store.commit("setInfoPhoto", "")
-        this.$store.commit("setMaster", "")
         this.$store.commit("changeSiderState", 1)
-        this.$store.commit("setAbout", -1)
-        this.$parent.$parent.$parent.$children[1].getG()
-        // this.$parent.$parent.$refs.sider1[0].$el.click()
+        const that = here.$parent.$refs.MemberList.groups
+        for (this.i = 0; this.i < that.length; this.i++) {
+          if (that[this.i].group_id == here.id) {
+            that.splice(this.i, 1)
+            break
+          }
+        }
+        this.about = -1
       })
     },
 
