@@ -8,6 +8,7 @@ import com.timeshaft.after_end.service.PersonalMessageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,12 +60,12 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
      *
      * @param friendsId 接收者id
      * @param senderId 发送者id
-     * @param index 查询起始的id
+     * @param time 查询起始的时间
      * @return 实例对象列表
      */
     @Override
-    public List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index) {
-        return this.personalMessageMapper.queryHistoryById(friendsId, senderId, index);
+    public List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Date time) {
+        return this.personalMessageMapper.queryHistoryById(friendsId, senderId, time);
     }
 
     /**

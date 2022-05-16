@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -72,7 +73,7 @@ public class ChatController {
             //拉取最近一条消息
             HashMap<String, Object> lastMessage = new HashMap<>();
             PersonalMessage last = null;
-            int index = -1;
+            Date lastTime = new Date(System.currentTimeMillis());
             if (messageTo == null) {
                 if (messageFrom != null) {
                     last = messageFrom;
@@ -93,7 +94,6 @@ public class ChatController {
             if (last != null) {
                 msg = last.getMessage();
                 time = last.getSendtime();
-                index = last.getId() + 1;
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
@@ -125,7 +125,7 @@ public class ChatController {
              */
             //若没聊过天，index为-1——加好友会打招呼，此种情况不会发生
             map.put("lastMessage", lastMessage);
-            map.put("index", index);
+            map.put("lastTime", lastTime);
             res.add(map);
         }
         //获取群聊相关信息
@@ -137,14 +137,13 @@ public class ChatController {
             map.put("chatAvatar", group.getPhoto());
             map.put("type", "group");
             GroupMessage latest = groupMessageService.queryLatestById(group.getId());
-            int index = -1;
+            Date lastTime = new Date(System.currentTimeMillis());
             HashMap<String, Object> lastMessage = new HashMap<>();
             String msg = null;
             Date time = null;
             if (latest != null) {
                 msg = latest.getMessage();
                 time = latest.getSendtime();
-                index = latest.getId() + 1;
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
@@ -184,7 +183,7 @@ public class ChatController {
             }
             */
             map.put("lastMessage", lastMessage);
-            map.put("index", index);
+            map.put("lastTime", lastTime);
             res.add(map);
         }
         return new ResponseService(res);
@@ -209,12 +208,19 @@ public class ChatController {
 
     @RequestMapping(value = "/getHistoryMessage")
     public ResponseService getHistoryMessage(@RequestParam("userId") Integer userId,
-                                             @RequestParam("index") Integer index,
+                                             @RequestParam("lastTime") String lastTime,
                                              @RequestParam("chatId") Integer chatId,
                                              @RequestParam("type") String type) {
         HashMap<String, Object> res = new HashMap<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        try {
+            date = simpleDateFormat.parse(lastTime);
+        } catch (Exception e) {
+            return new ResponseService();
+        }
         if (type != null && type.equals(GROUP)) {
-            List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, index);
+            List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
             int length = Math.min(groupMessageList.size(), 20);
             boolean more = (length != 0);
             List<HashMap<String, Object>> data = new ArrayList<>();
@@ -236,12 +242,12 @@ public class ChatController {
                 data.add(messageMap);
             }
             res.put("data", data);
-            int newIndex = index;
+            Date newLastTime = date;
             //若还有剩余的历史消息，则更新index
             if (more) {
-                newIndex = groupMessageList.get(length - 1).getId();
+                newLastTime = groupMessageList.get(length - 1).getSendtime();
             }
-            res.put("index", newIndex);
+            res.put("lastTime", newLastTime);
             res.put("more", more);
         } else {
             Friends friends = friendsService.queryById(chatId);
@@ -251,8 +257,8 @@ public class ChatController {
             User userSrc = userService.queryById(userId);
             User userDst = userService.queryById(dstId);
             List<PersonalMessage> historyMessage = new ArrayList<>();
-            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, userId, index));
-            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, index));
+            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, userId, date));
+            historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, date));
             historyMessage.sort(new Comparator<PersonalMessage>() {
                 @Override
                 public int compare(PersonalMessage o1, PersonalMessage o2) {
@@ -279,12 +285,12 @@ public class ChatController {
                 data.add(messageMap);
             }
             res.put("data", data);
-            int newIndex = index;
+            Date newLastTime = date;
             //若还有剩余的历史消息，则更新index
             if (more) {
-                newIndex = historyMessage.get(length - 1).getId();
+                newLastTime = historyMessage.get(length - 1).getSendtime();
             }
-            res.put("index", newIndex);
+            res.put("lastTime", newLastTime);
             res.put("more", more);
         }
         return new ResponseService(res);

@@ -3,6 +3,7 @@ package com.timeshaft.after_end.service;
 import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.Timeshaft;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,9 +79,9 @@ public interface GroupMessageService {
      * 查询群聊历史消息
      *
      * @param groupId 群聊Id
-     * @param index 索引id
+     * @param time 索引时间
      * @return 群聊消息列表
      */
-    List<GroupMessage> queryHistoryById(int groupId, int index);
+    List<GroupMessage> queryHistoryById(int groupId, Date time);
 
 }

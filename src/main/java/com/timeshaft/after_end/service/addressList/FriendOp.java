@@ -254,7 +254,7 @@ public class FriendOp {
             friends.addAll(friendsService.queryAll(friend2));
             Friends friendsRelation = friends.get(0);
             //设置打招呼消息
-            Date date = new Date(System.currentTimeMillis());
+            Date date = new Date(System.currentTimeMillis() - 1);
             PersonalMessage helloMessage = new PersonalMessage();
             helloMessage.setSendtime(date);
             String senderNickname = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ?
@@ -289,7 +289,7 @@ public class FriendOp {
                 index = personalMessage.getId() + 1;
                 recent = personalMessage.getSendtime();
             }
-            res.put("index", index);
+            res.put("lastTime", new Date(System.currentTimeMillis()));
             res.put("recent", recent);
             res.put("data", data);
             messagingTemplate.convertAndSend("/user/contact/" + acceptor.getId(), res);

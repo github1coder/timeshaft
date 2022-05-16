@@ -73,7 +73,6 @@ public class MessageController {
         PersonalMessage inserted = personalMessageService.insert(personalMessage);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
         payload.put("type", "private");
-        payload.put("index", inserted.getId() + 1);
         messagingTemplate.convertAndSend("/user/" + targetId, payload);
     }
 
@@ -99,7 +98,6 @@ public class MessageController {
         GroupMessageState groupMessageState = new GroupMessageState();
         groupMessageState.setMessageId(messageId);
         payload.put("type", "group");
-        payload.put("index", insertMessage.getId() + 1);
         for (GroupUser user : userInGroup) {
             if (user.getUserId().equals(groupMessage.getSenderId())) {
                 groupMessageState.setState(READ);

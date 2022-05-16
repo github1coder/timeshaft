@@ -44,12 +44,12 @@ public interface PersonalMessageMapper {
      *
      * @param friendsId 接收者id
      * @param senderId 发送者id
-     * @param index 查询起始的id
+     * @param time 查询起始的时间
      * @return 实例对象列表
      */
     List<PersonalMessage> queryHistoryById(@Param("friendsId") Integer friendsId,
                                            @Param("senderId") Integer senderId,
-                                           @Param("index") Integer index);
+                                           @Param("time") Date time);
 
     /**
      * 查询指定行数据

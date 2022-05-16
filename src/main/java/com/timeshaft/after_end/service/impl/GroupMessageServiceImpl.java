@@ -7,6 +7,7 @@ import com.timeshaft.after_end.service.GroupMessageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,11 +113,11 @@ public class GroupMessageServiceImpl implements GroupMessageService {
      * 查询群聊历史消息
      *
      * @param groupId 群聊Id
-     * @param index 索引id
+     * @param time 索引时间
      * @return 群聊消息列表
      */
     @Override
-    public List<GroupMessage> queryHistoryById(int groupId, int index) {
-        return this.groupMessageMapper.queryHistoryById(groupId, index);
+    public List<GroupMessage> queryHistoryById(int groupId, Date time) {
+        return this.groupMessageMapper.queryHistoryById(groupId, time);
     }
 }
