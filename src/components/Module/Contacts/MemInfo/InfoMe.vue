@@ -253,8 +253,8 @@ export default {
         this.passwordN = ""
         this.inputCheckCode = ""
         console(res)
-        if (res != null) {
-          this.msg = res
+        if (res.error) {
+          this.msg = res.error
         }
       })
     },
@@ -274,19 +274,6 @@ export default {
         console.log(res)
         this.$parent.$parent.$parent.$refs.MemberList.getG()
       })
-      // getGroups({
-      //   "user_id": this.$store.getters.userId,
-      //   "ACCESS_TOKEN": null
-      // }).then(res => {
-      //   // this.$store.commit("channels", res)
-      //   this.groups = res
-      //   this.groups.forEach(function (item) {
-      //     item["show"] = false;
-      //     item["quit"] = false;
-      //   });
-      //   this.groups = JSON.parse(JSON.stringify(this.groups))
-      //   this.allPageG = Math.ceil(this.groups.length / this.num);
-      // });
     }
   }
 }

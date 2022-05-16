@@ -81,9 +81,11 @@ export default {
           userId: this.$store.state.userId,
           type: this.$store.state.currentChatType,
           chatId: this.$store.state.currentChannelId,
+          first: this.$store.state.currentChatFirst,
         }).then(res => {
           console.log("拉取 " + res.data.length + " 条历史消息")
           console.log(res)
+          this.$store.state.currentChatFirst = 0
           this.$store.state.currentChatMore = res.more
           if (this.$store.state.currentChannelIdx !== -1) {
             this.$store.state.currentChatTime = res.lastTime
@@ -112,9 +114,11 @@ export default {
             userId: this.$store.state.userId,
             type: this.$store.state.currentChatType,
             chatId: this.$store.state.currentChannelId,
+            first: this.$store.state.currentChatFirst,
           }).then(res => {
             console.log("拉取 " + res.data.length + " 条历史消息")
             console.log(res)
+            this.$store.state.currentChatFirst = 0
             this.$store.state.currentChatMore = res.more
             if (this.$store.state.currentChannelIdx !== -1) {
               this.$store.state.currentChatTime = res.lastTime
@@ -129,16 +133,15 @@ export default {
         }
       }
     },
-    messages(newVal, oldVal) {
-      newVal
-      oldVal
-      this.scrollToBottom()
-    },
-
+    // messages(newVal, oldVal) {
+    //   newVal
+    //   oldVal
+    //   this.scrollToBottom()
+    // },
   },
 
   created() {
-    this.init()
+
   }
 }
 </script>

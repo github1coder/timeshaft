@@ -11,18 +11,18 @@
         ></member-list>
       </div>
       <div style="height:100%; width: 80%;">
-        <info-tool ref="InfoTool"></info-tool>
+        <info-tool ref="infoTool"></info-tool>
       </div>
     </v-row>
     <add-tool
       style="height:93%;"
       v-if="show == 1"
-      ref="AddTool"
+      ref="addTool"
     ></add-tool>
     <apply-tool
       style="height:93%;"
       v-if="show == 2"
-      ref="ApplyTool"
+      ref="applyTool"
     ></apply-tool>
     <div style="height:7%;">
       <v-bottom-navigation
