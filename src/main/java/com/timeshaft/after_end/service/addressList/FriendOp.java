@@ -271,34 +271,35 @@ public class FriendOp {
             String accNickName = Objects.equals(friendsRelation.getUserId1(), acceptor.getId()) ? friendsRelation.getNickname1():friendsRelation.getNickname2();
             res.put("chatName", senderNickName);
             res.put("chatAvatar", sender.getPhoto());
-            HashMap<String, Object> data = new HashMap<>();
             PersonalMessage personalMessage = personalMessageService.queryLatestById(friendsRelation.getId(), sender.getId());
             if (personalMessage == null) {
                 personalMessage = personalMessageService.queryLatest();
-            } else {
-                data.put("chatId", personalMessage.getFriendsId());
-                data.put("userId", personalMessage.getSenderId());
-                data.put("msg", personalMessage.getMessage());
-                data.put("msgFromName", senderNickName);
-                data.put("msgFromAvatar", sender.getPhoto());
-                data.put("time", personalMessage.getSendtime());
-            }
-            int index = 0;
-            Date recent = new Date(System.currentTimeMillis());
-            if (personalMessage != null) {
-                index = personalMessage.getId() + 1;
-                recent = personalMessage.getSendtime();
             }
             res.put("lastTime", new Date(System.currentTimeMillis()));
-            res.put("recent", recent);
-            res.put("data", data);
+            HashMap<String, Object> lastMessage = new HashMap<>();
+            lastMessage.put("msg", personalMessage.getMessage());
+            lastMessage.put("time", personalMessage.getSendtime());
+            res.put("lastMessage", lastMessage);
+            res.put("number", 1);
             messagingTemplate.convertAndSend("/user/contact/" + acceptor.getId(), res);
             /*下面发送给请求方*/
+            res.put("number", 0);
             res.put("chatName", accNickName);
             res.put("chatAvatar", acceptor.getPhoto());
             messagingTemplate.convertAndSend("/user/contact/" + sender.getId(), res);
         } else if (type.equals(groupType) && action.equals(ACCEPT)) {
-
+            HashMap<String, Object> res = new HashMap<>();
+            Group group = groupService.queryById(id);
+            res.put("id", id);
+            res.put("type", "group");
+            res.put("chatName", group.getName());
+            res.put("chatAvatar", null);
+            res.put("lastTime", new Date(System.currentTimeMillis()));
+            res.put("number", 0);
+            HashMap<String, Object> lastMessage = new HashMap<>();
+            lastMessage.put("msg", null);
+            lastMessage.put("time", null);
+            messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
         }
     }
 
