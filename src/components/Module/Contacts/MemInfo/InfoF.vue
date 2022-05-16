@@ -70,15 +70,14 @@ export default {
 
     sendMessage () {
       console.log("对好友进行消息发送")
-      //todo, friend_id 为 this.$store.getters.infoId
-      // changeSider
       setTimeout(function () {
         console.log(document.getElementById('nav-' + 0))
         document.getElementById('nav-' + 0).click()
         console.log("切换到聊天栏")
       }, 500)
       // 模拟点击事件
-      const id = this.$store.state.infoId.toString()
+      //todo 尚未模拟聊天频道点击或聊天频道点击失效
+      const id = this.$parent.$parent.id.toString()
       setTimeout(function () {
         console.log("得到好友关系id: " + id)
         console.log(document.getElementById('message-' + id))
