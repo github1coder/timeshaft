@@ -88,21 +88,11 @@
                   hover
                   dark
                 >
-                  <!-- <v-list-item
-                    v-for="(btnn, i) in groupsBtns"
-                    :key="i"
-                    @click="getMethod(btnn.method, j + num * (pageG - 1))"
-                  >
-                    <v-list-item-title>{{ btnn.title }}</v-list-item-title>
-                  </v-list-item> -->
-                  <!-- <v-list-item @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))">
-                    <v-list-item-title>{{ groupsBtns[0].title }}</v-list-item-title>
-                  </v-list-item> -->
                   <v-list-item
                     v-if="isMaster(j + num * (pageG - 1))"
-                    @click="getMethod(groupsBtns[1].method, j + num * (pageG - 1))"
+                    @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))"
                   >
-                    <v-list-item-title>{{ groupsBtns[1].title }}</v-list-item-title>
+                    <v-list-item-title>{{ groupsBtns[0].title }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -259,8 +249,8 @@ export default {
     return {
       name: "",
       textG: "",
-      groupsIndex: null,
-      friendsIndex: null,
+      groupsIndex: -1,
+      friendsIndex: -1,
       groupUnfolder: true,
       friendUnfolder: true,
       num: 10,
@@ -292,9 +282,6 @@ export default {
         method: 'showQuitField'
       },],
       groupsBtns: [{
-        title: '详情',
-        method: 'aboutG'
-      }, {
         title: '退出群聊',
         method: 'showGroupQuitField'
       },],
@@ -317,25 +304,12 @@ export default {
       console.log(1)
     },
 
-    aboutG (index) {
-      this.$store.commit("setInfoId", this.groups[index].group_id)
-      this.$store.commit("setInfoName", this.groups[index].group_name)
-      this.$store.commit("setInfoPhoto", this.groups[index].group_photo)
-      this.$store.commit("setMaster", this.groups[index].master_id)
-      // this.$store.commit("changeSiderState", 4)
-      this.$store.commit("setAbout", 1)
-      // this.$parent.$parent.$refs.sider4[0].$el.click()
-      // this.$router.push({
-      //   path: "/home"
-      // })
-    },
-
     initBtns () {
-      if (this.groupsIndex != null) {
+      if (this.groupsIndex != -1) {
         this.groups[this.groupsIndex].show = false;
         this.groups[this.groupsIndex].quit = false;
       }
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         this.friends[this.friendsIndex].show = false;
         this.friends[this.friendsIndex].quit = false;
       }
@@ -346,11 +320,11 @@ export default {
     },
 
     showTextField (j) {
-      if (this.groupsIndex != null) {
+      if (this.groupsIndex != -1) {
         this.groups[this.groupsIndex].show = false;
         this.groups[this.groupsIndex].quit = false;
       }
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].show = false;
           this.friends[this.friendsIndex].quit = false;
@@ -367,11 +341,11 @@ export default {
     },
 
     showQuitField (j) {
-      if (this.groupsIndex != null) {
+      if (this.groupsIndex != -1) {
         this.groups[this.groupsIndex].show = false;
         this.groups[this.groupsIndex].quit = false;
       }
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].quit = false;
           this.friends[this.friendsIndex].show = false;
@@ -388,11 +362,11 @@ export default {
     },
 
     showGroupTextField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         this.friends[this.friendsIndex].show = false;
         this.friends[this.friendsIndex].quit = false;
       }
-      if (this.groupsIndex != null) {
+      if (this.groupsIndex != -1) {
         if (this.groupsIndex != j) {
           this.groups[this.groupsIndex].show = false;
           this.groups[this.groupsIndex].quit = false;
@@ -409,11 +383,11 @@ export default {
     },
 
     showGroupQuitField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         this.friends[this.friendsIndex].show = false;
         this.friends[this.friendsIndex].quit = false;
       }
-      if (this.groupsIndex != null) {
+      if (this.groupsIndex != -1) {
         if (this.groupsIndex != j) {
           this.groups[this.groupsIndex].quit = false;
           this.groups[this.groupsIndex].show = false;
@@ -462,7 +436,7 @@ export default {
           "friend_nickname": this.name
         });
       }
-      this.friendsIndex = null;
+      this.friendsIndex = -1;
       this.friends[j].show = false;
     },
 
@@ -470,61 +444,77 @@ export default {
       if (this.name && this.name != "") {
         this.groups[j].group_name = this.name;
         changeGroupNickname({
-          "group_id": parseInt(this.groups[j].group_id),
+          "group_id": this.groups[j].group_id,
           "group_nickname": this.name
         });
       }
-      this.groupsIndex = null;
+      this.groupsIndex = -1;
       this.groups[j].show = false;
     },
 
     killFriend (j) {
       delFriend({
-        "friend_id": parseInt(this.friends[j].friend_id)
+        "friend_id": this.friends[j].friend_id
       });
       this.friends.splice(j, 1);
-      this.friendsIndex = null;
+      this.friendsIndex = -1;
+
+      const that = this.$parent.$refs.infoTool
+      if (that.about == 0 && that.id == this.friends[j].chat_id) {
+        that.about = -1
+      }
+
     },
 
     killGroup (j) {
       quitGroup({
-        "group_id": parseInt(this.groups[j].group_id)
+        "group_id": this.groups[j].group_id
       });
       this.groups.splice(j, 1);
-      this.groupsIndex = null;
+      this.groupsIndex = -1;
+
+      const that = this.$parent.$refs.infoTool
+      if (that.about == 1 && that.id == this.groups[j].group_id) {
+        that.about = -1
+      }
     },
 
     infoF (index) {
+      let nick = ""
+      let that = this.$parent.$refs.infoTool
+
+      //用来切换展示好友
+      that.about = 0
+      that.id = this.friends[index].chat_id
+
       console.log("info:" + index.toString())
-      this.$store.commit("setInfoNick", null)
-      if (this.friends[index].friend_name !== this.friends[index].friend_nick) {
-        this.$store.commit("setInfoNick", this.friends[index].friend_nick)
+
+      if (this.friends[index].friend_name != this.friends[index].friend_nick) {
+        nick = this.friends[index].friend_nick
       }
-      this.$store.commit("setInfoId", this.friends[index].chat_id)
-      console.log("chat_id:" + this.$store.getters.infoId)
-      this.$store.commit("setInfoName", this.friends[index].friend_name)
-      this.$store.commit("setInfoPhoto", this.friends[index].friend_photo)
-      this.$store.commit("setInfoEmail", this.friends[index].mail)
-      this.$store.commit("setAbout", 0)
+      that.$refs.infoF.init(
+        this.friends[index].friend_photo,
+        this.friends[index].friend_name,
+        nick,
+        this.friends[index].mail)
     },
 
     infoG (index) {
-      this.$store.commit("setInfoId", this.groups[index].group_id)
-      this.$store.commit("setInfoName", this.groups[index].group_name)
-      this.$store.commit("setInfoPhoto", this.groups[index].group_photo)
-      this.$store.commit("setMaster", this.groups[index].master_id)
-      // this.$store.commit("changeSiderState", 4)
-      this.$store.commit("setAbout", 1)
-      //用来解决第一次点击不显示bug
-      this.introduction = this.groups[index].notice
-      //
-      this.$parent.$refs.infoTool.$refs.infoG.introduction = this.groups[index].notice
-      this.$parent.$refs.infoTool.$refs.infoG.memberShow = false
-      this.$parent.$refs.infoTool.$refs.infoG.iShowTrue()
-      // this.$parent.$parent.$refs.sider4[0].$el.click()
-      // this.$router.push({
-      //   path: "/home"
-      // })
+      let that = this.$parent.$refs.infoTool
+
+      //用来切换展示群
+      that.about = 1
+      that.id = this.groups[index].group_id
+
+      that.$refs.infoG.init(
+        this.groups[index].group_photo,
+        this.groups[index].group_name,
+        this.groups[index].master_id,
+        this.groups[index].notice
+      )
+      //用来设置切换初始化
+      that.$refs.infoG.memberShow = false
+      that.$refs.infoG.iShowTrue()
     },
 
 

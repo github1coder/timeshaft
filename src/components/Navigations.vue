@@ -143,7 +143,7 @@ export default {
       })
     },
     editAccount () {
-      this.$store.commit("setAbout", -1)
+      this.$parent.$refs.contractsModule.$refs.infoTool.about = -1
       this.$store.commit("changeSiderState", 1)
     },
   }

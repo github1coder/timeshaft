@@ -10,19 +10,19 @@
         <div style="width: 100%; height: 100%;">
           <v-img
             style="margin: auto; border-radius: 50%; width: 40%"
-            :src="this.$store.getters.infoPhoto"
+            :src="photo"
           ></v-img>
           <v-divider>
           </v-divider>
 
           <v-list-item>
             <v-list-item-content style="font-size: 25px;">
-              <v-list-item-title style="font-size: 20px; line-height: 40px;">{{this.$store.getters.infoName}}</v-list-item-title>
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">{{name}}</v-list-item-title>
               <v-list-item-title
                 style="font-size: 20px; line-height: 40px;"
-                v-show="this.$store.getters.infoNick != null"
-              >备注：{{this.$store.getters.infoNick}}</v-list-item-title>
-              <v-list-item-title style="font-size: 20px; line-height: 40px;">邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title>
+                v-show="nick != ''"
+              >备注：{{nick}}</v-list-item-title>
+              <v-list-item-title style="font-size: 20px; line-height: 40px;">邮箱：{{email}}</v-list-item-title>
               <!-- <v-list-item-title>邮箱：{{this.$store.getters.infoEmail}}</v-list-item-title> -->
             </v-list-item-content>
           </v-list-item>
@@ -46,6 +46,10 @@
 export default {
   data () {
     return {
+      photo: "",
+      name: "",
+      nick: "",
+      email: "",
     };
   },
 
@@ -57,21 +61,27 @@ export default {
 
     },
 
+    init (photo, name, nick, email) {
+      this.photo = photo
+      this.name = name
+      this.nick = nick
+      this.email = email
+    },
+
     sendMessage () {
       console.log("对好友进行消息发送")
-      //todo, friend_id 为 this.$store.getters.infoId
-      // changeSider
       setTimeout(function () {
-        console.log(document.getElementById('nav-'+0))
-        document.getElementById('nav-'+0).click()
+        console.log(document.getElementById('nav-' + 0))
+        document.getElementById('nav-' + 0).click()
         console.log("切换到聊天栏")
       }, 500)
       // 模拟点击事件
-      const id = this.$store.state.infoId.toString()
+      //todo 尚未模拟聊天频道点击或聊天频道点击失效
+      const id = this.$parent.$parent.id.toString()
       setTimeout(function () {
-        console.log("得到好友关系id: "+ id)
-        console.log(document.getElementById('message-'+id))
-        document.getElementById('message-'+id).click()
+        console.log("得到好友关系id: " + id)
+        console.log(document.getElementById('message-' + id))
+        document.getElementById('message-' + id).click()
         console.log("切换到聊天框")
       }, 500)
 

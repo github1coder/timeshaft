@@ -1,11 +1,5 @@
 <template>
   <v-card style="height: 100%; width: 100%">
-    <info-me
-      dark
-      style="height: 100%; width: 100%; border-radius:0px;"
-      v-show="about == -1"
-      ref="infoMe"
-    ></info-me>
     <info-f
       v-show="about == 0"
       ref="infoF"
@@ -18,21 +12,19 @@
 </template>
 
 <script>
-import InfoF from "./MemInfo/InfoF.vue"
-import InfoG from "./MemInfo/InfoG.vue"
-import InfoMe from "./MemInfo/InfoMe.vue"
+import InfoF from "./Info/InfoFriend.vue"
+import InfoG from "./Info/InfoGroup.vue"
 
 export default {
   components: {
     InfoF,
-    InfoG,
-    InfoMe
+    InfoG
   },
 
   data () {
     return {
-      id: -1,
       about: -1,
+      id: -1,
     }
   },
   methods: {

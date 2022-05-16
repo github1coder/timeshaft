@@ -5,17 +5,16 @@
       dark
       flat
       tile
-      v-show="this.$store.getters.infoId != -1"
     >
       <v-card
         tile
         dark
-        style="width: 100%; height: 100%;overflow: auto; overflow-x: hidden"
+        style="width: 100%; overflow: auto; overflow-x: hidden"
       >
         <!-- <v-row style="width: 100%; height: 100%;"> -->
         <v-navigation-drawer
           permanent
-          style="width: 50%; height:100%; float: left;"
+          style="width: 100%;"
           dark
         >
           <!-- <v-system-bar></v-system-bar> -->
@@ -37,7 +36,7 @@
               </v-btn>
             </v-list-item> -->
           <v-card style="font-size: 50px;">
-            {{this.$store.getters.infoName}}
+            {{this.nameG}}
           </v-card>
           <v-textarea
             :disabled="iShow"
@@ -45,45 +44,43 @@
             auto-grow
             rows="4"
             black
-            v-model="introduction"
+            v-model="notice"
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
-          <!-- <v-btn
+          <v-btn
             color="blue"
             class="mx-2"
-            v-show="!iShow"
-            @click="iShowChange"
+            v-show="iShow && this.$store.getters.userId == this.master"
+            @click="iShowFalse"
           >
             修改群公告
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="success"
             width="40%"
-            @click="method1"
+            @click="changeNotice"
           >
             确认
           </v-btn>
           <v-btn
-            v-show="iShow"
+            v-show="!iShow"
             class="mx-2"
             color="error"
             width="40%"
-            @click="method1"
+            @click="iShowTrue"
           >
             取消
-          </v-btn> -->
+          </v-btn>
         </v-navigation-drawer>
-        <v-col style="width: 50%; height:100%; float: right">
-          <v-list
-            style="width: 100%; height:90%;"
-            value="false"
-          >
+        <v-col style="width: 100%;">
+          <v-list style="width: 100%;">
             <v-list-group
               prepend-icon="mdi-account-supervisor-circle"
               @click="getMember"
+              :value="memberShow"
             >
               <template v-slot:activator>
                 <v-list-item-content>
@@ -168,13 +165,13 @@
                         <v-list-item-title>{{ friendsBtns[0].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && !isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[1].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[1].title }}</v-list-item-title>
                       </v-list-item>
                       <v-list-item
-                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster()"
+                        v-show="!isSelf(j + num * (pageF - 1)) && isMaster() && isManager(j + num * (pageF - 1))"
                         @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
@@ -205,14 +202,27 @@
               </v-card>
             </v-list-group>
           </v-list>
-          <v-card style="width: 100%; height:10%;">
-            <!-- <v-btn
+          <div
+            v-for="(item, j) in friends"
+            :key=j
+            style="width:20%; float: left; margin-left: 5%; background-color: green; border-radius: 10%"
+          >
+            <div>
+              <v-img
+                :src="item.photo"
+                style="height: 100%; width: 100%;"
+              ></v-img>
+              <span>{{item.name.slice(0,5)}}</span>
+            </div>
+          </div>
+          <!-- <v-card style="width: 100%; height:10%;">
+            <v-btn
               v-show="isMaster() && !this.kill"
               @click="showKill"
               color="error"
             >
               解散群聊
-            </v-btn> -->
+            </v-btn>
             <div
               style="width: 100%;"
               v-show="kill"
@@ -234,35 +244,34 @@
                 取消
               </v-btn>
             </div>
-          </v-card>
+          </v-card> -->
         </v-col>
         <!-- </v-row> -->
       </v-card>
     </v-card>
-    <!-- <v-card
-      dark
-      style="margin-top: 200px"
-      v-show="this.$store.getters.infoId == -1"
-    >
-      从通讯录“我的团队”点击“详情”可在此页面查看团队信息
-    </v-card> -->
   </div>
 
 </template>
 
 <script>
-import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup } from '../../../../../api/addresslist/index'
+import { getInfoMsg } from "../../../../../api/addresslist/index"
+import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../../api/addresslist/index'
 export default {
   data () {
     return {
-      name: "",
+      photo: "",
+      nameG: "",//群聊名称
+      email: "",
+      master: -1,
+      memberShow: false,
+      name: "",//群昵称
       iShow: true,
       kill: false,
-      introduction: "团队介绍",
+      notice: "",
       num: 10,
       pageF: 1,
       allPageF: 1,
-      friendsIndex: null,
+      friendsIndex: -1,
       friends: [],
       friendsBtns: [{
         title: '修改群昵称',
@@ -278,32 +287,6 @@ export default {
   },
 
   mounted () {
-    // if (this.$store.getters.infoId != -1) {
-    //   getGroupMember({
-    //     "id": this.$store.getters.infoId,
-    //     "ACCESS_TOKEN": null
-    //   }).then(res => {
-    //     this.friends = res
-    //     this.friends.forEach(function (item) {
-    //       item["show"] = false;
-    //       item["quit"] = false;
-    //       if (item.nick && item.nick != "") {
-    //         item.name = item.nick
-    //       }
-    //     });
-    //     this.friends = JSON.parse(JSON.stringify(this.friends))
-    //     this.allPageF = Math.ceil(this.friends.length / this.num);
-    //     // console.log(this.friends)
-    //     // this.friends = [{
-    //     //   'id': 1,
-    //     //   'name': "1",
-    //     //   'photo': "",
-    //     //   "quit": false,
-    //     //   "show": false,
-    //     // }]
-    //     // console.log(this.friends)
-    //   })
-    // }
   },
 
   methods: {
@@ -311,10 +294,65 @@ export default {
 
     },
 
+    init (photo, nameG, master, notice) {
+      this.photo = photo
+      this.nameG = nameG
+      this.master = master
+      this.notice = notice
+    },
+
+    initInfo () {
+      const that = this
+      getInfoMsg({
+        "info_id": this.$store.state.currentChannelId,
+        "type": "group"
+      }).then(res => {
+        if (!res.error) {
+          that.init(
+            res.photo,
+            res.name,
+            res.master,
+            res.notice)
+          this.getM()
+        }
+        console.log("获取好友信息成功:" + this.$store.state.currentChannelId)
+      })
+    },
+
+    changeNotice () {
+      const here = this
+      console.log(this.notice)
+      updateGroup({
+        "id": this.$parent.$parent.id,
+        "notice": this.notice
+      }).then(res => {
+        console.log("修改群公告成功")
+        console.log(res)
+        if (!res) {
+          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
+          for (this.i = 0; this.i < that.length; this.i++) {
+            if (that[this.i].group_id == here.$parent.id) {
+              that[this.i].notice = here.notice
+              break
+            }
+          }
+          here.iShowTrue()
+        }
+      })
+
+    },
+
     getMember () {
-      if (this.$store.getters.infoId != -1) {
+      if (!this.memberShow) {
+        this.getM()
+      }
+    },
+
+    getM () {
+      if (this.$parent.$parent.id != -1) {
+        const that = this
         getGroupMember({
-          "id": this.$store.getters.infoId,
+          "id": this.$parent.$parent.id,
         }).then(res => {
           this.friends = res
           this.friends.forEach(function (item) {
@@ -323,18 +361,17 @@ export default {
             if (item.nick && item.nick != "") {
               item.name = item.nick
             }
+            if (item.id == that.master) {
+              item.name = item.name + "（群主）"
+            }
+            else if (item.type == "manager") {
+              item.nick = item.name
+              item.name = item.name + "（管理员）"
+            }
           });
           this.friends = JSON.parse(JSON.stringify(this.friends))
           this.allPageF = Math.ceil(this.friends.length / this.num);
-          // console.log(this.friends)
-          // this.friends = [{
-          //   'id': 1,
-          //   'name': "1",
-          //   'photo': "",
-          //   "quit": false,
-          //   "show": false,
-          // }]
-          // console.log(this.friends)
+          this.memberShow = !this.memberShow
         })
       }
     },
@@ -354,11 +391,11 @@ export default {
         this.pageF += 1
       }
     },
-    iShowC () {
-      this.iShow = !this.iShow
+    iShowTrue () {
+      this.iShow = true
     },
     showTextField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].show = false;
           this.friends[this.friendsIndex].quit = false;
@@ -375,7 +412,7 @@ export default {
     },
 
     showQuitField (j) {
-      if (this.friendsIndex != null) {
+      if (this.friendsIndex != -1) {
         if (this.friendsIndex != j) {
           this.friends[this.friendsIndex].quit = false;
           this.friends[this.friendsIndex].show = false;
@@ -392,12 +429,18 @@ export default {
     },
 
     isMaster () {
-      return this.$store.getters.userId == this.$store.getters.master
+      return this.$store.getters.userId == this.master
     },
 
     isSelf (index) {
-      return this.$store.getters.userId == this.friends[index].id
+      return this.friends[index].id == this.$store.getters.userId
     },
+
+    isManager (index) {
+      return this.friends[index].type == "manager"
+    },
+
+    //以下三个方法，由于只有isself成立的时候才会调用，因此this.friends[index].id=this.friends[index].id
 
     changeName (index) {
       changeGroupNickname({
@@ -411,19 +454,31 @@ export default {
     },
 
     addSubMaster (index) {
+      const that = this
       addGroupManager({
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
+        "id": that.friends[index].id
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
+        if (!res) {
+          that.friends[index].name = that.friends[index].name + "（管理员）"
+          that.friends[index].type = "manager"
+        }
       })
     },
 
-    subSubMaster () {
+    subSubMaster (index) {
+      const that = this
       delGroupManager({
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
+        "id": that.friends[index].id
       }).then(res => {
         console.log(res)
+        if (!res) {
+          that.friends[index].name = that.friends[index].nick
+          that.friends[index].type = "normal"
+        }
       })
     },
 
@@ -432,23 +487,25 @@ export default {
     },
 
     subGroup () {
+      const here = this.$parent.$parent
       delGroup({
-        "group_id": this.$store.getters.infoId
+        "group_id": this.$parent.$parent.id
       }).then(res => {
         console.log(res)
-        this.$store.commit("setInfoId", -1)
-        this.$store.commit("setInfoName", "")
-        this.$store.commit("setInfoPhoto", "")
-        this.$store.commit("setMaster", "")
         this.$store.commit("changeSiderState", 1)
-        this.$store.commit("setAbout", -1)
-        this.$parent.$parent.$parent.$children[1].getG()
-        // this.$parent.$parent.$refs.sider1[0].$el.click()
+        const that = here.$parent.$refs.MemberList.groups
+        for (this.i = 0; this.i < that.length; this.i++) {
+          if (that[this.i].group_id == here.id) {
+            that.splice(this.i, 1)
+            break
+          }
+        }
+        this.about = -1
       })
     },
 
-    iShowChange () {
-      this.iShow = true
+    iShowFalse () {
+      this.iShow = false
     }
   }
 }
