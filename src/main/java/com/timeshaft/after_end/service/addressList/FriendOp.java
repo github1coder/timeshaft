@@ -286,7 +286,7 @@ public class FriendOp {
             int index = 0;
             Date recent = new Date(System.currentTimeMillis());
             if (personalMessage != null) {
-                index = personalMessage.getId();
+                index = personalMessage.getId() + 1;
                 recent = personalMessage.getSendtime();
             }
             res.put("index", index);
