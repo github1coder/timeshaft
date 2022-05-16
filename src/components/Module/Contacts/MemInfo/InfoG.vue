@@ -51,7 +51,7 @@
           <v-btn
             color="blue"
             class="mx-2"
-            v-show="iShow && this.$store.getters.userId == this.$parent.$parent.id"
+            v-show="iShow && this.$store.getters.userId == this.master"
             @click="iShowFalse"
           >
             修改群公告
@@ -297,7 +297,7 @@ export default {
       }).then(res => {
         console.log("修改群公告成功")
         console.log(res)
-        if (res.error == null) {
+        if (!res) {
           const that = here.$parent.$parent.$parent.$refs.MemberList.groups
           for (this.i = 0; this.i < that.length; this.i++) {
             if (that[this.i].group_id == here.$parent.id) {
@@ -424,7 +424,7 @@ export default {
       }).then(res => {
         console.log(res)
         this.showQuitField(index)
-        if (res.error == null) {
+        if (!res) {
           that.friends[index].name = that.friends[index].name + "（管理员）"
           that.friends[index].type = "manager"
         }
@@ -438,7 +438,7 @@ export default {
         "id": that.friends[index].id
       }).then(res => {
         console.log(res)
-        if (res.error == null) {
+        if (!res) {
           that.friends[index].name = that.friends[index].nick
           that.friends[index].type = "normal"
         }
