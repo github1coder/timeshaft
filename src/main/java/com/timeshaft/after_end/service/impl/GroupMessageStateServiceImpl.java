@@ -43,6 +43,17 @@ public class GroupMessageStateServiceImpl implements GroupMessageStateService {
     }
 
     /**
+     * 通过实体查询
+     *
+     * @param groupMessageState 查询条件实体
+     * @return 对象列表
+     */
+    @Override
+    public List<GroupMessageState> queryAll(GroupMessageState groupMessageState) {
+        return this.groupMessageStateMapper.queryAll(groupMessageState);
+    }
+
+    /**
      * 新增数据
      *
      * @param groupMessageState 实例对象

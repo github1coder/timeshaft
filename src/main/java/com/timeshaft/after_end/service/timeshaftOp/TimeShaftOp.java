@@ -1,12 +1,14 @@
 package com.timeshaft.after_end.service.timeshaftOp;
 
 
+import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.*;
 
@@ -38,8 +40,9 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-    public Integer beginTimeShaftSingle(String title, String conclude, Integer creator_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
-        Timeshaft timeshaft = new Timeshaft(group_id, creator_id, title, new Date(), null, conclude, type);
+//    @PermissionAnnotation(level=2)
+    public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type);
         timeshaft = timeshaftService.insert(timeshaft);
         changeGroupState(group_id, type, OnMeeting);
         for (String tag : tags) {
@@ -49,39 +52,45 @@ public class TimeShaftOp {
         return timeshaft.getId();
     }
 
-    public List<Map<String, Object>> getTimeshaft(Integer group_id, String type) {
+//    @PermissionAnnotation(level=3)
+    public List<Map<String, Object>> getTimeshaft(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
-            Map<String, Object> timeshaftRes = new HashMap<>();
-            User user = userService.queryById(timeshaft.getCreatorId());
-            timeshaftRes.put("title", timeshaft.getName());
-            timeshaftRes.put("img", user.getPhoto());
-            timeshaftRes.put("begin_date", timeshaft.getBeginTime());
-            timeshaftRes.put("end_date", timeshaft.getEndTime());
-            timeshaftRes.put("conclude", timeshaft.getConclude());
-            timeshaftRes.put("host", user.getUsername());
+            if (timeshaft.getEndTime()!=null) {
+                Map<String, Object> timeshaftRes = new HashMap<>();
+                User user = userService.queryById(timeshaft.getCreatorId());
+                timeshaftRes.put("title", timeshaft.getName());
+                timeshaftRes.put("img", user.getPhoto());
+                timeshaftRes.put("begin_date", timeshaft.getBeginTime());
+                timeshaftRes.put("last_time", (timeshaft.getEndTime().getTime()-timeshaft.getBeginTime().getTime())/1000/60);
+                timeshaftRes.put("conclude", timeshaft.getConclude());
+                timeshaftRes.put("host", user.getUsername());
 
-            List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
-            List<String> tagsRes = new ArrayList<>();
-            for (Tag tag: tags) {
-                tagsRes.add(tag.getName());
+                List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                List<String> tagsRes = new ArrayList<>();
+                for (Tag tag : tags) {
+                    tagsRes.add(tag.getName());
+                }
+                timeshaftRes.put("tags", tagsRes);
+
+                Object messages = getTimeShaftMessage(timeshaft);
+                timeshaftRes.put("messages", messages);
+                timeshaftsRes.add(timeshaftRes);
             }
-            timeshaftRes.put("tags", tagsRes);
-
-            Object messages = getTimeShaftMessage(timeshaft);
-            timeshaftRes.put("messages", messages);
-            timeshaftsRes.add(timeshaftRes);
         }
         return timeshaftsRes;
     }
 
-    public void endTimeShaft(Integer timeshaft_id) throws Exception {
-        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
-        timeshaft.setEndTime(new Date());
-        timeshaftService.update(timeshaft);
-        changeGroupState(timeshaft.getGroupId(), timeshaft.getType(), OffMeeting);
+//    @PermissionAnnotation(level=2)
+    public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
+        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null,type));
+        for (Timeshaft timeshaft : timeshafts) {
+            timeshaft.setEndTime(new Date());
+            timeshaftService.update(timeshaft);
+        }
+        changeGroupState(group_id, type, OffMeeting);
     }
 
     private void changeGroupState(Integer group_id, String type, String status) throws Exception {

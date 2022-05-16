@@ -15,7 +15,7 @@ public interface GroupMessageStateService {
     /**
      * 通过ID查询单条数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 实例对象
      */
     GroupMessageState queryById(Integer id);
@@ -28,6 +28,14 @@ public interface GroupMessageStateService {
      * @return 对象列表
      */
     List<GroupMessageState> queryAllByLimit(int offset, int limit);
+
+    /**
+     * 通过实体查询
+     *
+     * @param groupMessageState 查询条件实体
+     * @return 对象列表
+     */
+    List<GroupMessageState> queryAll(GroupMessageState groupMessageState);
 
     /**
      * 新增数据
@@ -48,7 +56,7 @@ public interface GroupMessageStateService {
     /**
      * 通过主键删除数据
      *
-     * @param messageId 主键
+     * @param id 主键
      * @return 是否成功
      */
     boolean deleteById(Integer id);

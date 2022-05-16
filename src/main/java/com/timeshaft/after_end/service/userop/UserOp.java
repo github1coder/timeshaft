@@ -4,15 +4,11 @@ import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.entity.UserToken;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.UserTokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UserOp {
@@ -22,6 +18,10 @@ public class UserOp {
     private MyPasswordEncoder myPasswordEncoder;
     @Autowired
     private UserTokenService userTokenService;
+    @Autowired
+    RedisTemplate<String,Object> redisTemplate;
+
+    String key = "userToken";
 
 
     public User register(String email, String password, String username) throws Exception {
@@ -54,6 +54,17 @@ public class UserOp {
         userRes.put("username", user.getUsername());
         userRes.put("email", user.getEmail());
         userRes.put("ACCESS_TOKEN", token);
+
+        ArrayList<String> tokens = new ArrayList<>();
+        String userId = String.valueOf(user.getId());
+        if (redisTemplate.hasKey(key)) {
+            if (redisTemplate.opsForHash().hasKey(key, userId)) {
+                tokens = (ArrayList<String>) redisTemplate.opsForHash().get(key, userId);
+            }
+        }
+        tokens.add(token);
+        redisTemplate.opsForHash().put(key, userId, tokens);
+
         return userRes;
     }
 
@@ -73,6 +84,17 @@ public class UserOp {
        List<UserToken> userTokens = userTokenService.queryAll(new UserToken(user_id, token));
        for (UserToken userToken: userTokens) {
            userTokenService.deleteById(userToken.getId());
+       }
+
+        String userId = String.valueOf(user_id);
+       if (redisTemplate.hasKey(key)) {
+           if (redisTemplate.opsForHash().hasKey(key, userId)) {
+                ArrayList<String> tokens = (ArrayList<String>) redisTemplate.opsForHash().get(key, userId);
+                if(tokens.contains(token)) {
+                    tokens.remove(token);
+                    redisTemplate.opsForHash().put(key, userId, tokens);
+                }
+           }
        }
     }
 

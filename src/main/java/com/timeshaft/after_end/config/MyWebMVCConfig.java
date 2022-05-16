@@ -15,8 +15,8 @@ public class MyWebMVCConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new MyHandlerIntercepter())
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/user/loginn", "/user/register", "/user/getCheckCode");
+        registry.addInterceptor(new TokenIntercepter())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/loginn", "/user/register", "/user/getCheckCode", "/photo/*", "/favicon.ico");
     }
 }
