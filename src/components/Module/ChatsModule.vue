@@ -57,7 +57,7 @@
                 rounded
                 max-height="80px"
             >
-              <v-list-item-group color="primary">
+              <v-list-item-group color="primary" mandatory>
                 <v-list-item
                     v-for="(item, i) in this.messages"
                     @click="selectChannel(item.id, i, item)"
@@ -169,7 +169,7 @@ export default {
       })
       console.log("idx: " + idx)
       if (idx !== -1) {
-        console.log("in")
+        console.log("out" + payload.time)
         this.messages[idx].lastTime = payload.time
         this.messages[idx].lastMessage = {
           msg: payload.msg,
@@ -187,7 +187,7 @@ export default {
       })
       console.log("idx: " + idx)
       if (idx !== -1) {
-        console.log("in")
+        console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
         this.messages[idx].number += 1
         this.messages[idx].lastMessage = {
@@ -197,6 +197,7 @@ export default {
         if (this.$refs.chatMessage !== undefined) {
           console.log(this.$refs.chatMessage)
           this.$refs.chatMessage.messages.push(payload)
+          this.$refs.chatMessage.scrollToBottom()
         }
 
       } else {
@@ -219,28 +220,31 @@ export default {
       this.$store.commit("toggleAC");
     },
     selectChannel (id, idx, item) {
-      // 等画面完全渲染
-      setTimeout(()=> {
-        console.log(this.$refs)
-        this.$refs.chatMessage.init()
-      }, 100)
       //关闭工具栏
       this.$parent.toolsDrawer = false
       console.log(id)
       console.log(item)
-      this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
-      if (item.number !== 0) {
-        item.number = 0
-        haveRead({
-          type: item.type,
-          chatId: item.id,
-          userId: this.$store.state.userId,
-          time: item.time,
-        }).then(res => {
-          res
-          console.log("have read this msg")
-        })
+      if (idx !== this.$store.state.currentChannelIdx) {
+        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
+        // 等画面完全渲染
+        setTimeout(()=> {
+          console.log(this.$refs)
+          this.$refs.chatMessage.init()
+        }, 100)
+        if (item.number !== 0) {
+          item.number = 0
+          haveRead({
+            type: item.type,
+            chatId: item.id,
+            userId: this.$store.state.userId,
+            time: item.time,
+          }).then(res => {
+            res
+            console.log("have read this msg")
+          })
+        }
       }
+
     },
 
     socketInit() {
