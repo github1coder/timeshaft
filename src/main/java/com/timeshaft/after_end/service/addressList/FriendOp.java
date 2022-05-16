@@ -299,6 +299,7 @@ public class FriendOp {
             HashMap<String, Object> lastMessage = new HashMap<>();
             lastMessage.put("msg", null);
             lastMessage.put("time", null);
+            res.put("lastMessage", lastMessage);
             messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
         }
     }
