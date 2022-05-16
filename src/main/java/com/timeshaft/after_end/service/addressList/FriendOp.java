@@ -309,6 +309,8 @@ public class FriendOp {
             res.put("email", null);
             res.put("name", group.getName());
             res.put("nick", null);
+            res.put("notice", group.getNotice());
+            res.put("master", group.getMasterId().toString());
         } else {
             Friends friends = friendsService.queryById(info_id);
             if(friends.getUserId1() == user_id) {
