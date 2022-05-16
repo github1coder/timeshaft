@@ -75,17 +75,18 @@ export default {
     init() {
       this.clearMessages()
       setTimeout(() => {
+        console.log(this.$store.state.currentChatTime)
         getHistoryMessage({
+          lastTime: this.$store.state.currentChatTime,
           userId: this.$store.state.userId,
           type: this.$store.state.currentChatType,
           chatId: this.$store.state.currentChannelId,
-          index: this.$store.state.currentChatIndex,
         }).then(res => {
           console.log("拉取 " + res.data.length + " 条历史消息")
           console.log(res)
           this.$store.state.currentChatMore = res.more
           if (this.$store.state.currentChannelIdx !== -1) {
-            this.$store.state.currentChatIndex = res.index
+            this.$store.state.currentChatTime = res.lastTime
             console.log(this.messages)
             for (let i = res.data.length-1; i >= 0; i--) {
               this.messages.unshift(res.data[i])
@@ -107,16 +108,16 @@ export default {
         console.log("more: " + this.$store.state.currentChatMore)
         if (this.$store.state.currentChatMore) {
           getHistoryMessage({
+            lastTime: this.$store.state.currentChatTime,
             userId: this.$store.state.userId,
             type: this.$store.state.currentChatType,
             chatId: this.$store.state.currentChannelId,
-            index: this.$store.state.currentChatIndex,
           }).then(res => {
             console.log("拉取 " + res.data.length + " 条历史消息")
             console.log(res)
             this.$store.state.currentChatMore = res.more
             if (this.$store.state.currentChannelIdx !== -1) {
-              this.$store.state.currentChatIndex = res.index
+              this.$store.state.currentChatTime = res.lastTime
               console.log(this.messages)
               for (let i = res.data.length-1; i >= 0; i--) {
                 this.messages.unshift(res.data[i])
@@ -139,7 +140,6 @@ export default {
   created() {
     this.init()
   }
-
 }
 </script>
 

@@ -32,7 +32,7 @@ export default new Vuex.Store({
         contactClient: null,
         //
         currentChatType: null,
-        currentChatIndex: null,
+        currentChatTime: null,
         currentChatMore: null,
         currentChatName: null,
     },
@@ -102,7 +102,7 @@ export default new Vuex.Store({
             store.currentChannelIdx = data.idx;
             store.more = true
             store.currentChatType = data.type;
-            store.currentChatIndex = data.index;
+            store.currentChatTime = data.time;
                 // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {

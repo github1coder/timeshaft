@@ -170,6 +170,7 @@ export default {
       console.log("idx: " + idx)
       if (idx !== -1) {
         console.log("in")
+        this.messages[idx].lastTime = payload.time
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
@@ -187,6 +188,7 @@ export default {
       console.log("idx: " + idx)
       if (idx !== -1) {
         console.log("in")
+        this.messages[idx].lastTime = payload.time
         this.messages[idx].number += 1
         this.messages[idx].lastMessage = {
           msg: payload.msg,
@@ -226,7 +228,7 @@ export default {
       this.$parent.toolsDrawer = false
       console.log(id)
       console.log(item)
-      this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, index: item.index });
+      this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
       if (item.number !== 0) {
         item.number = 0
         haveRead({
