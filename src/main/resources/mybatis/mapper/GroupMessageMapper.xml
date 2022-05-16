@@ -111,7 +111,7 @@
     <select id="queryHistoryById" resultMap="BaseResultMap">
         select
             id, group_id, sender_id, message, sendtime from timeshaft.group_message
-        where group_id = #{groupId} and id &lt; #{index}
+        where group_id = #{groupId} and sendtime &lt; #{time}
         order by id desc
         limit 0, 20
     </select>

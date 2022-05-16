@@ -5,6 +5,8 @@ import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
 import com.timeshaft.after_end.entity.Timeshaft;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,10 +30,10 @@ public interface PersonalMessageService {
      *
      * @param friendsId 接收者id
      * @param senderId 发送者id
-     * @param index 查询起始的id
+     * @param time 查询起始的时间
      * @return 实例对象列表
      */
-    List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Integer index);
+    List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Date time);
 
     /**
      * 查询最新消息
