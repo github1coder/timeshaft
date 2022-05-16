@@ -8,15 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 //@Controller
@@ -29,15 +28,16 @@ public class UserController {
     private UserOp userOp;
     @Autowired
     private MailService mailService;
+    @Autowired
+    RedisTemplate<String,Object> redisTemplate;
 
     @RequestMapping("/getCheckCode")
     public ResponseService getCheckCode(@RequestParam(value = "email") String email){
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         String message = "您的注册验证码为："+checkCode;
         mailService.sendSimpleMail(email, "注册验证码", message);
-        Map<String, String> res = new HashMap<>();
-        res.put("checkCode", checkCode);
-        return new ResponseService(res);
+        redisTemplate.opsForValue().set(email, checkCode, 5,  TimeUnit.MINUTES);
+        return new ResponseService();
     }
 
     @RequestMapping("/register")
@@ -46,7 +46,8 @@ public class UserController {
         String email = requestMap.get("email");
         String password = requestMap.get("password");
         String username = requestMap.get("username");
-        User user = userOp.register(email, password, username);
+        String checkCode = requestMap.get("checkCode");
+        User user = userOp.register(email, password, username, checkCode);
         log.info("注册成功");
         return new ResponseService();
     }
@@ -68,7 +69,7 @@ public class UserController {
     @RequestMapping(value = "/changePwd")
     public ResponseService changePwd(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) throws Exception {
         //Integer uid = (Integer) session.getAttribute(Const.SESSION_UID);
-        userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"));
+        userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"), map.get("checkCode"));
         return new ResponseService();
     }
 }

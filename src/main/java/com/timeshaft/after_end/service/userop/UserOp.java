@@ -24,12 +24,15 @@ public class UserOp {
     String key = "userToken";
 
 
-    public User register(String email, String password, String username) throws Exception {
+    public User register(String email, String password, String username, String checkCode) throws Exception {
         User u = new User(email, null, null, null);
         List<User> users = userService.queryAll(u);
         if (users.size() > 0) {
             throw new Exception("邮箱已被注册");
         }
+
+        checkCodeCheck(email, checkCode);
+
         String savePassword = myPasswordEncoder.encode(password);
         String baseURL = "http://182.92.163.68:8080/photo/" +
                 (new Random().nextInt(12) + 1) + ".png";
@@ -68,8 +71,9 @@ public class UserOp {
         return userRes;
     }
 
-    public void changePwd(Integer user_id, String oldPassword, String newPassword) throws Exception {
+    public void changePwd(Integer user_id, String oldPassword, String newPassword, String checkCode) throws Exception {
         User user = userService.queryById(user_id);
+        checkCodeCheck(user.getEmail(), checkCode);
         boolean flag = myPasswordEncoder.matches(oldPassword, user.getPassword());
         if (flag) {
             user.setPassword(myPasswordEncoder.encode(newPassword));
@@ -96,6 +100,13 @@ public class UserOp {
                 }
            }
        }
+    }
+
+    private void checkCodeCheck(String email, String checkCode) throws Exception {
+        if (redisTemplate.opsForValue().get(email)==null
+                || !String.valueOf(redisTemplate.opsForValue().get(email)).equals(checkCode)) {
+            throw new Exception("验证码错误");
+        }
     }
 
     //length用户要求产生字符串的长度
