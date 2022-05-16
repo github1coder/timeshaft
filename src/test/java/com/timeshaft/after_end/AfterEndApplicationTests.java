@@ -1,6 +1,7 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
+import com.timeshaft.after_end.controller.MessageController;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 
 @SpringBootTest
@@ -33,9 +36,15 @@ class AfterEndApplicationTests {
     private MailService mailService;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private MessageController messageController;
 
     @Test
     void contextLoads() {
-
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("msg", "123");
+        map.put("chatId", 8);
+        map.put("userId", 5);
+        messageController.receivePersonalMessage(map);
     }
 }

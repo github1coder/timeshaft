@@ -191,7 +191,7 @@ public class ChatController {
 
     @RequestMapping(value = "/chatUrl")
     public ResponseService getChatUrl(@RequestParam("userId") Integer userId) {
-        String chatUrl = "/user/" + userId;
+        String chatUrl = "/user/" + userId + "/chat";
         HashMap<String, Object> data = new HashMap<>();
         data.put("url", chatUrl);
         return new ResponseService(data);
