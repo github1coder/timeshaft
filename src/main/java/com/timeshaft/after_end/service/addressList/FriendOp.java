@@ -297,6 +297,8 @@ public class FriendOp {
             res.put("chatName", accNickName);
             res.put("chatAvatar", acceptor.getPhoto());
             messagingTemplate.convertAndSend("/user/contact/" + sender.getId(), res);
+        } else if (type.equals(groupType) && action.equals(ACCEPT)) {
+
         }
     }
 

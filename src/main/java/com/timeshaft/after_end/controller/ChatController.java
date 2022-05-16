@@ -210,7 +210,8 @@ public class ChatController {
     public ResponseService getHistoryMessage(@RequestParam("userId") Integer userId,
                                              @RequestParam("lastTime") String lastTime,
                                              @RequestParam("chatId") Integer chatId,
-                                             @RequestParam("type") String type) {
+                                             @RequestParam("type") String type,
+                                             @RequestParam("first") Integer first) {
         HashMap<String, Object> res = new HashMap<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
@@ -218,6 +219,9 @@ public class ChatController {
             date = simpleDateFormat.parse(lastTime);
         } catch (Exception e) {
             return new ResponseService();
+        }
+        if (first == 1) {
+            date = new Date(date.getTime() + 1);
         }
         if (type != null && type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
