@@ -1,19 +1,22 @@
 <template>
   <div class="chat-content">
-    <div class="messages" id="scroll-target" >
+    <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
-        <v-list  three-line dark v-scroll:#scroll-target="onScroll">
+        <v-list three-line dark v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
               <v-list-item-avatar>
                 <!--TODO-- 等待对接后改成图片>-->
                 <v-img :src="message.msgFromAvatar"></v-img>
-<!--                <v-icon v-text="message.msgFromAvatar"></v-icon>-->
+                <!--                <v-icon v-text="message.msgFromAvatar"></v-icon>-->
               </v-list-item-avatar>
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ message.msg }}</v-list-item-subtitle>
+                <v-list-item-subtitle
+                    @contextmenu.prevent="messageOperations"
+                >{{ message.msg }}
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -25,7 +28,7 @@
 </template>
 
 <script>
-import { getHistoryMessage} from "@/api/message";
+import {getHistoryMessage} from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
 
 export default {
@@ -37,9 +40,26 @@ export default {
       refreshed: true,
       cache: 0,
       messages: [],
+      messagesOperationData: {
+        menuName: "message",
+        axis: {
+          x: null,
+          y: null
+        },
+        menulists: [
+          {
+            fnHandler: "test",
+            icoName: "fa fa-home fa-fw",
+            btnName: "Save"
+          }
+        ]
+      }
     }
   },
   methods: {
+    messageOperations() {
+
+    },
     onScroll() {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
@@ -51,7 +71,7 @@ export default {
     },
 
     scrollToBottom() {
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         const list = this.$el.querySelector(".messages");
         console.log("list is:")
         console.log(list)
@@ -90,7 +110,7 @@ export default {
           if (this.$store.state.currentChannelIdx !== -1) {
             this.$store.state.currentChatTime = res.lastTime
             console.log(this.messages)
-            for (let i = res.data.length-1; i >= 0; i--) {
+            for (let i = res.data.length - 1; i >= 0; i--) {
               this.messages.unshift(res.data[i])
             }
             this.$store.state.currentChatHaveRead += res.data.length
@@ -100,9 +120,7 @@ export default {
       }, 100)
     }
   },
-  computed: {
-
-  },
+  computed: {},
   watch: {
     refreshed(newVal, oldVal) {
       if (newVal && !oldVal) {
@@ -123,7 +141,7 @@ export default {
             if (this.$store.state.currentChannelIdx !== -1) {
               this.$store.state.currentChatTime = res.lastTime
               console.log(this.messages)
-              for (let i = res.data.length-1; i >= 0; i--) {
+              for (let i = res.data.length - 1; i >= 0; i--) {
                 this.messages.unshift(res.data[i])
               }
               this.$store.state.currentChatHaveRead += res.data.length
