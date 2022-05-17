@@ -137,6 +137,8 @@
 
 
 <script>
+import {getTimeShaftData} from "@/api/timeShaft";
+
 export default {
   data: () => ({
     focus: '',
@@ -209,7 +211,8 @@ export default {
       const max = new Date(`${end.date}T23:59:59`)
       const days = (max.getTime() - min.getTime()) / 86400000
       const eventCount = this.rnd(days, days + 20)
-
+      console.log("min:" + this.timestampToTime(min.getTime()))
+      console.log("max:" + this.timestampToTime(max.getTime()))
       for (let i = 0; i < eventCount; i++) {
         const allDay = this.rnd(0, 3) === 0
         const firstTimestamp = this.rnd(min.getTime(), max.getTime())
@@ -227,8 +230,22 @@ export default {
           timed: !allDay,
         })
       }
+      console.log("====")
+      console.log(events)
+      getTimeShaftData({
+        start: this.timestampToTime(min.getTime()),
+        end: this.timestampToTime(max.getTime())
+      }).then(res => {
+        console.log("----")
+        console.log(res)
+        for(let i in res) {
+          res[i].start = this.timestampToTime(res[i].start)
+          res[i].end = this.timestampToTime(res[i].end)
+          res[i].color = this.colors[this.rnd(0, this.colors.length - 1)]
+        }
+        this.events = res
+      })
 
-      this.events = events
     },
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
