@@ -241,6 +241,7 @@ export default {
         console.log(res)
         for(let i in res) {
           res[i].color = this.colors[this.rnd(0, this.colors.length - 1)]
+          res[i].timed = true
         }
         this.events = res
       })
