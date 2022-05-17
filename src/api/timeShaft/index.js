@@ -32,3 +32,11 @@ export function beginTimeShaftSingle(param) {
         data: param
     })
 }
+
+export function getTimeShaftData(param) {
+    return request({
+        url: '/timeshaft/getTimeShaftData',
+        method: 'get',
+        params: param
+    })
+}
