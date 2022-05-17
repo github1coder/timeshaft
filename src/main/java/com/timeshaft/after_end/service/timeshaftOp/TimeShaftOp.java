@@ -42,7 +42,7 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-//    @PermissionAnnotation(level=2)
+//    @PermissionAnnotation(level=12)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type);
         timeshaft = timeshaftService.insert(timeshaft);
@@ -54,7 +54,7 @@ public class TimeShaftOp {
         return timeshaft.getId();
     }
 
-//    @PermissionAnnotation(level=3)
+//    @PermissionAnnotation(level=13)
     public List<Map<String, Object>> getTimeshaft(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
@@ -85,7 +85,7 @@ public class TimeShaftOp {
         return timeshaftsRes;
     }
 
-//    @PermissionAnnotation(level=2)
+//    @PermissionAnnotation(level=12)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null,type));
         for (Timeshaft timeshaft : timeshafts) {

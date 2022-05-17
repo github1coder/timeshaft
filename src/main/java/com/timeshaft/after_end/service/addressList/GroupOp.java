@@ -47,7 +47,7 @@ public class GroupOp {
         groupHeatService.insert(new GroupHeat(group.getId(), 0, 0, GROUP));
     }
 
-    @PermissionAnnotation(level=1)
+    @PermissionAnnotation(level=11)
     public void deleteGroup(int user_id, int group_id) {
         List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, null, null, null, null));
         for(GroupUser groupUser : groupUsers) {
@@ -61,7 +61,7 @@ public class GroupOp {
         }
     }
 
-    @PermissionAnnotation(level=2)
+    @PermissionAnnotation(level=12)
     public void updateGroup(Integer user_id, int group_id, String name, String photo, String notice) {
         Group group = groupService.queryById(group_id);
         group.setName(name);
@@ -80,13 +80,13 @@ public class GroupOp {
         return groups;
     }
 
-    @PermissionAnnotation(level=3)
+    @PermissionAnnotation(level=13)
     public void joinGroup(int user_id, int group_id, int join_user_id) {
         GroupUser groupUser = new GroupUser(group_id, join_user_id, null, MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
     }
 
-    @PermissionAnnotation(level=3)
+    @PermissionAnnotation(level=13)
     public void quitGroup(int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
@@ -95,7 +95,7 @@ public class GroupOp {
         }
     }
 
-    @PermissionAnnotation(level=1)
+    @PermissionAnnotation(level=11)
     public void addManager(int id, int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
@@ -105,7 +105,7 @@ public class GroupOp {
         }
     }
 
-    @PermissionAnnotation(level=1)
+    @PermissionAnnotation(level=11)
     public void delManager(int id, int group_id, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, id, null, MANAGER, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
@@ -115,7 +115,7 @@ public class GroupOp {
         }
     }
 
-    @PermissionAnnotation(level=3)
+    @PermissionAnnotation(level=13)
     public void changeNickname(int group_id, String name, int user_id) {
         GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);

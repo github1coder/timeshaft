@@ -32,9 +32,17 @@ public class PermissionAOP {
 
     @Before(value = "permissionCheck() && @annotation(permissionAnnotation)")
     public void permission(JoinPoint joinPoint, PermissionAnnotation permissionAnnotation) throws Exception {
-        Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
-        Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-        groupUserService.hasPower(new GroupUser(group_id, user_id, null, null ,null), permissionAnnotation.level());
+        if (permissionAnnotation.level()>10 && permissionAnnotation.level()>20) { //zzy
+            Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
+            Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
+            groupUserService.hasPower(new GroupUser(group_id, user_id, null, null ,null), permissionAnnotation.level());
+        }
+        else if (permissionAnnotation.level()>20 && permissionAnnotation.level()>30) { //dxt
+
+        }
+        else if (permissionAnnotation.level()>30 && permissionAnnotation.level()>40) {  //czr
+
+        }
     }
 
     private Object simpleResolver(JoinPoint joinPoint, String str) {
