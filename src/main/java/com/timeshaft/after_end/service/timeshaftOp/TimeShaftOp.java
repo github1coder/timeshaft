@@ -89,8 +89,10 @@ public class TimeShaftOp {
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null,type));
         for (Timeshaft timeshaft : timeshafts) {
-            timeshaft.setEndTime(new Date());
-            timeshaftService.update(timeshaft);
+            if (timeshaft.getEndTime() == null) {
+                timeshaft.setEndTime(new Date());
+                timeshaftService.update(timeshaft);
+            }
         }
         changeGroupState(group_id, type, OffMeeting);
     }
