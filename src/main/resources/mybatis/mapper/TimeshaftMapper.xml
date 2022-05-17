@@ -103,4 +103,11 @@
         delete from timeshaft.timeshaft where id = #{id}
     </delete>
 
+    <select id="queryTimeshaftByTime" resultMap="BaseResultMap">
+        select
+            id, group_id, creator_id, name, begin_time, end_time, conclude, type
+        from timeshaft.timeshaft
+        where (begin_time between #{start_time} and #{end_time}) and (end_time between #{start_time} and #{end_time})
+    </select>
+
 </mapper>

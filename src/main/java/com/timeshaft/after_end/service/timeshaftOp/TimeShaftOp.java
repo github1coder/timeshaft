@@ -10,6 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -119,5 +121,22 @@ public class TimeShaftOp {
         else {
             return null;
         }
+    }
+
+    public List<Map<String, String>> getTimeShaftData(String start, String end) throws ParseException {
+        ArrayList<Map<String, String>> res = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start_time = sdf.parse(start);
+        Date end_time = sdf.parse(end);
+        List<Timeshaft> timeshafts = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        for(Timeshaft timeshaft : timeshafts) {
+            Map<String, String> out = new HashMap<>();
+            out.put("topic", timeshaft.getName());
+            out.put("start_time", timeshaft.getBeginTime().toString());
+            out.put("end_time", timeshaft.getEndTime().toString());
+            out.put("timed", "false");
+            res.add(out);
+        }
+        return res;
     }
 }

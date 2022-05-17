@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,5 +58,11 @@ public class TimeShaftController {
         timeShaftOp.endTimeShaft(group_id, type, user_id);
         log.info("结束时间轴成功");
         return new ResponseService();
+    }
+
+    @RequestMapping("/getTimeShaftData")
+    public ResponseService getTimeShaftData(@RequestParam("start_time") String start_time, @RequestParam("end_time") String end_time) throws ParseException {
+        List<Map<String, String>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
+        return new ResponseService(res);
     }
 }

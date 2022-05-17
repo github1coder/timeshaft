@@ -2,6 +2,7 @@ package com.timeshaft.after_end.service;
 
 import com.timeshaft.after_end.entity.Timeshaft;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,4 +55,6 @@ public interface TimeshaftService {
     boolean deleteById(Integer id);
 
     List<Timeshaft> queryAll(Timeshaft timeshaft);
+
+    List<Timeshaft> queryTimeshaftByTime(Date start_time, Date end_time);
 }

@@ -6,6 +6,7 @@ import com.timeshaft.after_end.service.TimeshaftService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -80,5 +81,10 @@ public class TimeshaftServiceImpl implements TimeshaftService {
     @Override
     public List<Timeshaft> queryAll(Timeshaft timeshaft) {
         return this.timeshaftMapper.queryAll(timeshaft);
+    }
+
+    @Override
+    public List<Timeshaft> queryTimeshaftByTime(Date start_time, Date end_time) {
+        return this.timeshaftMapper.queryTimeshaftByTime(start_time, end_time);
     }
 }

@@ -2,6 +2,8 @@ package com.timeshaft.after_end.mapper;
 
 import com.timeshaft.after_end.entity.Timeshaft;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,4 +64,13 @@ public interface TimeshaftMapper {
      */
     int deleteById(Integer id);
 
+
+    /**
+     * 通过时间查询数据
+     *
+     * @param start_time 开始时间
+     * @param end_time 结束时间
+     * @return 对象列表
+     */
+    List<Timeshaft> queryTimeshaftByTime(Date start_time, Date end_time);
 }
