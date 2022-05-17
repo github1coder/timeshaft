@@ -1,74 +1,53 @@
 <template>
-  <v-data-table
-      :headers="this.headers"
-      :items="this.items"
-      :items-per-page="5"
-      class="elevation-1"
-  ></v-data-table>
+  <div id="app" @contextmenu="showMenu"
+       style="width: 100px;height: 100px;margin-top: 20px;background: red;">
+    <vue-context-menu :contextMenuData="contextMenuData"
+                      @home="home"
+                      @deletedata="deletedata"></vue-context-menu>
+  </div>
 </template>
-
 <script>
 export default {
-name: "test",
-  data() {
+  name: 'app',
+  data () {
     return {
-      items: [
-        {
-          name: "International Workshop on Languages and Compilers for Parallel Computing",
-          num: "803"
+      // 菜单数据
+      contextMenuData: {
+        menuName: 'demo',
+        //菜单显示的位置
+        axis: {
+          x: null,
+          y: null
         },
-        {
-          name: "ACM Transactions on Architecture and Code Optimization",
-          num: "813"
-        },
-        {
-          name: "Proceedings of the VLDB Endowment",
-          num: "3189"
-        },
-        {
-          name: "ACM/IEEE Design Automation Conference",
-          num: "7772"
-        },
-        {
-          name: "International Conference on Architectural Support for Programming Languages and Operating Systems",
-          num: "1284"
-        },
-        {
-          name: "International Conference on Compiler Construction",
-          num: "596"
-        },
-        {
-          name: "Transactions on Embedded Computing Systems ",
-          num: "1476"
-        },
-        {
-          name: "International Workshop on Mobile Computing Systems and Applications",
-          num: "487"
-        },
-        {
-          name: "ACM SIGPLAN Notice",
-          num: "2544"
-        },
-        {
-          name: "USENIX Symposium on Operating Systems Design and Implementation",
-          num: "648"
-        },
-      ],
-      headers: [
-        {
-          text: "conference",
-          value: 'name'
-        },
-        {
-          text: "num",
-          value: 'num'
+        //菜单选项
+        menulists: [{
+          fnHandler: 'home', //绑定事件
+          icoName: 'fa fa-home fa-fw', //icon图标
+          btnName: '回到主页' //菜单名称
+        }, {
+          fnHandler: 'deletedata',
+          icoName: 'fa fa-minus-square-o  fa-fw',
+          btnName: '删除布局'
+        }]
+      }
+    }
+  },
+  methods: {
+      showMenu () {
+        event.preventDefault()
+        var x = event.clientX
+        var y = event.clientY
+        // Get the current location
+        this.contextMenuData.axis = {
+          x, y
         }
-      ]
+      },
+      homed () {
+        alert("主页")
+      },
+      deletedata () {
+        console.log('delete!')
+      }
     }
   }
-}
 </script>
-
-<style scoped>
-
-</style>

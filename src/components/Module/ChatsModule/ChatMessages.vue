@@ -13,10 +13,14 @@
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-                <v-list-item-subtitle
-                    @contextmenu.prevent="messageOperations"
-                >{{ message.msg }}
-                </v-list-item-subtitle>
+                <vue-context-menu
+                  :context-menu-data="messagesOperationData"
+                  @test="test"
+                >
+                  <v-list-item-subtitle
+                  >{{ message.msg }}
+                  </v-list-item-subtitle>
+                </vue-context-menu>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -51,12 +55,15 @@ export default {
             fnHandler: "test",
             icoName: "fa fa-home fa-fw",
             btnName: "Save"
-          }
+          },
         ]
       }
     }
   },
   methods: {
+    test() {
+      alert("哈哈")
+    },
     messageOperations() {
 
     },

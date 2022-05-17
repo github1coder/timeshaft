@@ -3,10 +3,13 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import router from './router'
 import store from './store'
+import VueContextMenu from "vue-contextmenu";
+
 
 Vue.config.productionTip = false
 
 new Vue({
+    VueContextMenu,
     vuetify,
     router,
     store,
