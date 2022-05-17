@@ -1,8 +1,10 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
+import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.GroupUserService;
+import com.timeshaft.after_end.service.TimeshaftService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
@@ -35,11 +37,13 @@ class AfterEndApplicationTests {
     private MailService mailService;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private TimeshaftService timeshaftService;
 
 
 
     @Test
     void contextLoads() {
-
+        System.out.println(timeshaftService.queryById(69).getBeginTime());
     }
 }
