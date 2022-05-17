@@ -132,8 +132,16 @@ public class TimeShaftOp {
         for(Timeshaft timeshaft : timeshafts) {
             Map<String, String> out = new HashMap<>();
             out.put("name", timeshaft.getName());
-            out.put("start", timeshaft.getBeginTime().toString());
-            out.put("end", timeshaft.getEndTime().toString());
+            if(timeshaft.getBeginTime().compareTo(start_time) < 0) {
+                out.put("start", start_time.toString());
+            } else {
+                out.put("start", timeshaft.getBeginTime().toString());
+            }
+            if(timeshaft.getEndTime().compareTo(end_time) > 0) {
+                out.put("end", end_time.toString());
+            } else {
+                out.put("end", timeshaft.getEndTime().toString());
+            }
             out.put("timed", "false");
             res.add(out);
         }

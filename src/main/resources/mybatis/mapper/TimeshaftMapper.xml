@@ -107,7 +107,7 @@
         select
             id, group_id, creator_id, name, begin_time, end_time, conclude, type
         from timeshaft.timeshaft
-        where (begin_time between #{start_time} and #{end_time}) and (end_time between #{start_time} and #{end_time})
+        where ((begin_time between #{start_time} and #{end_time}) or (end_time between #{start_time} and #{end_time})) or (begin_time > #{start_time} and  #{end_time} > end_time)
     </select>
 
 </mapper>
