@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         more: true,
-        DEBUG: true,
+        DEBUG: false,
         userId: -1,
         email: null,
         accessToken: null,
