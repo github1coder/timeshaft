@@ -203,6 +203,7 @@ export default {
     },
 
     updateRange ({ start, end }) {
+      // TODO 按照接口实现
       const events = []
 
       const min = new Date(`${start.date}T00:00:00`)
@@ -224,7 +225,7 @@ export default {
           start: this.timestampToTime(first),
           end: this.timestampToTime(second),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
+          timed: false
         })
       }
 
