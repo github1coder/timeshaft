@@ -61,7 +61,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeShaftData")
-    public ResponseService getTimeShaftData(@RequestParam("start_time") String start_time, @RequestParam("end_time") String end_time) throws ParseException {
+    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws ParseException {
         List<Map<String, String>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
         return new ResponseService(res);
     }
