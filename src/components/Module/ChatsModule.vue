@@ -260,21 +260,21 @@ export default {
   },
 
   created () {
-    this.$store.state.currentChannelIdx = -1
-    setTimeout(
-      () => {
-        getMessagesList({
-          srcId: this.$store.state.userId,
-        }).then(res => {
-          console.log("收到联系人列表")
-          console.log(this.messages)
-          for (let d in res) {
-            this.messages.push(res[d])
-          }
-          console.log(this.messages)
-        })
-      }, 100
-    )
+      this.$store.state.currentChannelIdx = -1
+      setTimeout(
+          () => {
+            getMessagesList({
+              srcId: this.$store.state.userId,
+            }).then(res => {
+              console.log("收到联系人列表")
+              console.log(this.messages)
+              for (let d in res) {
+                this.messages.push(res[d])
+              }
+              console.log(this.messages)
+            })
+          }, 100
+      )
   },
   computed: {
     messages () {
