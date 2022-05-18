@@ -248,8 +248,12 @@ public class ChatController {
             res.put("data", data);
             Date newLastTime = date;
             //若还有剩余的历史消息，则更新index
-            if (length < 20 && length != 0) {
-                newLastTime = new Date(groupMessageList.get(length - 1).getSendtime().getTime() - 5);
+            if (more) {
+                newLastTime = groupMessageList.get(length - 1).getSendtime();
+            }
+            //若没有后续的消息了，lastTime置为0
+            if (length < 20) {
+                newLastTime = new Date(0);
             }
             res.put("lastTime", newLastTime);
             res.put("more", more);
