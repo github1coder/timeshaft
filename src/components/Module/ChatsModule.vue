@@ -239,6 +239,7 @@ export default {
           console.log(this.$refs)
           this.$refs.chatMessage.init()
           this.$refs.timeShaft.getShaft()
+
         }, 100)
         if (item.number !== 0) {
           item.number = 0

@@ -72,10 +72,11 @@ export default {
     },
     socketSend(payload) {
       // TODO 改成传参
-      console.log(this.$store.state.chatClient)
+      console.log(this.$store.state.serviceClient)
       console.log(payload)
-      this.messages.push(payload.data)
-      this.$store.state.chatClient.send(payload.url, {}, JSON.stringify(payload.data));
+      this.scrollToBottom()
+      // this.messages.push(payload.data)
+      this.$store.state.serviceClient.send(payload.url, {}, JSON.stringify(payload.data));
       console.log("send + " + JSON.stringify(payload.data) + " to " + payload.url)
       this.$emit("send", payload.data)
     },
@@ -107,7 +108,9 @@ export default {
             this.$store.state.currentChatHaveRead += res.data.length
             console.log(this.messages)
           }
+          this.scrollToBottom()
         })
+
       }, 100)
     }
   },

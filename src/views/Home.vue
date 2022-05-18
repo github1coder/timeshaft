@@ -43,7 +43,7 @@ export default {
     }
   },
   created () {
-    this.socketInit()
+
     window.onbeforeunload = () => {
       this.$store.state.serviceClient = null
       this.$store.state.serviceSocket = null
@@ -68,6 +68,8 @@ export default {
         sessionStorage.removeItem("data");
       }, 300)
     }
+    this.socketInit()
+
   },
   methods: {
     socketInit () {
