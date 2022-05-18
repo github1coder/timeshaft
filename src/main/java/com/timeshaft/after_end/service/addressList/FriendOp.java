@@ -259,10 +259,18 @@ public class FriendOp {
             helloMessage.setSendtime(date);
             String senderNickname = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ?
                     friendsRelation.getNickname1():friendsRelation.getNickname2();
+            String acceptorNickname = Objects.equals(friendsRelation.getUserId1(), acceptor.getId()) ?
+                    friendsRelation.getNickname1():friendsRelation.getNickname2();
+            //发出请求者的打招呼消息
             helloMessage.setMessage("你好，我是" + senderNickname);
             helloMessage.setFriendsId(friendsRelation.getId());
             helloMessage.setSenderId(sender.getId());
             helloMessage.setState(UNREAD);
+            personalMessageService.insert(helloMessage);
+            //接收者的打招呼消息
+            helloMessage.setSendtime(new Date(date.getTime() + 1));
+            helloMessage.setMessage("你好，我是" + acceptorNickname);
+            helloMessage.setSenderId(acceptor.getId());
             personalMessageService.insert(helloMessage);
             HashMap<String, Object> res = new HashMap<>();
             res.put("id", friendsRelation.getId());
