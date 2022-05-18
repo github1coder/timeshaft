@@ -298,6 +298,10 @@ public class ChatController {
             if (more) {
                 newLastTime = historyMessage.get(length - 1).getSendtime();
             }
+            //若没有后续的消息了，lastTime置为0
+            if (length < 20) {
+                newLastTime = new Date(0);
+            }
             res.put("lastTime", newLastTime);
             res.put("more", more);
         }
