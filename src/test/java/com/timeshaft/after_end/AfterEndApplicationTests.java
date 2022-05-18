@@ -1,6 +1,7 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
+import com.timeshaft.after_end.controller.MessageController;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
@@ -13,7 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.core.AbstractDestinationResolvingMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+
+import javax.naming.ldap.HasControls;
+import java.util.HashMap;
 
 
 @SpringBootTest
@@ -40,6 +46,5 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-
     }
 }

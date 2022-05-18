@@ -73,7 +73,7 @@ public class MessageController {
         PersonalMessage inserted = personalMessageService.insert(personalMessage);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
         payload.put("type", "private");
-        messagingTemplate.convertAndSend("/user/" + targetId + "/chat", payload);
+        messagingTemplate.convertAndSend("/user/chat/" + targetId, payload);
     }
 
     /**
@@ -103,7 +103,7 @@ public class MessageController {
                 groupMessageState.setState(READ);
             } else {
                 groupMessageState.setState(UNREAD);
-                messagingTemplate.convertAndSend("/user/" + user.getUserId() + "/chat", payload);
+                messagingTemplate.convertAndSend("/user/chat/" + user.getUserId(), payload);
             }
             groupMessageState.setUserId(user.getUserId());
             groupMessageStateService.insert(groupMessageState);
