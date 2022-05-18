@@ -287,6 +287,7 @@ public class FriendOp {
             HashMap<String, Object> lastMessage = new HashMap<>();
             lastMessage.put("msg", personalMessage.getMessage());
             lastMessage.put("time", personalMessage.getSendtime());
+            lastMessage.put("msgId", personalMessage.getId());
             res.put("lastMessage", lastMessage);
             res.put("number", 1);
             messagingTemplate.convertAndSend("/user/contact/" + acceptor.getId(), res);
@@ -307,6 +308,7 @@ public class FriendOp {
             HashMap<String, Object> lastMessage = new HashMap<>();
             lastMessage.put("msg", null);
             lastMessage.put("time", null);
+            lastMessage.put("msgId", null);
             res.put("lastMessage", lastMessage);
             messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
         }

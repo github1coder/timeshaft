@@ -91,12 +91,15 @@ public class ChatController {
             }
             String msg = null;
             Date time = null;
+            int msgId = 0;
             if (last != null) {
                 msg = last.getMessage();
                 time = last.getSendtime();
+                msgId = last.getId();
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
+            lastMessage.put("msgId", msgId);
             PersonalMessage messageQuery = new PersonalMessage();
             messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
@@ -141,12 +144,15 @@ public class ChatController {
             HashMap<String, Object> lastMessage = new HashMap<>();
             String msg = null;
             Date time = null;
+            int msgId = 0;
             if (latest != null) {
                 msg = latest.getMessage();
                 time = latest.getSendtime();
+                msgId = latest.getId();
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
+            lastMessage.put("msgId", msgId);
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
             int number = notReadMessages.size();
             map.put("number", number);
@@ -260,6 +266,7 @@ public class ChatController {
                 messageMap.put("msgFromAvatar", user.getPhoto());
                 messageMap.put("msg", message.getMessage());
                 messageMap.put("time", message.getSendtime());
+                messageMap.put("msgId", message.getId());
                 data.add(messageMap);
             }
             res.put("data", data);
@@ -323,6 +330,7 @@ public class ChatController {
                     messageMap.put("msgFromAvatar", userDst.getPhoto());
                 }
                 messageMap.put("time", message.getSendtime());
+                messageMap.put("msgId", message.getId());
                 data.add(messageMap);
             }
             res.put("data", data);
