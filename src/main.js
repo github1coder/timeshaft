@@ -8,8 +8,9 @@ import VueContextMenu from "vue-contextmenu";
 
 Vue.config.productionTip = false
 
+Vue.use(VueContextMenu)
+
 new Vue({
-    VueContextMenu,
     vuetify,
     router,
     store,

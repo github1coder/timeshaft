@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../components/Register.vue'
 import WelcomeOverlay from '../components/WelcomeOverlay.vue'
-import Test from "@/views/test";
+// import Test from "@/views/test";
 
 Vue.use(VueRouter)
 
@@ -12,7 +12,7 @@ const router = new VueRouter({
     routes: [{
             path: '/',
             name: 'WelcomeOverlay',
-            component: Test
+            component: WelcomeOverlay
         },
         {
             path: '/login',

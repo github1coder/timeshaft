@@ -24,17 +24,25 @@ export function getHistoryMessage(param) {
     })
 }
 
-export function chatUrl(param) {
-    return request({
-        url: '/message/chatUrl',
-        method: 'get',
-        params: param
-    })
-}
+// export function chatUrl(param) {
+//     return request({
+//         url: '/message/chatUrl',
+//         method: 'get',
+//         params: param
+//     })
+// }
+//
+// export function contactUrl(param) {
+//     return request({
+//         url: '/message/contactUrl',
+//         method: 'get',
+//         params: param
+//     })
+// }
 
-export function contactUrl(param) {
+export function getListenerList(param) {
     return request({
-        url: '/message/contactUrl',
+        url: '/message/getListenerList',
         method: 'get',
         params: param
     })

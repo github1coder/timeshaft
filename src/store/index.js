@@ -26,10 +26,8 @@ export default new Vuex.Store({
         siderState: 0,
         // socket 相关
         checkInterval: null, //断线重连时 检测连接是否建立成功
-        chatSocket: null,
-        contactSocket: null,
-        chatClient: null,
-        contactClient: null,
+        serviceSocket: null,
+        serviceClient: null,
         //
         currentChatType: null,
         currentChatTime: null,
@@ -235,10 +233,6 @@ export default new Vuex.Store({
         //                         }
         //                     } else if (state.listenerList[listener].type === 1) {
         //                         console.log("添加好友服务收到消息")
-        //                         state.messageList.push(json)
-        //                         console.log(json)
-        //                     } else if(state.listenerList[listener].type === 2) {
-        //                         console.log("添加群聊服务收到消息")
         //                         state.messageList.push(json)
         //                         console.log(json)
         //                     } else {

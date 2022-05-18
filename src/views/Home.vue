@@ -2,7 +2,7 @@
   <div class="dc-container">
     <Navigations></Navigations>
     <div class="base">
-      <ChatsModule v-if="$store.state.siderState === 0"></ChatsModule>
+      <ChatsModule ref="chatModule" v-if="$store.state.siderState === 0"></ChatsModule>
       <ContractsModule
         v-else-if="$store.state.siderState === 1"
         ref="contractsModule"
@@ -23,6 +23,9 @@ import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
 import CalendarModule from "@/components/Module/CalendarModule";
 import Empty from "@/components/Module/empty";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import {getListenerList} from "@/api/message";
 
 
 export default {
@@ -34,18 +37,22 @@ export default {
     ContractsModule,
     Empty,
   },
+  data() {
+    return {
+
+    }
+  },
   created () {
+    this.socketInit()
     window.onbeforeunload = () => {
-      this.$store.state.chatClient = null
-      this.$store.state.contactClient = null
-      this.$store.state.chatSocket = null
-      this.$store.state.contactSocket = null
-      this.$store.state.currentChatType =  null,
-      this.$store.state.currentChatIndex= null,
-      this.$store.state.currentChatMore= null,
-      this.$store.state.currentChatName= null,
-      this.$store.state.currentChannelIdx = -1,
-      this.$store.state.currentChannelId= -1,
+      this.$store.state.serviceClient = null
+      this.$store.state.serviceSocket = null
+      this.$store.state.currentChatType =  null
+      this.$store.state.currentChatIndex= null
+      this.$store.state.currentChatMore= null
+      this.$store.state.currentChatName= null
+      this.$store.state.currentChannelIdx = -1
+      this.$store.state.currentChannelId= -1
       console.log(this.$store.state)
       sessionStorage.setItem("data", JSON.stringify(this.$store.state))
       console.log("save")
@@ -61,9 +68,92 @@ export default {
         sessionStorage.removeItem("data");
       }, 300)
     }
+  },
+  methods: {
+    socketInit () {
+      console.log("初始化socket")
+      if (this.$store.state.serviceClient == null || !this.$store.state.serviceClient.connected) {
+        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
+        if (this.$store.state.serviceClient != null && this.$store.state.serviceSocket.readyState === SockJS.OPEN) {
+          this.$store.state.serviceClient.disconnect(() => {
+            this.socketConnect()
+          })
+        } else if (this.$store.state.serviceClient != null && this.$store.state.serviceSocket.readyState === SockJS.CONNECTING) {
+          console.log("连接正在建立")
+          return;
+        } else {
+          console.log("第一次建立")
+          this.socketConnect()
+        }
+        if (!this.checkInterval) {
+          this.checkInterval = setInterval(() => {
+            console.log("检测连接：" + this.$store.state.serviceSocket.readyState)
+            if (this.$store.state.serviceClient != null && this.$store.state.serviceClient.connected) {
+              clearInterval(this.checkInterval)
+              this.checkInterval = null
+              console.log('重连成功')
+            } else if (this.$store.state.serviceClient != null && this.$store.state.serviceSocket.readyState !== SockJS.CONNECTING) {
+              //经常会遇到websocket的状态为open 但是stompClient的状态却是未连接状态，故此处需要把连接断掉 然后重连
+              this.$store.state.serviceClient.disconnect(() => {
+                this.socketConnect()
+              })
+            }
+          }, 2000)
+        }
+      } else {
+        console.log("连接已建立成功，不再执行")
+      }
+    },
 
+    socketConnect () {
+      this.$store.state.serviceSocket = new SockJS(this.socketUrl)
+      this.$store.state.serviceClient = Stomp.over(this.$store.state.serviceSocket);
+      this.$store.state.serviceClient.debug = null //关闭控制台打印
+      this.$store.state.serviceClient.heartbeat.outgoing = 20000;
+      this.$store.state.serviceClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
+      // 向服务器发起websocket连接
+      this.$store.state.serviceClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
+          frame => { // eslint-disable-line no-unused-vars
+            console.log('链接成功！')
+            console.log(this.$store.state.serviceClient)
+            // TODO url合并？
+            getListenerList({
+            }).then(res => {
+                console.log('链接成功！')
+                console.log(this.$store.state.serviceClient)
+                console.log(res)
+                for (let listener in res) {
+                  this.$store.state.serviceClient.subscribe(res[listener].url, payload => {
+                    let json = JSON.parse(payload.body)
+                    console.log("收到的json:")
+                    console.log(json)
+                    if (res[listener].type === 0) {
+                      console.log("即时通信服务收到消息")
+                      setTimeout( () => {
+                        this.$refs.chatModule.receiveMessage(json)
+                      },100)
+                    } else if (res[listener].type === 1) {
+                      console.log("添加好友服务收到消息")
+                      setTimeout(() => {
+                        this.$refs.chatModule.messages.push(json)
+                      }, 100)
+                    } else {
+                      console.log("未知url类型:" + res[listener].type.toString())
+                    }
+                  })
+                  console.log(res[listener].url)
+                }
+            })
+          },
+          err => { // eslint-disable-line no-unused-vars
+            setTimeout(() => {
+              console.log("reconnecting...")
+              this.socketInit()
+            }, 20000)
+          }
+      );
+    },
   }
-
 
 };
 </script>

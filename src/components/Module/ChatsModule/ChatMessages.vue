@@ -13,15 +13,19 @@
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-                <vue-context-menu
-                  :context-menu-data="messagesOperationData"
-                  @test="test"
-                >
-                  <v-list-item-subtitle
-                  >{{ message.msg }}
-                  </v-list-item-subtitle>
-                </vue-context-menu>
+                <v-list-item-subtitle
+                >{{ message.msg }}
+                </v-list-item-subtitle>
               </v-list-item-content>
+<!--              <v-list-item-content-->
+<!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
+<!--              >-->
+<!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
+<!--                <v-list-item-content-->
+<!--                    class="tobubble"-->
+<!--                >{{ message.msg }}-->
+<!--                </v-list-item-content>-->
+<!--              </v-list-item-content>-->
             </v-list-item>
           </template>
         </v-list>
@@ -43,30 +47,10 @@ export default {
     return {
       refreshed: true,
       cache: 0,
-      messages: [],
-      messagesOperationData: {
-        menuName: "message",
-        axis: {
-          x: null,
-          y: null
-        },
-        menulists: [
-          {
-            fnHandler: "test",
-            icoName: "fa fa-home fa-fw",
-            btnName: "Save"
-          },
-        ]
-      }
+      messages: []
     }
   },
   methods: {
-    test() {
-      alert("哈哈")
-    },
-    messageOperations() {
-
-    },
     onScroll() {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
@@ -158,11 +142,6 @@ export default {
         }
       }
     },
-    // messages(newVal, oldVal) {
-    //   newVal
-    //   oldVal
-    //   this.scrollToBottom()
-    // },
   },
 
   created() {
@@ -171,6 +150,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

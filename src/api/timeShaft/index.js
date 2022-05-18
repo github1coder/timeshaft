@@ -24,7 +24,6 @@ export function endTimeShaft(param) {
     })
 }
 
-
 export function beginTimeShaftSingle(param) {
     return request({
         url: '/timeshaft/beginTimeShaftSingle',
