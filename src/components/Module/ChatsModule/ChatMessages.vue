@@ -2,13 +2,21 @@
   <div class="chat-content">
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
+<!--        {{selected}}-->
         <v-list three-line dark v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
-              <v-list-item-avatar>
+              <v-list-item-avatar v-if="selecting" class="mx-0">
+                <v-checkbox
+                    v-model="selected"
+                    label=""
+                    :value="message.msgId"
+                ></v-checkbox>
+              </v-list-item-avatar>
+
+              <v-list-item-avatar class="mx-3">
                 <!--TODO-- 等待对接后改成图片>-->
                 <v-img :src="message.msgFromAvatar"></v-img>
-                <!--                <v-icon v-text="message.msgFromAvatar"></v-icon>-->
               </v-list-item-avatar>
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
@@ -31,13 +39,14 @@
         </v-list>
       </div>
     </div>
-    <ChatForm :draw="draw" @send="socketSend"></ChatForm>
+    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting"  @send="socketSend"></ChatForm>
   </div>
 </template>
 
 <script>
 import {getHistoryMessage} from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
+import {genTimeShaftFromMessages} from "@/api/timeShaft";
 
 export default {
   name: "ChatMessages",
@@ -47,7 +56,9 @@ export default {
     return {
       refreshed: true,
       cache: 0,
-      messages: []
+      messages: [], //
+      selected: [], // messageId that had been selected
+      selecting: false,
     }
   },
   methods: {
@@ -145,6 +156,17 @@ export default {
         }
       }
     },
+    selecting(newVal, oldVal) {
+      if (!newVal && oldVal) {
+        console.log("调用时间轴生成接口")
+        const post = this.selected
+        genTimeShaftFromMessages({
+          post
+        }).then(res => {
+          console.log(res)
+        })
+      }
+    }
   },
 
   created() {

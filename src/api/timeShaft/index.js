@@ -39,3 +39,11 @@ export function getTimeShaftData(param) {
         params: param
     })
 }
+
+export function genTimeShaftFromMessages(param) {
+    return request({
+        url: '/timeshaft/genTimeShaftFromMessages',
+        method: 'post',
+        data: param
+    })
+}

@@ -4,16 +4,44 @@
       <v-divider></v-divider>
       <div class="text-left">
           <v-btn
-              v-for="icon in icons"
-              :key="icon"
               icon
               left
               class="text-left mr-8"
           >
             <v-icon class="ml-12" color="white" left size="24px">
-              {{ icon }}
+              mdi-home
             </v-icon>
           </v-btn>
+        <v-btn
+            icon
+            left
+            class="text-left mr-8"
+        >
+          <v-icon class="ml-12" color="white" left size="24px">
+            mdi-email
+          </v-icon>
+        </v-btn>
+        <v-btn
+            icon
+            left
+            class="text-left mr-8"
+            @click="() => {
+              this.$emit('selectStatusChange')
+            }"
+        >
+          <v-icon class="ml-12" color="white" left size="24px">
+            mdi-calendar
+          </v-icon>
+        </v-btn>
+        <v-btn
+            icon
+            left
+            class="text-left mr-8"
+        >
+          <v-icon class="ml-12" color="white" left size="24px">
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </div>
       <v-textarea
           class="mx-5  chat-form-tf"
@@ -39,12 +67,6 @@ export default {
       chatUrlPrivate: "/app/personalMessage",
       chatUrlGroup: "/app/groupMessage",
       inputMsg: "",
-      icons: [
-        'mdi-home',
-        'mdi-email',
-        'mdi-calendar',
-        'mdi-delete',
-      ],
       items: [
         'default',
         'absolute',

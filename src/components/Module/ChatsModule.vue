@@ -197,7 +197,9 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        this.messages[idx].number += 1
+        if (this.$store.state.userId !== payload.userId) {
+          this.messages[idx].number += 1
+        }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
