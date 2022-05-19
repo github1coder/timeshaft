@@ -49,7 +49,7 @@
             <if test="photo != null and photo != ''">
                 and photo = #{photo}
             </if>
-            <if test="private != null">
+            <if test="private1 != null">
                 and private = #{private1}
             </if>
         </where>
@@ -78,7 +78,7 @@
             <if test="photo != null and photo != ''">
                 photo = #{photo},
             </if>
-            <if test="private != null">
+            <if test="private1 != null">
                 private = #{private1},
             </if>
         </set>

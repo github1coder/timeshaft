@@ -124,4 +124,9 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
     public List<PersonalMessage> queryAll(PersonalMessage personalMessage) {
         return this.personalMessageMapper.queryAll(personalMessage);
     }
+
+    @Override
+    public List<PersonalMessage> queryBeginEndMsg(int group_id, int startId, int endId) {
+        return  this.personalMessageMapper.queryBeginEndMsg(group_id, startId, endId);
+    }
 }

@@ -115,4 +115,11 @@
         order by id desc
         limit 0, 20
     </select>
+
+    <select id="queryBeginEndMsg" resultMap="BaseResultMap">
+        select
+            id, group_id, sender_id, message, sendtime
+        from timeshaft.group_message
+        where group_id = #{group_id} and id between #{startId} and #{endId}
+    </select>
 </mapper>

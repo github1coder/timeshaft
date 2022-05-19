@@ -42,21 +42,22 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-//    @PermissionAnnotation(level=2)
+    @PermissionAnnotation(level=38)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
-        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0, -1, -1);
         timeshaft = timeshaftService.insert(timeshaft);
+        checkGroupState(group_id, type, OnMeeting);
         changeGroupState(group_id, type, OnMeeting);
         for (String tag : tags) {
-            Tag newtag = new Tag(timeshaft.getId(), tag);
-            tagService.insert(newtag);
+            Tag newTag = new Tag(timeshaft.getId(), tag);
+            tagService.insert(newTag);
         }
         return timeshaft.getId();
     }
 
 //    @PermissionAnnotation(level=3)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type, null);
+        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type, null, null, null);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
@@ -66,7 +67,7 @@ public class TimeShaftOp {
                 timeshaftRes.put("title", timeshaft.getName());
                 timeshaftRes.put("img", user.getPhoto());
                 timeshaftRes.put("begin_date", timeshaft.getBeginTime());
-                timeshaftRes.put("last_time", (timeshaft.getEndTime().getTime()-timeshaft.getBeginTime().getTime())/1000/60);
+                timeshaftRes.put("end_date", timeshaft.getBeginTime());
                 timeshaftRes.put("conclude", timeshaft.getConclude());
                 timeshaftRes.put("host", user.getUsername());
 
@@ -76,22 +77,36 @@ public class TimeShaftOp {
                     tagsRes.add(tag.getName());
                 }
                 timeshaftRes.put("tags", tagsRes);
-
-                Object messages = getTimeShaftMessage(timeshaft);
-                timeshaftRes.put("messages", messages);
                 timeshaftsRes.add(timeshaftRes);
             }
         }
         return timeshaftsRes;
     }
 
-//    @PermissionAnnotation(level=2)
+    @PermissionAnnotation(level=32)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null, type, null));
+        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null,null,null,null,null, type, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
-            timeshaft.setEndTime(new Date());
+            Date end_time = new Date();
+            timeshaft.setEndTime(end_time);
+            if(groupType.equals(type)) {
+                List<GroupMessage> groupMessages = groupMessageService.queryTimeshaft(timeshaft);
+                if(!groupMessages.isEmpty()) {
+                    timeshaft.setStartMsgId(groupMessages.get(0).getId());
+                    timeshaft.setEndMsgId(groupMessages.get(groupMessages.size() - 1).getId());
+                }
+            } else if (friendType.equals(type)) {
+                List<PersonalMessage> personalMessages = personalMessageService.queryTimeshaft(timeshaft);
+                if(!personalMessages.isEmpty()) {
+                    timeshaft.setStartMsgId(personalMessages.get(0).getId());
+                    timeshaft.setEndMsgId(personalMessages.get(personalMessages.size() - 1).getId());
+                }
+            } else {
+                throw new Exception("type变量错误");
+            }
             timeshaftService.update(timeshaft);
         }
+        checkGroupState(group_id, type, OffMeeting);
         changeGroupState(group_id, type, OffMeeting);
     }
 
@@ -111,6 +126,24 @@ public class TimeShaftOp {
         }
     }
 
+    private void checkGroupState(Integer group_id, String type, String status) throws Exception {
+        if (groupType.equals(type)) {
+            Group group = groupService.queryById(group_id);
+            if(group.getStatus().equals(status)) {
+                throw new Exception("不要在开会的时候继续开会或没开会就结束开会啦，八嘎！");
+            }
+        }
+        else if (friendType.equals(type)) {
+            Friends friend = friendsService.queryById(group_id);
+            if(friend.getStatus().equals(status)) {
+                throw new Exception("不要在开会的时候继续开会或没开会就结束开会啦，八嘎！");
+            }
+        }
+        else {
+            throw new Exception("type变量错误");
+        }
+    }
+
     private Object getTimeShaftMessage(Timeshaft timeshaft) {
         if (groupType.equals(timeshaft.getType())) {
             return groupMessageService.queryTimeshaft(timeshaft);
@@ -123,6 +156,7 @@ public class TimeShaftOp {
         }
     }
 
+//    @PermissionAnnotation(level = 31)
     public List<Map<String, Object>> getTimeShaftData(String start, String end) throws ParseException {
         ArrayList<Map<String, Object>> res = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -146,5 +180,58 @@ public class TimeShaftOp {
             res.add(out);
         }
         return res;
+    }
+
+    public List<String> genTimeShaftFromMessages() {
+        ArrayList<String> res = new ArrayList<>();
+        return res;
+    }
+
+    @PermissionAnnotation(level = 31)
+    public Map<String, Object> getSingleTimeshaft(int user_id, int timeshaft_id) {
+        Map<String, Object> ans = new HashMap<>();
+        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        ans.put("name", userService.queryById(timeshaft.getCreatorId()).getUsername());
+        ans.put("startTime", timeshaft.getBeginTime());
+        ans.put("endTime", timeshaft.getEndTime());
+        ans.put("title", timeshaft.getName());
+        List<Tag> tags = tagService.queryAll(new Tag(timeshaft_id, null));
+        ArrayList<String> tagNames = new ArrayList<>();
+        for(Tag tag : tags) {
+            tagNames.add(tag.getName());
+        }
+        ans.put("tags", tagNames);
+        ans.put("conclude", timeshaft.getConclude());
+        ArrayList<Map<String, Object>> msg = new ArrayList<>();
+        if(timeshaft.getType().equals(groupType)) {
+            ans.put("groupName", groupService.queryById(timeshaft.getGroupId()).getName());
+            if(timeshaft.getStartMsgId() != -1) {
+                List<GroupMessage> groupMessages = groupMessageService.queryBeginEndMsg(timeshaft.getGroupId(), timeshaft.getStartMsgId(), timeshaft.getEndMsgId());
+                for (GroupMessage groupMessage : groupMessages) {
+                    HashMap<String, Object> res = new HashMap<>();
+                    res.put("msgFromName", userService.queryById(groupMessage.getSenderId()).getUsername());
+                    res.put("msgFromAvatar", userService.queryById(groupMessage.getSenderId()).getPhoto());
+                    res.put("time", groupMessage.getSendtime());
+                    res.put("msg", groupMessage.getMessage());
+                    msg.add(res);
+                }
+            }
+        } else {
+            ans.put("groupName", userService.queryById(timeshaft.getGroupId()).getUsername());
+            if(timeshaft.getStartMsgId() != -1) {
+                List<PersonalMessage> personalMessages = personalMessageService.queryBeginEndMsg(timeshaft.getGroupId(), timeshaft.getStartMsgId(), timeshaft.getEndMsgId());
+                for (PersonalMessage personalMessage : personalMessages) {
+                    HashMap<String, Object> res = new HashMap<>();
+                    res.put("msgFromName", userService.queryById(personalMessage.getSenderId()).getUsername());
+                    res.put("msgFromAvatar", userService.queryById(personalMessage.getSenderId()).getPhoto());
+                    res.put("time", personalMessage.getSendtime());
+                    res.put("msg", personalMessage.getMessage());
+                    msg.add(res);
+                }
+            }
+        }
+        ans.put("message", msg);
+        ans.put("id", timeshaft.getId().toString());
+        return ans;
     }
 }

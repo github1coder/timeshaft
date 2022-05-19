@@ -2,6 +2,7 @@ package com.timeshaft.after_end.service;
 
 import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.Timeshaft;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -84,4 +85,5 @@ public interface GroupMessageService {
      */
     List<GroupMessage> queryHistoryById(int groupId, Date time);
 
+    List<GroupMessage> queryBeginEndMsg(int group_id, int startId, int endId);
 }

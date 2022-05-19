@@ -93,4 +93,5 @@ public interface GroupMessageMapper {
      */
     List<GroupMessage> queryHistoryById(int groupId, Date time);
 
+    List<GroupMessage> queryBeginEndMsg(@Param("group_id") int group_id, @Param("startTime") int startId, @Param("endTime") int endId);
 }

@@ -57,7 +57,7 @@
             <if test="status != null and status != ''">
                 and status = #{status}
             </if>
-            <if test="private != null">
+            <if test="private1 != null">
                 and private = #{private1}
             </if>
         </where>
@@ -91,7 +91,7 @@
             <if test="status != null and status != ''">
                 status = #{status},
             </if>
-            <if test="private != null">
+            <if test="private1 != null">
                 private = #{private1},
             </if>
         </set>

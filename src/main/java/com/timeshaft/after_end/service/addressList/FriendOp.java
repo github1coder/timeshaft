@@ -92,7 +92,7 @@ public class FriendOp {
         }
     }
 
-    public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
+    public List<Map<String, String>> searchByNick(String name, String type, Integer id) throws Exception {
         List<Map<String, String>> ans = new ArrayList<>();
         if (groupType.equals(type)) {
             List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, null));
@@ -111,7 +111,7 @@ public class FriendOp {
                 map.put("photo", group.getPhoto());
                 ans.add(map);
             }
-        } else {
+        } else if (friendType.equals(type)){
             List<User> users = userService.queryAll(new User(null, null, name, null, null));
             List<User> tmp = userService.queryAll(new User(name, null, null, null, null));
             for (User user : tmp) {
@@ -136,11 +136,13 @@ public class FriendOp {
                 map.put("photo", user.getPhoto());
                 ans.add(map);
             }
+        } else {
+            throw new Exception("type变量错误");
         }
         return ans;
     }
 
-    public void apply(Integer self_id, String type, String action, Integer id) {
+    public void apply(Integer self_id, String type, String action, Integer id) throws Exception {
         if (groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
             if (action.equals(NEW)) {
@@ -163,7 +165,7 @@ public class FriendOp {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUserService.deleteById(groupUsers.get(0).getId());
             }
-        } else {
+        } else if(friendType.equals(type)){
             Friends friend1 = new Friends(self_id, id, null, null, null, null);
             Friends friend2 = new Friends(id, self_id, null, null, null, null);
             if (action.equals(NEW)) {
@@ -189,10 +191,12 @@ public class FriendOp {
                 friends.addAll(friendsService.queryAll(friend2));
                 friendsService.deleteById(friends.get(0).getId());
             }
+        } else {
+            throw new Exception("type变量错误");
         }
     }
 
-    public List<Map<String, String>> getApplyList(String type, Integer id) {
+    public List<Map<String, String>> getApplyList(String type, Integer id) throws Exception {
         List<Map<String, String>> ans = new ArrayList<>();
         if (groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(null, id, null, "master", null);
@@ -218,7 +222,7 @@ public class FriendOp {
                     ans.add(map);
                 }
             }
-        } else {
+        } else if (friendType.equals(type)){
             Friends friend = new Friends(null, id, null, null, NEW, null);
             List<Friends> friends = friendsService.queryAll(friend);
             for (Friends f : friends) {
@@ -230,6 +234,8 @@ public class FriendOp {
                 map.put("show", "true");
                 ans.add(map);
             }
+        } else {
+            throw new Exception("type变量错误");
         }
         return ans;
     }
@@ -304,7 +310,7 @@ public class FriendOp {
         }
     }
 
-    public Map<String, String> getInfoMsg(String type, int info_id, int user_id) {
+    public Map<String, String> getInfoMsg(String type, int info_id, int user_id) throws Exception {
         Map<String, String> res = new HashMap<>();
         if (groupType.equals(type)) {
             Group group = groupService.queryById(info_id);
@@ -315,7 +321,7 @@ public class FriendOp {
             res.put("nick", null);
             res.put("notice", group.getNotice());
             res.put("master", group.getMasterId().toString());
-        } else {
+        } else if (friendType.equals(type)) {
             Friends friends = friendsService.queryById(info_id);
             if (friends.getUserId1() == user_id) {
                 User user = userService.queryById(friends.getUserId2());
@@ -332,11 +338,13 @@ public class FriendOp {
                 res.put("name", user.getUsername());
                 res.put("nick", friends.getNickname1());
             }
+        } else {
+            throw new Exception("type变量错误");
         }
         return res;
     }
 
-    public List<Map<String, String>> finding(int user_id, String type) {
+    public List<Map<String, String>> finding(int user_id, String type) throws Exception {
         List<Map<String, String>> ans = new ArrayList<>();
         if (groupType.equals(type)) {
             List<Group> groups = groupService.queryAll(new Group(null, null, null, null, null,null,0));
@@ -357,7 +365,7 @@ public class FriendOp {
                 map.put("master", group.getMasterId().toString());
                 ans.add(map);
             }
-        } else {
+        } else if (friendType.equals(type)) {
             List<User> users = userService.queryAll(new User(null, null, null, null, 0));
             List<User> res = new ArrayList<>();
             while (users.size() > 0 && res.size() < 10) {
@@ -377,6 +385,8 @@ public class FriendOp {
                 map.put("master", "");
                 ans.add(map);
             }
+        } else {
+            throw new Exception("type变量错误");
         }
         return ans;
     }

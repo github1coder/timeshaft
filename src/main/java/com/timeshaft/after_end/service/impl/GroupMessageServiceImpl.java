@@ -120,4 +120,9 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     public List<GroupMessage> queryHistoryById(int groupId, Date time) {
         return this.groupMessageMapper.queryHistoryById(groupId, time);
     }
+
+    @Override
+    public List<GroupMessage> queryBeginEndMsg(int group_id, int startId, int endId) {
+        return this.groupMessageMapper.queryBeginEndMsg(group_id, startId, endId);
+    }
 }
