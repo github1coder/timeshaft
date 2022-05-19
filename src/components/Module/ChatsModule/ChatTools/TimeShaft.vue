@@ -3,10 +3,17 @@
     class="mx-auto"
     height="90%"
   >
+    <TimeNode
+      :id="90"
+      v-if="this.detail"
+      @closeT="closeT"
+    ></TimeNode>
     <v-card
       dark
       flat
     >
+      <!-- this.timeshaft_id -->
+
       <v-dialog
         v-model="dialog"
         persistent
@@ -106,7 +113,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <div>
+      <!-- <div>
         <v-snackbar
           v-model="snackbar"
           light
@@ -122,7 +129,7 @@
             结束
           </v-btn>
         </v-snackbar>
-      </div>
+      </div> -->
 
       <v-img
         src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
@@ -176,7 +183,7 @@
       您还没有和该好友添加事件呢~
     </h1>
     <v-card
-      class="overflow-x-auto overflow-y-auto"
+      class="overflow-x-hidden overflow-y-auto"
       height="77%"
       v-if="items.length !== 0"
     >
@@ -193,13 +200,13 @@
         >
           <v-row class="pt-1">
             <v-col
-              cols="4"
-              style="width: 50px"
+              cols="3"
+              style="width: 40px"
             >
-              <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} - {{item.end_date}}</strong>
+              <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} ~ {{item.end_date}}</strong>
             </v-col>
-            <v-col>
-              <strong>事件主题：{{item.title}}</strong>
+            <v-col style="a:hover{color: blue;}">
+              <a><strong @click="showDetail(1)">事件主题：{{item.title}}</strong></a>
               <div class="text-caption">
                 事件摘要：{{ item.conclude }}
               </div>
@@ -219,13 +226,22 @@
 </template>
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
-import { beginTimeShaftSingle, getTimeLine, endTimeShaft } from "../../../../api/timeShaft";
+import { beginTimeShaftSingle, getTimeshaft } from "../../../../api/timeShaft";
+import TimeNode from "./TimeNode"
 
 export default {
   name: "TimeShaft",
+  //聊天id 聊天类型
+  props: ['chatId', 'type'],
+
+  components: {
+    TimeNode
+  },
+
   data () {
     return {
-      //显示时间
+      //好友或者群id
+      id: -1,
       snackbar: false,
       timeout: -1,
       dialog: null,
@@ -239,12 +255,9 @@ export default {
         'deep-orange lighten-2', 'deep-orange lighten-1', 'deep-orange darken-1', 'deep-orange darken-2',
         'deep-orange darken-3', 'deep-orange darken-4'
       ],
-      chatid: {
-        'user1': -1,
-        'user2': -1
-      },
       timeshaft_id: -1,
-      items: []
+      items: [],
+      detail: false,
     }
   },
   mounted () {
@@ -265,20 +278,22 @@ export default {
   methods: {
     getShaft () {
       let para = {
-        group_id: this.$store.state.currentChannelId,
-        type: 'friend'
+        group_id: this.chatId,
+        type: this.type == "private" ? "friend" : "group",
       }
-      getTimeLine(para).then(res => {
+      getTimeshaft(para).then(res => {
         this.items = res.items
       })
     },
-    overTimeShaft () {
-      endTimeShaft({
-        timeshaft_id: this.timeshaft_id
-      })
-      this.timeshaft_id = -1
-      // this.$router.go(0)
-    },
+
+    // overTimeShaft () {
+    //   endTimeShaft({
+    //     group_id: this.chatId,
+    //     type: this.type
+    //   })
+    //   // this.$router.go(0)
+    // },
+
     setTimeline () {
       if (this.title === '' || this.lable === '' || this.time === '') {
         alert("请先补充完信息哦~");
@@ -286,19 +301,28 @@ export default {
       else {
         const that = this
         beginTimeShaftSingle({
-          group_id: this.$store.state.currentChannelId,
+          group_id: this.chatId,
           creator_id: this.$store.state.userId,
           title: this.title,
           tags: [this.lable],
           conclude: this.description,
-          type: 'friend'
+          type: this.type == "private" ? "friend" : "group",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
-          that.snackbar = true
+          that.$parent.isShowEnd(that.chatId, that.type, true)
+          //设置聊天开启id
         })
       }
+
     },
+
+    //展示详细信息
+    showDetail (id) {
+      console.log(id)
+      this.detail = true
+    },
+
     dataDestroy () {
       if (this.timer) {
         clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
@@ -321,7 +345,14 @@ export default {
       let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
       this.time = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
-  }
+
+    closeT (flag) {
+      this.detail = flag
+    },
+  },
+
+
+
 }
 </script>
 

@@ -38,6 +38,7 @@ service.interceptors.response.use(
         if (response.data.code === 0) {
             return response.data.data
         } else {
+            alert(response.data.msg);
             return { "error": response.data.msg }
         }
 

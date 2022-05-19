@@ -257,6 +257,7 @@
 import { getInfoMsg } from "../../../../../api/addresslist/index"
 import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../../api/addresslist/index'
 export default {
+  props: ["id"],
   data () {
     return {
       photo: "",
@@ -287,6 +288,7 @@ export default {
   },
 
   mounted () {
+    this.initInfo()
   },
 
   methods: {
@@ -304,7 +306,7 @@ export default {
     initInfo () {
       const that = this
       getInfoMsg({
-        "info_id": this.$store.state.currentChannelId,
+        "info_id": this.id,
         "type": "group"
       }).then(res => {
         if (!res.error) {

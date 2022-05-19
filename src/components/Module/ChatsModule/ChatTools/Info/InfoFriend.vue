@@ -41,6 +41,7 @@
 <script>
 import { getInfoMsg } from "../../../../../api/addresslist/index"
 export default {
+  props: ["id"],
   data () {
     return {
       photo: "",
@@ -51,6 +52,7 @@ export default {
   },
 
   mounted () {
+    this.initInfo()
   },
 
   methods: {
@@ -68,7 +70,7 @@ export default {
     initInfo () {
       const that = this
       getInfoMsg({
-        "info_id": this.$parent.$parent.id,
+        "info_id": this.id,
         "type": "friend"
       }).then(res => {
         if (!res.error) {

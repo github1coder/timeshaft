@@ -1,12 +1,14 @@
 <template>
   <v-card style="height: 100%; width: 100%">
     <info-f
-      v-show="about == 0"
+      v-if="type == 'private'"
       ref="infoF"
+      :id="id"
     ></info-f>
     <info-g
-      v-show="about == 1"
+      v-if="type == 'group'"
       ref="infoG"
+      :id="id"
     ></info-g>
   </v-card>
 </template>
@@ -16,6 +18,7 @@ import InfoF from "./Info/InfoFriend.vue"
 import InfoG from "./Info/InfoGroup.vue"
 
 export default {
+  props: ["type", "id"],
   components: {
     InfoF,
     InfoG
@@ -23,11 +26,13 @@ export default {
 
   data () {
     return {
-      about: -1,
-      id: -1,
     }
   },
   methods: {
+  },
+  created () {
+    console.log(this.type)
+    console.log(this.id)
   }
 }
 
