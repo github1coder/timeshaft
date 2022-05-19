@@ -97,28 +97,28 @@ public class GroupUserServiceImpl implements GroupUserService {
     }
 
     @Override
-    public void hasPower(GroupUser groupUser, Integer level) throws Exception {   //1为群主，2为群主或管理员
+    public void hasPower(GroupUser groupUser, Integer level) throws Exception {   //11为群主，12为群主或管理员
         boolean flag = false;
         List<GroupUser> groupUsers = groupUserMapper.queryAll(groupUser);
         if (groupUsers!=null && groupUsers.size()>0) {
-            if (level == 1) {
+            if (level == 11) {
                 if (MASTER.equals(groupUsers.get(0).getIdentity())) {
                     flag = true;
                 }
             }
-            else if (level == 2) {
+            else if (level == 12) {
                 if (MASTER.equals(groupUsers.get(0).getIdentity()) || MANAGER.equals(groupUsers.get(0).getIdentity())) {
                     flag = true;
                 }
             }
-            else if (level == 3) {
+            else if (level == 13) {
                 if (MASTER.equals(groupUsers.get(0).getIdentity()) || MANAGER.equals(groupUsers.get(0).getIdentity()) || MEMBER.equals(groupUsers.get(0).getIdentity())) {
                     flag = true;
                 }
             }
         }
         if (!flag) {
-            throw new Exception("你没有权限哦");
+            throw new Exception();
         }
     }
 
