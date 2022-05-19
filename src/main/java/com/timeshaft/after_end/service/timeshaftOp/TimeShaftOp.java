@@ -182,9 +182,25 @@ public class TimeShaftOp {
         return res;
     }
 
-    public List<String> genTimeShaftFromMessages() {
-        ArrayList<String> res = new ArrayList<>();
-        return res;
+    public String genTimeShaftFromMessages(int chat_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds){
+        try {
+            int timeshaft_id = beginTimeShaftSingle(title, conclude, user_id, chat_id, type, tags);
+            Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+            int max = 0, min = 99999999;
+            for (Integer integer : msgIds) {
+                if (integer > max) {
+                    max = integer;
+                }
+                if (integer < min) {
+                    min = integer;
+                }
+            }
+            timeshaft.setStartMsgId(max);
+            timeshaft.setEndMsgId(min);
+            return "success";
+        } catch (Exception e){
+            return "false";
+        }
     }
 
     @PermissionAnnotation(level = 31)

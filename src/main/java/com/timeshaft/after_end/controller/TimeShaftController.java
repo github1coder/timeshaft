@@ -67,8 +67,16 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/genTimeShaftFromMessages")
-    public ResponseService genTimeShaftFromMessages(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws ParseException {
-        return new ResponseService();
+    public ResponseService genTimeShaftFromMessages(@RequestBody Map<String, Object> requestMap, @RequestParam("end") String end_time) throws ParseException {
+        Integer chat_id = (Integer)requestMap.get("chat_id");
+        Integer user_id = (Integer)requestMap.get("user_id");
+        String title = (String)requestMap.get("title");
+        ArrayList<String> tags = (ArrayList<String>)requestMap.get("tags");
+        String conclude = (String)requestMap.get("conclude");
+        String type = (String)requestMap.get("type");
+        ArrayList<Integer> msgIds = (ArrayList<Integer>)requestMap.get("masIds");
+        String res = timeShaftOp.genTimeShaftFromMessages(chat_id, user_id, title, tags, conclude, type, msgIds);
+        return new ResponseService(res);
     }
 
     @RequestMapping("/getSingleTimeshaft")
