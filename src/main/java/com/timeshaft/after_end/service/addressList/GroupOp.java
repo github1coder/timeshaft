@@ -39,7 +39,7 @@ public class GroupOp {
 
     public void createGroup(String name, String photo,
                             String notice, int master_id) {
-        Group group = new Group(name, master_id, notice, photo, new Date(), "");
+        Group group = new Group(name, master_id, notice, photo, new Date(), "", 0);
         group = groupService.insert(group);
         GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", ACCEPT);
         groupUserService.insert(groupUser);

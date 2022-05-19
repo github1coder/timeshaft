@@ -43,7 +43,7 @@ public class TimeShaftController {
         log.info("获取时间轴开始");
         Integer group_id = (Integer) requestMap.get("group_id");
         String type = (String) requestMap.get("type");
-        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshaft(group_id, type, user_id);
+        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshafts(group_id, type, user_id);
         log.info("获取时间轴成功");
         Map<String, Object> res = new HashMap<>();
         res.put("items", timeshaftsRes);

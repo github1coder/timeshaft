@@ -28,11 +28,13 @@ public class Timeshaft implements Serializable {
 
     private String type;
 
+    private Integer private1;
+
     public Timeshaft() {
 
     }
 
-    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type) {
+    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type, Integer private1) {
         this.groupId = groupId;
         this.creatorId = creatorId;
         this.name = name;
@@ -40,6 +42,7 @@ public class Timeshaft implements Serializable {
         this.endTime = endTime;
         this.conclude = conclude;
         this.type = type;
+        this.private1 = private1;
     }
 
     public String getConclude() {
@@ -106,4 +109,11 @@ public class Timeshaft implements Serializable {
         this.endTime = endTime;
     }
 
+    public Integer getPrivate1() {
+        return private1;
+    }
+
+    public void setPrivate1(Integer private1) {
+        this.private1 = private1;
+    }
 }

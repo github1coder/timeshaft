@@ -21,14 +21,17 @@ public class User implements Serializable {
     
     private String photo;
 
+    private Integer private1;
+
     public User() {
     }
 
-    public User(String email, String password, String username, String photo) {
+    public User(String email, String password, String username, String photo, Integer private1) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.photo = photo;
+        this.private1 = private1;
     }
 
     public Integer getId() {
@@ -71,4 +74,11 @@ public class User implements Serializable {
         this.photo = photo;
     }
 
+    public Integer getPrivate1() {
+        return private1;
+    }
+
+    public void setPrivate1(Integer private1) {
+        this.private1 = private1;
+    }
 }

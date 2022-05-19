@@ -12,12 +12,13 @@
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
         <result property="conclude" column="conclude" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="private1" column="private" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          id, group_id, creator_id, name, begin_time, end_time, conclude, type
+          id, group_id, creator_id, name, begin_time, end_time, conclude, type, private
         from timeshaft.timeshaft
         where id = #{id}
     </select>
@@ -25,7 +26,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select
-          id, group_id, creator_id, name, begin_time, end_time, conclude, type
+          id, group_id, creator_id, name, begin_time, end_time, conclude, type, private
         from timeshaft.timeshaft
         limit #{offset}, #{limit}
     </select>
@@ -33,7 +34,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          id, group_id, creator_id, name, begin_time, end_time, conclude, type
+          id, group_id, creator_id, name, begin_time, end_time, conclude, type, private
         from timeshaft.timeshaft
         <where>
             <if test="id != null">
@@ -60,13 +61,16 @@
             <if test="type != null and type != ''">
                 and type = #{type}
             </if>
+            <if test="private != null">
+                and private = #{private1}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into timeshaft.timeshaft(group_id, creator_id, name, begin_time, end_time, conclude, type)
-        values (#{groupId}, #{creatorId}, #{name}, #{beginTime}, #{endTime}, #{conclude}, #{type})
+        insert into timeshaft.timeshaft(group_id, creator_id, name, begin_time, end_time, conclude, type, private)
+        values (#{groupId}, #{creatorId}, #{name}, #{beginTime}, #{endTime}, #{conclude}, #{type}, #{private1})
     </insert>
 
     <!--通过主键修改数据-->
@@ -94,6 +98,9 @@
             <if test="type != null and type != ''">
                 type = #{type},
             </if>
+            <if test="private != null">
+                private = #{private1},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -105,7 +112,7 @@
 
     <select id="queryTimeshaftByTime" resultMap="BaseResultMap">
         select
-            id, group_id, creator_id, name, begin_time, end_time, conclude, type
+            id, group_id, creator_id, name, begin_time, end_time, conclude, type, private
         from timeshaft.timeshaft
         where ((begin_time between #{start_time} and #{end_time}) or (end_time between #{start_time} and #{end_time})) or (begin_time > #{start_time} and  #{end_time} > end_time)
     </select>

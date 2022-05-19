@@ -44,7 +44,7 @@ public class TimeShaftOp {
 
 //    @PermissionAnnotation(level=2)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
-        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0);
         timeshaft = timeshaftService.insert(timeshaft);
         changeGroupState(group_id, type, OnMeeting);
         for (String tag : tags) {
@@ -55,8 +55,8 @@ public class TimeShaftOp {
     }
 
 //    @PermissionAnnotation(level=3)
-    public List<Map<String, Object>> getTimeshaft(Integer group_id, String type, Integer user_id) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type);
+    public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
+        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type, null);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
@@ -87,7 +87,7 @@ public class TimeShaftOp {
 
 //    @PermissionAnnotation(level=2)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null,type));
+        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id,null,null,null,null,null, type, null));
         for (Timeshaft timeshaft : timeshafts) {
             timeshaft.setEndTime(new Date());
             timeshaftService.update(timeshaft);

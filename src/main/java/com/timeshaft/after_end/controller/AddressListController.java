@@ -193,4 +193,10 @@ public class AddressListController {
         Map<String, String> res = friendOp.getInfoMsg(type, info_id, user_id);
         return new ResponseService(res);
     }
+
+    @RequestMapping(value = "/finding")
+    public ResponseService finding(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) {
+        List<Map<String, String>> res = friendOp.finding(user_id, type);
+        return new ResponseService(res);
+    }
 }
