@@ -7,4 +7,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface PermissionAnnotation {
     int level() default -1;
+    // 11 群主
+    // 12 群主或群管理员
+    // 13 群主或群管理员或群成员
 }

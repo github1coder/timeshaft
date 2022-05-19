@@ -30,7 +30,9 @@ public class UserOp {
         if (users.size() > 0) {
             throw new Exception("邮箱已被注册");
         }
-
+        if (password.length()<6 || password.length()>16) {
+            throw new Exception("密码长度应在6-16位之间");
+        }
         checkCodeCheck(email, checkCode);
 
         String savePassword = myPasswordEncoder.encode(password);

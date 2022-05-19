@@ -251,6 +251,10 @@ public class ChatController {
             if (more) {
                 newLastTime = groupMessageList.get(length - 1).getSendtime();
             }
+            //若没有后续的消息了，lastTime置为0
+            if (length < 20) {
+                newLastTime = new Date(0);
+            }
             res.put("lastTime", newLastTime);
             res.put("more", more);
         } else {
@@ -293,6 +297,10 @@ public class ChatController {
             //若还有剩余的历史消息，则更新index
             if (more) {
                 newLastTime = historyMessage.get(length - 1).getSendtime();
+            }
+            //若没有后续的消息了，lastTime置为0
+            if (length < 20) {
+                newLastTime = new Date(0);
             }
             res.put("lastTime", newLastTime);
             res.put("more", more);
