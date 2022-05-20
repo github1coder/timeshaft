@@ -46,6 +46,13 @@
         limit 0, 20
     </select>
 
+    <!--查询包含关键词的消息-->
+    <select id="queryByKeyword" resultMap="BaseResultMap">
+        select
+        id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
+        where friends_id = #{friendsId} and message like concat('%', #{keyword}, '%')
+    </select>
+
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select

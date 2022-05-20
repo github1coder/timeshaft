@@ -125,4 +125,17 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     public List<GroupMessage> queryBeginEndMsg(int group_id, int startId, int endId) {
         return this.groupMessageMapper.queryBeginEndMsg(group_id, startId, endId);
     }
+
+    /**
+     * 通过消息内容进行查询
+     *
+     * @param groupId 群聊Id
+     * @param keyword 关键词
+     * @return 实例对象列表
+     */
+    @Override
+    public List<GroupMessage> queryByKeyword(Integer groupId, String keyword) {
+        return this.groupMessageMapper.queryByKeyword(groupId, keyword);
+
+    }
 }

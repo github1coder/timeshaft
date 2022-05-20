@@ -51,6 +51,15 @@ public interface PersonalMessageMapper {
                                            @Param("time") Date time);
 
     /**
+     * 通过消息内容进行查询
+     *
+     * @param friendsId 好友关系id
+     * @param keyword 关键词
+     * @return 实例对象列表
+     */
+    List<PersonalMessage> queryByKeyword(Integer friendsId, String keyword);
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置
