@@ -14,9 +14,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 @Aspect
 @Component
@@ -32,15 +29,15 @@ public class PermissionAOP {
 
     @Before(value = "permissionCheck() && @annotation(permissionAnnotation)")
     public void permission(JoinPoint joinPoint, PermissionAnnotation permissionAnnotation) throws Exception {
-        if (permissionAnnotation.level()>10 && permissionAnnotation.level()>20) { //zzy
+        if (permissionAnnotation.level()>10 && permissionAnnotation.level()<20) { //zzy
             Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
             Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
             groupUserService.hasPower(new GroupUser(group_id, user_id, null, null ,null), permissionAnnotation.level());
         }
-        else if (permissionAnnotation.level()>20 && permissionAnnotation.level()>30) { //dxt
+        else if (permissionAnnotation.level()>20 && permissionAnnotation.level()<30) { //dxt
 
         }
-        else if (permissionAnnotation.level()>30 && permissionAnnotation.level()>40) {  //czr
+        else if (permissionAnnotation.level()>30 && permissionAnnotation.level()<40) {  //czr
 
         }
     }

@@ -125,17 +125,25 @@ public class TimeShaftOp {
         }
     }
 
-    public List<Map<String, String>> getTimeShaftData(String start, String end) throws ParseException {
-        ArrayList<Map<String, String>> res = new ArrayList<>();
+    public List<Map<String, Object>> getTimeShaftData(String start, String end) throws ParseException {
+        ArrayList<Map<String, Object>> res = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start_time = sdf.parse(start);
         Date end_time = sdf.parse(end);
         List<Timeshaft> timeshafts = timeshaftService.queryTimeshaftByTime(start_time, end_time);
         for(Timeshaft timeshaft : timeshafts) {
-            Map<String, String> out = new HashMap<>();
-            out.put("topic", timeshaft.getName());
-            out.put("start_time", timeshaft.getBeginTime().toString());
-            out.put("end_time", timeshaft.getEndTime().toString());
+            Map<String, Object> out = new HashMap<>();
+            out.put("name", timeshaft.getName());
+            if(timeshaft.getBeginTime().compareTo(start_time) < 0) {
+                out.put("start", start_time);
+            } else {
+                out.put("start", timeshaft.getBeginTime());
+            }
+            if(timeshaft.getEndTime().compareTo(end_time) > 0) {
+                out.put("end", end_time);
+            } else {
+                out.put("end", timeshaft.getEndTime());
+            }
             out.put("timed", "false");
             res.add(out);
         }
