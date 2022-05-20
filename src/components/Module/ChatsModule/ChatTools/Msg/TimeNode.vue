@@ -73,12 +73,21 @@
               <v-btn
                 color="gray darken-1"
                 text
-                style="font-size: 20px; margin-left: 10%; width: 80%; background-color: pink; margin-top: auto;"
+                style="font-size: 20px; margin-left: 10%; width: 35%; background-color: pink; margin-top: auto;"
+                @click="copyClicked"
+              >
+                复制分享链接
+              </v-btn>
+              <v-btn
+                color="gray darken-1"
+                text
+                style="font-size: 20px; margin-left: 10%; width: 35%; background-color: pink; margin-top: auto;"
                 @keyup.tab="close"
                 @click="close"
               >
                 关闭(tab)
               </v-btn>
+
               <v-spacer></v-spacer>
             </v-card-actions>
           </div>
@@ -93,6 +102,10 @@
           ></History>
         </div>
       </v-card>
+      <small
+        ref="share"
+        v-show="false"
+      >{{data.key}}</small>
     </v-dialog>
   </div>
 </template>
@@ -118,101 +131,19 @@ export default {
     return {
       show: true,
       data: {},
-      messages: [{
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      }, {
-        "msg": "你好，我是yy",
-        "msgFromName": "hoirqjhoq1",
-        "time": "2022-05-11 11:44:34",
-        "msgFromAvatar": "http://182.92.163.68:8080/photo/9.png"
-      },],
-
-
+      messages: [],
     }
   },
   methods: {
     close () {
       this.show = false
       this.$emit("closeT", this.show)
-    }
+    },
+
+    copyClicked () {
+      this.$refs.share.select()
+      document.execCommand('copy')
+    },
   }
 }
 
