@@ -4,6 +4,7 @@ package com.timeshaft.after_end.service.timeshaftOp;
 import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.*;
+import com.timeshaft.after_end.service.impl.GroupUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -34,6 +35,8 @@ public class TimeShaftOp {
     private PersonalMessageService personalMessageService;
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
+    @Autowired
+    private GroupUserServiceImpl groupUserService;
 
     @Value("${meeting.on}")
     private String OnMeeting;
@@ -182,14 +185,6 @@ public class TimeShaftOp {
         return res;
     }
 
-    public void sendNotification(String msgType, Integer chatId, Integer user_id, String operation) {
-        HashMap<String, Object> res = new HashMap<>();
-        res.put("msgType", msgType);
-        res.put("chatId", chatId);
-        res.put("operation", operation);
-        messagingTemplate.convertAndSend("/user/timeshaft/" + user_id, res);
-    }
-
     @PermissionAnnotation(level = 38)
     public void genTimeShaftFromMessages(int group_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds) throws Exception {
         int max = 0, min = 99999999;
@@ -321,5 +316,24 @@ public class TimeShaftOp {
             }
         }
         return result;
+    }
+
+    public void sendNotification(String msgType, Integer chatId, String operation) {
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("msgType", msgType);
+        res.put("chatId", chatId);
+        res.put("operation", operation);
+        if (msgType.equals(groupType)) {
+            GroupUser queryGroupUser = new GroupUser();
+            queryGroupUser.setGroupId(chatId);
+            List<GroupUser> userInGroup = groupUserService.queryAll(queryGroupUser);
+            for (GroupUser groupUser : userInGroup) {
+                messagingTemplate.convertAndSend("/user/timeshaft/" + groupUser.getUserId(), res);
+            }
+        } else {
+            Friends friends = friendsService.queryById(chatId);
+            messagingTemplate.convertAndSend("/user/timeshaft/" + friends.getUserId1(), res);
+            messagingTemplate.convertAndSend("/user/timeshaft/" + friends.getUserId2(), res);
+        }
     }
 }
