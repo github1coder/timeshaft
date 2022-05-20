@@ -1,5 +1,116 @@
 <template>
   <div class="chat-content">
+    <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="800px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+            absolute
+            bottom
+            color="blue-grey darken-4"
+            right
+            fab
+            v-bind="attrs"
+            v-on="on"
+            v-if="snackbar === false"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+
+      <v-card class="overflow-y-auto">
+        <v-card-title>
+          <span class="text-h5">添加事件</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+              >
+                <v-text-field
+                    label="事件主题"
+                    v-model="title"
+                    required
+                ></v-text-field>
+              </v-col>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="2"
+              >
+                <v-text-field
+                    label="添加至少一个标签"
+                    counter=5
+                    required
+                    v-model="label[0]"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="2"
+              >
+                <v-text-field
+                    label="标签2"
+                    counter=5
+                    v-model="label[1]"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="2"
+              >
+                <v-text-field
+                    label="标签3"
+                    counter=5
+                    v-model="label[2]"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                    label="事件描述"
+                    dense
+                    auto-grow
+                    required
+                    v-model="description"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+              color="gray darken-1"
+              text
+              style="
+              font-size: 20px;
+              margin-left: 10%;
+"
+              @click="dialog = false"
+          >
+            关闭
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="gray darken-1"
+              text
+              style="
+              margin-right: 10%;
+              font-size: 20px;"
+              @click="commitTimeline"
+          >
+            添加
+          </v-btn>
+
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
 <!--        {{selected}}-->
@@ -59,6 +170,11 @@ export default {
       messages: [], //
       selected: [], // messageId that had been selected
       selecting: false,
+      dialog: null,
+      description: null,
+      snackbar: null,
+      title: null,
+      label: [],
     }
   },
   methods: {
@@ -123,7 +239,21 @@ export default {
         })
 
       }, 100)
-    }
+    },
+    commitTimeline() {
+      genTimeShaftFromMessages({
+        chatId: this.$store.state.userId,
+        userId: this.$store.state.currentChannelId,
+        title: this.title,
+        tags: this.label,
+        conclude: this.description,
+        msgIds: this.selected,
+        type: this.$store.state.currentChatType
+      }).then(res => {
+        console.log(res.data)
+      })
+      this.dialog = false
+    },
   },
   computed: {},
   watch: {
@@ -158,15 +288,19 @@ export default {
     },
     selecting(newVal, oldVal) {
       if (!newVal && oldVal) {
-        console.log("调用时间轴生成接口")
-        const post = this.selected
-        genTimeShaftFromMessages({
-          post
-        }).then(res => {
-          console.log(res)
-        })
+        console.log("填写timeShaft信息")
+        this.dialog = true
+        // genTimeShaftFromMessages({
+        //   msgIds: this.selected,
+        //   chatId: this.$store.state.currentChannelId,
+        //   userId: this.$store.state.userId,
+        // }).then(res => {
+        //   console.log(res)
+        // })
       }
-    }
+    },
+
+
   },
 
   created() {
