@@ -74,7 +74,7 @@
                 and endMsgId = #{endMsgId}
             </if>
             <if test="key != null">
-                and `key` = #{endMsgId}
+                and `key` = #{key}
             </if>
         </where>
     </select>
@@ -120,7 +120,7 @@
                 endMsgId = #{endMsgId},
             </if>
             <if test="key != null">
-                `key` = #{endMsgId},
+                `key` = #{key},
             </if>
         </set>
         where id = #{id}

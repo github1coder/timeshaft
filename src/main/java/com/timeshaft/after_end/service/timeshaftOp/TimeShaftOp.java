@@ -305,7 +305,7 @@ public class TimeShaftOp {
         Random random = new Random();
         //使用for循环得到6为字符
         while (true) {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 15; i++) {
                 //返回一个小于62的int类型的随机数
                 int rd = random.nextInt(52);
                 //随机从指定的位置开始获取一个字符
