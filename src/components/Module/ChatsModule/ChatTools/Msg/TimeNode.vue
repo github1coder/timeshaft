@@ -22,8 +22,10 @@
         <div style="height: 100%; width: 50%; float: left; border-right: 1px skyblue solid;">
           <div style="width: 80%; height: 90%; margin: auto;">
             <v-card-title style="text-align: left; font-size: 40px">
-              这是一个标题
+              {{data.title}}
             </v-card-title>
+            <v-divider></v-divider>
+            <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
             <v-card-text style="text-align: left; font-size: 25px;">
               标签:
@@ -32,27 +34,30 @@
                 color="pink"
                 label
                 text-color="white"
+                v-if="data.tags[0]"
               >
                 <v-icon left>mdi-label</v-icon>
-                Tags
+                {{data.tags[0]}}
               </v-chip>
               <v-chip
                 class="ma-2"
                 color="pink"
                 label
                 text-color="white"
+                v-if="data.tags[1]"
               >
                 <v-icon left>mdi-label</v-icon>
-                Tags
+                {{data.tags[1]}}
               </v-chip>
               <v-chip
                 class="ma-2"
                 color="pink"
                 label
                 text-color="white"
+                v-if="data.tags[2]"
               >
                 <v-icon left>mdi-label</v-icon>
-                Tags
+                {{data.tags[2]}}
               </v-chip>
             </v-card-text>
             <v-divider></v-divider>
@@ -60,7 +65,7 @@
               摘要
             </v-card-subtitle>
             <v-card-text style="text-indent:2em; text-align: left; font-size: 20px;">
-              zhehsifiheofhqjoqej
+              {{data.conclude}}
             </v-card-text>
           </div>
           <div style="height: 5%;">
@@ -83,7 +88,7 @@
           style="height: 100%; width: 50%; float: right"
         >
           <History
-            :messages="messages"
+            :messages="data.message"
             v-if="show"
           ></History>
         </div>
@@ -94,19 +99,19 @@
 
 <script>
 import History from "./History.vue"
-// import { getSingleTimeshaft } from "@/api/timeShaft"
+import { getSingleTimeshaft } from "@/api/timeShaft"
 export default {
   components: { History },
 
   props: ["id"],
 
-  created () {
-    // getSingleTimeshaft({
-    //   timeshaft_id: this.id
-    // }).then(res => {
-    //   console.log(res)
-    //   this.data = res
-    // })
+  mounted () {
+    getSingleTimeshaft({
+      timeshaft_id: this.id
+    }).then(res => {
+      console.log(res)
+      this.data = res
+    })
   },
 
   data () {

@@ -10,6 +10,7 @@
         tile
         dark
         style="width: 100%; overflow: auto; overflow-x: hidden"
+        class="mem-info"
       >
         <!-- <v-row style="width: 100%; height: 100%;"> -->
         <v-navigation-drawer
@@ -205,7 +206,7 @@
           <div
             v-for="(item, j) in friends"
             :key=j
-            style="width:20%; float: left; margin-left: 5%; background-color: green; border-radius: 10%"
+            style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
           >
             <div>
               <v-img

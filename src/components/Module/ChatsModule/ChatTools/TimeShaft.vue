@@ -97,19 +97,19 @@
                 </v-col>
 
                 <v-col>
-                  <h1
+                  <!-- <h1
                     class="h1"
                     style="font-size: 20px;"
-                  >开始时间</h1>
-                  <v-time-picker
+                  >开始时间</h1> -->
+                  <!-- <v-time-picker
                     v-model="start_time"
                     format="24hr"
                     header-color="#777777"
-                  ></v-time-picker>
+                  ></v-time-picker> -->
                 </v-col>
               </v-row>
             </v-container>
-            <small>*滑动鼠标选择事件开始时间</small>
+            <!-- <small>*滑动鼠标选择事件开始时间</small> -->
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -219,7 +219,7 @@
       >
         <v-timeline-item
           small
-          v-for="(item, i) in items"
+          v-for="(item, i) in items.slice().reverse()"
           :key="i"
           :color="timecolor[i % 10]"
         >
@@ -298,13 +298,12 @@ export default {
     this.dataDestroy();
   },
   computed: {
-
   },
   methods: {
     getShaft () {
       let para = {
         group_id: this.chatId,
-        type: this.type,
+        type: this.type == "group" ? "group" : "friend",
       }
       getTimeshaft(para).then(res => {
         this.items = res.items
@@ -329,9 +328,9 @@ export default {
           group_id: this.chatId,
           creator_id: this.$store.state.userId,
           title: this.title,
-          tags: [this.lable],
+          tags: this.lable,
           conclude: this.description,
-          type: this.type,
+          type: this.type == "group" ? "group" : "friend",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
@@ -376,9 +375,9 @@ export default {
     },
   },
 
-
-
 }
+
+
 </script>
 
 <style scoped>

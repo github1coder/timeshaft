@@ -270,7 +270,7 @@ export default {
         }
       }
 
-      //这个是用来关闭时间轴按钮
+      //这个是用来关闭时间轴按钮,请传入参数state（true代表开会中）
       this.isShowEnd()
     },
 
@@ -412,14 +412,15 @@ export default {
     endTime () {
       //目前使用friend调试
       endTimeShaft({
-        group_id: this.chatId,
-        type: "friend"
+        group_id: this.$store.state.currentChannelId,
+        chatId: this.$store.state.currentChannelId,
+        type: this.$store.state.currentChatType == "group" ? "group" : "friend",
       })
       this.showEnd = false
     },
 
-    isShowEnd (chatId, type, state) {
-      console.log(chatId, type, state)
+    isShowEnd (state) {
+      console.log(state)
       this.showEnd = state
       //state代表是否在会议中
       // const that = this
