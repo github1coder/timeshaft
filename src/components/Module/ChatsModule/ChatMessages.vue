@@ -242,8 +242,8 @@ export default {
     },
     commitTimeline() {
       genTimeShaftFromMessages({
-        chatId: this.$store.state.userId,
-        userId: this.$store.state.currentChannelId,
+        chatId: this.$store.state.currentChannelId,
+        userId: this.$store.state.userId,
         title: this.title,
         tags: this.label,
         conclude: this.description,

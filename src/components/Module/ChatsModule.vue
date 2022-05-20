@@ -69,7 +69,7 @@
                 >
                   <v-list-item-avatar>
                     <v-img
-                      v-if="item.type==='private'"
+                      v-if="item.type==='friend'"
                       max-height="70px"
                       max-width="50px"
                       :src="item.chatAvatar"
@@ -212,14 +212,14 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId) {
+        if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
           this.messages[idx].number += 1
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
         }
-        if (this.$refs.chatMessage !== undefined) {
+        if (this.$refs.chatMessage !== undefined && this.$store.state.currentChannelId === payload.chatId) {
           console.log(this.$refs.chatMessage)
           this.$refs.chatMessage.messages.push(payload)
           this.$refs.chatMessage.scrollToBottom()
@@ -255,8 +255,6 @@ export default {
         setTimeout(() => {
           console.log(this.$refs)
           this.$refs.chatMessage.init()
-          this.$refs.timeShaft.getShaft()
-
         }, 100)
         if (item.number !== 0) {
           item.number = 0
@@ -283,7 +281,7 @@ export default {
       endTimeShaft({
         group_id: this.$store.state.currentChannelId,
         chatId: this.$store.state.currentChannelId,
-        type: this.$store.state.currentChatType == "group" ? "group" : "friend",
+        type: this.$store.state.currentChatType === "group" ? "group" : "friend",
       })
       this.showEnd = false
     },
