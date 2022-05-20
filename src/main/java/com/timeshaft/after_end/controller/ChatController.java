@@ -91,12 +91,15 @@ public class ChatController {
             }
             String msg = null;
             Date time = null;
+            int msgId = 0;
             if (last != null) {
                 msg = last.getMessage();
                 time = last.getSendtime();
+                msgId = last.getId();
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
+            lastMessage.put("msgId", msgId);
             PersonalMessage messageQuery = new PersonalMessage();
             messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
@@ -141,12 +144,15 @@ public class ChatController {
             HashMap<String, Object> lastMessage = new HashMap<>();
             String msg = null;
             Date time = null;
+            int msgId = 0;
             if (latest != null) {
                 msg = latest.getMessage();
                 time = latest.getSendtime();
+                msgId = latest.getId();
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
+            lastMessage.put("msgId", msgId);
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
             int number = notReadMessages.size();
             map.put("number", number);
@@ -189,21 +195,23 @@ public class ChatController {
         return new ResponseService(res);
     }
 
-    @RequestMapping(value = "/chatUrl")
-    public ResponseService getChatUrl(@RequestParam("userId") Integer userId) {
-        String chatUrl = "/user/" + userId + "/chat";
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("url", chatUrl);
-        return new ResponseService(data);
-    }
+    @RequestMapping(value = "/getListenerList")
+    public ResponseService getListenerList(@RequestHeader("user_id") Integer user_id) {
+        //消息url
+        String chatUrl = "/user/chat/" + user_id;
+        HashMap<String, Object> chatMap = new HashMap<>();
+        chatMap.put("type", 0);
+        chatMap.put("url", chatUrl);
+        //好友通知url
+        String friendUrl = "/user/contact/" + user_id;
+        HashMap<String, Object> friendMap = new HashMap<>();
+        friendMap.put("type", 1);
+        friendMap.put("url", friendUrl);
 
-    @RequestMapping(value = "/contactUrl")
-    public ResponseService getContactUrl(@RequestParam("userId") Integer userId) {
-        HashMap<String, Object> data = new HashMap<>();
-        String contactUrl = "/user/contact/" + userId;
-        data.put("url", contactUrl);
-        data.put("type", "private");
-        return new ResponseService(data);
+        ArrayList<HashMap<String, Object>> res = new ArrayList<>();
+        res.add(chatMap);
+        res.add(friendMap);
+        return new ResponseService(res);
     }
 
     @RequestMapping(value = "/getHistoryMessage")
@@ -225,12 +233,27 @@ public class ChatController {
         }
         if (type != null && type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
+            //还要同时拉取所有相同时间的消息
             int length = Math.min(groupMessageList.size(), 20);
             boolean more = (length != 0);
+            //还要同时拉取所有相同时间的消息
+            if (length == 20) {
+                GroupMessage temp = groupMessageList.get(19);
+                int count = 0;
+                for (int i = 20; i < groupMessageList.size(); i++) {
+                    if (groupMessageList.get(i).getSendtime().equals(temp.getSendtime())) {
+                        count++;
+                    }
+                }
+                length += count;
+            }
             List<HashMap<String, Object>> data = new ArrayList<>();
             for (int i = length - 1; i >= 0; i--) {
                 HashMap<String, Object> messageMap = new HashMap<>();
                 GroupMessage message = groupMessageList.get(i);
+                if (message.getSendtime().equals(date)) {
+                    continue;
+                }
                 messageMap.put("userId", message.getSenderId());
                 messageMap.put("chatId", message.getGroupId());
                 User user = userService.queryById(message.getSenderId());
@@ -243,6 +266,7 @@ public class ChatController {
                 messageMap.put("msgFromAvatar", user.getPhoto());
                 messageMap.put("msg", message.getMessage());
                 messageMap.put("time", message.getSendtime());
+                messageMap.put("msgId", message.getId());
                 data.add(messageMap);
             }
             res.put("data", data);
@@ -252,9 +276,10 @@ public class ChatController {
                 newLastTime = groupMessageList.get(length - 1).getSendtime();
             }
             //若没有后续的消息了，lastTime置为0
-            if (length < 20) {
+            if (length == groupMessageList.size()) {
                 newLastTime = new Date(0);
             }
+
             res.put("lastTime", newLastTime);
             res.put("more", more);
         } else {
@@ -267,6 +292,7 @@ public class ChatController {
             List<PersonalMessage> historyMessage = new ArrayList<>();
             historyMessage.addAll(personalMessageService.queryHistoryById(chatId, userId, date));
             historyMessage.addAll(personalMessageService.queryHistoryById(chatId, dstId, date));
+
             historyMessage.sort(new Comparator<PersonalMessage>() {
                 @Override
                 public int compare(PersonalMessage o1, PersonalMessage o2) {
@@ -275,10 +301,24 @@ public class ChatController {
             });
             int length = Math.min(historyMessage.size(), 20);
             boolean more = (length != 0);
+            //还要同时拉取所有相同时间的消息
+            if (length == 20) {
+                PersonalMessage temp = historyMessage.get(19);
+                int count = 0;
+                for (int i = 20; i < historyMessage.size(); i++) {
+                    if (historyMessage.get(i).getSendtime().equals(temp.getSendtime())) {
+                        count++;
+                    }
+                }
+                length += count;
+            }
             List<HashMap<String, Object>> data = new ArrayList<>();
             for (int i = length - 1; i >= 0; i--) {
                 HashMap<String, Object> messageMap = new HashMap<>();
                 PersonalMessage message = historyMessage.get(i);
+                if (message.getSendtime().equals(date)) {
+                    continue;
+                }
                 messageMap.put("userId", message.getSenderId());
                 messageMap.put("chatId", message.getFriendsId());
                 messageMap.put("msg", message.getMessage());
@@ -290,6 +330,7 @@ public class ChatController {
                     messageMap.put("msgFromAvatar", userDst.getPhoto());
                 }
                 messageMap.put("time", message.getSendtime());
+                messageMap.put("msgId", message.getId());
                 data.add(messageMap);
             }
             res.put("data", data);
@@ -299,7 +340,7 @@ public class ChatController {
                 newLastTime = historyMessage.get(length - 1).getSendtime();
             }
             //若没有后续的消息了，lastTime置为0
-            if (length < 20) {
+            if (length == historyMessage.size()) {
                 newLastTime = new Date(0);
             }
             res.put("lastTime", newLastTime);

@@ -1,11 +1,9 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
-import com.timeshaft.after_end.entity.PersonalMessage;
 import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.GroupUserService;
-import com.timeshaft.after_end.service.PersonalMessageService;
 import com.timeshaft.after_end.service.TimeshaftService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
@@ -18,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @SpringBootTest
@@ -43,26 +39,11 @@ class AfterEndApplicationTests {
     RedisTemplate<String,Object> redisTemplate;
     @Autowired
     private TimeshaftService timeshaftService;
-    @Autowired
-    private PersonalMessageService personalMessageService;
 
 
 
     @Test
     void contextLoads() {
-        for (int i = 68; i < 97; i++) {
-            if(timeshaftService.queryById(i) != null) {
-                Timeshaft timeshaft = timeshaftService.queryById(i);
-                List<PersonalMessage> personalMessages = personalMessageService.queryTimeshaft(timeshaft);
-                if(!personalMessages.isEmpty()) {
-                    timeshaft.setStartMsgId(personalMessages.get(0).getId());
-                    timeshaft.setEndMsgId(personalMessages.get(personalMessages.size() - 1).getId());
-                } else {
-                    timeshaft.setStartMsgId(-1);
-                    timeshaft.setEndMsgId(-1);
-                }
-                timeshaftService.update(timeshaft);
-            }
-        }
+        System.out.println(timeshaftService.queryById(69).getBeginTime());
     }
 }
