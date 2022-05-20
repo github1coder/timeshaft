@@ -53,7 +53,7 @@ public class TimeShaftController {
     @RequestMapping("/endTimeShaft")
     public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("结束时间轴开始");
-        Integer group_id = (Integer) requestMap.get("group_id");
+        Integer group_id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
         timeShaftOp.endTimeShaft(group_id, type, user_id);
         log.info("结束时间轴成功");

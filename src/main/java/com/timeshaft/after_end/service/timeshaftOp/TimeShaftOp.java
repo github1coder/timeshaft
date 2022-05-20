@@ -178,22 +178,37 @@ public class TimeShaftOp {
 
     @PermissionAnnotation(level = 38)
     public String genTimeShaftFromMessages(int group_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds) throws Exception {
-        int timeshaft_id = beginTimeShaftSingle(title, conclude, user_id, group_id, type, tags);
-        changeGroupState(group_id, type, OffMeeting);
-        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
         int max = 0, min = 99999999;
-        for (Integer integer : msgIds) {
-            if (integer > max) {
-                max = integer;
+        if(!msgIds.isEmpty()) {
+            for (Integer integer : msgIds) {
+                if (integer > max) {
+                    max = integer;
+                }
+                if (integer < min) {
+                    min = integer;
+                }
             }
-            if (integer < min) {
-                min = integer;
+            if(groupType.equals(type)) {
+                if(groupMessageService.queryById(max) == null || groupMessageService.queryById(min) == null) {
+                    throw new Exception("传入消息列表错误");
+                }
+            } else if (friendType.equals(type)) {
+                if(personalMessageService.queryById(max) == null || personalMessageService.queryById(min) == null) {
+                    throw new Exception("传入消息列表错误");
+                }
+            } else {
+                throw new Exception("type参数类型错误");
             }
+        } else {
+            max = -1;
+            min = -1;
         }
-        timeshaft.setStartMsgId(max);
-        timeshaft.setEndMsgId(min);
-        timeshaft.setEndTime(new Date());
-        timeshaftService.update(timeshaft);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0, min, max);
+        timeshaftService.insert(timeshaft);
+        for (String tag : tags) {
+            Tag newTag = new Tag(timeshaft.getId(), tag);
+            tagService.insert(newTag);
+        }
         return "success";
     }
 
