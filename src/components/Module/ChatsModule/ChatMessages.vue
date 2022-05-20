@@ -1,5 +1,10 @@
 <template>
   <div class="chat-content">
+    <TimeNode
+      :id="shaftId"
+      v-if="detail"
+      @closeT="closeT"
+    ></TimeNode>
     <v-dialog
         v-model="dialog"
         persistent
@@ -166,10 +171,10 @@
 import {getHistoryMessage} from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
 import {genTimeShaftFromMessages, queryTimeShaftId} from "@/api/timeShaft";
-
+import TimeNode from "@/components/Module/ChatsModule/ChatTools/Msg/TimeNode";
 export default {
   name: "ChatMessages",
-  components: {ChatForm},
+  components: {TimeNode, ChatForm},
   props: ['draw'],
   data() {
     return {
@@ -183,14 +188,27 @@ export default {
       snackbar: null,
       title: null,
       label: [],
+      detail: null,
+      shaftId: null,
+      success: 0,
     }
   },
   methods: {
+    closeT (flag) {
+      this.detail = flag
+    },
     queryTimeShaft(msg) {
       queryTimeShaftId({
           msg: msg
       }).then(res => {
         console.log(res)
+        if (res.timeShaftId !== -1) {
+          this.detail = true
+          this.shaftId = res.timeShaftId
+          alert("成功")
+        } else {
+          alert("非法的时间轴")
+        }
       })
     },
     onScroll() {

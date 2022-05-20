@@ -61,7 +61,7 @@
               </v-chip>
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-subtitle style="font-size: 25px; height 500px;">
+            <v-card-subtitle style="font-size: 25px; height: 500px;">
               摘要
             </v-card-subtitle>
             <v-card-text style="text-indent:2em; text-align: left; font-size: 20px;">
