@@ -57,6 +57,7 @@ public class TimeShaftOp {
             Tag newTag = new Tag(timeshaft.getId(), tag);
             tagService.insert(newTag);
         }
+        sendNotification(type, group_id, OnMeeting);
         return timeshaft.getId();
     }
 
@@ -115,6 +116,7 @@ public class TimeShaftOp {
         }
         checkGroupState(group_id, type, OffMeeting);
         changeGroupState(group_id, type, OffMeeting);
+        sendNotification(type, group_id, OffMeeting);
     }
 
     private void changeGroupState(Integer group_id, String type, String status) throws Exception {
@@ -180,14 +182,6 @@ public class TimeShaftOp {
             res.add(out);
         }
         return res;
-    }
-
-    public void sendNotification(String msgType, Integer chatId, Integer user_id, String operation) {
-        HashMap<String, Object> res = new HashMap<>();
-        res.put("msgType", msgType);
-        res.put("chatId", chatId);
-        res.put("operation", operation);
-        messagingTemplate.convertAndSend("/user/timeshaft/" + user_id, res);
     }
 
     @PermissionAnnotation(level = 38)
@@ -321,5 +315,13 @@ public class TimeShaftOp {
             }
         }
         return result;
+    }
+
+    private void sendNotification(String msgType, Integer chatId, Integer user_id, String operation) {
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("msgType", msgType);
+        res.put("chatId", chatId);
+        res.put("operation", operation);
+        messagingTemplate.convertAndSend("/user/timeshaft/" + user_id, res);
     }
 }
