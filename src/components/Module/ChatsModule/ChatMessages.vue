@@ -113,7 +113,7 @@
     </v-dialog>
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
-<!--        {{selected}}-->
+        <!--        {{selected}}-->
         <v-list three-line dark v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
@@ -133,31 +133,39 @@
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
                 <v-list-item-subtitle
+                    v-if="message.msgType === 'text'"
                 >{{ message.msg }}
                 </v-list-item-subtitle>
+                <v-list-item-subtitle
+                    v-else-if="message.msgType === 'timeShaft'"
+                    @click="queryTimeShaft(message.msg)"
+                    style="color: #2196F3"
+                >
+                  {{message.msg}}
+                </v-list-item-subtitle>
               </v-list-item-content>
-<!--              <v-list-item-content-->
-<!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
-<!--              >-->
-<!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
-<!--                <v-list-item-content-->
-<!--                    class="tobubble"-->
-<!--                >{{ message.msg }}-->
-<!--                </v-list-item-content>-->
-<!--              </v-list-item-content>-->
+              <!--              <v-list-item-content-->
+              <!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
+              <!--              >-->
+              <!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
+              <!--                <v-list-item-content-->
+              <!--                    class="tobubble"-->
+              <!--                >{{ message.msg }}-->
+              <!--                </v-list-item-content>-->
+              <!--              </v-list-item-content>-->
             </v-list-item>
           </template>
         </v-list>
       </div>
     </div>
-    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting"  @send="socketSend"></ChatForm>
+    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting" @send="socketSend"></ChatForm>
   </div>
 </template>
 
 <script>
 import {getHistoryMessage} from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
-import {genTimeShaftFromMessages} from "@/api/timeShaft";
+import {genTimeShaftFromMessages, queryTimeShaftId} from "@/api/timeShaft";
 
 export default {
   name: "ChatMessages",
@@ -178,6 +186,13 @@ export default {
     }
   },
   methods: {
+    queryTimeShaft(msg) {
+      queryTimeShaftId({
+          msg: msg
+      }).then(res => {
+        console.log(res)
+      })
+    },
     onScroll() {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
