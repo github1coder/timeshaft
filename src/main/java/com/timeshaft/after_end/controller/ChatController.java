@@ -394,8 +394,37 @@ public class ChatController {
                                                   @RequestParam("type") String type,
                                                   @RequestParam("text") String text) {
         List<HashMap<String, Object>> data = new ArrayList<>();
-
-
-        return new ResponseService();
+        if (type.equals(GROUP)) {
+            List<GroupMessage> list = groupMessageService.queryByKeyword(chatId, text);
+            for (GroupMessage message : list) {
+                HashMap<String, Object> map = new HashMap<>();
+                GroupUser queryGroupUser = new GroupUser();
+                queryGroupUser.setGroupId(chatId);
+                queryGroupUser.setUserId(message.getSenderId());
+                List<GroupUser> groupUserList = groupUserService.queryAll(queryGroupUser);
+                GroupUser groupUser = groupUserList.get(0);
+                User user = userService.queryById(message.getSenderId());
+                map.put("msg", message.getMessage());
+                map.put("msgFromName", groupUser.getUserNickname());
+                map.put("msgFromAvatar", user.getPhoto());
+                map.put("time", message.getSendtime());
+                data.add(map);
+            }
+        } else {
+            List<PersonalMessage> list = personalMessageService.queryByKeyword(chatId, text);
+            for (PersonalMessage message : list) {
+                HashMap<String, Object> map = new HashMap<>();
+                Friends friends = friendsService.queryById(chatId);
+                User user = userService.queryById(message.getSenderId());
+                String senderNickName = Objects.equals(friends.getUserId1(), message.getSenderId()) ?
+                        friends.getNickname1() : friends.getNickname2();
+                map.put("msg", message.getMessage());
+                map.put("msgFromName", senderNickName);
+                map.put("msgFromAvatar", user.getPhoto());
+                map.put("time", message.getSendtime());
+                data.add(map);
+            }
+        }
+        return new ResponseService(data);
     }
 }

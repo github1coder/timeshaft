@@ -84,4 +84,13 @@ public interface GroupMessageService {
      */
     List<GroupMessage> queryHistoryById(int groupId, Date time);
 
+    /**
+     * 通过消息内容进行查询
+     *
+     * @param groupId 群聊Id
+     * @param keyword 关键词
+     * @return 实例对象列表
+     */
+    List<GroupMessage> queryByKeyword(Integer groupId, String keyword);
+
 }

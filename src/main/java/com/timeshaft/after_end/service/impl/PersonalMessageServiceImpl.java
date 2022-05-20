@@ -72,13 +72,12 @@ public class PersonalMessageServiceImpl implements PersonalMessageService {
      * 通过消息内容进行查询
      *
      * @param friendsId 好友关系id
-     * @param senderId 发送者id
      * @param keyword 关键词
      * @return 实例对象列表
      */
     @Override
-    public List<PersonalMessage> queryByKeyword(Integer friendsId, Integer senderId, String keyword) {
-        return null;
+    public List<PersonalMessage> queryByKeyword(Integer friendsId, String keyword) {
+        return this.personalMessageMapper.queryByKeyword(friendsId, keyword);
     }
 
     /**

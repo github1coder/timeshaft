@@ -120,4 +120,16 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     public List<GroupMessage> queryHistoryById(int groupId, Date time) {
         return this.groupMessageMapper.queryHistoryById(groupId, time);
     }
+
+    /**
+     * 通过消息内容进行查询
+     *
+     * @param groupId 群聊Id
+     * @param keyword 关键词
+     * @return 实例对象列表
+     */
+    @Override
+    public List<GroupMessage> queryByKeyword(Integer groupId, String keyword) {
+        return this.groupMessageMapper.queryByKeyword(groupId, keyword);
+    }
 }
