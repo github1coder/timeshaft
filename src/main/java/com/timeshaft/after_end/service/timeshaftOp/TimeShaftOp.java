@@ -309,7 +309,7 @@ public class TimeShaftOp {
                 //返回一个小于62的int类型的随机数
                 int rd = random.nextInt(52);
                 //随机从指定的位置开始获取一个字符
-                String oneChar = strAll.substring(rd, 1);
+                String oneChar = strAll.substring(rd, rd + 1);
                 //循环加到6为
                 result += oneChar;
             }
