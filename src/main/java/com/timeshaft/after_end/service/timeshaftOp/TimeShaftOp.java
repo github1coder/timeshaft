@@ -87,6 +87,7 @@ public class TimeShaftOp {
                     tagsRes.add(tag.getName());
                 }
                 timeshaftRes.put("tags", tagsRes);
+                timeshaftRes.put("id", timeshaft.getId());
                 timeshaftsRes.add(timeshaftRes);
             }
         }
