@@ -28,12 +28,22 @@ public interface PersonalMessageService {
     /**
      * 通过id组合与索引查询最近历史消息（默认20条）
      *
-     * @param friendsId 接收者id
+     * @param friendsId 好友关系id
      * @param senderId 发送者id
      * @param time 查询起始的时间
      * @return 实例对象列表
      */
     List<PersonalMessage> queryHistoryById(Integer friendsId, Integer senderId, Date time);
+
+    /**
+     * 通过消息内容进行查询
+     *
+     * @param friendsId 好友关系id
+     * @param senderId 发送者id
+     * @param keyword 关键词
+     * @return 实例对象列表
+     */
+    List<PersonalMessage> queryByKeyword(Integer friendsId, Integer senderId, String keyword);
 
     /**
      * 查询最新消息
