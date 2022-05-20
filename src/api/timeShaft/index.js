@@ -47,3 +47,11 @@ export function genTimeShaftFromMessages(param) {
         data: param
     })
 }
+
+export function queryTimeShaftId(param) {
+    return request({
+        url: 'timeshaft/queryTimeShaftId',
+        method: 'post',
+        data: param
+    })
+}
