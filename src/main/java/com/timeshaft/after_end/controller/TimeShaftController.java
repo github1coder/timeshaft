@@ -76,8 +76,8 @@ public class TimeShaftController {
         String type = (String)requestMap.get("type");
         ArrayList<Integer> msgIds = (ArrayList<Integer>)requestMap.get("msgIds");
         System.out.println(msgIds.size());
-        String res = timeShaftOp.genTimeShaftFromMessages(chat_id, user_id, title, tags, conclude, type, msgIds);
-        return new ResponseService(res);
+        timeShaftOp.genTimeShaftFromMessages(chat_id, user_id, title, tags, conclude, type, msgIds);
+        return new ResponseService();
     }
 
     @RequestMapping("/getSingleTimeshaft")

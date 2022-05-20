@@ -177,7 +177,7 @@ public class TimeShaftOp {
     }
 
     @PermissionAnnotation(level = 38)
-    public String genTimeShaftFromMessages(int group_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds) throws Exception {
+    public void genTimeShaftFromMessages(int group_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds) throws Exception {
         int max = 0, min = 99999999;
         if(!msgIds.isEmpty()) {
             for (Integer integer : msgIds) {
@@ -209,7 +209,6 @@ public class TimeShaftOp {
             Tag newTag = new Tag(timeshaft.getId(), tag);
             tagService.insert(newTag);
         }
-        return "success";
     }
 
     @PermissionAnnotation(level = 31)
