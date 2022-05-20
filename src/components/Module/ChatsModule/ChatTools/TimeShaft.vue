@@ -231,7 +231,7 @@
               <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} ~ {{item.end_date}}</strong>
             </v-col>
             <v-col style="a:hover{color: blue;}">
-              <a><strong @click="showDetail(1)">事件主题：{{item.title}}</strong></a>
+              <a><strong @click="showDetail(item.id)">事件主题：{{item.title}}</strong></a>
               <div class="text-caption">
                 事件摘要：{{ item.conclude }}
               </div>
