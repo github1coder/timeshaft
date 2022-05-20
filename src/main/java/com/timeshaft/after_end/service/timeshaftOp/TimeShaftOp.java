@@ -285,7 +285,7 @@ public class TimeShaftOp {
         int timeshaft_id;
         Map<String, Object> res = new HashMap<>();
         try {
-            key = key.replace("/n", "");
+            key = key.replace("n", "");
             key = key.substring(1).split("-")[0];
             String name = key.substring(1).split("-")[1];
             List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(null, null, name, null,
@@ -299,7 +299,7 @@ public class TimeShaftOp {
     }
 
     private String randomKey() {
-        String strAll = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String strAll = "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         //定义一个结果
         String result = "";
         //实例化Random对象
@@ -308,7 +308,7 @@ public class TimeShaftOp {
         while (true) {
             for (int i = 0; i < 15; i++) {
                 //返回一个小于62的int类型的随机数
-                int rd = random.nextInt(52);
+                int rd = random.nextInt(51);
                 //随机从指定的位置开始获取一个字符
                 String oneChar = strAll.substring(rd, rd + 1);
                 //循环加到6为
