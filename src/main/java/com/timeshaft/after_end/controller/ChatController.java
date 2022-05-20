@@ -386,4 +386,16 @@ public class ChatController {
         }
         return new ResponseService();
     }
+
+
+    @RequestMapping(value = "/searchHistory")
+    public ResponseService searchMessageByKeyword(@RequestHeader("user_id") Integer userId,
+                                                  @RequestParam("chatId") Integer chatId,
+                                                  @RequestParam("type") String type,
+                                                  @RequestParam("text") String text) {
+        List<HashMap<String, Object>> data = new ArrayList<>();
+
+
+        return new ResponseService();
+    }
 }
