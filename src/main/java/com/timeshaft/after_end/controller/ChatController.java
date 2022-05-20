@@ -53,6 +53,10 @@ public class ChatController {
     private String GROUP;
     @Value("${type.friendType}")
     private String FRIEND;
+    @Value("${type.textType}")
+    private String TEXT;
+    @Value("${type.timeShaftType}")
+    private String TIMESHAFT;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -94,14 +98,21 @@ public class ChatController {
             String msg = null;
             Date time = null;
             int msgId = 0;
+            String msgType = null;
             if (last != null) {
                 msg = last.getMessage();
                 time = last.getSendtime();
                 msgId = last.getId();
+                if (msg.startsWith("#")) {
+                    msgType = TIMESHAFT;
+                } else {
+                    msgType = TEXT;
+                }
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
             lastMessage.put("msgId", msgId);
+            lastMessage.put("msgType", msgType);
             PersonalMessage messageQuery = new PersonalMessage();
             messageQuery.setState(UNREAD);
             messageQuery.setSenderId(friendUserId);
@@ -109,25 +120,6 @@ public class ChatController {
             List<PersonalMessage> notReadMessages = personalMessageService.queryAll(messageQuery);
             int number = notReadMessages.size();
             map.put("number", number);
-            /*
-            if (notReadMessages != null && !notReadMessages.isEmpty()) {
-                index = notReadMessages.get(0).getId();
-            }
-            if (notReadMessages != null && notReadMessages.size() > 0) {
-                for (PersonalMessage message : notReadMessages) {
-                    HashMap<String, Object> dataMap = new HashMap<>();
-                    dataMap.put("msgFromName", chatName);
-                    dataMap.put("msgFromAvatar", chatAvatar);
-                    dataMap.put("msg", message.getMessage());
-                    dataMap.put("time", message.getSendtime());
-                    dataMap.put("userId", message.getSenderId());
-                    dataMap.put("chatId", message.getFriendsId());
-                    data.add(dataMap);
-                }
-                recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
-                index = notReadMessages.get(0).getId();
-            }
-             */
             //若没聊过天，index为-1——加好友会打招呼，此种情况不会发生
             map.put("lastMessage", lastMessage);
             map.put("lastTime", lastTime);
@@ -147,49 +139,24 @@ public class ChatController {
             String msg = null;
             Date time = null;
             int msgId = 0;
+            String msgType = null;
             if (latest != null) {
                 msg = latest.getMessage();
                 time = latest.getSendtime();
                 msgId = latest.getId();
+                if (msg.startsWith("#")) {
+                    msgType = TIMESHAFT;
+                } else {
+                    msgType = TEXT;
+                }
             }
             lastMessage.put("msg", msg);
             lastMessage.put("time", time);
             lastMessage.put("msgId", msgId);
+            lastMessage.put("msgType", msgType);
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(sourceId, group.getId(), UNREAD);
             int number = notReadMessages.size();
             map.put("number", number);
-            /*
-            //拉取所有未读消息
-            Date recent = null;
-            List<HashMap<String, Object>> data = new ArrayList<>();
-            if (notReadMessages != null && !notReadMessages.isEmpty()) {
-                index = notReadMessages.get(0).getId();
-            }
-            if (notReadMessages != null && notReadMessages.size() > 0) {
-                for (GroupMessage message : notReadMessages) {
-                    HashMap<String, Object> dataMap = new HashMap<>();
-                    User user = userService.queryById(message.getSenderId());
-                    GroupUser queryGroupUser = new GroupUser();
-                    queryGroupUser.setGroupId(group.getId());
-                    queryGroupUser.setUserId(user.getId());
-                    List<GroupUser> groupUserList = groupUserService.queryAll(queryGroupUser);
-                    //用户已经退群则跳过此条消息
-                    if (groupUserList == null || groupUserList.size() == 0) {
-                        continue;
-                    }
-                    GroupUser groupUser = groupUserList.get(0);
-                    dataMap.put("msgFromName", groupUser.getUserNickname());
-                    dataMap.put("msgFromAvatar", user.getPhoto());
-                    dataMap.put("msg", message.getMessage());
-                    dataMap.put("time", message.getSendtime());
-                    dataMap.put("userId", message.getSenderId());
-                    dataMap.put("chatId", group.getId());
-                    data.add(dataMap);
-                }
-                recent = notReadMessages.get(notReadMessages.size()-1).getSendtime();
-                index = notReadMessages.get(0).getId();
-            }
-            */
             map.put("lastMessage", lastMessage);
             map.put("lastTime", lastTime);
             res.add(map);
@@ -269,6 +236,11 @@ public class ChatController {
                 messageMap.put("msg", message.getMessage());
                 messageMap.put("time", message.getSendtime());
                 messageMap.put("msgId", message.getId());
+                if (message.getMessage().startsWith("#")) {
+                    messageMap.put("msgType", TIMESHAFT);
+                } else {
+                    messageMap.put("msgType", TEXT);
+                }
                 data.add(messageMap);
             }
             res.put("data", data);
@@ -333,6 +305,11 @@ public class ChatController {
                 }
                 messageMap.put("time", message.getSendtime());
                 messageMap.put("msgId", message.getId());
+                if (message.getMessage().startsWith("#")) {
+                    messageMap.put("msgType", TIMESHAFT);
+                } else {
+                    messageMap.put("msgType", TEXT);
+                }
                 data.add(messageMap);
             }
             res.put("data", data);

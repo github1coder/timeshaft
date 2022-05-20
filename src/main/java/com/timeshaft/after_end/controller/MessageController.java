@@ -49,6 +49,10 @@ public class MessageController {
     private String READ;
     @Value("${type.messageNotRead}")
     private String UNREAD;
+    @Value("${type.textType}")
+    private String TEXT;
+    @Value("${type.timeShaftType}")
+    private String TIMESHAFT;
 
     /**
      * 接收客户端发送的私信类型消息，将其存入数据库，并发送至指定的用户路径
@@ -57,6 +61,7 @@ public class MessageController {
      */
     @MessageMapping("/personalMessage")
     public void receivePersonalMessage(@Payload Map<String, Object> payload) {
+        payload.put("type", FRIEND);
         Date date = new Date(System.currentTimeMillis());
         PersonalMessage personalMessage = new PersonalMessage();
         personalMessage.setSendtime(date);
@@ -67,15 +72,22 @@ public class MessageController {
         int friendId = personalMessage.getFriendsId();
         int senderId = personalMessage.getSenderId();
         Friends friends = friendsService.queryById(friendId);
+        if (personalMessage.getMessage() == null || personalMessage.getMessage().length() == 0) {
+            return;
+        }
         if (friends == null) {
-            payload.put("msg", "你被删啦，呜呜呜，重新登录可以去掉负心人");
-            messagingTemplate.convertAndSend("/user/" + senderId, payload);
+            payload.put("msg", "你们不是好友哦");
+            messagingTemplate.convertAndSend("/user/chat/" + senderId, payload);
             return;
         }
         PersonalMessage inserted = personalMessageService.insert(personalMessage);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
-        payload.put("type", FRIEND);
         payload.put("msgId", inserted.getId());
+        if (personalMessage.getMessage().startsWith("#")) {
+            payload.put("msgType", TIMESHAFT);
+        } else {
+            payload.put("msgType", TEXT);
+        }
         messagingTemplate.convertAndSend("/user/chat/" + targetId, payload);
         messagingTemplate.convertAndSend("/user/chat/" + senderId, payload);
     }
@@ -87,12 +99,25 @@ public class MessageController {
      */
     @MessageMapping("/groupMessage")
     public void receiveGroupMessage(@Payload Map<String, Object> payload) {
+        payload.put("type", GROUP);
         Date date = new Date(System.currentTimeMillis());
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setMessage((String) payload.get("msg"));
         groupMessage.setGroupId(Integer.valueOf(payload.get("chatId").toString()));
         groupMessage.setSenderId(Integer.valueOf(payload.get("userId").toString()));
         groupMessage.setSendtime(date);
+        if (groupMessage.getMessage() == null || groupMessage.getMessage().length() == 0) {
+            return;
+        }
+        GroupUser queryGroupUser = new GroupUser();
+        queryGroupUser.setUserId(groupMessage.getSenderId());
+        queryGroupUser.setGroupId(groupMessage.getGroupId());
+        List<GroupUser> queryResult = groupUserService.queryAll(queryGroupUser);
+        if (queryResult.size() == 0) {
+            payload.put("msg", "你们不是好友哦");
+            messagingTemplate.convertAndSend("/user/chat/" + groupMessage.getSenderId(), payload);
+            return;
+        }
         GroupMessage insertMessage = groupMessageService.insert(groupMessage);
         int messageId = insertMessage.getId();
         int groupId = groupMessage.getGroupId();
@@ -101,8 +126,12 @@ public class MessageController {
         List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
         GroupMessageState groupMessageState = new GroupMessageState();
         groupMessageState.setMessageId(messageId);
-        payload.put("type", GROUP);
         payload.put("msgId", insertMessage.getId());
+        if (groupMessage.getMessage().startsWith("#")) {
+            payload.put("msgType", TIMESHAFT);
+        } else {
+            payload.put("msgType", TEXT);
+        }
         for (GroupUser user : userInGroup) {
             if (user.getUserId().equals(groupMessage.getSenderId())) {
                 groupMessageState.setState(READ);

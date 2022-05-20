@@ -47,6 +47,10 @@ public class FriendOp {
     private String READ;
     @Value("${type.messageNotRead}")
     private String UNREAD;
+    @Value("${type.textType}")
+    private String TEXT;
+    @Value("${type.timeShaftType}")
+    private String TIMESHAFT;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -290,6 +294,7 @@ public class FriendOp {
             lastMessage.put("msgId", personalMessage.getId());
             res.put("lastMessage", lastMessage);
             res.put("number", 1);
+            res.put("msgType", TEXT);
             messagingTemplate.convertAndSend("/user/contact/" + acceptor.getId(), res);
             /*下面发送给请求方*/
             res.put("number", 0);
