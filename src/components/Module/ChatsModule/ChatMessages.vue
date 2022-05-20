@@ -251,9 +251,6 @@ export default {
         type: this.$store.state.currentChatType
       }).then(res => {
         console.log(res.data)
-        if (this.$parent.$refs.timeShaft !== undefined) {
-          this.$parent.$refs.timeShaft.getShaft()
-        }
       })
       this.dialog = false
     },
