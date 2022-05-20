@@ -284,6 +284,7 @@ public class TimeShaftOp {
         int timeshaft_id;
         Map<String, Object> res = new HashMap<>();
         try {
+            key = key.replace("/n", "");
             key = key.substring(1).split("-")[0];
             String name = key.substring(1).split("-")[1];
             List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(null, null, name, null,
