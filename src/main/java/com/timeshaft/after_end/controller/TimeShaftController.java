@@ -39,11 +39,11 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeshaft")
-    public ResponseService getTimeshaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+    public ResponseService getTimeshafts(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("获取时间轴开始");
         Integer group_id = (Integer) requestMap.get("group_id");
         String type = (String) requestMap.get("type");
-        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshaft(group_id, type, user_id);
+        List<Map<String, Object>> timeshaftsRes = timeShaftOp.getTimeshafts(group_id, type, user_id);
         log.info("获取时间轴成功");
         Map<String, Object> res = new HashMap<>();
         res.put("items", timeshaftsRes);
@@ -53,7 +53,7 @@ public class TimeShaftController {
     @RequestMapping("/endTimeShaft")
     public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("结束时间轴开始");
-        Integer group_id = (Integer) requestMap.get("group_id");
+        Integer group_id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
         timeShaftOp.endTimeShaft(group_id, type, user_id);
         log.info("结束时间轴成功");
@@ -63,6 +63,27 @@ public class TimeShaftController {
     @RequestMapping("/getTimeShaftData")
     public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws ParseException {
         List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping("/genTimeShaftFromMessages")
+    public ResponseService genTimeShaftFromMessages(@RequestBody Map<String, Object> requestMap) throws Exception {
+        Integer chat_id = (Integer)requestMap.get("chatId");
+        Integer user_id = (Integer)requestMap.get("userId");
+        String title = (String)requestMap.get("title");
+        ArrayList<String> tags = (ArrayList<String>)requestMap.get("tags");
+        String conclude = (String)requestMap.get("conclude");
+        String type = (String)requestMap.get("type");
+        ArrayList<Integer> msgIds = (ArrayList<Integer>)requestMap.get("msgIds");
+        System.out.println(msgIds.size());
+        timeShaftOp.genTimeShaftFromMessages(chat_id, user_id, title, tags, conclude, type, msgIds);
+        return new ResponseService();
+    }
+
+    @RequestMapping("/getSingleTimeshaft")
+    public ResponseService getSingleTimeshaft(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws ParseException {
+        Integer timeshaft_id = (Integer) requestMap.get("timeshaft_id");
+        Map<String, Object> res = timeShaftOp.getSingleTimeshaft(user_id, timeshaft_id);
         return new ResponseService(res);
     }
 }

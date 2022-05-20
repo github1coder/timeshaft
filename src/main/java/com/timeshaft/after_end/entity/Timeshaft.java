@@ -11,28 +11,36 @@ import java.io.Serializable;
  */
 public class Timeshaft implements Serializable {
     private static final long serialVersionUID = -18461926436711026L;
-    
+
     private Integer id;
-    
+
     private Integer groupId;
-    
+
     private Integer creatorId;
-    
+
     private String name;
-    
+
     private Date beginTime;
-    
+
     private Date endTime;
 
     private String conclude;
 
     private String type;
 
+    private Integer private1;
+
+    private Integer startMsgId;
+
+    private Integer endMsgId;
+
+    private String key;
+
     public Timeshaft() {
 
     }
 
-    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type) {
+    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type, Integer private1, Integer startMsgId, Integer endMsgIdm, String key) {
         this.groupId = groupId;
         this.creatorId = creatorId;
         this.name = name;
@@ -40,6 +48,10 @@ public class Timeshaft implements Serializable {
         this.endTime = endTime;
         this.conclude = conclude;
         this.type = type;
+        this.private1 = private1;
+        this.startMsgId = startMsgId;
+        this.endMsgId = endMsgIdm;
+        this.key = key;
     }
 
     public String getConclude() {
@@ -106,4 +118,35 @@ public class Timeshaft implements Serializable {
         this.endTime = endTime;
     }
 
+    public Integer getPrivate1() {
+        return private1;
+    }
+
+    public void setPrivate1(Integer private1) {
+        this.private1 = private1;
+    }
+
+    public Integer getStartMsgId() {
+        return startMsgId;
+    }
+
+    public void setStartMsgId(Integer startMsgId) {
+        this.startMsgId = startMsgId;
+    }
+
+    public Integer getEndMsgId() {
+        return endMsgId;
+    }
+
+    public void setEndMsgId(Integer endMsgId) {
+        this.endMsgId = endMsgId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

@@ -26,16 +26,19 @@ public class Group implements Serializable {
 
     private String status;
 
+    private Integer private1;
+
     public Group() {
     }
 
-    public Group(String name, Integer masterId, String notice, String photo, Date buildtime, String status) {
+    public Group(String name, Integer masterId, String notice, String photo, Date buildtime, String status, Integer private1) {
         this.name = name;
         this.masterId = masterId;
         this.notice = notice;
         this.photo = photo;
         this.buildtime = buildtime;
         this.status = status;
+        this.private1 = private1;
     }
 
     public Integer getId() {
@@ -92,5 +95,13 @@ public class Group implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getPrivate1() {
+        return private1;
+    }
+
+    public void setPrivate1(Integer private1) {
+        this.private1 = private1;
     }
 }

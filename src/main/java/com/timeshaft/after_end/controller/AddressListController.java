@@ -139,20 +139,20 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/searchByNick")
-    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) {
+    public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
         List<Map<String, String>> res = friendOp.searchByNick(name, type, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/apply")
-    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) {
+    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
         friendOp.apply(user_id, type, action, id);
         friendOp.sendNotification(type, action, id, user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getApplyList")
-    public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) {
+    public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
         return new ResponseService(res);
     }
@@ -189,8 +189,14 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getInfoMsg")
-    public ResponseService getInfoMsg(@RequestParam(value = "type") String type, @RequestParam("info_id") Integer info_id, @RequestHeader("user_id") Integer user_id) {
+    public ResponseService getInfoMsg(@RequestParam(value = "type") String type, @RequestParam("info_id") Integer info_id, @RequestHeader("user_id") Integer user_id) throws Exception {
         Map<String, String> res = friendOp.getInfoMsg(type, info_id, user_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/finding")
+    public ResponseService finding(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
+        List<Map<String, String>> res = friendOp.finding(user_id, type);
         return new ResponseService(res);
     }
 }

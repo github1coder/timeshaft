@@ -4,6 +4,7 @@ package com.timeshaft.after_end.service;
 import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
 import com.timeshaft.after_end.entity.Timeshaft;
+import org.apache.ibatis.annotations.Param;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
@@ -92,5 +93,7 @@ public interface PersonalMessageService {
      * @return 查询结果列表
      */
     List<PersonalMessage> queryAll(PersonalMessage personalMessage);
+
+    List<PersonalMessage> queryBeginEndMsg(int group_id, int startId, int endId);
 
 }

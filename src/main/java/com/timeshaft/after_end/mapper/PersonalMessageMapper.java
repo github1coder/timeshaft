@@ -1,6 +1,5 @@
 package com.timeshaft.after_end.mapper;
 
-import com.timeshaft.after_end.entity.GroupMessage;
 import com.timeshaft.after_end.entity.PersonalMessage;
 import org.apache.ibatis.annotations.Param;
 
@@ -95,4 +94,5 @@ public interface PersonalMessageMapper {
 
     List<PersonalMessage> queryTimeshaft(@Param("group_id") Integer group_id, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
+    List<PersonalMessage> queryBeginEndMsg(@Param("group_id") int group_id, @Param("startId") int startId, @Param("endId") int endId);
 }

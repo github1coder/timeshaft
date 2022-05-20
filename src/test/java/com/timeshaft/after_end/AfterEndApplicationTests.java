@@ -1,9 +1,10 @@
 package com.timeshaft.after_end;
 
 import com.timeshaft.after_end.controller.ChatController;
-import com.timeshaft.after_end.controller.MessageController;
+import com.timeshaft.after_end.entity.Timeshaft;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.GroupUserService;
+import com.timeshaft.after_end.service.TimeshaftService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
@@ -14,12 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.messaging.core.AbstractDestinationResolvingMessagingTemplate;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-
-import javax.naming.ldap.HasControls;
-import java.util.HashMap;
 
 
 @SpringBootTest
@@ -41,10 +37,13 @@ class AfterEndApplicationTests {
     private MailService mailService;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private TimeshaftService timeshaftService;
 
 
 
     @Test
     void contextLoads() {
+        System.out.println(timeshaftService.queryById(69).getBeginTime());
     }
 }

@@ -99,7 +99,7 @@ public class FriendOp {
     public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
         if(groupType.equals(type)) {
-            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null));
+            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, 0));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
                 GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null);
@@ -116,8 +116,8 @@ public class FriendOp {
                 ans.add(map);
             }
         } else {
-            List<User> users = userService.queryAll(new User(null, null, name, null));
-            List<User> tmp = userService.queryAll(new User(name, null, null, null));
+            List<User> users = userService.queryAll(new User(null, null, name, null, 0));
+            List<User> tmp = userService.queryAll(new User(name, null, null, null, 0));
             for(User user : tmp) {
                 if(!users.contains(user)) {
                     users.add(user);
@@ -263,18 +263,10 @@ public class FriendOp {
             helloMessage.setSendtime(date);
             String senderNickname = Objects.equals(friendsRelation.getUserId1(), sender.getId()) ?
                     friendsRelation.getNickname1():friendsRelation.getNickname2();
-            String acceptorNickname = Objects.equals(friendsRelation.getUserId1(), acceptor.getId()) ?
-                    friendsRelation.getNickname1():friendsRelation.getNickname2();
-            //发出请求者的打招呼消息
             helloMessage.setMessage("你好，我是" + senderNickname);
             helloMessage.setFriendsId(friendsRelation.getId());
             helloMessage.setSenderId(sender.getId());
             helloMessage.setState(UNREAD);
-            personalMessageService.insert(helloMessage);
-            //接收者的打招呼消息
-            helloMessage.setSendtime(new Date(date.getTime() + 1));
-            helloMessage.setMessage("你好，我是" + acceptorNickname);
-            helloMessage.setSenderId(acceptor.getId());
             personalMessageService.insert(helloMessage);
             HashMap<String, Object> res = new HashMap<>();
             res.put("id", friendsRelation.getId());
@@ -291,7 +283,6 @@ public class FriendOp {
             HashMap<String, Object> lastMessage = new HashMap<>();
             lastMessage.put("msg", personalMessage.getMessage());
             lastMessage.put("time", personalMessage.getSendtime());
-            lastMessage.put("msgId", personalMessage.getId());
             res.put("lastMessage", lastMessage);
             res.put("number", 1);
             res.put("msgType", TEXT);
@@ -313,7 +304,6 @@ public class FriendOp {
             HashMap<String, Object> lastMessage = new HashMap<>();
             lastMessage.put("msg", null);
             lastMessage.put("time", null);
-            lastMessage.put("msgId", null);
             res.put("lastMessage", lastMessage);
             messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
         }
@@ -349,5 +339,50 @@ public class FriendOp {
             }
         }
         return res;
+    }
+
+    public List<Map<String, String>> finding(int user_id, String type) {
+        List<Map<String, String>> ans = new ArrayList<>();
+        if (groupType.equals(type)) {
+            List<Group> groups = groupService.queryAll(new Group(null, null, null, null, null,null,0));
+            List<Group> res = new ArrayList<>();
+            while (groups.size() > 0 && res.size() < 5) {
+                int random = new Random().nextInt(groups.size());
+                Group randomGroup = groups.remove(random);
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(randomGroup.getId(), user_id, null, null, null));
+                if (groupUsers.size() <= 0) {
+                    res.add(randomGroup);
+                }
+            }
+            for (Group group : res) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", group.getId().toString());
+                map.put("name", group.getName());
+                map.put("photo", group.getPhoto());
+                map.put("master", group.getMasterId().toString());
+                ans.add(map);
+            }
+        } else {
+            List<User> users = userService.queryAll(new User(null, null, null, null, 0));
+            List<User> res = new ArrayList<>();
+            while (users.size() > 0 && res.size() < 10) {
+                int random = new Random().nextInt(users.size());
+                User randomUser = users.remove(random);
+                List<Friends> friends = friendsService.queryAll(new Friends(user_id, randomUser.getId(), null, null, null, null));
+                friends.addAll(friendsService.queryAll(new Friends(randomUser.getId(), user_id, null, null, null, null)));
+                if (randomUser.getId() != user_id && friends.size() <= 0) {
+                    res.add(randomUser);
+                }
+            }
+            for (User user : res) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", user.getId().toString());
+                map.put("name", user.getUsername());
+                map.put("photo", user.getPhoto());
+                map.put("master", "");
+                ans.add(map);
+            }
+        }
+        return ans;
     }
 }

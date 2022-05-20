@@ -25,7 +25,7 @@ public class UserOp {
 
 
     public User register(String email, String password, String username, String checkCode) throws Exception {
-        User u = new User(email, null, null, null);
+        User u = new User(email, null, null, null, null);
         List<User> users = userService.queryAll(u);
         if (users.size() > 0) {
             throw new Exception("邮箱已被注册");
@@ -38,13 +38,13 @@ public class UserOp {
         String savePassword = myPasswordEncoder.encode(password);
         String baseURL = "http://182.92.163.68:8080/photo/" +
                 (new Random().nextInt(12) + 1) + ".png";
-        User user = new User(email, savePassword, username, baseURL);
+        User user = new User(email, savePassword, username, baseURL, 0);
         userService.insert(user);
         return user;
     }
 
     public Map<String, Object> login(String email, String password) throws Exception {
-        User u = new User(email, null, null, null);
+        User u = new User(email, null, null, null, null);
         List<User> users = userService.queryAll(u);
         User user = users.get(0);
         boolean log = myPasswordEncoder.matches(password, user.getPassword());
