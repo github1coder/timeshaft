@@ -4,6 +4,7 @@ package com.timeshaft.after_end.service.timeshaftOp;
 import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.*;
+import com.timeshaft.after_end.service.impl.GroupUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -34,6 +35,8 @@ public class TimeShaftOp {
     private PersonalMessageService personalMessageService;
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
+    @Autowired
+    private GroupUserServiceImpl groupUserService;
 
     @Value("${meeting.on}")
     private String OnMeeting;
@@ -64,7 +67,7 @@ public class TimeShaftOp {
     //    @PermissionAnnotation(level=3)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, randomKey());
+                null, null, null, null);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
@@ -93,7 +96,7 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 38)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, randomKey()));
+                null, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
             Date end_time = new Date();
             timeshaft.setEndTime(end_time);
@@ -277,8 +280,9 @@ public class TimeShaftOp {
         return ans;
     }
 
-    public int getIdByKey(String key) {
+    public Map<String, Object> getIdByKey(String key) {
         int timeshaft_id;
+        Map<String, Object> res = new HashMap<>();
         try {
             key = key.substring(1).split("-")[0];
             String name = key.substring(1).split("-")[1];
@@ -288,7 +292,8 @@ public class TimeShaftOp {
         } catch (Exception e) {
             timeshaft_id = -1;
         }
-        return timeshaft_id;
+        res.put("timeShaftId", timeshaft_id);
+        return res;
     }
 
     private String randomKey() {
@@ -299,7 +304,7 @@ public class TimeShaftOp {
         Random random = new Random();
         //使用for循环得到6为字符
         while (true) {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 15; i++) {
                 //返回一个小于62的int类型的随机数
                 int rd = random.nextInt(52);
                 //随机从指定的位置开始获取一个字符
@@ -317,11 +322,22 @@ public class TimeShaftOp {
         return result;
     }
 
-    private void sendNotification(String msgType, Integer chatId, Integer user_id, String operation) {
+    public void sendNotification(String msgType, Integer chatId, String operation) {
         HashMap<String, Object> res = new HashMap<>();
         res.put("msgType", msgType);
         res.put("chatId", chatId);
         res.put("operation", operation);
-        messagingTemplate.convertAndSend("/user/timeshaft/" + user_id, res);
+        if (msgType.equals(groupType)) {
+            GroupUser queryGroupUser = new GroupUser();
+            queryGroupUser.setGroupId(chatId);
+            List<GroupUser> userInGroup = groupUserService.queryAll(queryGroupUser);
+            for (GroupUser groupUser : userInGroup) {
+                messagingTemplate.convertAndSend("/user/timeshaft/" + groupUser.getUserId(), res);
+            }
+        } else {
+            Friends friends = friendsService.queryById(chatId);
+            messagingTemplate.convertAndSend("/user/timeshaft/" + friends.getUserId1(), res);
+            messagingTemplate.convertAndSend("/user/timeshaft/" + friends.getUserId2(), res);
+        }
     }
 }
