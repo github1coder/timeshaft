@@ -61,7 +61,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeShaftData")
-    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws ParseException {
+    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws Exception {
         List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
         return new ResponseService(res);
     }
@@ -81,9 +81,16 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getSingleTimeshaft")
-    public ResponseService getSingleTimeshaft(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws ParseException {
+    public ResponseService getSingleTimeshaft(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws Exception {
         Integer timeshaft_id = (Integer) requestMap.get("timeshaft_id");
         Map<String, Object> res = timeShaftOp.getSingleTimeshaft(user_id, timeshaft_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping("/queryTimeShaftId")
+    public ResponseService queryTimeShaftId(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws Exception {
+        String msg = (String) requestMap.get("msg");
+        Map<String, Object> res = timeShaftOp.getIdByKey(msg);
         return new ResponseService(res);
     }
 }

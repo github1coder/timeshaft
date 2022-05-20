@@ -60,13 +60,14 @@ public class TimeShaftOp {
             Tag newTag = new Tag(timeshaft.getId(), tag);
             tagService.insert(newTag);
         }
+        sendNotification(type, group_id, OnMeeting);
         return timeshaft.getId();
     }
 
     //    @PermissionAnnotation(level=3)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, randomKey());
+                null, null, null, null);
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
@@ -95,7 +96,7 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 38)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, randomKey()));
+                null, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
             Date end_time = new Date();
             timeshaft.setEndTime(end_time);
@@ -118,6 +119,7 @@ public class TimeShaftOp {
         }
         checkGroupState(group_id, type, OffMeeting);
         changeGroupState(group_id, type, OffMeeting);
+        sendNotification(type, group_id, OffMeeting);
     }
 
     private void changeGroupState(Integer group_id, String type, String status) throws Exception {
@@ -278,8 +280,9 @@ public class TimeShaftOp {
         return ans;
     }
 
-    public int getIdByKey(String key) {
+    public Map<String, Object> getIdByKey(String key) {
         int timeshaft_id;
+        Map<String, Object> res = new HashMap<>();
         try {
             key = key.substring(1).split("-")[0];
             String name = key.substring(1).split("-")[1];
@@ -289,7 +292,8 @@ public class TimeShaftOp {
         } catch (Exception e) {
             timeshaft_id = -1;
         }
-        return timeshaft_id;
+        res.put("timeShaftId", timeshaft_id);
+        return res;
     }
 
     private String randomKey() {
