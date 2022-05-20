@@ -69,7 +69,7 @@
                 >
                   <v-list-item-avatar>
                     <v-img
-                      v-if="item.type==='private'"
+                      v-if="item.type==='friend'"
                       max-height="70px"
                       max-width="50px"
                       :src="item.chatAvatar"
@@ -255,8 +255,6 @@ export default {
         setTimeout(() => {
           console.log(this.$refs)
           this.$refs.chatMessage.init()
-          this.$refs.timeShaft.getShaft()
-
         }, 100)
         if (item.number !== 0) {
           item.number = 0
@@ -283,7 +281,7 @@ export default {
       endTimeShaft({
         group_id: this.$store.state.currentChannelId,
         chatId: this.$store.state.currentChannelId,
-        type: this.$store.state.currentChatType == "group" ? "group" : "friend",
+        type: this.$store.state.currentChatType === "group" ? "group" : "friend",
       })
       this.showEnd = false
     },

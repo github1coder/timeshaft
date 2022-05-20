@@ -303,7 +303,7 @@ export default {
     getShaft () {
       let para = {
         group_id: this.chatId,
-        type: this.type == "group" ? "group" : "friend",
+        type: this.type === "group" ? "group" : "friend",
       }
       getTimeshaft(para).then(res => {
         this.items = res.items
