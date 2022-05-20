@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto"
-    height="90%"
+    height="100%"
   >
     <TimeNode
       :id="90"
@@ -17,7 +17,7 @@
       <v-dialog
         v-model="dialog"
         persistent
-        max-width="600px"
+        max-width="800px"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -55,20 +55,45 @@
                 <v-col
                   cols="12"
                   sm="6"
-                  md="4"
+                  md="2"
                 >
                   <v-text-field
-                    label="打上标签(5个字以内)"
+                    label="添加至少一个标签"
+                    counter=5
                     required
-                    v-model="lable"
+                    v-model="lable[0]"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="2"
+                >
+                  <v-text-field
+                    label="标签2"
+                    counter=5
+                    v-model="lable[1]"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="2"
+                >
+                  <v-text-field
+                    label="标签3"
+                    counter=5
+                    v-model="lable[2]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field
+                  <v-textarea
                     label="事件描述"
+                    dense
+                    auto-grow
                     required
                     v-model="description"
-                  ></v-text-field>
+                  ></v-textarea>
                 </v-col>
 
                 <v-col>
@@ -227,7 +252,7 @@
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
 import { beginTimeShaftSingle, getTimeshaft } from "../../../../api/timeShaft";
-import TimeNode from "./TimeNode"
+import TimeNode from "./Msg/TimeNode"
 
 export default {
   name: "TimeShaft",
@@ -248,7 +273,7 @@ export default {
       time: '',
       start_time: null,
       title: '',
-      lable: '',
+      lable: ["", "", ""],
       description: '',
       timecolor: [
         'deep-orange', 'deep-orange lighten-5', 'deep-orange lighten-4', 'deep-orange lighten-3',
@@ -279,7 +304,7 @@ export default {
     getShaft () {
       let para = {
         group_id: this.chatId,
-        type: this.type == "private" ? "friend" : "group",
+        type: this.type == "group" ? "group" : "friend",
       }
       getTimeshaft(para).then(res => {
         this.items = res.items
@@ -306,7 +331,7 @@ export default {
           title: this.title,
           tags: [this.lable],
           conclude: this.description,
-          type: this.type == "private" ? "friend" : "group",
+          type: this.type == "group" ? "group" : "friend",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false

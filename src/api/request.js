@@ -5,7 +5,7 @@ import axios from 'axios'
 import store from '../store/index'
 // import { Message } from 'element-ui'
 
-const DEBUG = false;
+const DEBUG = true;
 // axios.defaults.withCredentials = true;
 
 const service = axios.create({

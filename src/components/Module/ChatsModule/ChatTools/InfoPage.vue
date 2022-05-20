@@ -1,7 +1,7 @@
 <template>
   <v-card style="height: 100%; width: 100%">
     <info-f
-      v-if="type == 'private'"
+      v-if="type == 'private' || type == 'friend'"
       ref="infoF"
       :id="id"
     ></info-f>
