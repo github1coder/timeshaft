@@ -24,7 +24,6 @@ export function endTimeShaft(param) {
     })
 }
 
-
 export function beginTimeShaftSingle(param) {
     return request({
         url: '/timeshaft/beginTimeShaftSingle',
@@ -38,5 +37,13 @@ export function getTimeShaftData(param) {
         url: '/timeshaft/getTimeShaftData',
         method: 'get',
         params: param
+    })
+}
+
+export function genTimeShaftFromMessages(param) {
+    return request({
+        url: '/timeshaft/genTimeShaftFromMessages',
+        method: 'post',
+        data: param
     })
 }

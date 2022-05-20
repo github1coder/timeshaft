@@ -15,6 +15,7 @@
     "sockjs-client": "^1.6.0",
     "stompjs": "^2.3.3",
     "vue": "^2.6.11",
+    "vue-contextmenu": "^1.5.11",
     "vue-router": "^3.1.5",
     "vuetify": "^2.2.11",
     "vuex": "^3.1.2"
