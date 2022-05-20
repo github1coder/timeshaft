@@ -1,4 +1,4 @@
-package com.timeshaft.after_end.jobs;
+package com.timeshaft.after_end.service.addressList.jobs;
 
 import com.timeshaft.after_end.entity.GroupHeat;
 import com.timeshaft.after_end.service.GroupHeatService;

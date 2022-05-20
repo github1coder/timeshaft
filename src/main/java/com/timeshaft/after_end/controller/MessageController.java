@@ -43,6 +43,8 @@ public class MessageController {
     private GroupHeatService groupHeatService;
     @Value("${type.groupType}")
     private String GROUP;
+    @Value("${type.friendType}")
+    private String FRIEND;
     @Value("${type.messageRead}")
     private String READ;
     @Value("${type.messageNotRead}")
@@ -72,7 +74,7 @@ public class MessageController {
         }
         PersonalMessage inserted = personalMessageService.insert(personalMessage);
         int targetId = friends.getUserId1() == senderId? friends.getUserId2():friends.getUserId1();
-        payload.put("type", "private");
+        payload.put("type", FRIEND);
         payload.put("msgId", inserted.getId());
         messagingTemplate.convertAndSend("/user/chat/" + targetId, payload);
         messagingTemplate.convertAndSend("/user/chat/" + senderId, payload);
@@ -99,7 +101,7 @@ public class MessageController {
         List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
         GroupMessageState groupMessageState = new GroupMessageState();
         groupMessageState.setMessageId(messageId);
-        payload.put("type", "group");
+        payload.put("type", GROUP);
         payload.put("msgId", insertMessage.getId());
         for (GroupUser user : userInGroup) {
             if (user.getUserId().equals(groupMessage.getSenderId())) {

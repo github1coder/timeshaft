@@ -51,6 +51,8 @@ public class ChatController {
     private String UNREAD;
     @Value("${type.groupType}")
     private String GROUP;
+    @Value("${type.friendType}")
+    private String FRIEND;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -67,7 +69,7 @@ public class ChatController {
             map.put("id", friendId);
             map.put("chatName", chatName);
             map.put("chatAvatar", chatAvatar);
-            map.put("type", "private");
+            map.put("type", FRIEND);
             PersonalMessage messageTo= personalMessageService.queryLatestById(friendId, sourceId);
             PersonalMessage messageFrom = personalMessageService.queryLatestById(friendId, friendUserId);
             //拉取最近一条消息
@@ -138,7 +140,7 @@ public class ChatController {
             map.put("id", group.getId());
             map.put("chatName", group.getName());
             map.put("chatAvatar", group.getPhoto());
-            map.put("type", "group");
+            map.put("type", GROUP);
             GroupMessage latest = groupMessageService.queryLatestById(group.getId());
             Date lastTime = new Date(System.currentTimeMillis());
             HashMap<String, Object> lastMessage = new HashMap<>();
@@ -231,7 +233,7 @@ public class ChatController {
         if (first == 1) {
             date = new Date(date.getTime() + 1);
         }
-        if (type != null && type.equals(GROUP)) {
+        if (type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
             //还要同时拉取所有相同时间的消息
             int length = Math.min(groupMessageList.size(), 20);
@@ -355,7 +357,7 @@ public class ChatController {
         int userId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
         String type = (String) requestMap.get("type");
-        if (type != null && type.equals(GROUP)) {
+        if (type.equals(GROUP)) {
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(userId, chatId, UNREAD);
             GroupMessageState groupMessageState = new GroupMessageState();
             groupMessageState.setState(UNREAD);
