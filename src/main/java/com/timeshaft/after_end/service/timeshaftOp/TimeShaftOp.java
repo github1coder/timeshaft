@@ -83,7 +83,7 @@ public class TimeShaftOp {
         return timeshaftsRes;
     }
 
-    @PermissionAnnotation(level = 32)
+    @PermissionAnnotation(level = 38)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
