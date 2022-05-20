@@ -92,7 +92,7 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 38)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, randomKey()));
+                null, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
             Date end_time = new Date();
             timeshaft.setEndTime(end_time);
