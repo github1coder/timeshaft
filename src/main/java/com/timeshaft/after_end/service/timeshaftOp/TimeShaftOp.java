@@ -44,7 +44,8 @@ public class TimeShaftOp {
 
     @PermissionAnnotation(level = 38)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
-        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0, -1, -1);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type,
+                0, -1, -1, randomKey());
         timeshaft = timeshaftService.insert(timeshaft);
         checkGroupState(group_id, type, OnMeeting);
         changeGroupState(group_id, type, OnMeeting);
@@ -57,7 +58,8 @@ public class TimeShaftOp {
 
     //    @PermissionAnnotation(level=3)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type, null, null, null);
+        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
+                null, null, null, randomKey());
         List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
@@ -85,7 +87,8 @@ public class TimeShaftOp {
 
     @PermissionAnnotation(level = 38)
     public void endTimeShaft(Integer group_id, String type, Integer user_id) throws Exception {
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type, null, null, null));
+        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
+                null, null, null, randomKey()));
         for (Timeshaft timeshaft : timeshafts) {
             Date end_time = new Date();
             timeshaft.setEndTime(end_time);
@@ -181,7 +184,7 @@ public class TimeShaftOp {
         int max = 0, min = 99999999;
         Date date1;
         Date date2;
-        if(!msgIds.isEmpty()) {
+        if (!msgIds.isEmpty()) {
             for (Integer integer : msgIds) {
                 if (integer > max) {
                     max = integer;
@@ -190,14 +193,14 @@ public class TimeShaftOp {
                     min = integer;
                 }
             }
-            if(groupType.equals(type)) {
-                if(groupMessageService.queryById(max) == null || groupMessageService.queryById(min) == null) {
+            if (groupType.equals(type)) {
+                if (groupMessageService.queryById(max) == null || groupMessageService.queryById(min) == null) {
                     throw new Exception("传入消息列表错误");
                 }
                 date1 = groupMessageService.queryById(min).getSendtime();
                 date2 = groupMessageService.queryById(max).getSendtime();
             } else if (friendType.equals(type)) {
-                if(personalMessageService.queryById(max) == null || personalMessageService.queryById(min) == null) {
+                if (personalMessageService.queryById(max) == null || personalMessageService.queryById(min) == null) {
                     throw new Exception("传入消息列表错误");
                 }
                 date1 = personalMessageService.queryById(min).getSendtime();
@@ -212,7 +215,7 @@ public class TimeShaftOp {
             date1 = new Date();
             date2 = new Date();
         }
-        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, date1, date2, conclude, type, 0, min, max);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, date1, date2, conclude, type, 0, min, max, randomKey());
         timeshaftService.insert(timeshaft);
         for (String tag : tags) {
             Tag newTag = new Tag(timeshaft.getId(), tag);
@@ -265,6 +268,47 @@ public class TimeShaftOp {
         }
         ans.put("message", msg);
         ans.put("id", timeshaft.getId().toString());
+        ans.put("key", "#"+timeshaft.getKey()+"-"+timeshaft.getName());
         return ans;
+    }
+
+    public int getIdByKey(String key) {
+        int timeshaft_id;
+        try {
+            key = key.substring(1).split("-")[0];
+            String name = key.substring(1).split("-")[1];
+            List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(null, null, name, null,
+                    null, null, null, null, null, null, key));
+            timeshaft_id = timeshafts.get(0).getId();
+        } catch (Exception e) {
+            timeshaft_id = -1;
+        }
+        return timeshaft_id;
+    }
+
+    private String randomKey() {
+        String strAll = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //定义一个结果
+        String result = "";
+        //实例化Random对象
+        Random random = new Random();
+        //使用for循环得到6为字符
+        while (true) {
+            for (int i = 0; i < 6; i++) {
+                //返回一个小于62的int类型的随机数
+                int rd = random.nextInt(52);
+                //随机从指定的位置开始获取一个字符
+                String oneChar = strAll.substring(rd, 1);
+                //循环加到6为
+                result += oneChar;
+            }
+            if(timeshaftService.queryAll(new Timeshaft(null, null, null, null,
+                    null, null ,null, null, null, null, result)).isEmpty()) {
+                break;
+            } else {
+                result = "";
+            }
+        }
+        return result;
     }
 }

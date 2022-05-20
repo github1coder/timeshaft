@@ -34,11 +34,13 @@ public class Timeshaft implements Serializable {
 
     private Integer endMsgId;
 
+    private String key;
+
     public Timeshaft() {
 
     }
 
-    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type, Integer private1, Integer startMsgId, Integer endMsgId) {
+    public Timeshaft(Integer groupId, Integer creatorId, String name, Date beginTime, Date endTime, String conclude, String type, Integer private1, Integer startMsgId, Integer endMsgIdm, String key) {
         this.groupId = groupId;
         this.creatorId = creatorId;
         this.name = name;
@@ -47,8 +49,9 @@ public class Timeshaft implements Serializable {
         this.conclude = conclude;
         this.type = type;
         this.private1 = private1;
-        this.endMsgId = endMsgId;
         this.startMsgId = startMsgId;
+        this.endMsgId = endMsgIdm;
+        this.key = key;
     }
 
     public String getConclude() {
@@ -137,5 +140,13 @@ public class Timeshaft implements Serializable {
 
     public void setEndMsgId(Integer endMsgId) {
         this.endMsgId = endMsgId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
