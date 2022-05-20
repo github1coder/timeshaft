@@ -176,10 +176,16 @@ public class ChatController {
         HashMap<String, Object> friendMap = new HashMap<>();
         friendMap.put("type", 1);
         friendMap.put("url", friendUrl);
+        //会议通知url
+        String timeShaftUrl = "/user/timeshaft/" + user_id;
+        HashMap<String, Object> timeShaftMap = new HashMap<>();
+        friendMap.put("type", 2);
+        friendMap.put("url", timeShaftUrl);
 
         ArrayList<HashMap<String, Object>> res = new ArrayList<>();
         res.add(chatMap);
         res.add(friendMap);
+        res.add(timeShaftMap);
         return new ResponseService(res);
     }
 

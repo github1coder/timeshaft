@@ -7,6 +7,7 @@ import com.timeshaft.after_end.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -31,6 +32,8 @@ public class TimeShaftOp {
     private GroupMessageService groupMessageService;
     @Autowired
     private PersonalMessageService personalMessageService;
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
     @Value("${meeting.on}")
     private String OnMeeting;
@@ -42,7 +45,12 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-//    @PermissionAnnotation(level=12)
+    @Value("${type.timeShaftStart}")
+    private String START;
+    @Value("${type.timeShaftEnd}")
+    private String END;
+
+    //    @PermissionAnnotation(level=12)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type);
         timeshaft = timeshaftService.insert(timeshaft);
@@ -148,5 +156,13 @@ public class TimeShaftOp {
             res.add(out);
         }
         return res;
+    }
+
+    public void sendNotification(String msgType, Integer chatId, Integer user_id, String operation) {
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("msgType", msgType);
+        res.put("chatId", chatId);
+        res.put("operation", operation);
+        messagingTemplate.convertAndSend("/user/timeshaft/" + user_id, res);
     }
 }

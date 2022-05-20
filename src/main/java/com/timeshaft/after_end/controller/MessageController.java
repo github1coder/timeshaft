@@ -114,7 +114,7 @@ public class MessageController {
         queryGroupUser.setGroupId(groupMessage.getGroupId());
         List<GroupUser> queryResult = groupUserService.queryAll(queryGroupUser);
         if (queryResult.size() == 0) {
-            payload.put("msg", "你们不是好友哦");
+            payload.put("msg", "你不在群里哦");
             messagingTemplate.convertAndSend("/user/chat/" + groupMessage.getSenderId(), payload);
             return;
         }
