@@ -212,14 +212,14 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId) {
+        if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
           this.messages[idx].number += 1
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
         }
-        if (this.$refs.chatMessage !== undefined) {
+        if (this.$refs.chatMessage !== undefined && this.$store.state.currentChannelId === payload.chatId) {
           console.log(this.$refs.chatMessage)
           this.$refs.chatMessage.messages.push(payload)
           this.$refs.chatMessage.scrollToBottom()
