@@ -1,14 +1,14 @@
 <template>
   <div
     class="sb-container"
-    style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"
+    style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%; "
   >
     <v-card
       height="100%"
       dark
       flat
       tile
-      class="server-info"
+      class="mem-info"
     >
       <v-list>
         <v-list-group

@@ -108,6 +108,13 @@
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
           </v-row>
+          <v-btn
+            style="width: 100%; margin-top: 20px;"
+            color=blue
+            @click="findmore('friend')"
+          >
+            发现更多
+          </v-btn>
         </v-tab-item>
         <v-tab-item
           height="100%"
@@ -193,13 +200,20 @@
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
           </v-row>
+          <v-btn
+            style="width: 100%; margin-top: 20px;"
+            color=blue
+            @click="findmore('group')"
+          >
+            发现更多
+          </v-btn>
         </v-tab-item>
       </v-tabs-items>
     </v-card>
   </v-card>
 </template>
 <script>
-import { apply, search } from "../../../../api/addresslist/index"
+import { apply, finding, search } from "../../../../api/addresslist/index"
 export default {
   data () {
     return {
@@ -302,6 +316,46 @@ export default {
           this.pageG = 0
         }
       })
+    },
+
+    findmore (type) {
+      finding({
+        "type": type
+      }).then(res => {
+        if (type == "friend") {
+          this.friendAns = res
+          this.friendAns.forEach(function (item) {
+            item["show"] = false;
+          });
+          this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
+          this.allPageF = Math.ceil(this.friendAns.length / this.num)
+          if (this.allPageF != 0) {
+            this.pageF = 1
+            this.showF = false
+          }
+          else {
+            this.showF = true
+            this.pageF = 0
+          }
+        }
+        else {
+          this.groupAns = res
+          this.groupAns.forEach(function (item) {
+            item["show"] = false;
+          });
+          this.groupAns = JSON.parse(JSON.stringify(this.groupAns))
+          this.allPageG = Math.ceil(this.groupAns.length / this.num)
+          if (this.allPageG != 0) {
+            this.pageG = 1
+            this.showG = false
+          }
+          else {
+            this.showG = true
+            this.pageG = 0
+          }
+        }
+      })
+
     },
 
     newApplyF (index) {

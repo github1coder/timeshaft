@@ -57,7 +57,10 @@
               rounded
               max-height="80px"
             >
-              <v-list-item-group color="primary" mandatory>
+              <v-list-item-group
+                color="primary"
+                mandatory
+              >
                 <v-list-item
                   v-for="(item, i) in this.messages"
                   @click="selectChannel(item.id, i, item)"
@@ -113,12 +116,16 @@
           v-show="toolsDrawer"
         >
           <TimeShaft
-            v-show="tools[0].show"
+            v-if="tools[0].show"
             ref="timeShaft"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></TimeShaft>
           <InfoPage
-            v-show="tools[1].show"
+            v-else-if="tools[1].show"
             ref="infoPage"
+            :id="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></InfoPage>
         </div>
       </div>
@@ -129,6 +136,12 @@
       v-show="$store.state.currentChannelIdx !== -1"
       @callback="callback"
     ></ChatTools>
+
+    <v-btn
+      style="position: fixed; top: 2rem; right:5rem"
+      v-show="showEnd"
+      @click="endTime"
+    >结束时间轴</v-btn>
   </div>
 </template>
 
@@ -138,7 +151,8 @@ import ChatHeader from "@/components/Module/ChatsModule/ChatHeader";
 import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
-import {  getMessagesList, haveRead } from "@/api/message";
+import { getMessagesList, haveRead } from "@/api/message";
+import { endTimeShaft } from "@/api/timeShaft"
 export default {
   name: "ChatsModule",
   components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage },
@@ -165,6 +179,7 @@ export default {
       messagesList: [],
       socketUrl: null,
       checkInterval: null,
+      showEnd: false, //是否展示时间轴按钮
     }
   },
   methods: {
@@ -231,11 +246,11 @@ export default {
     },
     selectChannel (id, idx, item) {
       //关闭工具栏
-      this.$parent.toolsDrawer = false
+      this.toolsDrawer = false
       console.log(id)
       console.log(item)
       if (idx !== this.$store.state.currentChannelIdx) {
-        this.$store.commit("changeChannel", {id: id, idx: idx, type: item.type, time: item.lastMessage.time});
+        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
         // 等画面完全渲染
         setTimeout(() => {
           console.log(this.$refs)
@@ -256,25 +271,45 @@ export default {
           })
         }
       }
-    }
+
+      //这个是用来关闭时间轴按钮,请传入参数state（true代表开会中）
+      this.isShowEnd()
+    },
+
+
+    //结束当前时间轴
+    endTime () {
+      //目前使用friend调试
+      endTimeShaft({
+        group_id: this.$store.state.currentChannelId,
+        chatId: this.$store.state.currentChannelId,
+        type: this.$store.state.currentChatType == "group" ? "group" : "friend",
+      })
+      this.showEnd = false
+    },
+
+    isShowEnd (state) {
+      console.log(state)
+      this.showEnd = state
+    },
   },
 
   created () {
-      this.$store.state.currentChannelIdx = -1
-      setTimeout(
-          () => {
-            getMessagesList({
-              srcId: this.$store.state.userId,
-            }).then(res => {
-              console.log("收到联系人列表")
-              console.log(this.messages)
-              for (let d in res) {
-                this.messages.push(res[d])
-              }
-              console.log(this.messages)
-            })
-          }, 100
-      )
+    this.$store.state.currentChannelIdx = -1
+    setTimeout(
+      () => {
+        getMessagesList({
+          srcId: this.$store.state.userId,
+        }).then(res => {
+          console.log("收到联系人列表")
+          console.log(this.messages)
+          for (let d in res) {
+            this.messages.push(res[d])
+          }
+          console.log(this.messages)
+        })
+      }, 100
+    )
   },
   computed: {
     messages () {

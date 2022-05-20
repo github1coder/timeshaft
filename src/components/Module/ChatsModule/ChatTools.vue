@@ -46,20 +46,20 @@ export default {
         }
       }
       //用来初始化info
-      if (this.tools[1].show) {
-        const that = this.$parent.$refs.infoPage
-        that.id = this.$store.state.currentChannelId
-        if (this.$store.state.currentChatType == 'private') {
-          that.about = 0
-          that.$refs.infoF.initInfo()
-        }
-        else {
-          that.about = 1
-          that.$refs.infoG.initInfo()
-          that.$refs.infoG.memberShow = false
-          that.$refs.infoG.iShowTrue()
-        }
-      }
+      // if (this.tools[1].show) {
+      //   const that = this.$parent.$refs.infoPage
+      //   that.id = this.$store.state.currentChannelId
+      //   if (this.$store.state.currentChatType == 'private') {
+      //     that.about = 0
+      //     that.$refs.infoF.initInfo()
+      //   }
+      //   else {
+      //     that.about = 1
+      //     that.$refs.infoG.initInfo()
+      //     that.$refs.infoG.memberShow = false
+      //     that.$refs.infoG.iShowTrue()
+      //   }
+      // }
       this.$emit("callback", this.tempDraw)
     },
   },
