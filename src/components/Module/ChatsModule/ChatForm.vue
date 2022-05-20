@@ -89,7 +89,7 @@ export default {
         chatId: this.$store.state.currentChannelId,
       }
       this.clearMsg()
-      const url = this.$store.state.currentChatType === 'private' ? this.chatUrlPrivate : this.chatUrlGroup;
+      const url = this.$store.state.currentChatType === 'friend' ? this.chatUrlPrivate : this.chatUrlGroup;
       this.$emit("send", {
         url: url,
         data: msgForm,
