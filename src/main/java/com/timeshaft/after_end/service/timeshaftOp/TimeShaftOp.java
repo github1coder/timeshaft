@@ -179,6 +179,8 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 38)
     public void genTimeShaftFromMessages(int group_id, int user_id, String title, ArrayList<String> tags, String conclude, String type, ArrayList<Integer> msgIds) throws Exception {
         int max = 0, min = 99999999;
+        Date date1;
+        Date date2;
         if(!msgIds.isEmpty()) {
             for (Integer integer : msgIds) {
                 if (integer > max) {
@@ -192,18 +194,25 @@ public class TimeShaftOp {
                 if(groupMessageService.queryById(max) == null || groupMessageService.queryById(min) == null) {
                     throw new Exception("传入消息列表错误");
                 }
+                date1 = groupMessageService.queryById(min).getSendtime();
+                date2 = groupMessageService.queryById(max).getSendtime();
             } else if (friendType.equals(type)) {
                 if(personalMessageService.queryById(max) == null || personalMessageService.queryById(min) == null) {
                     throw new Exception("传入消息列表错误");
                 }
+                date1 = personalMessageService.queryById(min).getSendtime();
+                date2 = personalMessageService.queryById(max).getSendtime();
             } else {
                 throw new Exception("type参数类型错误");
             }
+
         } else {
             max = -1;
             min = -1;
+            date1 = new Date();
+            date2 = new Date();
         }
-        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type, 0, min, max);
+        Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, date1, date2, conclude, type, 0, min, max);
         timeshaftService.insert(timeshaft);
         for (String tag : tags) {
             Tag newTag = new Tag(timeshaft.getId(), tag);
