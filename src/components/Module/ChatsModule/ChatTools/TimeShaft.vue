@@ -304,7 +304,7 @@ export default {
     getShaft () {
       let para = {
         group_id: this.chatId,
-        type: this.type == "group" ? "group" : "friend",
+        type: this.type,
       }
       getTimeshaft(para).then(res => {
         this.items = res.items
@@ -331,7 +331,7 @@ export default {
           title: this.title,
           tags: [this.lable],
           conclude: this.description,
-          type: this.type == "group" ? "group" : "friend",
+          type: this.type,
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
