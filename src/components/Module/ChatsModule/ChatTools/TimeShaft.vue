@@ -4,7 +4,7 @@
     height="100%"
   >
     <TimeNode
-      :id="90"
+      :id="timeNodeId"
       v-if="this.detail"
       @closeT="closeT"
     ></TimeNode>
@@ -265,8 +265,8 @@ export default {
 
   data () {
     return {
-      //好友或者群id
-      id: -1,
+      //用来到
+      timeNodeId: -1,
       snackbar: false,
       timeout: -1,
       dialog: null,
@@ -334,7 +334,7 @@ export default {
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
-          that.$parent.isShowEnd(that.chatId, that.type, true)
+          that.$parent.isShowEnd(true)
           //设置聊天开启id
         })
       }
@@ -343,7 +343,8 @@ export default {
 
     //展示详细信息
     showDetail (id) {
-      console.log(id)
+      console.log("时间轴结点id：" + id)
+      this.timeNodeId = id
       this.detail = true
     },
 
