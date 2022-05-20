@@ -67,14 +67,15 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/genTimeShaftFromMessages")
-    public ResponseService genTimeShaftFromMessages(@RequestBody Map<String, Object> requestMap, @RequestParam("end") String end_time) throws ParseException {
-        Integer chat_id = (Integer)requestMap.get("chat_id");
-        Integer user_id = (Integer)requestMap.get("user_id");
+    public ResponseService genTimeShaftFromMessages(@RequestBody Map<String, Object> requestMap) throws Exception {
+        Integer chat_id = (Integer)requestMap.get("chatId");
+        Integer user_id = (Integer)requestMap.get("userId");
         String title = (String)requestMap.get("title");
         ArrayList<String> tags = (ArrayList<String>)requestMap.get("tags");
         String conclude = (String)requestMap.get("conclude");
         String type = (String)requestMap.get("type");
-        ArrayList<Integer> msgIds = (ArrayList<Integer>)requestMap.get("masIds");
+        ArrayList<Integer> msgIds = (ArrayList<Integer>)requestMap.get("msgIds");
+        System.out.println(msgIds.size());
         String res = timeShaftOp.genTimeShaftFromMessages(chat_id, user_id, title, tags, conclude, type, msgIds);
         return new ResponseService(res);
     }
