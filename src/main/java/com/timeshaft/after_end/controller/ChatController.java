@@ -276,7 +276,7 @@ public class ChatController {
                 newLastTime = groupMessageList.get(length - 1).getSendtime();
             }
             //若没有后续的消息了，lastTime置为0
-            if (length < 20) {
+            if (length == groupMessageList.size()) {
                 newLastTime = new Date(0);
             }
 
@@ -340,7 +340,7 @@ public class ChatController {
                 newLastTime = historyMessage.get(length - 1).getSendtime();
             }
             //若没有后续的消息了，lastTime置为0
-            if (length < 20) {
+            if (length == historyMessage.size()) {
                 newLastTime = new Date(0);
             }
             res.put("lastTime", newLastTime);
