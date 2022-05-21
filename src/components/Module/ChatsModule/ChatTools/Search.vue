@@ -1,20 +1,36 @@
 <template>
-  <v-card style="height: 100%; width: 100%">
-    <v-text-field
-      clearable
-      outlined
+  <v-card
+    dark
+    style="height: 100%; width: 100%"
+  >
+    <v-row
       dense
       dark
-      hide-details
-      label="请输入关键词"
-      v-model="text"
-      class="input-search mt-3"
-      autocomplete="off"
-      v-on="on"
-      ref="search"
-    ></v-text-field>
+      style="width: 100%; height: 64px; margin: auto;"
+    >
+      <v-text-field
+        clearable
+        outlined
+        dense
+        dark
+        hide-details
+        v-model="text"
+        class="input-search mt-3"
+        autocomplete="off"
+        style="width: 70%; margin: auto;"
+      ></v-text-field>
+      <v-btn
+        style="width: 15%; height: 64%; margin: 12px 0px auto;"
+        @click="searchHistory"
+      >
+        <!-- <v-icon style="width: 100%; height: 100%;">
+          mdi-magnify
+        </v-icon> -->
+        搜索
+      </v-btn>
+    </v-row>
     <div>
-      <History>
+      <History v-show="show">
       </History>
     </div>
 
@@ -32,10 +48,17 @@ export default {
 
   data () {
     return {
+      text: "",
+      show: false
     }
   },
+
   methods: {
+    searchHistory () {
+
+    },
   },
+
   created () {
     console.log(this.type)
     console.log(this.id)

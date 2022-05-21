@@ -127,6 +127,12 @@
             :id="this.$store.state.currentChannelId"
             :type="this.$store.state.currentChatType"
           ></InfoPage>
+          <Search
+            v-else-if="tools[2].show"
+            ref="search"
+            :id="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
+          ></Search>
         </div>
       </div>
     </div>
@@ -136,26 +142,22 @@
       v-show="$store.state.currentChannelIdx !== -1"
       @callback="callback"
     ></ChatTools>
-
-    <v-btn
-      style="position: fixed; top: 2rem; right:5rem"
-      v-show="showEnd"
-      @click="endTime"
-    >结束时间轴</v-btn>
+    <TimeTool v-show="$store.state.currentChannelIdx !== -1"></TimeTool>
   </div>
 </template>
 
 <script>
 import ChatTools from "@/components/Module/ChatsModule/ChatTools";
+import TimeTool from "@/components/Module/ChatsModule/TimeTool";
 import ChatHeader from "@/components/Module/ChatsModule/ChatHeader";
 import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
+import Search from "@/components/Module/ChatsModule/ChatTools/Search"
 import { getMessagesList, haveRead } from "@/api/message";
-import { endTimeShaft } from "@/api/timeShaft"
 export default {
   name: "ChatsModule",
-  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage },
+  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool },
   data () {
     return {
       toolsDrawer: false, // 用于控制工具栏打开与否
@@ -274,17 +276,6 @@ export default {
       this.isShowEnd()
     },
 
-
-    //结束当前时间轴
-    endTime () {
-      //目前使用friend调试
-      endTimeShaft({
-        group_id: this.$store.state.currentChannelId,
-        chatId: this.$store.state.currentChannelId,
-        type: this.$store.state.currentChatType === "group" ? "group" : "friend",
-      })
-      this.showEnd = false
-    },
 
     isShowEnd (state) {
       console.log(state)

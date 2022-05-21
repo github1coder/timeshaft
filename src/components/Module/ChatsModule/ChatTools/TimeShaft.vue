@@ -19,7 +19,7 @@
         persistent
         max-width="800px"
       >
-        <template v-slot:activator="{ on, attrs }">
+        <!-- <template v-slot:activator="{ on, attrs }">
           <v-btn
             absolute
             bottom
@@ -32,7 +32,7 @@
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </template>
+        </template> -->
 
         <v-card class="overflow-y-auto">
           <v-card-title>
