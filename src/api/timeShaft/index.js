@@ -55,3 +55,11 @@ export function queryTimeShaftId(param) {
         data: param
     })
 }
+
+export function meetingChange(param) {
+    return request( {
+        url: 'timeshaft/meetingChange',
+        method: 'post',
+        data: param
+    })
+}

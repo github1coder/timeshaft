@@ -96,7 +96,7 @@
   </v-dialog>
 </template>
 <script>
-import { beginTimeShaftSingle } from "../../../../../api/timeShaft";
+import {beginTimeShaftSingle, meetingChange} from "../../../../../api/timeShaft";
 
 export default {
 
@@ -122,14 +122,18 @@ export default {
           title: this.title,
           tags: this.lable,
           conclude: this.description,
-          type: this.$store.state.currentChatType == "group" ? "group" : "friend",
+          type: this.$store.state.currentChatType === "group" ? "group" : "friend",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
           this.$emit("tryOk")
-          //todo: 广播一条消息，告诉好友或者群成员会议开始了，并且让他们接受到消息以后调用timetool中的tryOk方法
-
-
+          meetingChange({
+            type: this.$store.state.currentChatType,
+            chatId: this.$store.state.currentChannelId,
+            isMeeting: true,
+          }).then(res => {
+            console.log(res)
+          })
         })
       }
 
