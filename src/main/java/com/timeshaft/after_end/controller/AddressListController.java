@@ -3,6 +3,7 @@ package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.FriendsService;
+import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.UserService;
@@ -29,6 +30,8 @@ public class AddressListController {
     private FriendsService friendsService;
     @Autowired
     private GroupUserService groupUserService;
+    @Autowired
+    private GroupService groupService;
 
     @RequestMapping(value = "/getFriends")
     public ResponseService getFriends(@RequestHeader("user_id") Integer user_id) {
@@ -97,8 +100,12 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/updateGroup")
-    public ResponseService updateGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
-        groupOp.updateGroup(user_id, Integer.parseInt(map.get("id")), map.get("name"), map.get("static/photo"), map.get("notice"));
+    public ResponseService updateGroup(@RequestBody Map<String, Object> map, @RequestHeader("user_id") Integer user_id) {
+        boolean visibility = (boolean) map.get("state");
+        int group_id = (int) map.get("id");
+        String name = (String) map.get("name");
+        String notice = (String) map.get("notice");
+        groupOp.updateGroup(user_id, group_id, name, notice, visibility);
         return new ResponseService();
     }
 
@@ -199,4 +206,5 @@ public class AddressListController {
         List<Map<String, String>> res = friendOp.finding(user_id, type);
         return new ResponseService(res);
     }
+
 }

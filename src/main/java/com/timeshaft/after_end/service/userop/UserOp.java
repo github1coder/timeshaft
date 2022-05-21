@@ -122,4 +122,14 @@ public class UserOp {
         }
         return sb.toString();
     }
+
+    public void updateSelf(Integer user_id, boolean visibility) {
+        User user = userService.queryById(user_id);
+        if(visibility) {
+            user.setPrivate1(1);
+        } else {
+            user.setPrivate1(0);
+        }
+        userService.update(user);
+    }
 }
