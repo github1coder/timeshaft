@@ -139,6 +139,18 @@ export default {
                       setTimeout(() => {
                         this.$refs.chatModule.messages.push(json)
                       }, 100)
+                    } else if (res[listener].type === 2) {
+                      console.log("会议状态服务收到消息")
+                      setTimeout(() => {
+                        const idx = this.$refs.chatModule.messages.findIndex(message => {
+                          return message.id === json.chatId && message.type === json.type
+                        })
+                        if (idx !== -1) {
+                          this.$refs.chatModule.messages[idx].isMeeting = json.isMeeting
+                        } else {
+                          console.log("未找到聊天id:" + json.chatId)
+                        }
+                      }, 100)
                     } else {
                       console.log("未知url类型:" + res[listener].type.toString())
                     }

@@ -96,7 +96,7 @@
   </v-dialog>
 </template>
 <script>
-import { beginTimeShaftSingle } from "../../../../../api/timeShaft";
+import {beginTimeShaftSingle, meetingChange} from "../../../../../api/timeShaft";
 
 export default {
 
@@ -122,14 +122,18 @@ export default {
           title: this.title,
           tags: this.lable,
           conclude: this.description,
-          type: this.$store.state.currentChatType == "group" ? "group" : "friend",
+          type: this.$store.state.currentChatType === "group" ? "group" : "friend",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
           this.$emit("tryOk")
-          //todo 你需要发送一条消息给其他在该页面的用户，如果是群聊，让他们调用
-
-
+          meetingChange({
+            type: this.$store.state.currentChatType,
+            chatId: this.$store.state.currentChannelId,
+            isMeeting: true,
+          }).then(res => {
+            console.log(res)
+          })
         })
       }
 
