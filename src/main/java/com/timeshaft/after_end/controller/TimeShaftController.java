@@ -4,6 +4,7 @@ import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.timeshaftOp.TimeShaftOp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -21,6 +22,11 @@ import java.util.Map;
 public class TimeShaftController {
     @Autowired
     private TimeShaftOp timeShaftOp;
+
+    @Value("{meeting.on}")
+    private String onMeeting;
+    @Value("{meeting.off}")
+    private String offMeeting;
 
     @RequestMapping("/beginTimeShaftSingle")
     public ResponseService beginTimeShaftSingle(@RequestBody Map<String, Object> requestMap) throws Exception {
@@ -92,5 +98,15 @@ public class TimeShaftController {
         String msg = (String) requestMap.get("msg");
         Map<String, Object> res = timeShaftOp.getIdByKey(msg);
         return new ResponseService(res);
+    }
+
+    @RequestMapping("/meetingChange")
+    public ResponseService meetingChange(@RequestBody Map<String, Object> requestMap) {
+        String type = (String) requestMap.get("type");
+        Integer chatId = (Integer) requestMap.get("chatId");
+        boolean isMeeting = (boolean) requestMap.get("isMeeting");
+        String operation = isMeeting? onMeeting : offMeeting;
+        timeShaftOp.sendNotification(type, chatId, operation);
+        return new ResponseService();
     }
 }

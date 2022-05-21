@@ -57,6 +57,10 @@ public class ChatController {
     private String TEXT;
     @Value("${type.timeShaftType}")
     private String TIMESHAFT;
+    @Value("{meeting.on}")
+    private String OnMeeting;
+    @Value("{meeting.off}")
+    private String OffMeeting;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -71,6 +75,7 @@ public class ChatController {
             String chatName = friends.getUserId1().equals(sourceId)? friends.getNickname2():friends.getNickname1();
             String chatAvatar = userService.queryById(friendUserId).getPhoto();
             map.put("id", friendId);
+            map.put("isMeeting", friends.getStatus().equals(OnMeeting));
             map.put("chatName", chatName);
             map.put("chatAvatar", chatAvatar);
             map.put("type", FRIEND);
@@ -133,6 +138,7 @@ public class ChatController {
             map.put("chatName", group.getName());
             map.put("chatAvatar", group.getPhoto());
             map.put("type", GROUP);
+            map.put("isMeeting", group.getStatus().equals(OnMeeting));
             GroupMessage latest = groupMessageService.queryLatestById(group.getId());
             Date lastTime = new Date(System.currentTimeMillis());
             HashMap<String, Object> lastMessage = new HashMap<>();
@@ -390,6 +396,11 @@ public class ChatController {
                 User user = userService.queryById(message.getSenderId());
                 map.put("msg", message.getMessage());
                 map.put("msgFromName", groupUser.getUserNickname());
+                if (message.getMessage().startsWith("#")) {
+                    map.put("msgType", TIMESHAFT);
+                } else {
+                    map.put("msgType", TEXT);
+                }
                 map.put("msgFromAvatar", user.getPhoto());
                 map.put("time", message.getSendtime());
                 data.add(map);
@@ -403,6 +414,11 @@ public class ChatController {
                 String senderNickName = Objects.equals(friends.getUserId1(), message.getSenderId()) ?
                         friends.getNickname1() : friends.getNickname2();
                 map.put("msg", message.getMessage());
+                if (message.getMessage().startsWith("#")) {
+                    map.put("msgType", TIMESHAFT);
+                } else {
+                    map.put("msgType", TEXT);
+                }
                 map.put("msgFromName", senderNickName);
                 map.put("msgFromAvatar", user.getPhoto());
                 map.put("time", message.getSendtime());
