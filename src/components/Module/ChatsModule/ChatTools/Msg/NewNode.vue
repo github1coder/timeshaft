@@ -96,9 +96,11 @@
   </v-dialog>
 </template>
 <script>
-import {beginTimeShaftSingle, meetingChange} from "../../../../../api/timeShaft";
+import { beginTimeShaftSingle, meetingChange } from "../../../../../api/timeShaft";
 
 export default {
+
+  props: ["chatId", "type"],
 
   data () {
     return {
@@ -117,19 +119,19 @@ export default {
       else {
         const that = this
         beginTimeShaftSingle({
-          group_id: this.$store.state.currentChannelId,
+          group_id: this.chatId,
           creator_id: this.$store.state.userId,
           title: this.title,
           tags: this.lable,
           conclude: this.description,
-          type: this.$store.state.currentChatType === "group" ? "group" : "friend",
+          type: this.type === "group" ? "group" : "friend",
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
           this.$emit("tryOk")
           meetingChange({
-            type: this.$store.state.currentChatType,
-            chatId: this.$store.state.currentChannelId,
+            type: this.type,
+            chatId: this.chatId,
             isMeeting: true,
           }).then(res => {
             console.log(res)

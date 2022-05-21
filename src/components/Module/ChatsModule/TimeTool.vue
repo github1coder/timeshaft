@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      style="position: fixed; top: 1rem; right:20rem"
+      style="position: fixed; top: 1rem; right:15rem"
       v-if="start"
       @click="tryBegin"
     >开始时间轴
@@ -24,6 +24,8 @@
     </v-chip>
     <NewNode
       v-if="dialog"
+      :chatId="this.chatId"
+      :type="this.type"
       @closeD="closeD"
       @tryOk="tryOk"
     ></NewNode>
@@ -36,6 +38,9 @@ import NewNode from "./ChatTools/Msg/NewNode"
 import { endTimeShaft } from "../../../api/timeShaft/index"
 
 export default {
+
+  props: ["chatId", "type"],
+
   components: {
     NewNode
   },
@@ -71,9 +76,9 @@ export default {
     endTime () {
       //目前使用friend调试
       endTimeShaft({
-        group_id: this.$store.state.currentChannelId,
-        chatId: this.$store.state.currentChannelId,
-        type: this.$store.state.currentChatType === "group" ? "group" : "friend",
+        group_id: this.chatId,
+        chatId: this.chatId,
+        type: this.type === "group" ? "group" : "friend",
       }).then(res => {
         if (!res || (res && !res.error)) {
           //正常返回

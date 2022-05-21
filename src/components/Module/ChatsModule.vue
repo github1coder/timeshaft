@@ -144,6 +144,8 @@
     ></ChatTools>
     <TimeTool
       ref="timeTool"
+      :chatId="this.$store.state.currentChannelId"
+      :type="this.$store.state.currentChatType"
       v-show="$store.state.currentChannelIdx !== -1"
     ></TimeTool>
   </div>
