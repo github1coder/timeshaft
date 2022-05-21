@@ -83,7 +83,8 @@ export default {
         if (!res || (res && !res.error)) {
           //正常返回
           this.endOk()
-          //todo: 广播一条消息，告诉好友或者群成员会议结束了，并且让他们接受到消息以后调用timetool中的endOk方法
+          //广播一条消息，告诉好友或者群成员会议结束了()
+          //todo: 让他们接受到消息以后调用timetool中的endOk方法
         }
         else {
           //错误信息展示

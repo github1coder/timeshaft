@@ -96,7 +96,8 @@
   </v-dialog>
 </template>
 <script>
-import { beginTimeShaftSingle, meetingChange } from "../../../../../api/timeShaft";
+import { beginTimeShaftSingle } from "../../../../../api/timeShaft";
+// import { meetingChange } from "../../../../../api/timeShaft";
 
 export default {
 
@@ -129,13 +130,13 @@ export default {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
           this.$emit("tryOk")
-          meetingChange({
-            type: this.type,
-            chatId: this.chatId,
-            isMeeting: true,
-          }).then(res => {
-            console.log(res)
-          })
+          // meetingChange({
+          //   type: this.type,
+          //   chatId: this.chatId,
+          //   isMeeting: true,
+          // }).then(res => {
+          //   console.log(res)
+          // })
         })
       }
 
