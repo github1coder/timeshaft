@@ -322,12 +322,16 @@ public class TimeShaftOp {
         return result;
     }
 
-    public void sendNotification(String msgType, Integer chatId, String operation) {
+    public void sendNotification(String type, Integer chatId, String operation) {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("msgType", msgType);
+        res.put("type", type);
         res.put("chatId", chatId);
-        res.put("operation", operation);
-        if (msgType.equals(groupType)) {
+        if (operation.equals(OnMeeting)) {
+            res.put("isMeeting", true);
+        } else {
+            res.put("isMeeting", false);
+        }
+        if (type.equals(groupType)) {
             GroupUser queryGroupUser = new GroupUser();
             queryGroupUser.setGroupId(chatId);
             List<GroupUser> userInGroup = groupUserService.queryAll(queryGroupUser);

@@ -390,6 +390,11 @@ public class ChatController {
                 User user = userService.queryById(message.getSenderId());
                 map.put("msg", message.getMessage());
                 map.put("msgFromName", groupUser.getUserNickname());
+                if (message.getMessage().startsWith("#")) {
+                    map.put("msgType", TIMESHAFT);
+                } else {
+                    map.put("msgType", TEXT);
+                }
                 map.put("msgFromAvatar", user.getPhoto());
                 map.put("time", message.getSendtime());
                 data.add(map);
@@ -403,6 +408,11 @@ public class ChatController {
                 String senderNickName = Objects.equals(friends.getUserId1(), message.getSenderId()) ?
                         friends.getNickname1() : friends.getNickname2();
                 map.put("msg", message.getMessage());
+                if (message.getMessage().startsWith("#")) {
+                    map.put("msgType", TIMESHAFT);
+                } else {
+                    map.put("msgType", TEXT);
+                }
                 map.put("msgFromName", senderNickName);
                 map.put("msgFromAvatar", user.getPhoto());
                 map.put("time", message.getSendtime());
