@@ -142,7 +142,10 @@
       v-show="$store.state.currentChannelIdx !== -1"
       @callback="callback"
     ></ChatTools>
-    <TimeTool v-show="$store.state.currentChannelIdx !== -1"></TimeTool>
+    <TimeTool
+      ref="timeTool"
+      v-show="$store.state.currentChannelIdx !== -1"
+    ></TimeTool>
   </div>
 </template>
 
@@ -272,8 +275,7 @@ export default {
         }
       }
 
-      //这个是用来关闭时间轴按钮,请传入参数state（true代表开会中）
-      this.isShowEnd()
+      //todo：如果当前群在会议中，调用this.$refs.timeTool.tryOk()
     },
 
 

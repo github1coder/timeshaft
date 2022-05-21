@@ -127,7 +127,7 @@ export default {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
           this.$emit("tryOk")
-          //todo 你需要发送一条消息给其他在该页面的用户，如果是群聊，让他们调用
+          //todo: 广播一条消息，告诉好友或者群成员会议开始了，并且让他们接受到消息以后调用timetool中的tryOk方法
 
 
         })
