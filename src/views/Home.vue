@@ -2,7 +2,10 @@
   <div class="dc-container">
     <Navigations></Navigations>
     <div class="base">
-      <ChatsModule ref="chatModule" v-if="$store.state.siderState === 0"></ChatsModule>
+      <ChatsModule
+        ref="chatModule"
+        v-if="$store.state.siderState === 0"
+      ></ChatsModule>
       <ContractsModule
         v-else-if="$store.state.siderState === 1"
         ref="contractsModule"
@@ -25,7 +28,7 @@ import CalendarModule from "@/components/Module/CalendarModule";
 import Empty from "@/components/Module/empty";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import {getListenerList} from "@/api/message";
+import { getListenerList } from "@/api/message";
 
 
 export default {
@@ -37,7 +40,7 @@ export default {
     ContractsModule,
     Empty,
   },
-  data() {
+  data () {
     return {
 
     }
@@ -47,12 +50,12 @@ export default {
     window.onbeforeunload = () => {
       this.$store.state.serviceClient = null
       this.$store.state.serviceSocket = null
-      this.$store.state.currentChatType =  null
-      this.$store.state.currentChatIndex= null
-      this.$store.state.currentChatMore= null
-      this.$store.state.currentChatName= null
+      this.$store.state.currentChatType = null
+      this.$store.state.currentChatIndex = null
+      this.$store.state.currentChatMore = null
+      this.$store.state.currentChatName = null
       this.$store.state.currentChannelIdx = -1
-      this.$store.state.currentChannelId= -1
+      this.$store.state.currentChannelId = -1
       console.log(this.$store.state)
       sessionStorage.setItem("data", JSON.stringify(this.$store.state))
       console.log("save")
@@ -115,56 +118,66 @@ export default {
       this.$store.state.serviceClient.heartbeat.incoming = 0; //客户端不从服务端接收心跳包
       // 向服务器发起websocket连接
       this.$store.state.serviceClient.connect({ name: this.$store.state.myNick }, //此处注意更换自己的用户名，最好以参数形式带入
-          frame => { // eslint-disable-line no-unused-vars
+        frame => { // eslint-disable-line no-unused-vars
+          console.log('链接成功！')
+          console.log(this.$store.state.serviceClient)
+          // TODO url合并？
+          getListenerList({
+          }).then(res => {
             console.log('链接成功！')
             console.log(this.$store.state.serviceClient)
-            // TODO url合并？
-            getListenerList({
-            }).then(res => {
-                console.log('链接成功！')
-                console.log(this.$store.state.serviceClient)
-                console.log(res)
-                for (let listener in res) {
-                  this.$store.state.serviceClient.subscribe(res[listener].url, payload => {
-                    let json = JSON.parse(payload.body)
-                    console.log("收到的json:")
-                    console.log(json)
-                    if (res[listener].type === 0) {
-                      console.log("即时通信服务收到消息")
-                      setTimeout( () => {
-                        this.$refs.chatModule.receiveMessage(json)
-                      },100)
-                    } else if (res[listener].type === 1) {
-                      console.log("添加好友服务收到消息")
-                      setTimeout(() => {
-                        this.$refs.chatModule.messages.push(json)
-                      }, 100)
-                    } else if (res[listener].type === 2) {
-                      console.log("会议状态服务收到消息")
-                      setTimeout(() => {
-                        const idx = this.$refs.chatModule.messages.findIndex(message => {
-                          return message.id === json.chatId && message.type === json.type
-                        })
-                        if (idx !== -1) {
-                          this.$refs.chatModule.messages[idx].isMeeting = json.isMeeting
-                        } else {
-                          console.log("未找到聊天id:" + json.chatId)
+            console.log(res)
+            for (let listener in res) {
+              this.$store.state.serviceClient.subscribe(res[listener].url, payload => {
+                let json = JSON.parse(payload.body)
+                console.log("收到的json:")
+                console.log(json)
+                if (res[listener].type === 0) {
+                  console.log("即时通信服务收到消息")
+                  setTimeout(() => {
+                    this.$refs.chatModule.receiveMessage(json)
+                  }, 100)
+                } else if (res[listener].type === 1) {
+                  console.log("添加好友服务收到消息")
+                  setTimeout(() => {
+                    this.$refs.chatModule.messages.push(json)
+                  }, 100)
+                } else if (res[listener].type === 2) {
+                  console.log("会议状态服务收到消息")
+                  setTimeout(() => {
+                    const idx = this.$refs.chatModule.messages.findIndex(message => {
+                      return message.id === json.chatId && message.type === json.type
+                    })
+                    if (idx !== -1) {
+                      this.$refs.chatModule.messages[idx].isMeeting = json.isMeeting
+                      if (this.$store.state.currentChannelId == idx) {
+                        if (json.isMeeting == false) {
+                          console.log("会议状态：开始=>关闭")
+                          this.$refs.chatModule.$refs.timeTool.endOk(false)
                         }
-                      }, 100)
+                        else {
+                          console.log("会议状态：关闭=>开始")
+                          this.$refs.chatModule.$refs.timeTool.tryOk(false)
+                        }
+                      }
                     } else {
-                      console.log("未知url类型:" + res[listener].type.toString())
+                      console.log("未找到聊天id:" + json.chatId)
                     }
-                  })
-                  console.log(res[listener].url)
+                  }, 100)
+                } else {
+                  console.log("未知url类型:" + res[listener].type.toString())
                 }
-            })
-          },
-          err => { // eslint-disable-line no-unused-vars
-            setTimeout(() => {
-              console.log("reconnecting...")
-              this.socketInit()
-            }, 20000)
-          }
+              })
+              console.log(res[listener].url)
+            }
+          })
+        },
+        err => { // eslint-disable-line no-unused-vars
+          setTimeout(() => {
+            console.log("reconnecting...")
+            this.socketInit()
+          }, 20000)
+        }
       );
     },
   }

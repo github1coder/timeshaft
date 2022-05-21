@@ -129,7 +129,7 @@ export default {
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false
-          this.$emit("tryOk")
+          this.$emit("tryOk", true)
           // meetingChange({
           //   type: this.type,
           //   chatId: this.chatId,

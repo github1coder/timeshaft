@@ -4,13 +4,15 @@
       style="position: fixed; top: 1rem; right:15rem"
       v-if="start"
       @click="tryBegin"
-    >开始时间轴
+      :disabled="disabled"
+    >{{hint}}
     </v-btn>
     <v-btn
-      style="position: fixed; top: 1rem; right:5rem"
-      v-if="true"
+      style="position: fixed; top: 1rem; right:15rem"
+      v-if="!start"
       @click="endTime"
-    >结束时间轴
+      :disabled="disabled"
+    >{{hint}}
     </v-btn>
     <v-chip
       color="pink"
@@ -20,7 +22,7 @@
       v-if="meeting"
     >
       <v-icon left>mdi-label</v-icon>
-      会议中
+      {{state}}
     </v-chip>
     <NewNode
       v-if="dialog"
@@ -49,6 +51,9 @@ export default {
       start: true,
       dialog: false,
       meeting: false,
+      disabled: false,
+      hint: "开启时间轴",
+      state: "会议中"
     }
   },
 
@@ -61,15 +66,50 @@ export default {
       this.dialog = false
     },
 
-    tryOk () {
+    tryOk (intervel) {
+      if (!this.timer && intervel) {
+        this.state = "正在开始会议"
+        this.count = 2
+        this.disabled = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 2) {
+            this.count--
+            this.hint = this.count
+          } else {
+            this.disabled = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.hint = "结束时间轴"
+            this.state = "会议中"
+          }
+        }, 1000)
+      }
       this.dialog = false
       this.start = false
       this.meeting = true
     },
 
-    endOk () {
+    endOk (intervel) {
+      if (!this.timer && intervel) {
+        this.state = "正在结束会议"
+        this.count = 2
+        this.disabled = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 2) {
+            this.count--
+            this.hint = this.count
+          } else {
+            this.disabled = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.hint = "开始时间轴"
+            this.state = "会议中"
+            this.meeting = false
+          }
+        }, 1000)
+      }
+      this.dialog = false
       this.start = true
-      this.meeting = false
     },
 
     //结束当前时间轴
@@ -82,9 +122,7 @@ export default {
       }).then(res => {
         if (!res || (res && !res.error)) {
           //正常返回
-          this.endOk()
-          //广播一条消息，告诉好友或者群成员会议结束了()
-          //todo: 让他们接受到消息以后调用timetool中的endOk方法
+          this.endOk(true)
         }
         else {
           //错误信息展示

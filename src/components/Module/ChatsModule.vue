@@ -275,9 +275,19 @@ export default {
             console.log("have read this msg")
           })
         }
-      }
 
-      //todo：如果当前群在会议中，调用this.$refs.timeTool.tryOk()
+        //切换会议状态
+        if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
+          || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
+          this.messages[this.$store.state.currentChannelIdx].isMeeting = false
+          console.log("会议状态：开始=>关闭")
+          this.$refs.timeTool.endOk(false)
+        }
+        else {
+          console.log("会议状态：关闭=>开始")
+          this.$refs.timeTool.tryOk(false)
+        }
+      }
     },
 
 
