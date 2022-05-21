@@ -68,11 +68,11 @@ export default {
 
     tryOk (intervel) {
       if (!this.timer && intervel) {
-        this.state = "正在开始会议"
-        this.count = 2
+        this.state = "正在加入会议"
+        this.count = 1
         this.disabled = true
         this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= 2) {
+          if (this.count > 0 && this.count <= 1) {
             this.count--
             this.hint = this.count
           } else {
@@ -84,6 +84,10 @@ export default {
           }
         }, 1000)
       }
+      else {
+        this.hint = "结束时间轴"
+        this.state = "会议中"
+      }
       this.dialog = false
       this.start = false
       this.meeting = true
@@ -91,11 +95,11 @@ export default {
 
     endOk (intervel) {
       if (!this.timer && intervel) {
-        this.state = "正在结束会议"
-        this.count = 2
+        this.state = "正在退出会议"
+        this.count = 1
         this.disabled = true
         this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= 2) {
+          if (this.count > 0 && this.count <= 1) {
             this.count--
             this.hint = this.count
           } else {
@@ -107,6 +111,11 @@ export default {
             this.meeting = false
           }
         }, 1000)
+      }
+      else {
+        this.hint = "开始时间轴"
+        this.state = "会议中"
+        this.meeting = false
       }
       this.dialog = false
       this.start = true
@@ -122,7 +131,7 @@ export default {
       }).then(res => {
         if (!res || (res && !res.error)) {
           //正常返回
-          this.endOk(true)
+          // this.endOk(true)
         }
         else {
           //错误信息展示

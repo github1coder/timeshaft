@@ -111,6 +111,7 @@ export default {
     },
 
     socketConnect () {
+      const that = this
       this.$store.state.serviceSocket = new SockJS(this.socketUrl)
       this.$store.state.serviceClient = Stomp.over(this.$store.state.serviceSocket);
       this.$store.state.serviceClient.debug = null //关闭控制台打印
@@ -150,14 +151,14 @@ export default {
                     })
                     if (idx !== -1) {
                       this.$refs.chatModule.messages[idx].isMeeting = json.isMeeting
-                      if (this.$store.state.currentChannelId == idx) {
+                      if (that.$store.state.currentChannelId == this.$refs.chatModule.messages[idx].id) {
                         if (json.isMeeting == false) {
                           console.log("会议状态：开始=>关闭")
-                          this.$refs.chatModule.$refs.timeTool.endOk(false)
+                          this.$refs.chatModule.$refs.timeTool.endOk(true)
                         }
                         else {
                           console.log("会议状态：关闭=>开始")
-                          this.$refs.chatModule.$refs.timeTool.tryOk(false)
+                          this.$refs.chatModule.$refs.timeTool.tryOk(true)
                         }
                       }
                     } else {
