@@ -71,4 +71,11 @@ public class UserController {
         userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"), map.get("checkCode"));
         return new ResponseService();
     }
+
+    @RequestMapping(value = "/updateSelf")
+    public ResponseService updateSelf(@RequestBody Map<String, Object> map, @RequestHeader("user_id") Integer user_id) throws Exception {
+        boolean visibility = (boolean) map.get("state");
+        userOp.updateSelf(user_id, visibility);
+        return new ResponseService();
+    }
 }

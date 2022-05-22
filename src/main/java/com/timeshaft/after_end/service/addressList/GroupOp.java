@@ -4,6 +4,7 @@ import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.Group;
 import com.timeshaft.after_end.entity.GroupHeat;
 import com.timeshaft.after_end.entity.GroupUser;
+import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
@@ -62,11 +63,15 @@ public class GroupOp {
     }
 
     @PermissionAnnotation(level=12)
-    public void updateGroup(Integer user_id, int group_id, String name, String photo, String notice) {
+    public void updateGroup(Integer user_id, int group_id, String name, String notice, boolean visibility) {
         Group group = groupService.queryById(group_id);
         group.setName(name);
         group.setNotice(notice);
-        group.setPhoto(photo);
+        if(visibility) {
+            group.setPrivate1(1);
+        } else {
+            group.setPrivate1(0);
+        }
         groupService.update(group);
     }
 
@@ -124,4 +129,5 @@ public class GroupOp {
             groupUserService.update(tmp);
         }
     }
+
 }
