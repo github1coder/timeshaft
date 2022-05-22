@@ -57,10 +57,10 @@ public class ChatController {
     private String TEXT;
     @Value("${type.timeShaftType}")
     private String TIMESHAFT;
-    @Value("{meeting.on}")
-    private String OnMeeting;
-    @Value("{meeting.off}")
-    private String OffMeeting;
+    @Value("${meeting.on}")
+    private String onMeeting;
+    @Value("${meeting.off}")
+    private String offMeeting;
 
     @RequestMapping(value = "/getMessagesList")
     public ResponseService getMessagesList(@RequestBody Map<String, Object> requestMap) {
@@ -75,7 +75,7 @@ public class ChatController {
             String chatName = friends.getUserId1().equals(sourceId)? friends.getNickname2():friends.getNickname1();
             String chatAvatar = userService.queryById(friendUserId).getPhoto();
             map.put("id", friendId);
-            map.put("isMeeting", friends.getStatus().equals(OnMeeting));
+            map.put("isMeeting", friends.getStatus().equals(onMeeting));
             map.put("chatName", chatName);
             map.put("chatAvatar", chatAvatar);
             map.put("type", FRIEND);
@@ -138,7 +138,7 @@ public class ChatController {
             map.put("chatName", group.getName());
             map.put("chatAvatar", group.getPhoto());
             map.put("type", GROUP);
-            map.put("isMeeting", group.getStatus().equals(OnMeeting));
+            map.put("isMeeting", group.getStatus().equals(onMeeting));
             GroupMessage latest = groupMessageService.queryLatestById(group.getId());
             Date lastTime = new Date(System.currentTimeMillis());
             HashMap<String, Object> lastMessage = new HashMap<>();
