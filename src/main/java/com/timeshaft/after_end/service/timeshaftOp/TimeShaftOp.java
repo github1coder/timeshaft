@@ -170,20 +170,22 @@ public class TimeShaftOp {
         Date end_time = sdf.parse(end);
         List<Timeshaft> timeshafts = timeshaftService.queryTimeshaftByTime(start_time, end_time);
         for (Timeshaft timeshaft : timeshafts) {
-            Map<String, Object> out = new HashMap<>();
-            out.put("name", timeshaft.getName());
-            if (timeshaft.getBeginTime().compareTo(start_time) < 0) {
-                out.put("start", start_time);
-            } else {
-                out.put("start", timeshaft.getBeginTime());
+            if(timeshaft.getEndTime() != null && timeshaft.getBeginTime() != null) {
+                Map<String, Object> out = new HashMap<>();
+                out.put("name", timeshaft.getName());
+                if (timeshaft.getBeginTime().compareTo(start_time) < 0) {
+                    out.put("start", start_time);
+                } else {
+                    out.put("start", timeshaft.getBeginTime());
+                }
+                if (timeshaft.getEndTime().compareTo(end_time) > 0) {
+                    out.put("end", end_time);
+                } else {
+                    out.put("end", timeshaft.getEndTime());
+                }
+                out.put("timed", "false");
+                res.add(out);
             }
-            if (timeshaft.getEndTime().compareTo(end_time) > 0) {
-                out.put("end", end_time);
-            } else {
-                out.put("end", timeshaft.getEndTime());
-            }
-            out.put("timed", "false");
-            res.add(out);
         }
         return res;
     }
