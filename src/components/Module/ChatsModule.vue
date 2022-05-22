@@ -130,7 +130,7 @@
           <Search
             v-else-if="tools[2].show"
             ref="search"
-            :id="this.$store.state.currentChannelId"
+            :chatId="this.$store.state.currentChannelId"
             :type="this.$store.state.currentChatType"
           ></Search>
         </div>

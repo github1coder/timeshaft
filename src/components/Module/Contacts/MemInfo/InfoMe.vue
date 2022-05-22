@@ -30,7 +30,7 @@
               width="50%"
               style="margin: auto;"
             >
-              修改头像
+              公开
             </v-btn> -->
           </v-list-item>
 

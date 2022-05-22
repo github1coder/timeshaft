@@ -29,8 +29,12 @@
         搜索
       </v-btn>
     </v-row>
-    <div>
-      <History v-show="show">
+    <span>{{feedback}}</span>
+    <div style="height: 100%; width: 100%;">
+      <History
+        v-if="show"
+        :messages="this.messages"
+      >
       </History>
     </div>
 
@@ -39,9 +43,10 @@
 
 <script>
 import History from './Msg/History.vue'
+import { searchHistory } from "../../../../api/message/index"
 
 export default {
-  // props: ["type", "id"],
+  props: ["type", "chatId"],
   components: {
     History
   },
@@ -49,13 +54,34 @@ export default {
   data () {
     return {
       text: "",
-      show: false
+      show: false,
+      messages: "",
+      feedback: "",
     }
   },
 
   methods: {
-    searchHistory () {
+    search () {
+      if (this.text == "") {
+        return
+      }
+      const that = this
+      searchHistory({
+        "chatId": this.chatId,
+        "type": this.type,
+        "text": this.text,
+      }).then(res => {
+        console.log("获得查询结果")
+        if (res == null || res == []) {
+          that.feedback = "无相关记录"
+        }
+        else {
+          that.feedback = ""
+          that.message = res
+          that.show = true
+        }
 
+      })
     },
   },
 
