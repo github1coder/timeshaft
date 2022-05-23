@@ -80,14 +80,19 @@ public class AddressListController {
     @RequestMapping(value = "/getGroups")
     public ResponseService getGroups(@RequestHeader("user_id") Integer user_id) {
         List<Group> groups = groupOp.getGroup(user_id);
-        List<Map<String, String>> res = new ArrayList<>();
+        List<Map<String, Object>> res = new ArrayList<>();
         for(Group group : groups) {
-            HashMap<String, String> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("group_id", group.getId().toString());
             map.put("group_name", group.getName());
             map.put("group_photo", group.getPhoto());
             map.put("master_id", group.getMasterId().toString());
             map.put("notice", group.getNotice());
+            if(group.getPrivate1() == 1) {
+                map.put("state", false);
+            } else {
+                map.put("state", true);
+            }
             res.add(map);
         }
         return new ResponseService(res);
