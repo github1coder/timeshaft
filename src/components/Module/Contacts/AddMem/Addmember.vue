@@ -55,6 +55,14 @@
             </v-btn>
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
+          <v-btn
+            style="width: 100%; margin-top: 20px;"
+            color=blue
+            @click="findmore('friend')"
+            v-if="isMore"
+          >
+            发现周围
+          </v-btn>
           <v-card-title
             style="margin: auto;"
             v-show="showF"
@@ -108,13 +116,6 @@
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
           </v-row>
-          <v-btn
-            style="width: 100%; margin-top: 20px;"
-            color=blue
-            @click="findmore('friend')"
-          >
-            发现更多
-          </v-btn>
         </v-tab-item>
         <v-tab-item
           height="100%"
@@ -147,6 +148,14 @@
             </v-btn>
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
+          <v-btn
+            style="width: 100%; margin-top: 20px;"
+            color=blue
+            @click="findmore('group')"
+            v-if="isMore"
+          >
+            发现周围
+          </v-btn>
           <v-card-title
             style="margin: auto;"
             v-show="showG"
@@ -200,13 +209,6 @@
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
           </v-row>
-          <v-btn
-            style="width: 100%; margin-top: 20px;"
-            color=blue
-            @click="findmore('group')"
-          >
-            发现更多
-          </v-btn>
         </v-tab-item>
       </v-tabs-items>
     </v-card>
@@ -229,6 +231,7 @@ export default {
       groupAns: [],
       showF: false,
       showG: false,
+      isMore: true,
     };
   },
 
@@ -275,6 +278,7 @@ export default {
           "type": "friend",
         }
       ).then(res => {
+        // this.isMore = false
         this.friendAns = res
         this.friendAns.forEach(function (item) {
           item["show"] = false;
@@ -301,6 +305,7 @@ export default {
           "type": "group",
         }
       ).then(res => {
+        // this.isMore = false
         this.groupAns = res
         this.groupAns.forEach(function (item) {
           item["show"] = false;
