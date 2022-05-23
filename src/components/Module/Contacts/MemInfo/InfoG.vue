@@ -35,9 +35,21 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-          <v-card style="font-size: 50px;">
+          <div style="font-size: 50px; height: 20%;">
             {{this.nameG}}
-          </v-card>
+            <v-divider>
+            </v-divider>
+            <v-btn
+              dark
+              width="50%"
+              style="margin: auto;"
+              @click="updateState()"
+              :disabled="isState"
+              v-show="isMaster()"
+            >
+              {{stateText}}
+            </v-btn>
+          </div>
           <v-textarea
             :disabled="iShow"
             filled
@@ -74,6 +86,7 @@
           >
             取消
           </v-btn>
+
         </v-navigation-drawer>
         <v-col style="width: 50%; height:100%; float: right">
           <v-list style="width: 100%; height:90%;">
@@ -269,6 +282,9 @@ export default {
         title: '取消管理员',
         method: 'subSubMaster'
       },],
+
+      stateText: "公开",
+      isState: false,
     };
   },
 
@@ -280,11 +296,43 @@ export default {
 
     },
 
-    init (photo, nameG, master, notice) {
+    updateState () {
+      const that = this.$parent.$parent.$parent.$refs.memberList
+      const here = this
+
+      updateGroup({
+        "id": parseInt(this.$parent.$parent.id),
+        "name": this.nameG,
+        "state": !that.groups[that.indexG].state ? true : false,
+        "notice": this.notice,
+      }).then(res => {
+        if (!res || !res.error) {
+          that.groups[that.indexG].state = !that.groups[that.indexG].state
+        }
+      })
+      if (!this.timer) {
+        this.count = 3
+        this.isState = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 3) {
+            this.count--
+            here.stateText = this.count
+          } else {
+            this.isState = false
+            clearInterval(this.timer)
+            this.timer = null
+            here.stateText = that.groups[that.indexG].state ? "公开" : "未公开"
+          }
+        }, 1000)
+      }
+    },
+
+    init (photo, nameG, master, notice, state) {
       this.photo = photo
       this.nameG = nameG
       this.master = master
       this.notice = notice
+      this.stateText = state ? "公开" : "未公开"
     },
 
 
@@ -292,19 +340,22 @@ export default {
       const here = this
       console.log(this.notice)
       updateGroup({
-        "id": this.$parent.$parent.id,
+        "id": parseInt(this.$parent.$parent.id),
+        "name": this.nameG,
+        "state": this.stateText == "公开" ? true : false,
         "notice": this.notice
       }).then(res => {
         console.log("修改群公告成功")
         console.log(res)
         if (!res) {
-          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
-          for (this.i = 0; this.i < that.length; this.i++) {
-            if (that[this.i].group_id == here.$parent.id) {
-              that[this.i].notice = here.notice
-              break
-            }
-          }
+          const that = here.$parent.$parent.$parent.$refs.memberList
+          // for (this.i = 0; this.i < that.length; this.i++) {
+          //   if (that[this.i].group_id == here.$parent.id) {
+          //     that[this.i].notice = here.notice
+          //     break
+          //   }
+          // }
+          that.groups[that.indexG].notice = here.notice
           here.iShowTrue()
         }
       })
@@ -456,7 +507,7 @@ export default {
       }).then(res => {
         console.log(res)
         this.$store.commit("changeSiderState", 1)
-        const that = here.$parent.$refs.MemberList.groups
+        const that = here.$parent.$refs.memberList.groups
         for (this.i = 0; this.i < that.length; this.i++) {
           if (that[this.i].group_id == here.id) {
             that.splice(this.i, 1)

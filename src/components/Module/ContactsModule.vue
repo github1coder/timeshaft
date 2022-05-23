@@ -6,7 +6,7 @@
     >
       <div style="height:100%; width: 20%;">
         <member-list
-          ref="MemberList"
+          ref="memberList"
           v-if="show == 0"
         ></member-list>
       </div>

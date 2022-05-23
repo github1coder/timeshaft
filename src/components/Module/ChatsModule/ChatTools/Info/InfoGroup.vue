@@ -332,7 +332,7 @@ export default {
         console.log("修改群公告成功")
         console.log(res)
         if (!res) {
-          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
+          const that = here.$parent.$parent.$parent.$refs.memberList.groups
           for (this.i = 0; this.i < that.length; this.i++) {
             if (that[this.i].group_id == here.$parent.id) {
               that[this.i].notice = here.notice
@@ -496,7 +496,7 @@ export default {
       }).then(res => {
         console.log(res)
         this.$store.commit("changeSiderState", 1)
-        const that = here.$parent.$refs.MemberList.groups
+        const that = here.$parent.$refs.memberList.groups
         for (this.i = 0; this.i < that.length; this.i++) {
           if (that[this.i].group_id == here.id) {
             that.splice(this.i, 1)
