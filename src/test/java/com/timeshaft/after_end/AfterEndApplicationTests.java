@@ -44,6 +44,5 @@ class AfterEndApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(timeshaftService.queryById(69).getBeginTime());
     }
 }

@@ -99,24 +99,26 @@ public class TimeShaftOp {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
                 null, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
-            Date end_time = new Date();
-            timeshaft.setEndTime(end_time);
-            if (groupType.equals(type)) {
-                List<GroupMessage> groupMessages = groupMessageService.queryTimeshaft(timeshaft);
-                if (!groupMessages.isEmpty()) {
-                    timeshaft.setStartMsgId(groupMessages.get(0).getId());
-                    timeshaft.setEndMsgId(groupMessages.get(groupMessages.size() - 1).getId());
+            if (timeshaft.getEndTime() == null){
+                Date end_time = new Date();
+                timeshaft.setEndTime(end_time);
+                if (groupType.equals(type)) {
+                    List<GroupMessage> groupMessages = groupMessageService.queryTimeshaft(timeshaft);
+                    if (!groupMessages.isEmpty()) {
+                        timeshaft.setStartMsgId(groupMessages.get(0).getId());
+                        timeshaft.setEndMsgId(groupMessages.get(groupMessages.size() - 1).getId());
+                    }
+                } else if (friendType.equals(type)) {
+                    List<PersonalMessage> personalMessages = personalMessageService.queryTimeshaft(timeshaft);
+                    if (!personalMessages.isEmpty()) {
+                        timeshaft.setStartMsgId(personalMessages.get(0).getId());
+                        timeshaft.setEndMsgId(personalMessages.get(personalMessages.size() - 1).getId());
+                    }
+                } else {
+                    throw new Exception("type变量错误");
                 }
-            } else if (friendType.equals(type)) {
-                List<PersonalMessage> personalMessages = personalMessageService.queryTimeshaft(timeshaft);
-                if (!personalMessages.isEmpty()) {
-                    timeshaft.setStartMsgId(personalMessages.get(0).getId());
-                    timeshaft.setEndMsgId(personalMessages.get(personalMessages.size() - 1).getId());
-                }
-            } else {
-                throw new Exception("type变量错误");
+                timeshaftService.update(timeshaft);
             }
-            timeshaftService.update(timeshaft);
         }
         checkGroupState(group_id, type, OffMeeting);
         changeGroupState(group_id, type, OffMeeting);
