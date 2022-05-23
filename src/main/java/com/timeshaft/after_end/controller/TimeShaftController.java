@@ -23,9 +23,9 @@ public class TimeShaftController {
     @Autowired
     private TimeShaftOp timeShaftOp;
 
-    @Value("{meeting.on}")
+    @Value("${meeting.on}")
     private String onMeeting;
-    @Value("{meeting.off}")
+    @Value("${meeting.off}")
     private String offMeeting;
 
     @RequestMapping("/beginTimeShaftSingle")
