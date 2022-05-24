@@ -2,6 +2,7 @@
   <div style="
   width: 100%;
   height: 100%;
+  background: #999999;
 ">
   <h1 style="
   color: white;

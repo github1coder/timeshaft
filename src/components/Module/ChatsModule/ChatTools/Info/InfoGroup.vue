@@ -2,13 +2,11 @@
   <div style="width: 100%; height: 100%">
     <v-card
       style="width: 100%; height: 100%;"
-      dark
       flat
       tile
     >
       <v-card
         tile
-        dark
         style="width: 100%; overflow: auto; overflow-x: hidden"
         class="mem-info"
       >

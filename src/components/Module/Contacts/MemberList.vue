@@ -5,7 +5,6 @@
   >
     <v-card
       height="100%"
-      dark
       flat
       tile
       class="mem-info"

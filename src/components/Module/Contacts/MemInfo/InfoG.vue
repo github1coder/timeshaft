@@ -2,20 +2,17 @@
   <div style="width: 100%; height: 100%">
     <v-card
       style="width: 100%; height: 100%;"
-      dark
       flat
       tile
     >
       <v-card
         tile
-        dark
         style="width: 100%; height: 100%;overflow: auto; overflow-x: hidden"
       >
         <!-- <v-row style="width: 100%; height: 100%;"> -->
         <v-navigation-drawer
           permanent
           style="width: 50%; height:100%; float: left;"
-          dark
         >
           <!-- <v-system-bar></v-system-bar> -->
           <!-- <v-list-item>

@@ -1,7 +1,6 @@
 <template>
   <nav class="guilds">
     <v-card
-      dark
       flat
       tile
       width="100%"

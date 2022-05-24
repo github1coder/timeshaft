@@ -4,7 +4,6 @@
       <div class="sb-container">
         <v-card
           height="100%"
-          dark
           flat
           tile
           class="server-info"
@@ -21,7 +20,6 @@
                     clearable
                     outlined
                     dense
-                    dark
                     hide-details
                     label="请输入关键词"
                     v-model="text"

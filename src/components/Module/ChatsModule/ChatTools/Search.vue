@@ -1,18 +1,15 @@
 <template>
   <v-card
-    dark
     style="height: 100%; width: 100%"
   >
     <v-row
       dense
-      dark
       style="width: 100%; height: 64px; margin: auto;"
     >
       <v-text-field
         clearable
         outlined
         dense
-        dark
         hide-details
         v-model="text"
         class="input-search mt-3"
