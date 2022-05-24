@@ -1,14 +1,14 @@
 <template>
   <div
     class="sb-container"
-    style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"
+    style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%; "
   >
     <v-card
       height="100%"
       dark
       flat
       tile
-      class="server-info"
+      class="mem-info"
     >
       <v-list>
         <v-list-group
@@ -249,6 +249,7 @@ export default {
     return {
       name: "",
       textG: "",
+      indexG: -1,
       groupsIndex: -1,
       friendsIndex: -1,
       groupUnfolder: true,
@@ -505,12 +506,14 @@ export default {
       //用来切换展示群
       that.about = 1
       that.id = this.groups[index].group_id
+      this.indexG = index
 
       that.$refs.infoG.init(
         this.groups[index].group_photo,
         this.groups[index].group_name,
         this.groups[index].master_id,
-        this.groups[index].notice
+        this.groups[index].notice,
+        this.groups[index].state
       )
       //用来设置切换初始化
       that.$refs.infoG.memberShow = false

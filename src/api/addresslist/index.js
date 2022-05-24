@@ -150,3 +150,10 @@ export function getInfoMsg(param) {
         params: param
     })
 }
+export function finding(param) {
+    return request({
+        url: '/addresslist/finding',
+        method: 'get',
+        params: param
+    })
+}

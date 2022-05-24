@@ -57,23 +57,41 @@
               rounded
               max-height="80px"
             >
-              <v-list-item-group color="primary" mandatory>
+              <v-list-item-group
+                color="primary"
+                mandatory
+              >
                 <v-list-item
                   v-for="(item, i) in this.messages"
                   @click="selectChannel(item.id, i, item)"
                   :id="'message-'+item.id.toString()"
                   :key="i"
                 >
-                  <v-list-item-avatar>
-                    <v-img
-                      v-if="item.type==='private'"
-                      max-height="70px"
-                      max-width="50px"
-                      :src="item.chatAvatar"
-                    ></v-img>
-                    <v-avatar v-else-if="item.type==='group'">
-                      <span class="white--text text-h5">{{ item.chatName[0] }}</span>
-                    </v-avatar>
+                  <v-list-item-avatar v-if="item.isMeeting">
+                    <v-badge
+                        color="green"
+                        content="开会中">
+                      <v-img
+                          v-if="item.type==='friend'"
+                          max-height="70px"
+                          max-width="50px"
+                          :src="item.chatAvatar"
+                      ></v-img>
+                      <v-avatar v-else-if="item.type==='group'">
+                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                      </v-avatar>
+                    </v-badge>
+                  </v-list-item-avatar>
+                  <v-list-item-avatar v-else>
+                      <v-img
+                          v-if="item.type==='friend'"
+                          max-height="70px"
+                          max-width="50px"
+                          :src="item.chatAvatar"
+                      ></v-img>
+                      <v-avatar v-else-if="item.type==='group'">
+                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                      </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title
@@ -113,13 +131,23 @@
           v-show="toolsDrawer"
         >
           <TimeShaft
-            v-show="tools[0].show"
+            v-if="tools[0].show"
             ref="timeShaft"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></TimeShaft>
           <InfoPage
-            v-show="tools[1].show"
+            v-else-if="tools[1].show"
             ref="infoPage"
+            :id="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></InfoPage>
+          <Search
+            v-else-if="tools[2].show"
+            ref="search"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
+          ></Search>
         </div>
       </div>
     </div>
@@ -129,19 +157,27 @@
       v-show="$store.state.currentChannelIdx !== -1"
       @callback="callback"
     ></ChatTools>
+    <TimeTool
+      ref="timeTool"
+      :chatId="this.$store.state.currentChannelId"
+      :type="this.$store.state.currentChatType"
+      v-show="$store.state.currentChannelIdx !== -1"
+    ></TimeTool>
   </div>
 </template>
 
 <script>
 import ChatTools from "@/components/Module/ChatsModule/ChatTools";
+import TimeTool from "@/components/Module/ChatsModule/TimeTool";
 import ChatHeader from "@/components/Module/ChatsModule/ChatHeader";
 import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
-import {  getMessagesList, haveRead } from "@/api/message";
+import Search from "@/components/Module/ChatsModule/ChatTools/Search"
+import { getMessagesList, haveRead } from "@/api/message";
 export default {
   name: "ChatsModule",
-  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage },
+  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool },
   data () {
     return {
       toolsDrawer: false, // 用于控制工具栏打开与否
@@ -165,6 +201,7 @@ export default {
       messagesList: [],
       socketUrl: null,
       checkInterval: null,
+      showEnd: false, //是否展示时间轴按钮
     }
   },
   methods: {
@@ -197,14 +234,14 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId) {
+        if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
           this.messages[idx].number += 1
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
         }
-        if (this.$refs.chatMessage !== undefined) {
+        if (this.$refs.chatMessage !== undefined && this.$store.state.currentChannelId === payload.chatId) {
           console.log(this.$refs.chatMessage)
           this.$refs.chatMessage.messages.push(payload)
           this.$refs.chatMessage.scrollToBottom()
@@ -231,17 +268,15 @@ export default {
     },
     selectChannel (id, idx, item) {
       //关闭工具栏
-      this.$parent.toolsDrawer = false
+      this.toolsDrawer = false
       console.log(id)
       console.log(item)
       if (idx !== this.$store.state.currentChannelIdx) {
-        this.$store.commit("changeChannel", {id: id, idx: idx, type: item.type, time: item.lastMessage.time});
+        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
         // 等画面完全渲染
         setTimeout(() => {
           console.log(this.$refs)
           this.$refs.chatMessage.init()
-          this.$refs.timeShaft.getShaft()
-
         }, 100)
         if (item.number !== 0) {
           item.number = 0
@@ -255,26 +290,44 @@ export default {
             console.log("have read this msg")
           })
         }
+
+        //切换会议状态
+        if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
+          || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
+          this.messages[this.$store.state.currentChannelIdx].isMeeting = false
+          console.log("会议状态：开始=>关闭")
+          this.$refs.timeTool.endOk(false)
+        }
+        else {
+          console.log("会议状态：关闭=>开始")
+          this.$refs.timeTool.tryOk(false)
+        }
       }
-    }
+    },
+
+
+    isShowEnd (state) {
+      console.log(state)
+      this.showEnd = state
+    },
   },
 
   created () {
-      this.$store.state.currentChannelIdx = -1
-      setTimeout(
-          () => {
-            getMessagesList({
-              srcId: this.$store.state.userId,
-            }).then(res => {
-              console.log("收到联系人列表")
-              console.log(this.messages)
-              for (let d in res) {
-                this.messages.push(res[d])
-              }
-              console.log(this.messages)
-            })
-          }, 100
-      )
+    this.$store.state.currentChannelIdx = -1
+    setTimeout(
+      () => {
+        getMessagesList({
+          srcId: this.$store.state.userId,
+        }).then(res => {
+          console.log("收到联系人列表")
+          console.log(this.messages)
+          for (let d in res) {
+            this.messages.push(res[d])
+          }
+          console.log(this.messages)
+        })
+      }, 100
+    )
   },
   computed: {
     messages () {

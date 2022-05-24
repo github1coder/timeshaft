@@ -1,6 +1,6 @@
 import request from "../request"
 
-export function addTimeLine(param) {
+export function beginTimeShaftSingle(param) {
     return request({
         url: '/timeshaft/beginTimeShaftSingle',
         method: 'post',
@@ -8,7 +8,7 @@ export function addTimeLine(param) {
     })
 }
 
-export function getTimeLine(param) {
+export function getTimeshaft(param) {
     return request({
         url: '/timeshaft/getTimeshaft',
         method: 'post',
@@ -24,9 +24,9 @@ export function endTimeShaft(param) {
     })
 }
 
-export function beginTimeShaftSingle(param) {
+export function getSingleTimeshaft(param) {
     return request({
-        url: '/timeshaft/beginTimeShaftSingle',
+        url: '/timeshaft/getSingleTimeshaft',
         method: 'post',
         data: param
     })
@@ -43,6 +43,22 @@ export function getTimeShaftData(param) {
 export function genTimeShaftFromMessages(param) {
     return request({
         url: '/timeshaft/genTimeShaftFromMessages',
+        method: 'post',
+        data: param
+    })
+}
+
+export function queryTimeShaftId(param) {
+    return request({
+        url: 'timeshaft/queryTimeShaftId',
+        method: 'post',
+        data: param
+    })
+}
+
+export function meetingChange(param) {
+    return request( {
+        url: 'timeshaft/meetingChange',
         method: 'post',
         data: param
     })

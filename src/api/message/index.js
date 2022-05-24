@@ -47,3 +47,12 @@ export function getListenerList(param) {
         params: param
     })
 }
+
+
+export function searchHistory(param) {
+    return request({
+        url: '/message/searchHistory',
+        method: 'post',
+        data: param
+    })
+}

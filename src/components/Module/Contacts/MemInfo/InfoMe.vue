@@ -24,14 +24,17 @@
               ></v-img>
             </v-list-item-icon>
           </v-list-item>
+          <v-divider></v-divider>
           <v-list-item>
-            <!-- <v-btn
+            <v-btn
               dark
               width="50%"
               style="margin: auto;"
+              @click="updateMyState"
+              :disabled="isState"
             >
-              修改头像
-            </v-btn> -->
+              {{state}}
+            </v-btn>
           </v-list-item>
 
           <v-list-item>
@@ -152,7 +155,7 @@
 </template>
 <script>
 import { addGroup } from '../../../../api/addresslist/index';
-import { getCheckCode, changePwd } from '../../../../api/user/index';
+import { getCheckCode, changePwd, updateSelf } from '../../../../api/user/index';
 export default {
   data () {
     return {
@@ -170,6 +173,8 @@ export default {
       valid: true,
       type: "password",
       msg: "",
+      state: "公开",
+      isState: false,
       rules: {
         password: [
           (password) => !!password || "密码不能为空",
@@ -188,11 +193,34 @@ export default {
   },
 
   mounted () {
+    this.state = this.$store.state.state ? "公开" : "未公开"
   },
 
   methods: {
     method1 () {
 
+    },
+
+    updateMyState () {
+      this.$store.state.state = !this.$store.state.state
+      updateSelf({
+        "state": this.$store.state.state
+      })
+      if (!this.timer) {
+        this.count = 3
+        this.isState = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 3) {
+            this.count--
+            this.state = this.count
+          } else {
+            this.isState = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.state = this.$store.state.state ? "公开" : "未公开"
+          }
+        }, 1000)
+      }
     },
 
     changeShowText () {
@@ -272,7 +300,7 @@ export default {
         this.textG = ""
         this.labelG = "创建成功"
         console.log(res)
-        this.$parent.$parent.$parent.$refs.MemberList.getG()
+        this.$parent.$parent.$parent.$refs.memberList.getG()
       })
     }
   }

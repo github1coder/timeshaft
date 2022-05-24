@@ -1,5 +1,10 @@
 <template>
   <div class="chat-content">
+    <TimeNode
+      :id="shaftId"
+      v-if="detail"
+      @closeT="closeT"
+    ></TimeNode>
     <v-dialog
         v-model="dialog"
         persistent
@@ -113,7 +118,7 @@
     </v-dialog>
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
-<!--        {{selected}}-->
+        <!--        {{selected}}-->
         <v-list three-line dark v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
@@ -124,7 +129,16 @@
                     :value="message.msgId"
                 ></v-checkbox>
               </v-list-item-avatar>
-
+              <v-list-item-avatar v-if="message.isMeeting" class="mx-3">
+                <v-btn
+                    color="success"
+                    fab
+                    x-small
+                    dark
+                >
+                  <v-icon>mdi-domain</v-icon>
+                </v-btn>
+              </v-list-item-avatar>
               <v-list-item-avatar class="mx-3">
                 <!--TODO-- 等待对接后改成图片>-->
                 <v-img :src="message.msgFromAvatar"></v-img>
@@ -133,35 +147,43 @@
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
                 <v-list-item-subtitle
+                    v-if="message.msgType === 'text'"
                 >{{ message.msg }}
                 </v-list-item-subtitle>
+                <v-list-item-subtitle
+                    v-else-if="message.msgType === 'timeShaft'"
+                    @click="queryTimeShaft(message.msg)"
+                    style="color: #2196F3"
+                >
+                  {{message.msg}}
+                </v-list-item-subtitle>
               </v-list-item-content>
-<!--              <v-list-item-content-->
-<!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
-<!--              >-->
-<!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
-<!--                <v-list-item-content-->
-<!--                    class="tobubble"-->
-<!--                >{{ message.msg }}-->
-<!--                </v-list-item-content>-->
-<!--              </v-list-item-content>-->
+              <!--              <v-list-item-content-->
+              <!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
+              <!--              >-->
+              <!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
+              <!--                <v-list-item-content-->
+              <!--                    class="tobubble"-->
+              <!--                >{{ message.msg }}-->
+              <!--                </v-list-item-content>-->
+              <!--              </v-list-item-content>-->
             </v-list-item>
           </template>
         </v-list>
       </div>
     </div>
-    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting"  @send="socketSend"></ChatForm>
+    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting" @send="socketSend"></ChatForm>
   </div>
 </template>
 
 <script>
 import {getHistoryMessage} from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
-import {genTimeShaftFromMessages} from "@/api/timeShaft";
-
+import {genTimeShaftFromMessages, queryTimeShaftId} from "@/api/timeShaft";
+import TimeNode from "@/components/Module/ChatsModule/ChatTools/Msg/TimeNode";
 export default {
   name: "ChatMessages",
-  components: {ChatForm},
+  components: {TimeNode, ChatForm},
   props: ['draw'],
   data() {
     return {
@@ -175,9 +197,28 @@ export default {
       snackbar: null,
       title: null,
       label: [],
+      detail: null,
+      shaftId: null,
+      success: 0,
     }
   },
   methods: {
+    closeT (flag) {
+      this.detail = flag
+    },
+    queryTimeShaft(msg) {
+      queryTimeShaftId({
+          msg: msg
+      }).then(res => {
+        console.log(res)
+        if (res.timeShaftId !== -1) {
+          this.detail = true
+          this.shaftId = res.timeShaftId
+        } else {
+          alert("非法的时间轴")
+        }
+      })
+    },
     onScroll() {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
@@ -242,8 +283,8 @@ export default {
     },
     commitTimeline() {
       genTimeShaftFromMessages({
-        chatId: this.$store.state.userId,
-        userId: this.$store.state.currentChannelId,
+        chatId: this.$store.state.currentChannelId,
+        userId: this.$store.state.userId,
         title: this.title,
         tags: this.label,
         conclude: this.description,

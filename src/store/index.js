@@ -6,10 +6,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         more: true,
-        DEBUG: false,
+        DEBUG: true,
         userId: -1,
         email: null,
         accessToken: null,
+        state: true,
         infoId: -1,
         infoPhoto: null,
         infoEmail: null,
@@ -103,7 +104,7 @@ export default new Vuex.Store({
             store.currentChatType = data.type;
             store.currentChatTime = data.time;
             store.currentChatFirst = 1;
-            console.log("time: "  + store.currentChatTime)
+            console.log("time: " + store.currentChatTime)
                 // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {
