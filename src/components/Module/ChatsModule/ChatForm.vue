@@ -80,7 +80,7 @@ export default {
     isSpace(message) {
       let flag = true
        for (let i in message) {
-          if (!message.charAt(i).isSpace()) {
+          if (!(message.charAt(i) !== " ")) {
             flag = false
             break
           }
