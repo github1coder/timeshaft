@@ -1,0 +1,58 @@
+name: SpringBoot_master
+
+on:
+  push:
+    # 分支
+    branches: [ after_master ]
+  pull_request:
+    branches: [ after_master ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      # maven缓存，不加的话每次都会去重新拉取，会影响速度
+      - name: Dependies Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      # 编译打包
+      - name: Build with Maven
+        run: mvn package -Dmaven.test.skip=true
+      # 登录Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      # build 镜像并push到中央仓库中
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile_prod
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/timeshaft:latest
+      # push后，用ssh连接服务器执行脚本
+      - name: SSH
+        uses: appleboy/ssh-action@master # 使用ssh链接服务器
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          #key: ${{ secrets.PRIVATE_KEY}}
+          port: ${{ secrets.PORT }}
+          script: |
+            sh /root/start.sh
