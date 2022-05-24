@@ -80,7 +80,7 @@ export default {
     isSpace(message) {
       let flag = true
        for (let i in message) {
-          if (!(message.charAt(i) !== " ")) {
+          if ((message.charAt(i) !== " ")) {
             flag = false
             break
           }
@@ -89,7 +89,7 @@ export default {
     },
     sendChat(message) {
       if (this.isSpace(message)) {
-        alert("")
+        alert("不能输入空白信息哦~")
       } else {
         let name = this.$store.state.myNick
         let avatar = this.$store.state.myIcon
