@@ -4,23 +4,12 @@
 import axios from 'axios'
 import store from '../store/index'
 // import { Message } from 'element-ui'
-
-const DEBUG = true;
 // axios.defaults.withCredentials = true;
-let baseURL =  'http://localhost:8080'
-if (process.env.NODE_ENV === 'prod') {
-    baseURL = 'http://59.110.153.238:8080'
-}
-else if (process.env.NODE_ENV === 'dev') {
-    baseURL = 'http://182.92.163.68:8080'
-}
-
 
 const service = axios.create({
-    baseURL: DEBUG ? 'http://localhost:8080' : baseURL,
+    baseURL: process.env.VUE_APP_baseURL,
     timeout: 20000,
 })
-
 // service.defaults.withCredentials = true //是否携带cookie
 
 service.interceptors.request.use(
