@@ -78,7 +78,7 @@ export default {
     socketInit () {
       console.log("初始化socket")
       if (this.$store.state.serviceClient == null || !this.$store.state.serviceClient.connected) {
-        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : 'http://182.92.163.68:8080/websocket'
+        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : process.env.VUE_APP_baseURL+'/websocket'
         if (this.$store.state.serviceClient != null && this.$store.state.serviceSocket.readyState === SockJS.OPEN) {
           this.$store.state.serviceClient.disconnect(() => {
             this.socketConnect()
