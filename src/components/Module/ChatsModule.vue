@@ -67,13 +67,14 @@
                 >
                   <v-list-item-avatar v-if="item.isMeeting">
                     <v-badge
-                        color="green"
-                        content="开会中">
+                      color="green"
+                      content="开会中"
+                    >
                       <v-img
-                          v-if="item.type==='friend'"
-                          max-height="70px"
-                          max-width="50px"
-                          :src="item.chatAvatar"
+                        v-if="item.type==='friend'"
+                        max-height="70px"
+                        max-width="50px"
+                        :src="item.chatAvatar"
                       ></v-img>
                       <v-avatar v-else-if="item.type==='group'">
                         <span class="white--text text-h5">{{ item.chatName[0] }}</span>
@@ -81,15 +82,15 @@
                     </v-badge>
                   </v-list-item-avatar>
                   <v-list-item-avatar v-else>
-                      <v-img
-                          v-if="item.type==='friend'"
-                          max-height="70px"
-                          max-width="50px"
-                          :src="item.chatAvatar"
-                      ></v-img>
-                      <v-avatar v-else-if="item.type==='group'">
-                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
-                      </v-avatar>
+                    <v-img
+                      v-if="item.type==='friend'"
+                      max-height="70px"
+                      max-width="50px"
+                      :src="item.chatAvatar"
+                    ></v-img>
+                    <v-avatar v-else-if="item.type==='group'">
+                      <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                    </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title
@@ -184,11 +185,11 @@ export default {
         text: '',
         show: false
       }, {
-        icon: 'mdi-cloud-search-outline',
+        icon: 'mdi-account-details',
         text: '',
         show: false
       }, {
-        icon: 'mdi-cog-outline',
+        icon: 'mdi-cloud-search-outline',
         text: '',
         show: false
       },
