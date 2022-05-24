@@ -40,3 +40,11 @@ export function changePwd(param) {
         data: param
     })
 }
+
+export function updateSelf(param) {
+    return request({
+        url: '/user/updateSelf',
+        method: 'post',
+        data: param
+    })
+}

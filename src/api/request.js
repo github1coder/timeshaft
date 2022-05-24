@@ -5,7 +5,7 @@ import axios from 'axios'
 import store from '../store/index'
 // import { Message } from 'element-ui'
 
-const DEBUG = false;
+const DEBUG = true;
 // axios.defaults.withCredentials = true;
 let baseURL =  'http://localhost:8080'
 if (process.env.NODE_ENV === 'prod') {
@@ -46,6 +46,7 @@ service.interceptors.response.use(
         if (response.data.code === 0) {
             return response.data.data
         } else {
+            alert(response.data.msg);
             return { "error": response.data.msg }
         }
 

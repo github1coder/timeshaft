@@ -141,7 +141,10 @@ export default {
       })
     },
     editAccount () {
-      this.$parent.$refs.contractsModule.$refs.infoTool.about = -1
+      this.$parent.$refs.contractsModule.show = 0
+      if (this.$parent.$refs.contractsModule.$refs.infoTool) {
+        this.$parent.$refs.contractsModule.$refs.infoTool.about = -1
+      }
       this.$store.commit("changeSiderState", 1)
     },
   }

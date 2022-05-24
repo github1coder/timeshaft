@@ -10,6 +10,7 @@
         tile
         dark
         style="width: 100%; overflow: auto; overflow-x: hidden"
+        class="mem-info"
       >
         <!-- <v-row style="width: 100%; height: 100%;"> -->
         <v-navigation-drawer
@@ -205,7 +206,7 @@
           <div
             v-for="(item, j) in friends"
             :key=j
-            style="width:20%; float: left; margin-left: 5%; background-color: green; border-radius: 10%"
+            style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
           >
             <div>
               <v-img
@@ -257,6 +258,7 @@
 import { getInfoMsg } from "../../../../../api/addresslist/index"
 import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../../api/addresslist/index'
 export default {
+  props: ["id"],
   data () {
     return {
       photo: "",
@@ -287,6 +289,7 @@ export default {
   },
 
   mounted () {
+    this.initInfo()
   },
 
   methods: {
@@ -304,7 +307,7 @@ export default {
     initInfo () {
       const that = this
       getInfoMsg({
-        "info_id": this.$store.state.currentChannelId,
+        "info_id": this.id,
         "type": "group"
       }).then(res => {
         if (!res.error) {
@@ -329,7 +332,7 @@ export default {
         console.log("修改群公告成功")
         console.log(res)
         if (!res) {
-          const that = here.$parent.$parent.$parent.$refs.MemberList.groups
+          const that = here.$parent.$parent.$parent.$refs.memberList.groups
           for (this.i = 0; this.i < that.length; this.i++) {
             if (that[this.i].group_id == here.$parent.id) {
               that[this.i].notice = here.notice
@@ -493,7 +496,7 @@ export default {
       }).then(res => {
         console.log(res)
         this.$store.commit("changeSiderState", 1)
-        const that = here.$parent.$refs.MemberList.groups
+        const that = here.$parent.$refs.memberList.groups
         for (this.i = 0; this.i < that.length; this.i++) {
           if (that[this.i].group_id == here.id) {
             that.splice(this.i, 1)
