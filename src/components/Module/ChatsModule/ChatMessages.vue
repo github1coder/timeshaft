@@ -129,7 +129,16 @@
                     :value="message.msgId"
                 ></v-checkbox>
               </v-list-item-avatar>
-
+              <v-list-item-avatar v-if="message.isMeeting" class="mx-3">
+                <v-btn
+                    color="success"
+                    fab
+                    x-small
+                    dark
+                >
+                  <v-icon>mdi-domain</v-icon>
+                </v-btn>
+              </v-list-item-avatar>
               <v-list-item-avatar class="mx-3">
                 <!--TODO-- 等待对接后改成图片>-->
                 <v-img :src="message.msgFromAvatar"></v-img>
@@ -205,7 +214,6 @@ export default {
         if (res.timeShaftId !== -1) {
           this.detail = true
           this.shaftId = res.timeShaftId
-          alert("成功")
         } else {
           alert("非法的时间轴")
         }

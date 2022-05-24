@@ -67,16 +67,31 @@
                   :id="'message-'+item.id.toString()"
                   :key="i"
                 >
-                  <v-list-item-avatar>
-                    <v-img
-                      v-if="item.type==='friend'"
-                      max-height="70px"
-                      max-width="50px"
-                      :src="item.chatAvatar"
-                    ></v-img>
-                    <v-avatar v-else-if="item.type==='group'">
-                      <span class="white--text text-h5">{{ item.chatName[0] }}</span>
-                    </v-avatar>
+                  <v-list-item-avatar v-if="item.isMeeting">
+                    <v-badge
+                        color="green"
+                        content="开会中">
+                      <v-img
+                          v-if="item.type==='friend'"
+                          max-height="70px"
+                          max-width="50px"
+                          :src="item.chatAvatar"
+                      ></v-img>
+                      <v-avatar v-else-if="item.type==='group'">
+                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                      </v-avatar>
+                    </v-badge>
+                  </v-list-item-avatar>
+                  <v-list-item-avatar v-else>
+                      <v-img
+                          v-if="item.type==='friend'"
+                          max-height="70px"
+                          max-width="50px"
+                          :src="item.chatAvatar"
+                      ></v-img>
+                      <v-avatar v-else-if="item.type==='group'">
+                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                      </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title

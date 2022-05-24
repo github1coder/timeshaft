@@ -77,24 +77,38 @@ export default {
     }
   },
   methods: {
+    isSpace(message) {
+      let flag = true
+       for (let i in message) {
+          if (!message.charAt(i).isSpace()) {
+            flag = false
+            break
+          }
+       }
+       return flag
+    },
     sendChat(message) {
-      let name = this.$store.state.myNick
-      let avatar = this.$store.state.myIcon
-      const msgForm = {
-        msgFromName: name,
-        msgFromAvatar: avatar,
-        msg: message,
-        time: this.getDate(),
-        userId: this.$store.state.userId,
-        chatId: this.$store.state.currentChannelId,
+      if (this.isSpace(message)) {
+        alert("")
+      } else {
+        let name = this.$store.state.myNick
+        let avatar = this.$store.state.myIcon
+        const msgForm = {
+          msgFromName: name,
+          msgFromAvatar: avatar,
+          msg: message,
+          time: this.getDate(),
+          userId: this.$store.state.userId,
+          chatId: this.$store.state.currentChannelId,
+        }
+        this.clearMsg()
+        const url = this.$store.state.currentChatType === 'friend' ? this.chatUrlPrivate : this.chatUrlGroup;
+        this.$emit("send", {
+          url: url,
+          data: msgForm,
+        })
+        this.$store.state.currentChatHaveRead += 1
       }
-      this.clearMsg()
-      const url = this.$store.state.currentChatType === 'friend' ? this.chatUrlPrivate : this.chatUrlGroup;
-      this.$emit("send", {
-        url: url,
-        data: msgForm,
-      })
-      this.$store.state.currentChatHaveRead += 1
     },
     getDate() {
       const date = new Date();//当前时间
