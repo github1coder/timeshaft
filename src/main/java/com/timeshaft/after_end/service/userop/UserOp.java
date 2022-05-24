@@ -46,6 +46,9 @@ public class UserOp {
     public Map<String, Object> login(String email, String password) throws Exception {
         User u = new User(email, null, null, null, null);
         List<User> users = userService.queryAll(u);
+        if (users.size()<=0) {
+            throw new Exception("用户不存在");
+        }
         User user = users.get(0);
         boolean log = myPasswordEncoder.matches(password, user.getPassword());
         if (!log) {
