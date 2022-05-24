@@ -185,6 +185,7 @@ public class FriendOp {
                 List<Friends> friends = friendsService.queryAll(friend1);
                 friends.addAll(friendsService.queryAll(friend2));
                 friends.get(0).setState(action);
+                friends.get(0).setStatus("offMeeting");
                 friendsService.update(friends.get(0));
             } else {
                 friend1.setState(NEW);

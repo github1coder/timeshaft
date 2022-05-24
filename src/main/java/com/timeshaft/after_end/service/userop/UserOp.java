@@ -59,6 +59,11 @@ public class UserOp {
         userRes.put("username", user.getUsername());
         userRes.put("email", user.getEmail());
         userRes.put("ACCESS_TOKEN", token);
+        if(user.getPrivate1() == 1) {
+            userRes.put("state", false);
+        } else {
+            userRes.put("state", true);
+        }
 
         ArrayList<String> tokens = new ArrayList<>();
         String userId = String.valueOf(user.getId());
@@ -126,9 +131,9 @@ public class UserOp {
     public void updateSelf(Integer user_id, boolean visibility) {
         User user = userService.queryById(user_id);
         if(visibility) {
-            user.setPrivate1(1);
-        } else {
             user.setPrivate1(0);
+        } else {
+            user.setPrivate1(1);
         }
         userService.update(user);
     }
