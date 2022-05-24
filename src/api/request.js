@@ -4,15 +4,12 @@
 import axios from 'axios'
 import store from '../store/index'
 // import { Message } from 'element-ui'
-
-const DEBUG = true;
 // axios.defaults.withCredentials = true;
 
 const service = axios.create({
-    baseURL: DEBUG ? 'http://localhost:8080' : 'http://182.92.163.68:8080',
+    baseURL: process.env.VUE_APP_baseURL,
     timeout: 20000,
 })
-
 // service.defaults.withCredentials = true //是否携带cookie
 
 service.interceptors.request.use(

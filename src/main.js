@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import VueContextMenu from "vue-contextmenu";
 // import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import '@mdi/font/css/materialdesignicons.css'
+import '../public/MaterialDesign/css/materialdesignicons.min.css'
 
 
 Vue.config.productionTip = false
@@ -17,7 +17,7 @@ new Vue({
     router,
     store,
     icons: {
-      iconfont: 'mdi',
+        iconfont: 'mdi',
     },
     render: h => h(App)
 }).$mount('#app')

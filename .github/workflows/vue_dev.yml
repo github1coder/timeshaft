@@ -1,4 +1,4 @@
-name: Vue
+name: Vue_dev
 
 on:
   push:
