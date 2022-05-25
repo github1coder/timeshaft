@@ -73,7 +73,6 @@
                   v-text="subItem.name"
                   style="text-align: left"
                 ></v-list-item-title>
-                <v-list-item-subtitle style="text-align: left">{{subItem.master}}的群聊</v-list-item-subtitle>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -121,7 +120,6 @@
               clearable
               outlined
               dense
-
               hide-details
               label="团队名字"
               v-model="textG"
@@ -167,6 +165,7 @@
                   v-text="subItem.name"
                   style="text-align: left"
                 ></v-list-item-title>
+                <v-list-item-subtitle style="text-align: left">{{subItem.master}}创建的团队</v-list-item-subtitle>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -370,6 +369,7 @@ export default {
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
+        "memId": this.$store.state.userId
       }
       ).then(res => {
         console.log(res)
