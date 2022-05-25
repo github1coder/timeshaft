@@ -80,10 +80,8 @@ export default {
   },
   methods: {
     isSpace(message) {
-      console.log("-------------")
       let flag = true
        for (let i in message) {
-         console.log(message[i])
           if ((message.charAt(i) !== " " && message.charAt(i) !== "" && message.charAt(i) !== "\n")) {
             flag = false
             break
@@ -93,7 +91,7 @@ export default {
     },
     sendChat(message) {
       if (this.isSpace(message)) {
-        alert("不能输入空白信息哦~")
+        this.clearMsg()
       } else {
         let name = this.$store.state.myNick
         let avatar = this.$store.state.myIcon

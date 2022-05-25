@@ -301,10 +301,13 @@ export default {
             time: item.time,
           }).then(res => {
             res
+            console.log(this.$store.state.unreadNum)
             this.$store.state.unreadNum -= item.number
+            console.log(this.$store.state.unreadNum)
             console.log("have read this msg")
+            item.number = 0
           })
-          item.number = 0
+
         }
 
         //切换会议状态
