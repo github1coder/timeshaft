@@ -11,13 +11,16 @@
         outlined
         dense
         hide-details
+        light
         v-model="text"
-        class="input-search mt-3"
         autocomplete="off"
+        background-color="grey"
         style="width: 70%; margin: auto;"
       ></v-text-field>
       <v-btn
         style="width: 15%; height: 64%; margin: 12px 0px auto;"
+        rounded
+        color="brown lighten-5"
         @click="search"
       >
         <!-- <v-icon style="width: 100%; height: 100%;">
