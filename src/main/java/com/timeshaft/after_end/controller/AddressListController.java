@@ -157,8 +157,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/apply")
-    public ResponseService apply(@RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
-        friendOp.apply(user_id, type, action, id);
+    public ResponseService apply(@RequestParam(value = "memId") Integer memId, @RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
+        friendOp.apply(user_id, type, action, id, memId);
         friendOp.sendNotification(type, action, id, user_id);
         return new ResponseService();
     }

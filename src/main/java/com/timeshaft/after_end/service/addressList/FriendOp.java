@@ -146,7 +146,7 @@ public class FriendOp {
         return ans;
     }
 
-    public void apply(Integer self_id, String type, String action, Integer id) {
+    public void apply(Integer self_id, String type, String action, Integer id, Integer memId) {
         if(groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
             if(action.equals(NEW)) {
@@ -159,6 +159,7 @@ public class FriendOp {
                 }
             } else if(action.equals(ACCEPT)) {
                 groupUser.setState(NEW);
+                groupUser.setUserId(memId);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUsers.get(0).setState(action);
                 groupUser = groupUsers.get(0);
@@ -166,6 +167,7 @@ public class FriendOp {
                 groupUserService.update(groupUser);
             } else {
                 groupUser.setState(NEW);
+                groupUser.setUserId(memId);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 groupUserService.deleteById(groupUsers.get(0).getId());
             }
