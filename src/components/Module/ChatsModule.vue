@@ -9,9 +9,9 @@
           class="server-info"
         >
           <v-card
-              height="60"
-              tile
-              class="server-title"
+            height="60"
+            tile
+            class="server-title"
           >
             <div v-on:keyup.enter="search">
               <v-menu offset-y>
@@ -30,14 +30,14 @@
                   ></v-text-field>
                 </template>
                 <v-list
-                    v-if="searchResult.length > 0"
-                    class="border-list"
-                    dense
+                  v-if="searchResult.length > 0"
+                  class="border-list"
+                  dense
                 >
                   <v-list-item
-                      v-for="(item, index) in searchResult"
-                      :key="index"
-                      @click="itemClick(item)"
+                    v-for="(item, index) in searchResult"
+                    :key="index"
+                    @click="itemClick(item)"
                   >
                     <v-list-item-title>{{ item.name }}</v-list-item-title>
                   </v-list-item>
@@ -46,55 +46,61 @@
             </div>
           </v-card>
           <v-card
-              tile
-              class="channels"
+            tile
+            class="channels"
           >
             <!-- TODO expansion needed! -->
             <v-list
-                width="100%"
-                rounded
-                max-height="100px"
+              width="100%"
+              rounded
+              max-height="100px"
             >
               <v-list-item-group
-                  color="primary"
-                  mandatory
+                color="primary"
+                mandatory
               >
                 <v-list-item
-                    v-for="(item, i) in this.messages"
-                    @click="selectChannel(item.id, i, item)"
-                    :id="'message-'+item.id.toString()"
-                    :key="i"
+                  v-for="(item, i) in this.messages"
+                  @click="selectChannel(item.id, i, item)"
+                  :id="'message-'+item.id.toString()"
+                  :key="i"
                 >
                   <v-list-item-avatar v-if="item.isMeeting">
                     <v-badge
-                        avatar
-                        dot
-                        bottom
-                        color="green"
-                        overlap>
+                      avatar
+                      dot
+                      bottom
+                      color="green"
+                      overlap
+                    >
                       <v-avatar size="30">
                         <v-img
-                            v-if="item.type==='friend'"
-                            :src="item.chatAvatar"
+                          v-if="item.type==='friend'"
+                          :src="item.chatAvatar"
                         ></v-img>
-                        <span v-else-if="item.type==='group'"
-                              class="white--text text-h5">{{ item.chatName[0] }}</span>
+                        <span
+                          v-else-if="item.type==='group'"
+                          class="white--text text-h5"
+                        >{{ item.chatName[0] }}</span>
                       </v-avatar>
                     </v-badge>
                   </v-list-item-avatar>
                   <v-list-item-avatar v-else>
                     <v-avatar size="30">
                       <v-img
-                          v-if="item.type==='friend'"
-                          :src="item.chatAvatar"
+                        v-if="item.type==='friend'"
+                        :src="item.chatAvatar"
                       ></v-img>
-                      <span v-else-if="item.type==='group'" class="white--text text-h5">{{ item.chatName[0] }}</span>
+                      <span
+                        v-else-if="item.type==='group'"
+                        class="white--text text-h5"
+                      >{{ item.chatName[0] }}</span>
                     </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title
-                        class="channel-title"
-                        v-text="item.chatName"
+                      class="channel-title"
+                      v-text="item.chatName"
                     ></v-list-item-title>
                     <v-list-item-content style="text-align: left; font-size: 5px">
                       {{ item.number > 0 ? ("[未读 " + (item.number).toString() + " 条]") : "" }}
@@ -102,8 +108,8 @@
                     </v-list-item-content>
                   </v-list-item-content>
                   <v-list-item-content
-                      style="text-align: right; font-size: 1px"
-                      v-if="item.lastMessage !== null > 0"
+                    style="text-align: right; font-size: 1px"
+                    v-if="item.lastMessage !== null > 0"
                   >
                     {{ item.lastMessage.time }}
                   </v-list-item-content>
@@ -117,30 +123,30 @@
     <div class="chat">
       <ChatHeader></ChatHeader>
       <div
-          class="chat-screen"
-          v-show="$store.state.currentChannelIdx !== -1"
+        class="chat-screen"
+        v-show="$store.state.currentChannelIdx !== -1"
       >
         <ChatMessages
-            @send="sendMessage"
-            @receive="receiveMessage"
-            ref="chatMessage"
-            :draw="toolsDrawer"
+          @send="sendMessage"
+          @receive="receiveMessage"
+          ref="chatMessage"
+          :draw="toolsDrawer"
         ></ChatMessages>
         <div
-            class="moveBand"
-            v-show="toolsDrawer"
+          class="moveBand"
+          v-show="toolsDrawer"
         >
           <TimeShaft
-              v-if="tools[0].show"
-              ref="timeShaft"
-              :chatId="this.$store.state.currentChannelId"
-              :type="this.$store.state.currentChatType"
+            v-if="tools[0].show"
+            ref="timeShaft"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></TimeShaft>
           <InfoPage
-              v-else-if="tools[1].show"
-              ref="infoPage"
-              :id="this.$store.state.currentChannelId"
-              :type="this.$store.state.currentChatType"
+            v-else-if="tools[1].show"
+            ref="infoPage"
+            :id="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></InfoPage>
           <Search
             v-else-if="tools[2].show"
@@ -152,16 +158,16 @@
       </div>
     </div>
     <ChatTools
-        :draw="toolsDrawer"
-        :tools="tools"
-        v-show="$store.state.currentChannelIdx !== -1"
-        @callback="callback"
+      :draw="toolsDrawer"
+      :tools="tools"
+      v-show="$store.state.currentChannelIdx !== -1"
+      @callback="callback"
     ></ChatTools>
     <TimeTool
-        ref="timeTool"
-        :chatId="this.$store.state.currentChannelId"
-        :type="this.$store.state.currentChatType"
-        v-show="$store.state.currentChannelIdx !== -1"
+      ref="timeTool"
+      :chatId="this.$store.state.currentChannelId"
+      :type="this.$store.state.currentChatType"
+      v-show="$store.state.currentChannelIdx !== -1"
     ></TimeTool>
   </div>
 </template>
@@ -174,12 +180,12 @@ import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
 import Search from "@/components/Module/ChatsModule/ChatTools/Search"
-import {getMessagesList, haveRead} from "@/api/message";
+import { getMessagesList, haveRead } from "@/api/message";
 
 export default {
   name: "ChatsModule",
-  components: {ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool},
-  data() {
+  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool },
+  data () {
     return {
       toolsDrawer: false, // 用于控制工具栏打开与否
       tools: [{
@@ -206,7 +212,7 @@ export default {
     }
   },
   methods: {
-    sendMessage(payload) {
+    sendMessage (payload) {
       payload.type = this.$store.state.currentChatType
       console.log(this.messages)
       console.log(payload)
@@ -226,7 +232,7 @@ export default {
       }
     }
     ,
-    receiveMessage(payload) {
+    receiveMessage (payload) {
       console.log(this.messages)
       const idx = this.messages.findIndex(message => {
         return message.id === payload.chatId && message.type === payload.type
@@ -266,28 +272,31 @@ export default {
         console.log("没有对应的聊天框" + payload.id + " " + payload.type)
       }
     },
-    callback(flag) {
+    callback (flag) {
       this.toolsDrawer = flag
     },
-    itemClick(item) {
+    itemClick (item) {
       this.text = item.name
       this.$refs.search.blur()
       // this.$router.push()
     },
-    search() {
+    search () {
       this.$refs.search.blur()
       console.log(this.text)
     },
-    toggleAC() {
+    toggleAC () {
       this.$store.commit("toggleAC");
     },
-    selectChannel(id, idx, item) {
+    selectChannel (id, idx, item) {
       //关闭工具栏
       this.toolsDrawer = false
+      this.tools[0].show = false
+      this.tools[1].show = false
+      this.tools[2].show = false
       console.log(id)
       console.log(item)
       if (idx !== this.$store.state.currentChannelIdx) {
-        this.$store.commit("changeChannel", {id: id, idx: idx, type: item.type, time: item.lastMessage.time});
+        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
         // 等画面完全渲染
         setTimeout(() => {
           console.log(this.$refs)
@@ -309,7 +318,7 @@ export default {
 
         //切换会议状态
         if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
-            || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
+          || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
           console.log("会议状态：开始=>关闭")
           this.$refs.timeTool.endOk(false)
@@ -321,33 +330,33 @@ export default {
     },
 
 
-    isShowEnd(state) {
+    isShowEnd (state) {
       console.log(state)
       this.showEnd = state
     },
   },
 
-  created() {
+  created () {
     this.$store.state.currentChannelIdx = -1
     setTimeout(
-        () => {
-          getMessagesList({
-            srcId: this.$store.state.userId,
-          }).then(res => {
-            console.log("收到联系人列表")
-            console.log(this.messages)
-            this.$store.state.unreadNum = 0
-            for (let d in res) {
-              this.messages.push(res[d])
-              this.$store.state.unreadNum += res[d].number
-            }
-            console.log(this.messages)
-          })
-        }, 100
+      () => {
+        getMessagesList({
+          srcId: this.$store.state.userId,
+        }).then(res => {
+          console.log("收到联系人列表")
+          console.log(this.messages)
+          this.$store.state.unreadNum = 0
+          for (let d in res) {
+            this.messages.push(res[d])
+            this.$store.state.unreadNum += res[d].number
+          }
+          console.log(this.messages)
+        })
+      }, 100
     )
   },
   computed: {
-    messages() {
+    messages () {
       return this.messagesList
     }
   }
