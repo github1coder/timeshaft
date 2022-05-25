@@ -77,7 +77,13 @@
             :id="'nav-'+i"
           >
             <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
+              <v-badge
+                  color="red"
+                  :value="$store.state.unreadNum !== 0 && i === 0"
+                  :content="$store.state.unreadNum"
+                >
+                <v-icon v-text="item.icon"></v-icon>
+              </v-badge>
             </v-list-item-icon>
 
             <v-list-item-content>

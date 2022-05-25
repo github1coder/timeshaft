@@ -239,6 +239,7 @@ export default {
         this.messages[idx].lastTime = payload.time
         if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
           this.messages[idx].number += 1
+          this.$store.state.unreadNum += 1
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
@@ -290,6 +291,11 @@ export default {
             time: item.time,
           }).then(res => {
             res
+
+            // TODO 完善
+            if (res) {
+              this.$store.state.unreadNum -= item.number
+            }
             console.log("have read this msg")
           })
         }
@@ -323,8 +329,10 @@ export default {
           }).then(res => {
             console.log("收到联系人列表")
             console.log(this.messages)
+            this.$store.state.unreadNum = 0
             for (let d in res) {
               this.messages.push(res[d])
+              this.$store.state.unreadNum += res[d].number
             }
             console.log(this.messages)
           })
