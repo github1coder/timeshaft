@@ -80,9 +80,11 @@ export default {
   },
   methods: {
     isSpace(message) {
+      console.log("-------------")
       let flag = true
        for (let i in message) {
-          if ((message.charAt(i) !== " ")) {
+         console.log(message[i])
+          if ((message.charAt(i) !== " " && message.charAt(i) !== "" && message.charAt(i) !== "\n")) {
             flag = false
             break
           }
