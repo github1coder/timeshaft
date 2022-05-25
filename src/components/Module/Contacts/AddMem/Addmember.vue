@@ -358,6 +358,7 @@ export default {
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
