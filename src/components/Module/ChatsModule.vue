@@ -247,6 +247,7 @@ export default {
             type: payload.type
           }).then(res => {
             res
+            this.$store.state.unreadNum -= 1
             console.log("have read this msg")
           })
         }
