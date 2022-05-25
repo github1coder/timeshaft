@@ -58,7 +58,8 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="success"
+            rounded
+            color="green lighten-3"
             width="40%"
             @click="changeNotice"
           >
@@ -67,7 +68,8 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="error"
+            rounded
+            color="red lighten-3"
             width="40%"
             @click="iShowTrue"
           >

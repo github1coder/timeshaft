@@ -21,15 +21,15 @@
       <v-card style="width: 100%;height: 100%;">
         <div style="height: 100%; width: 50%; float: left; border-right: 1px skyblue solid;">
           <div style="width: 80%; height: 90%; margin: auto;">
-            <v-card-title style="text-align: center; font-size: 40px">
-              {{data.title}}
+            <v-card-title style=" font-size: 40px; font-weight: bold; ">
+              主题：{{data.title}}
             </v-card-title>
             <v-divider></v-divider>
             <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
             <small style="text-align: left;">时间轴链接：{{data.key}}</small>
             <v-divider></v-divider>
-            <v-card-text style="text-align: left; font-size: 25px;">
+            <v-card-text style="text-align: left; font-size: 20px; font-weight: bold">
               标签:
               <v-chip
                 class="ma-2"
@@ -74,7 +74,7 @@
             <v-btn
               color="gray darken-1"
               text
-              style="font-size: 20px; margin-left: 10%; width: 80%; background-color: pink; margin-top: auto;"
+              style="font-size: 20px; margin-left: 10%; width: 80%; background-color: pink; margin-top: auto; font-weight: bold"
               @keyup.tab="close"
               @click="close"
             >
