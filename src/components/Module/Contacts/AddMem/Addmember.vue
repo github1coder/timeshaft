@@ -121,7 +121,7 @@
               clearable
               outlined
               dense
-              dark
+
               hide-details
               label="团队名字"
               v-model="textG"

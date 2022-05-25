@@ -128,7 +128,6 @@
                 clearable
                 outlined
                 dense
-                dark
                 hide-details
                 :label="labelG"
                 v-model="textG"
@@ -137,7 +136,7 @@
                 style="width: 70%; margin: auto;"
               ></v-text-field>
               <v-btn
-                style="width: 15%; height: 64%; margin: 12px 0px auto;"
+                style="width: 15%; height: 64%; margin: 12px 1px auto;"
                 @click="newGroup"
               >
                 创建

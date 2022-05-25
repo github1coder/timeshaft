@@ -235,10 +235,12 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId) {
+
+        if (this.$store.state.currentChannelId !== payload.chatId && this.$store.state.currentChatType === payload.type) {
           this.messages[idx].number += 1
           this.$store.state.unreadNum += 1
         }
+
         if (this.$store.state.currentChannelId === payload.chatId && this.$store.state.currentChatType === payload.type) {
           haveRead({
             time: payload.time,
@@ -292,7 +294,6 @@ export default {
           this.$refs.chatMessage.init()
         }, 100)
         if (item.number !== 0) {
-          item.number = 0
           haveRead({
             type: item.type,
             chatId: item.id,
@@ -303,6 +304,7 @@ export default {
             this.$store.state.unreadNum -= item.number
             console.log("have read this msg")
           })
+          item.number = 0
         }
 
         //切换会议状态
