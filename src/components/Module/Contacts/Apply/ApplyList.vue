@@ -270,6 +270,7 @@ export default {
         "type": "friend",
         "action": "accept",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
@@ -283,6 +284,7 @@ export default {
         "type": "friend",
         "action": "refuse",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
