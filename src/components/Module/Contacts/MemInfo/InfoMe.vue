@@ -1,21 +1,18 @@
 <template>
   <v-card
     height="100%"
-    dark
   >
     <v-card
       height="100%"
-      dark
       flat
       tile
     >
       <v-navigation-drawer
         permanent
         style="width: 50%; height: 100%; float: left;"
-        dark
       >
         <!-- <v-system-bar></v-system-bar> -->
-        <v-list dark>
+        <v-list >
           <v-list-item>
             <v-list-item-icon style="margin: 0px auto 0px;">
               <v-img
@@ -27,7 +24,6 @@
           <v-divider></v-divider>
           <v-list-item>
             <v-btn
-              dark
               width="50%"
               style="margin: auto;"
               @click="updateMyState"

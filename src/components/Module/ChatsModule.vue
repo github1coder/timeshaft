@@ -3,11 +3,10 @@
     <div class="sidebar">
       <div class="sb-container">
         <v-card
-            height="100%"
-            dark
-            flat
-            tile
-            class="server-info"
+          height="100%"
+          flat
+          tile
+          class="server-info"
         >
           <v-card
               height="60"
@@ -18,17 +17,16 @@
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                      clearable
-                      outlined
-                      dense
-                      dark
-                      hide-details
-                      label="请输入关键词"
-                      v-model="text"
-                      class="input-search mt-3"
-                      autocomplete="off"
-                      v-on="on"
-                      ref="search"
+                    clearable
+                    outlined
+                    dense
+                    hide-details
+                    label="请输入关键词"
+                    v-model="text"
+                    class="input-search mt-3"
+                    autocomplete="off"
+                    v-on="on"
+                    ref="search"
                   ></v-text-field>
                 </template>
                 <v-list
@@ -145,10 +143,10 @@
               :type="this.$store.state.currentChatType"
           ></InfoPage>
           <Search
-              v-else-if="tools[2].show"
-              ref="search"
-              :chatId="this.$store.state.currentChannelId"
-              :type="this.$store.state.currentChatType"
+            v-else-if="tools[2].show"
+            ref="search"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
           ></Search>
         </div>
       </div>
@@ -189,11 +187,11 @@ export default {
         text: '',
         show: false
       }, {
-        icon: 'mdi-cloud-search-outline',
+        icon: 'mdi-account-details',
         text: '',
         show: false
       }, {
-        icon: 'mdi-cog-outline',
+        icon: 'mdi-cloud-search-outline',
         text: '',
         show: false
       },

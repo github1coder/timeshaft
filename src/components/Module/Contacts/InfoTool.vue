@@ -1,7 +1,6 @@
 <template>
   <v-card style="height: 100%; width: 100%">
     <info-me
-      dark
       style="height: 100%; width: 100%; border-radius:0px;"
       v-show="about == -1"
       ref="infoMe"

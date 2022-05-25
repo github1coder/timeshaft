@@ -2,13 +2,11 @@
   <div style="width: 100%; height: 100%">
     <v-card
       style="width: 100%; height: 100%;"
-      dark
       flat
       tile
     >
       <v-card
         tile
-        dark
         style="width: 100%; overflow: auto; overflow-x: hidden"
         class="mem-info"
       >
@@ -49,14 +47,14 @@
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
-          <v-btn
+          <!-- <v-btn
             color="blue"
             class="mx-2"
             v-show="iShow && this.$store.getters.userId == this.master"
             @click="iShowFalse"
           >
             修改群公告
-          </v-btn>
+          </v-btn> -->
           <v-btn
             v-show="!iShow"
             class="mx-2"

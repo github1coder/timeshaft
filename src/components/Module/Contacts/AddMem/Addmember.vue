@@ -2,14 +2,11 @@
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
   <v-card
     style="height: 100%; width: 100%;"
-    dark
   >
     <v-card
-      dark
       style="height:100%; width:60%; margin: auto;"
     >
       <v-tabs
-        dark
         color="pink"
         left
         v-model="tab"
@@ -20,24 +17,20 @@
 
       <v-tabs-items
         v-model="tab"
-        dark
         style="flex:1; width:100%; margin: auto;"
       >
         <v-tab-item
           height="100%"
-          dark
           style="overflow: auto; overflow-x: hidden"
         >
           <v-row
             dense
-            dark
             style="width: 100%; height: 64px; margin: auto;"
           >
             <v-text-field
               clearable
               outlined
               dense
-              dark
               hide-details
               label="好友昵称/邮箱"
               v-model="textF"

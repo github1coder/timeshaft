@@ -119,7 +119,7 @@
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
         <!--        {{selected}}-->
-        <v-list three-line dark v-scroll:#scroll-target="onScroll">
+        <v-list three-line v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
               <v-list-item-avatar v-if="selecting" class="mx-0">
@@ -134,7 +134,7 @@
                     color="success"
                     fab
                     x-small
-                    dark
+
                 >
                   <v-icon>mdi-domain</v-icon>
                 </v-btn>

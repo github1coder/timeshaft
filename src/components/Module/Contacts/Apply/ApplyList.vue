@@ -2,14 +2,11 @@
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
   <v-card
     style="height: 100%; width: 100%;"
-    dark
   >
     <v-card
-      dark
       style="height:100%; width:60%; margin: auto;"
     >
       <v-tabs
-        dark
         color="pink"
         left
         v-model="tab"
@@ -20,12 +17,10 @@
 
       <v-tabs-items
         v-model="tab"
-        dark
         style="flex:1; width:100%; margin: auto;"
       >
         <v-tab-item
           height="100%"
-          dark
           style="overflow: auto; overflow-x: hidden"
         >
           <v-card
