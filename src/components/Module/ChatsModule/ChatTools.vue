@@ -1,8 +1,7 @@
 <template>
   <div class="members hidden-sm-and-down">
-    <v-card dark>
+    <v-card>
       <v-list
-        dark
         v-for="(item, i) in tools"
         :key="i"
       >

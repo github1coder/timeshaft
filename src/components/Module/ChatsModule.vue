@@ -4,7 +4,6 @@
       <div class="sb-container">
         <v-card
           height="100%"
-          dark
           flat
           tile
           class="server-info"
@@ -21,7 +20,6 @@
                     clearable
                     outlined
                     dense
-                    dark
                     hide-details
                     label="请输入关键词"
                     v-model="text"
@@ -55,7 +53,7 @@
             <v-list
               width="100%"
               rounded
-              max-height="80px"
+              max-height="100px"
             >
               <v-list-item-group
                 color="primary"
@@ -69,44 +67,52 @@
                 >
                   <v-list-item-avatar v-if="item.isMeeting">
                     <v-badge
-                        color="green"
-                        content="开会中">
-                      <v-img
+                      avatar
+                      dot
+                      bottom
+                      color="green"
+                      overlap
+                    >
+                      <v-avatar size="30">
+                        <v-img
                           v-if="item.type==='friend'"
-                          max-height="70px"
-                          max-width="50px"
                           :src="item.chatAvatar"
-                      ></v-img>
-                      <v-avatar v-else-if="item.type==='group'">
-                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
+                        ></v-img>
+                        <span
+                          v-else-if="item.type==='group'"
+                          class="white--text text-h5"
+                        >{{ item.chatName[0] }}</span>
                       </v-avatar>
                     </v-badge>
                   </v-list-item-avatar>
                   <v-list-item-avatar v-else>
+                    <v-avatar size="30">
                       <v-img
-                          v-if="item.type==='friend'"
-                          max-height="70px"
-                          max-width="50px"
-                          :src="item.chatAvatar"
+                        v-if="item.type==='friend'"
+                        :src="item.chatAvatar"
                       ></v-img>
-                      <v-avatar v-else-if="item.type==='group'">
-                        <span class="white--text text-h5">{{ item.chatName[0] }}</span>
-                      </v-avatar>
+                      <span
+                        v-else-if="item.type==='group'"
+                        class="white--text text-h5"
+                      >{{ item.chatName[0] }}</span>
+                    </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title
                       class="channel-title"
                       v-text="item.chatName"
                     ></v-list-item-title>
-                    <v-list-item-content style="text-align: left; font-size: 5px"> {{item.number > 0? ("[未读 " + (item.number).toString() +" 条]") : ""  }} {{item.lastMessage.msg}}</v-list-item-content>
+                    <v-list-item-content style="text-align: left; font-size: 5px">
+                      {{ item.number > 0 ? ("[未读 " + (item.number).toString() + " 条]") : "" }}
+                      {{ item.lastMessage.msg }}
+                    </v-list-item-content>
                   </v-list-item-content>
                   <v-list-item-content
                     style="text-align: right; font-size: 1px"
                     v-if="item.lastMessage !== null > 0"
                   >
-                    {{item.lastMessage.time}}
+                    {{ item.lastMessage.time }}
                   </v-list-item-content>
-
                 </v-list-item>
               </v-list-item-group>
             </v-list>
@@ -175,6 +181,7 @@ import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
 import Search from "@/components/Module/ChatsModule/ChatTools/Search"
 import { getMessagesList, haveRead } from "@/api/message";
+
 export default {
   name: "ChatsModule",
   components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool },
@@ -186,11 +193,11 @@ export default {
         text: '',
         show: false
       }, {
-        icon: 'mdi-cloud-search-outline',
+        icon: 'mdi-account-details',
         text: '',
         show: false
       }, {
-        icon: 'mdi-cog-outline',
+        icon: 'mdi-cloud-search-outline',
         text: '',
         show: false
       },
@@ -234,8 +241,22 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
+
+        if (this.$store.state.currentChannelId !== payload.chatId && this.$store.state.currentChatType === payload.type) {
           this.messages[idx].number += 1
+          this.$store.state.unreadNum += 1
+        }
+
+        if (this.$store.state.currentChannelId === payload.chatId && this.$store.state.currentChatType === payload.type) {
+          haveRead({
+            time: payload.time,
+            userId: payload.userId,
+            chatId: payload.chatId,
+            type: payload.type
+          }).then(res => {
+            res
+            console.log("have read this msg")
+          })
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
@@ -269,6 +290,9 @@ export default {
     selectChannel (id, idx, item) {
       //关闭工具栏
       this.toolsDrawer = false
+      this.tools[0].show = false
+      this.tools[1].show = false
+      this.tools[2].show = false
       console.log(id)
       console.log(item)
       if (idx !== this.$store.state.currentChannelIdx) {
@@ -279,7 +303,6 @@ export default {
           this.$refs.chatMessage.init()
         }, 100)
         if (item.number !== 0) {
-          item.number = 0
           haveRead({
             type: item.type,
             chatId: item.id,
@@ -287,8 +310,13 @@ export default {
             time: item.time,
           }).then(res => {
             res
+            console.log(this.$store.state.unreadNum)
+            this.$store.state.unreadNum -= item.number
+            console.log(this.$store.state.unreadNum)
             console.log("have read this msg")
+            item.number = 0
           })
+
         }
 
         //切换会议状态
@@ -297,8 +325,7 @@ export default {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
           console.log("会议状态：开始=>关闭")
           this.$refs.timeTool.endOk(false)
-        }
-        else {
+        } else {
           console.log("会议状态：关闭=>开始")
           this.$refs.timeTool.tryOk(false)
         }
@@ -321,8 +348,10 @@ export default {
         }).then(res => {
           console.log("收到联系人列表")
           console.log(this.messages)
+          this.$store.state.unreadNum = 0
           for (let d in res) {
             this.messages.push(res[d])
+            this.$store.state.unreadNum += res[d].number
           }
           console.log(this.messages)
         })

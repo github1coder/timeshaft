@@ -1,24 +1,29 @@
 <template>
   <div>
     <v-btn
-      style="position: fixed; top: 1rem; right:15rem"
+      style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
       v-if="start"
       @click="tryBegin"
+      rounded
+      color="blue-grey lighten-2"
       :disabled="disabled"
     >{{hint}}
     </v-btn>
     <v-btn
-      style="position: fixed; top: 1rem; right:15rem"
+      style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
       v-if="!start"
       @click="endTime"
+      rounded
+      color="green lighten-3"
       :disabled="disabled"
     >{{hint}}
     </v-btn>
     <v-chip
       color="pink"
+      roun
       label
       text-color="white"
-      style="position: fixed; top: 1rem; right:25rem"
+      style="position: fixed; top: 0.6rem; right:25rem; font-weight: bold"
       v-if="meeting"
     >
       <v-icon left>mdi-label</v-icon>
@@ -52,8 +57,8 @@ export default {
       dialog: false,
       meeting: false,
       disabled: false,
-      hint: "开启时间轴",
-      state: "会议中"
+      hint: "开启事件",
+      state: "事件中"
     }
   },
 
@@ -68,7 +73,7 @@ export default {
 
     tryOk (intervel) {
       if (!this.timer && intervel) {
-        this.state = "正在加入会议"
+        this.state = "正在加入事件"
         this.count = 1
         this.disabled = true
         this.timer = setInterval(() => {
@@ -79,14 +84,14 @@ export default {
             this.disabled = false
             clearInterval(this.timer)
             this.timer = null
-            this.hint = "结束时间轴"
-            this.state = "会议中"
+            this.hint = "结束事件"
+            this.state = "事件中"
           }
         }, 1000)
       }
       else {
-        this.hint = "结束时间轴"
-        this.state = "会议中"
+        this.hint = "结束事件"
+        this.state = "事件中"
       }
       this.dialog = false
       this.start = false
@@ -95,7 +100,7 @@ export default {
 
     endOk (intervel) {
       if (!this.timer && intervel) {
-        this.state = "正在退出会议"
+        this.state = "正在退出事件"
         this.count = 1
         this.disabled = true
         this.timer = setInterval(() => {
@@ -106,15 +111,15 @@ export default {
             this.disabled = false
             clearInterval(this.timer)
             this.timer = null
-            this.hint = "开始时间轴"
-            this.state = "会议中"
+            this.hint = "开启事件"
+            this.state = "事件中"
             this.meeting = false
           }
         }, 1000)
       }
       else {
-        this.hint = "开始时间轴"
-        this.state = "会议中"
+        this.hint = "开启事件"
+        this.state = "事件中"
         this.meeting = false
       }
       this.dialog = false

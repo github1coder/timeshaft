@@ -4,8 +4,6 @@ on:
   push:
     # 分支
     branches: [ front_dev ]
-  pull_request:
-    branches: [ front_dev ]
 
 jobs:
   compile:

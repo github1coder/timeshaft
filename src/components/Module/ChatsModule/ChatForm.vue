@@ -44,13 +44,11 @@
         </v-btn>
       </div>
       <v-textarea
-          class="mx-5  chat-form-tf"
           label="这边输入消息捏~"
-          flat
-          clearable
+          light
           solo
+          height="50px"
           v-model="inputMsg"
-          autocomplete="off"
           @keyup.enter="sendChat(inputMsg)"
       >
       </v-textarea>
@@ -80,7 +78,7 @@ export default {
     isSpace(message) {
       let flag = true
        for (let i in message) {
-          if (!message.charAt(i).isSpace()) {
+          if ((message.charAt(i) !== " " && message.charAt(i) !== "" && message.charAt(i) !== "\n")) {
             flag = false
             break
           }
@@ -89,7 +87,7 @@ export default {
     },
     sendChat(message) {
       if (this.isSpace(message)) {
-        alert("")
+        this.clearMsg()
       } else {
         let name = this.$store.state.myNick
         let avatar = this.$store.state.myIcon

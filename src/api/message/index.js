@@ -52,7 +52,7 @@ export function getListenerList(param) {
 export function searchHistory(param) {
     return request({
         url: '/message/searchHistory',
-        method: 'post',
-        data: param
+        method: 'get',
+        params: param
     })
 }

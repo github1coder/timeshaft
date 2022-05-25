@@ -1,15 +1,13 @@
 <template>
   <v-row  class="fill-height" style="">
     <v-col>
-      <v-sheet dark height="64">
+      <v-sheet height="64" dark>
         <v-toolbar
             flat
-            dark
         >
           <v-btn
               outlined
               class="mr-4"
-              dark
               @click="setToday"
           >
             Today
@@ -18,7 +16,6 @@
               fab
               text
               small
-              dark
               @click="prev"
           >
             <v-icon small>
@@ -29,7 +26,6 @@
               fab
               text
               small
-              dark
               @click="next"
           >
             <v-icon small>
@@ -41,13 +37,11 @@
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
-              dark
               bottom
               right
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                  dark
                   outlined
                   v-bind="attrs"
                   v-on="on"
@@ -58,7 +52,7 @@
                 </v-icon>
               </v-btn>
             </template>
-            <v-list dark>
+            <v-list color="blue-grey lighten-4">
               <v-list-item @click="type = 'day'">
                 <v-list-item-title>Day</v-list-item-title>
               </v-list-item>
@@ -75,7 +69,7 @@
           </v-menu>
         </v-toolbar>
       </v-sheet>
-      <v-sheet dark height="600">
+      <v-sheet  height="600" color="blue-grey lighten-3">
         <v-calendar
             ref="calendar"
             v-model="focus"
@@ -122,7 +116,7 @@
             <v-card-actions>
               <v-btn
                   text
-                  color="secondary"
+                  color="white"
                   @click="selectedOpen = false"
               >
                 Cancel

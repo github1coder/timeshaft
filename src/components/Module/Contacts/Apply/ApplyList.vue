@@ -1,31 +1,22 @@
 <template>
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
-  <v-card
-    style="height: 100%; width: 100%;"
-    dark
-  >
-    <v-card
-      dark
-      style="height:100%; width:60%; margin: auto;"
-    >
+  <v-card style="height: 100%; width: 100%;">
+    <v-card style="height:100%; width:60%; margin: auto;">
       <v-tabs
-        dark
         color="pink"
         left
         v-model="tab"
       >
-        <v-tab>好友邀请</v-tab>
+        <v-tab>好友申请</v-tab>
         <v-tab>团队邀请</v-tab>
       </v-tabs>
 
       <v-tabs-items
         v-model="tab"
-        dark
         style="flex:1; width:100%; margin: auto;"
       >
         <v-tab-item
           height="100%"
-          dark
           style="overflow: auto; overflow-x: hidden"
         >
           <v-card
@@ -40,7 +31,7 @@
                 style="margin: auto;"
                 v-show="showF"
               >
-                暂无好友邀请
+                暂无好友申请
               </v-card-title>
             </v-row>
             <v-divider style="margin-top: 10px;"></v-divider>
@@ -65,12 +56,16 @@
                   <v-row style="width: 10%;">
                     <v-btn
                       small
+                      rounded
+                      color="green lighten-3"
                       @click="acF(j + num * (pageF - 1))"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
                     <v-btn
                       small
+                      rounded
+                      color="red lighten-3"
                       @click="reF(j + num * (pageF - 1))"
                     >
                       <v-icon>mdi-close-thick</v-icon>
@@ -146,12 +141,16 @@
                   <v-row style="width: 10%;">
                     <v-btn
                       small
+                      rounded
+                      color="green lighten-3"
                       @click="acG(j + num * (pageG - 1))"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
                     <v-btn
                       small
+                      rounded
+                      color="red lighten-3"
                       @click="reG(j + num * (pageG - 1))"
                     >
                       <v-icon>mdi-close-thick</v-icon>
@@ -271,6 +270,7 @@ export default {
         "type": "friend",
         "action": "accept",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
@@ -284,6 +284,7 @@ export default {
         "type": "friend",
         "action": "refuse",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
@@ -296,6 +297,7 @@ export default {
         "type": "group",
         "action": "accept",
         "id": this.groupAns[index].group_id,
+        "memId": this.groupAns[index].id,
       }
       ).then(res => {
         console.log(res)
@@ -308,6 +310,7 @@ export default {
         "type": "group",
         "action": "refuse",
         "id": this.groupAns[index].group_id,
+        "memId": this.groupAns[index].id,
       }
       ).then(res => {
         console.log(res)

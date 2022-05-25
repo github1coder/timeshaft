@@ -27,7 +27,6 @@
     <div style="height:7%;">
       <v-bottom-navigation
         color="blue"
-        dark
         mandatory
         height="100%"
         grow

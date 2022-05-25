@@ -2,13 +2,11 @@
   <div style="width: 100%; height: 100%">
     <v-card
       style="width: 100%; height: 100%;"
-      dark
       flat
       tile
     >
       <v-card
         tile
-        dark
         style="width: 100%; overflow: auto; overflow-x: hidden"
         class="mem-info"
       >
@@ -16,7 +14,6 @@
         <v-navigation-drawer
           permanent
           style="width: 100%;"
-          dark
         >
           <!-- <v-system-bar></v-system-bar> -->
           <!-- <v-list-item>
@@ -36,10 +33,11 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-          <v-card style="font-size: 50px;">
+          <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
             {{this.nameG}}
           </v-card>
           <v-textarea
+              background-color="grey lighten-3"
             :disabled="iShow"
             filled
             auto-grow
@@ -49,18 +47,19 @@
             row-height="40"
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
-          <v-btn
+          <!-- <v-btn
             color="blue"
             class="mx-2"
             v-show="iShow && this.$store.getters.userId == this.master"
             @click="iShowFalse"
           >
             修改群公告
-          </v-btn>
+          </v-btn> -->
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="success"
+            rounded
+            color="green lighten-3"
             width="40%"
             @click="changeNotice"
           >
@@ -69,7 +68,8 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="error"
+            rounded
+            color="red lighten-3"
             width="40%"
             @click="iShowTrue"
           >
@@ -203,7 +203,7 @@
               </v-card>
             </v-list-group>
           </v-list>
-          <div
+          <!-- <div
             v-for="(item, j) in friends"
             :key=j
             style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
@@ -215,7 +215,7 @@
               ></v-img>
               <span>{{item.name.slice(0,5)}}</span>
             </div>
-          </div>
+          </div> -->
           <!-- <v-card style="width: 100%; height:10%;">
             <v-btn
               v-show="isMaster() && !this.kill"

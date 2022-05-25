@@ -1,27 +1,27 @@
 <template>
   <v-card
-    dark
     style="height: 100%; width: 100%"
   >
     <v-row
       dense
-      dark
       style="width: 100%; height: 64px; margin: auto;"
     >
       <v-text-field
         clearable
         outlined
         dense
-        dark
         hide-details
+        light
         v-model="text"
-        class="input-search mt-3"
         autocomplete="off"
+        background-color="grey"
         style="width: 70%; margin: auto;"
       ></v-text-field>
       <v-btn
         style="width: 15%; height: 64%; margin: 12px 0px auto;"
-        @click="searchHistory"
+        rounded
+        color="brown lighten-5"
+        @click="search"
       >
         <!-- <v-icon style="width: 100%; height: 100%;">
           mdi-magnify
@@ -29,10 +29,13 @@
         搜索
       </v-btn>
     </v-row>
-    <span>{{feedback}}</span>
+    <h1
+      v-text="feedback"
+      v-if="!show"
+    ></h1>
     <div style="height: 100%; width: 100%;">
       <History
-        v-if="show"
+        v-if="this.show"
         :messages="this.messages"
       >
       </History>
@@ -66,18 +69,20 @@ export default {
         return
       }
       const that = this
+      that.show = false
       searchHistory({
         "chatId": this.chatId,
         "type": this.type,
         "text": this.text,
       }).then(res => {
         console.log("获得查询结果")
-        if (res == null || res == []) {
+        if (!res[0]) {
           that.feedback = "无相关记录"
+          that.show = false
         }
         else {
           that.feedback = ""
-          that.message = res
+          that.messages = res
           that.show = true
         }
 

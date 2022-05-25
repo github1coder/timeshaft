@@ -1,7 +1,6 @@
 <template>
   <nav class="guilds">
     <v-card
-      dark
       flat
       tile
       width="100%"
@@ -46,7 +45,7 @@
                     text
                     @click="editAccount"
                   >
-                    Edit Account
+                    编辑信息
                   </v-btn>
                   <v-divider class="my-3"></v-divider>
                   <v-btn
@@ -55,7 +54,7 @@
                     text
                     @click="disconnect"
                   >
-                    Disconnect
+                    退出登录
                   </v-btn>
                 </div>
               </v-list-item-content>
@@ -77,12 +76,16 @@
             :id="'nav-'+i"
           >
             <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
+              <v-badge
+                  color="red"
+                  :value="$store.state.unreadNum !== 0 && i === 0"
+                  :content="$store.state.unreadNum"
+                >
+                  <v-icon v-text="item.icon"></v-icon>
+                  <v-list-item-title v-text="item.text" style="font-size: 5px"></v-list-item-title>
+              </v-badge>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title v-text="item.text"></v-list-item-title>
-            </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -100,16 +103,16 @@ export default {
       model: 0,
       navs: [{
         icon: 'mdi-message-text',
-        text: '',
+        text: '消息栏',
       }, {
         icon: 'mdi-account-box-multiple-outline',
-        text: '',
+        text: '通讯录',
       }, {
         icon: 'mdi-file-document-multiple-outline',
-        text: '',
+        text: '文件夹',
       }, {
         icon: 'mdi-calendar-check',
-        text: '',
+        text: '日历表',
       },],
     }
   },

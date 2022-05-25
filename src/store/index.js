@@ -35,6 +35,7 @@ export default new Vuex.Store({
         currentChatMore: null,
         currentChatName: null,
         currentChatFirst: null,
+        unreadNum: null,
     },
     getters: {
         userId: state => state.userId,

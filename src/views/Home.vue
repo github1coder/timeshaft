@@ -1,6 +1,6 @@
 <template>
   <div class="dc-container">
-    <Navigations></Navigations>
+    <Navigations ></Navigations>
     <div class="base">
       <ChatsModule
         ref="chatModule"
@@ -42,7 +42,7 @@ export default {
   },
   data () {
     return {
-
+      number: 0,
     }
   },
   created () {
@@ -72,6 +72,9 @@ export default {
       }, 300)
     }
     this.socketInit()
+
+  },
+  computed: {
 
   },
   methods: {
@@ -151,8 +154,8 @@ export default {
                     })
                     if (idx !== -1) {
                       this.$refs.chatModule.messages[idx].isMeeting = json.isMeeting
-                      if (that.$store.state.currentChannelId == this.$refs.chatModule.messages[idx].id) {
-                        if (json.isMeeting == false) {
+                      if (that.$store.state.currentChannelId === this.$refs.chatModule.messages[idx].id) {
+                        if (json.isMeeting === false) {
                           console.log("会议状态：开始=>关闭")
                           this.$refs.chatModule.$refs.timeTool.endOk(true)
                         }

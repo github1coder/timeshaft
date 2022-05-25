@@ -119,7 +119,7 @@
     <div class="messages" id="scroll-target">
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
         <!--        {{selected}}-->
-        <v-list three-line dark v-scroll:#scroll-target="onScroll">
+        <v-list three-line v-scroll:#scroll-target="onScroll">
           <template v-for="(message, i) in messages" class="chat-list">
             <v-list-item :key="i" class="chat-list-item">
               <v-list-item-avatar v-if="selecting" class="mx-0">
@@ -134,7 +134,7 @@
                     color="success"
                     fab
                     x-small
-                    dark
+
                 >
                   <v-icon>mdi-domain</v-icon>
                 </v-btn>
@@ -328,16 +328,9 @@ export default {
       }
     },
     selecting(newVal, oldVal) {
-      if (!newVal && oldVal) {
+      if (!newVal && oldVal && this.selected.length !== 0) {
         console.log("填写timeShaft信息")
         this.dialog = true
-        // genTimeShaftFromMessages({
-        //   msgIds: this.selected,
-        //   chatId: this.$store.state.currentChannelId,
-        //   userId: this.$store.state.userId,
-        // }).then(res => {
-        //   console.log(res)
-        // })
       }
     },
 
