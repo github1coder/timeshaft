@@ -328,16 +328,9 @@ export default {
       }
     },
     selecting(newVal, oldVal) {
-      if (!newVal && oldVal) {
+      if (!newVal && oldVal && this.selected.length !== 0) {
         console.log("填写timeShaft信息")
         this.dialog = true
-        // genTimeShaftFromMessages({
-        //   msgIds: this.selected,
-        //   chatId: this.$store.state.currentChannelId,
-        //   userId: this.$store.state.userId,
-        // }).then(res => {
-        //   console.log(res)
-        // })
       }
     },
 

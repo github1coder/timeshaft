@@ -235,9 +235,20 @@ export default {
       if (idx !== -1) {
         console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
-        if (this.$store.state.userId !== payload.userId && this.$store.state.currentChannelId !== payload.chatId) {
+        if (this.$store.state.userId !== payload.userId) {
           this.messages[idx].number += 1
           this.$store.state.unreadNum += 1
+        }
+        if (this.$store.state.currentChannelId === payload.chatId && this.$store.state.currentChatType === payload.type) {
+          haveRead({
+            time: payload.time,
+            userId: payload.userId,
+            chatId: payload.chatId,
+            type: payload.type
+          }).then(res => {
+            res
+            console.log("have read this msg")
+          })
         }
         this.messages[idx].lastMessage = {
           msg: payload.msg,
@@ -289,11 +300,7 @@ export default {
             time: item.time,
           }).then(res => {
             res
-
-            // TODO 完善
-            if (res) {
-              this.$store.state.unreadNum -= item.number
-            }
+            this.$store.state.unreadNum -= item.number
             console.log("have read this msg")
           })
         }
