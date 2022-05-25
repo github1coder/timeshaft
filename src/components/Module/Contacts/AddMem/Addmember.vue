@@ -1,11 +1,7 @@
 <template>
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
-  <v-card
-    style="height: 100%; width: 100%;"
-  >
-    <v-card
-      style="height:100%; width:60%; margin: auto;"
-    >
+  <v-card style="height: 100%; width: 100%;">
+    <v-card style="height:100%; width:60%; margin: auto;">
       <v-tabs
         color="pink"
         left
@@ -39,7 +35,9 @@
               style="width: 70%; margin: auto;"
             ></v-text-field>
             <v-btn
-              style="width: 15%; height: 64%; margin: 12px 0px auto;"
+              style="width: 10%; height: 64%; margin: 12px 8px auto; "
+              rounded
+              color="brown lighten-5"
               @click="searchFriend"
             >
               <v-icon style="width: 100%; height: 100%;">
@@ -49,12 +47,15 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
+              class="white--text"
+              rounded
             style="width: 100%; margin-top: 20px;"
-            color=blue
+            color="blue-grey"
             @click="findmore('friend')"
             v-if="isMore"
           >
-            发现周围
+            发现周围用户
+            <v-icon right dark >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -67,6 +68,7 @@
               v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
               :key="j + num * (pageF - 1)"
               @click="method1"
+              two-line
             >
               <v-list-item-avatar>
                 <v-img :src="subItem.photo"></v-img>
@@ -81,6 +83,8 @@
               <v-list-item-action>
                 <v-btn
                   small
+                  rounded
+                  color="brown lighten-5"
                   @click="newApplyF(j + num * (pageF - 1))"
                   :disabled="subItem.show"
                 >
@@ -123,7 +127,6 @@
               clearable
               outlined
               dense
-
               hide-details
               label="团队名字"
               v-model="textG"
@@ -132,8 +135,10 @@
               style="width: 70%; margin: auto;"
             ></v-text-field>
             <v-btn
-              style="width: 15%; height: 64%; margin: 12px 0px auto;"
+              style="width: 10%; height: 64%; margin: 12px 8px;"
               @click="searchGroup"
+              rounded
+              color="brown lighten-5"
             >
               <v-icon style="width: 100%; height: 100%;">
                 mdi-magnify
@@ -142,12 +147,15 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
+              class="white--text"
+              rounded
             style="width: 100%; margin-top: 20px;"
-            color=blue
+            color="blue-grey"
             @click="findmore('group')"
             v-if="isMore"
           >
-            发现周围
+            发现周围团队
+            <v-icon right dark >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -169,11 +177,14 @@
                   v-text="subItem.name"
                   style="text-align: left"
                 ></v-list-item-title>
+                <v-list-item-subtitle style="text-align: left">{{subItem.master}}创建的团队</v-list-item-subtitle>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
                 <v-btn
                   small
+                  rounded
+                  color="brown lighten-5"
                   @click="newApplyG(j + num * (pageG - 1))"
                   :disabled="subItem.show"
                 >
@@ -361,6 +372,7 @@ export default {
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
+        "memId": -1
       }
       ).then(res => {
         console.log(res)
@@ -372,6 +384,7 @@ export default {
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
+        "memId": this.$store.state.userId
       }
       ).then(res => {
         console.log(res)

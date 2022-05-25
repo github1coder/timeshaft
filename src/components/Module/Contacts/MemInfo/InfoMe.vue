@@ -25,7 +25,9 @@
           <v-list-item>
             <v-btn
               width="50%"
-              style="margin: auto;"
+              color="blue-grey lighten-4"
+              rounded
+              style="margin: auto; font-size: 15px; font-weight: bold"
               @click="updateMyState"
               :disabled="isState"
             >
@@ -90,21 +92,27 @@
           <v-list-item>
             <div style="width: 100%;">
               <v-btn
-                class="mx-2"
-                color="blue"
+                class="mx-2 white--text"
                 width="40%"
+                color="blue-grey"
                 @click="newCheckCode"
+                style="[disabled]{
+                  color: white !important;
+
+                }"
                 :disabled="loadingCheckCode"
               >
                 {{hint}}
+                <v-icon right dark small>mdi-send</v-icon>
               </v-btn>
               <v-btn
-                class="mx-2"
-                color="blue"
+                  class="ma-2 white--text"
+                  color="blue-grey"
                 width="40%"
                 @click="changePassword"
               >
                 确定
+                <v-icon right dark small>mdi-account-arrow-up-outline</v-icon>
               </v-btn>
             </div>
             <span>{{msg}}</span>
@@ -135,11 +143,13 @@
                 autocomplete="off"
                 style="width: 70%; margin: auto;"
               ></v-text-field>
-              <v-btn
-                style="width: 15%; height: 64%; margin: 12px 1px auto;"
+              <v-btn class="ma-2 white--text"
+                style="width: 15%; height: 64%; margin: 12px 0.25px auto;"
+                color="blue-grey"
                 @click="newGroup"
               >
                 创建
+                <v-icon right dark>mdi-account-group-outline</v-icon>
               </v-btn>
             </v-row>
           </v-list-item>
@@ -168,7 +178,7 @@ export default {
       valid: true,
       type: "password",
       msg: "",
-      state: "公开",
+      state: "公开个人信息",
       isState: false,
       rules: {
         password: [
@@ -188,7 +198,7 @@ export default {
   },
 
   mounted () {
-    this.state = this.$store.state.state ? "公开" : "未公开"
+    this.state = this.$store.state.state ? "公开个人信息" : "未公开个人信息"
   },
 
   methods: {
@@ -212,7 +222,7 @@ export default {
             this.isState = false
             clearInterval(this.timer)
             this.timer = null
-            this.state = this.$store.state.state ? "公开" : "未公开"
+            this.state = this.$store.state.state ? "公开个人信息" : "未公开个人信息"
           }
         }, 1000)
       }

@@ -1,7 +1,7 @@
 <template>
   <div
-    style="height: 100%; weight: 100%;"
-    class="one"
+    class="mem-info"
+    style="height: 90%; weight: 100%;"
   >
     <v-list three-line>
       <v-list-item

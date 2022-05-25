@@ -37,9 +37,10 @@
             <v-divider>
             </v-divider>
             <v-btn
-              dark
+                color="blue-grey lighten-4"
+                rounded
               width="50%"
-              style="margin: auto;"
+              style="margin: auto;font-size: 15px; font-weight: bold"
               @click="updateState()"
               :disabled="isState"
               v-show="isMaster()"
@@ -58,8 +59,10 @@
             style="margin: 20px 20px 0px 20px;"
           ></v-textarea>
           <v-btn
-            color="blue"
             class="mx-2"
+            color="deep-orange lighten-4"
+            rounded
+            style="font-size: 15px; font-weight: bold;"
             v-show="iShow && this.$store.getters.userId == this.master"
             @click="iShowFalse"
           >
@@ -68,8 +71,10 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="success"
+            rounded
+            color="green lighten-3"
             width="40%"
+            style="font-size: 15px; font-weight: bold;"
             @click="changeNotice"
           >
             确认
@@ -77,8 +82,10 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="error"
+            rounded
+            color="red lighten-3"
             width="40%"
+            style="font-size: 15px; font-weight: bold;"
             @click="iShowTrue"
           >
             取消
@@ -216,6 +223,8 @@
             <v-btn
               v-show="isMaster() && !this.kill"
               @click="showKill"
+              rounded
+              style="margin-top: 20px;font-weight: bold"
               color="error"
             >
               解散群聊
@@ -225,17 +234,21 @@
               v-show="kill"
             >
               <v-btn
-                class="mx-2"
-                color="blue"
+                class="mx-2 white--text"
+                color="red lighten-3"
+                rounded
                 width="40%"
+                style="margin-top: 20px;font-weight: bold;"
                 @click="subGroup"
               >
                 确认解散
               </v-btn>
               <v-btn
-                class="mx-2"
+                class="mx-2 white--text"
                 color="blue"
+                rounded
                 width="40%"
+                style="margin-top: 20px;font-weight: bold"
                 @click="showKill"
               >
                 取消
@@ -280,7 +293,7 @@ export default {
         method: 'subSubMaster'
       },],
 
-      stateText: "公开",
+      stateText: "公开团队信息",
       isState: false,
     };
   },
@@ -318,7 +331,7 @@ export default {
             this.isState = false
             clearInterval(this.timer)
             this.timer = null
-            here.stateText = that.groups[that.indexG].state ? "公开" : "未公开"
+            here.stateText = that.groups[that.indexG].state ? "公开团队信息" : "未公开团队信息"
           }
         }, 1000)
       }
@@ -329,7 +342,7 @@ export default {
       this.nameG = nameG
       this.master = master
       this.notice = notice
-      this.stateText = state ? "公开" : "未公开"
+      this.stateText = state ? "公开团队信息" : "未公开团队信息"
     },
 
 
@@ -339,7 +352,7 @@ export default {
       updateGroup({
         "id": parseInt(this.$parent.$parent.id),
         "name": this.nameG,
-        "state": this.stateText == "公开" ? true : false,
+        "state": this.stateText == "公开团队信息" ? true : false,
         "notice": this.notice
       }).then(res => {
         console.log("修改群公告成功")

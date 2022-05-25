@@ -58,7 +58,8 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="success"
+            rounded
+            color="green lighten-3"
             width="40%"
             @click="changeNotice"
           >
@@ -67,7 +68,8 @@
           <v-btn
             v-show="!iShow"
             class="mx-2"
-            color="error"
+            rounded
+            color="red lighten-3"
             width="40%"
             @click="iShowTrue"
           >
@@ -201,7 +203,7 @@
               </v-card>
             </v-list-group>
           </v-list>
-          <div
+          <!-- <div
             v-for="(item, j) in friends"
             :key=j
             style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
@@ -213,7 +215,7 @@
               ></v-img>
               <span>{{item.name.slice(0,5)}}</span>
             </div>
-          </div>
+          </div> -->
           <!-- <v-card style="width: 100%; height:10%;">
             <v-btn
               v-show="isMaster() && !this.kill"

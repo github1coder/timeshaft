@@ -1,6 +1,7 @@
 <template>
   <v-card
       class="chat-header"
+      dark
       tile
   >
     <div
