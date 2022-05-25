@@ -113,6 +113,7 @@ public class FriendOp {
                 map.put("id", group.getId().toString());
                 map.put("name", group.getName());
                 map.put("photo", group.getPhoto());
+                map.put("master", userService.queryById(group.getMasterId()).getUsername());
                 ans.add(map);
             }
         } else {
@@ -138,6 +139,7 @@ public class FriendOp {
                 map.put("id", user.getId().toString());
                 map.put("name", user.getUsername());
                 map.put("photo", user.getPhoto());
+                map.put("master", "null");
                 ans.add(map);
             }
         }
