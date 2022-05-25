@@ -405,7 +405,7 @@ export default {
 
     downPageF () {
       this.initBtns()
-      if (this.pageF != 1) {
+      if (this.pageF != 1 && this.pageF != 0) {
         this.pageF -= 1
       }
     },
