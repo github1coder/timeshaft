@@ -1,11 +1,7 @@
 <template>
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
-  <v-card
-    style="height: 100%; width: 100%;"
-  >
-    <v-card
-      style="height:100%; width:60%; margin: auto;"
-    >
+  <v-card style="height: 100%; width: 100%;">
+    <v-card style="height:100%; width:60%; margin: auto;">
       <v-tabs
         color="pink"
         left
@@ -299,6 +295,7 @@ export default {
         "type": "group",
         "action": "accept",
         "id": this.groupAns[index].group_id,
+        "memId": this.groupAns[index].id,
       }
       ).then(res => {
         console.log(res)
@@ -311,6 +308,7 @@ export default {
         "type": "group",
         "action": "refuse",
         "id": this.groupAns[index].group_id,
+        "memId": this.groupAns[index].id,
       }
       ).then(res => {
         console.log(res)

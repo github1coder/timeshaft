@@ -1,11 +1,7 @@
 <template>
   <!-- <div style="overflow: auto; overflow-x: hidden; height: 100%; width: 100%;"> -->
-  <v-card
-    style="height: 100%; width: 100%;"
-  >
-    <v-card
-      style="height:100%; width:60%; margin: auto;"
-    >
+  <v-card style="height: 100%; width: 100%;">
+    <v-card style="height:100%; width:60%; margin: auto;">
       <v-tabs
         color="pink"
         left
@@ -72,6 +68,7 @@
               v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
               :key="j + num * (pageF - 1)"
               @click="method1"
+              two-line
             >
               <v-list-item-avatar>
                 <v-img :src="subItem.photo"></v-img>
@@ -130,7 +127,6 @@
               clearable
               outlined
               dense
-
               hide-details
               label="团队名字"
               v-model="textG"
@@ -181,6 +177,7 @@
                   v-text="subItem.name"
                   style="text-align: left"
                 ></v-list-item-title>
+                <v-list-item-subtitle style="text-align: left">{{subItem.master}}创建的团队</v-list-item-subtitle>
               </v-list-item-content>
               <!-- 后面的省略号 -->
               <v-list-item-action>
@@ -386,6 +383,7 @@ export default {
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
+        "memId": this.$store.state.userId
       }
       ).then(res => {
         console.log(res)
