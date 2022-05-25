@@ -1,13 +1,13 @@
 package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.annotation.PermissionAnnotation;
-import com.timeshaft.after_end.entity.Group;
-import com.timeshaft.after_end.entity.GroupHeat;
-import com.timeshaft.after_end.entity.GroupUser;
-import com.timeshaft.after_end.entity.User;
+import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
+import com.timeshaft.after_end.service.impl.GroupMessageServiceImpl;
+import com.timeshaft.after_end.service.impl.GroupMessageStateServiceImpl;
+import com.timeshaft.after_end.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GroupOp {
@@ -25,6 +26,12 @@ public class GroupOp {
     private GroupUserService groupUserService;
     @Autowired
     private GroupHeatService groupHeatService;
+    @Autowired
+    private UserServiceImpl userService;
+    @Autowired
+    private GroupMessageServiceImpl groupMessageService;
+    @Autowired
+    private GroupMessageStateServiceImpl groupMessageStateService;
 
     @Value("${groupIdentity.manager}")
     private String MANAGER;
@@ -36,15 +43,30 @@ public class GroupOp {
     private String ACCEPT;
     @Value("${type.groupType}")
     private String GROUP;
-
+    @Value("${type.messageRead}")
+    private String READ;
+    @Value("${type.messageNotRead}")
+    private String UNREAD;
 
     public void createGroup(String name, String photo,
                             String notice, int master_id) {
         Group group = new Group(name, master_id, notice, photo, new Date(), "offMeeting", 0);
         group = groupService.insert(group);
-        GroupUser groupUser = new GroupUser(group.getId(), master_id, null, "master", ACCEPT);
+        User user = userService.queryById(master_id);
+        GroupUser groupUser = new GroupUser(group.getId(), master_id, user.getUsername(), "master", ACCEPT);
         groupUserService.insert(groupUser);
-
+        Date date = new Date(System.currentTimeMillis());
+        GroupMessage helloMessage = new GroupMessage();
+        helloMessage.setSendtime(date);
+        helloMessage.setMessage("欢迎来到" + group.getName());
+        helloMessage.setGroupId(groupUser.getGroupId());
+        helloMessage.setSenderId(groupUser.getUserId());
+        GroupMessage inserted = groupMessageService.insert(helloMessage);
+        GroupMessageState groupMessageState = new GroupMessageState();
+        groupMessageState.setState(READ);
+        groupMessageState.setMessageId(inserted.getId());
+        groupMessageState.setUserId(inserted.getSenderId());
+        groupMessageStateService.insert(groupMessageState);
         groupHeatService.insert(new GroupHeat(group.getId(), 0, 0, GROUP));
     }
 
@@ -87,7 +109,8 @@ public class GroupOp {
 
     @PermissionAnnotation(level=13)
     public void joinGroup(int user_id, int group_id, int join_user_id) {
-        GroupUser groupUser = new GroupUser(group_id, join_user_id, null, MEMBER, ACCEPT);
+        User user = userService.queryById(user_id);
+        GroupUser groupUser = new GroupUser(group_id, join_user_id, user.getUsername(), MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
     }
 
