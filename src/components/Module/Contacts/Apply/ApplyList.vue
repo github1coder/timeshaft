@@ -7,7 +7,7 @@
         left
         v-model="tab"
       >
-        <v-tab>好友邀请</v-tab>
+        <v-tab>好友申请</v-tab>
         <v-tab>团队邀请</v-tab>
       </v-tabs>
 
@@ -31,7 +31,7 @@
                 style="margin: auto;"
                 v-show="showF"
               >
-                暂无好友邀请
+                暂无好友申请
               </v-card-title>
             </v-row>
             <v-divider style="margin-top: 10px;"></v-divider>
@@ -56,12 +56,16 @@
                   <v-row style="width: 10%;">
                     <v-btn
                       small
+                      rounded
+                      color="green lighten-3"
                       @click="acF(j + num * (pageF - 1))"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
                     <v-btn
                       small
+                      rounded
+                      color="red lighten-3"
                       @click="reF(j + num * (pageF - 1))"
                     >
                       <v-icon>mdi-close-thick</v-icon>
@@ -137,12 +141,16 @@
                   <v-row style="width: 10%;">
                     <v-btn
                       small
+                      rounded
+                      color="green lighten-3"
                       @click="acG(j + num * (pageG - 1))"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
                     <v-btn
                       small
+                      rounded
+                      color="red lighten-3"
                       @click="reG(j + num * (pageG - 1))"
                     >
                       <v-icon>mdi-close-thick</v-icon>

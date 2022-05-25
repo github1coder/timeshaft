@@ -29,7 +29,7 @@
               this.$emit('selectStatusChange')
             }"
         >
-          <v-icon class="ml-12" color="black" left size="24px">
+          <v-icon class="ml-12" color="white" left size="24px">
             mdi-calendar
           </v-icon>
         </v-btn>
@@ -38,21 +38,17 @@
             left
             class="text-left mr-8"
         >
-          <v-icon class="ml-12" color="black" left size="24px">
+          <v-icon class="ml-12" color="white" left size="24px">
             mdi-delete
           </v-icon>
         </v-btn>
       </div>
       <v-textarea
-          class="mx-2"
           label="这边输入消息捏~"
-          flat
+          light
           solo
-          background-color="grey lighten-2"
-          auto-grow
           height="50px"
           v-model="inputMsg"
-          autocomplete="off"
           @keyup.enter="sendChat(inputMsg)"
       >
       </v-textarea>

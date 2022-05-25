@@ -35,7 +35,9 @@
               style="width: 70%; margin: auto;"
             ></v-text-field>
             <v-btn
-              style="width: 15%; height: 64%; margin: 12px 0px auto;"
+              style="width: 10%; height: 64%; margin: 12px 8px auto; "
+              rounded
+              color="brown lighten-5"
               @click="searchFriend"
             >
               <v-icon style="width: 100%; height: 100%;">
@@ -45,12 +47,15 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
+              class="white--text"
+              rounded
             style="width: 100%; margin-top: 20px;"
-            color=blue
+            color="blue-grey"
             @click="findmore('friend')"
             v-if="isMore"
           >
-            发现周围
+            发现周围用户
+            <v-icon right dark >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -78,6 +83,8 @@
               <v-list-item-action>
                 <v-btn
                   small
+                  rounded
+                  color="brown lighten-5"
                   @click="newApplyF(j + num * (pageF - 1))"
                   :disabled="subItem.show"
                 >
@@ -128,8 +135,10 @@
               style="width: 70%; margin: auto;"
             ></v-text-field>
             <v-btn
-              style="width: 15%; height: 64%; margin: 12px 0px auto;"
+              style="width: 10%; height: 64%; margin: 12px 8px;"
               @click="searchGroup"
+              rounded
+              color="brown lighten-5"
             >
               <v-icon style="width: 100%; height: 100%;">
                 mdi-magnify
@@ -138,12 +147,15 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
+              class="white--text"
+              rounded
             style="width: 100%; margin-top: 20px;"
-            color=blue
+            color="blue-grey"
             @click="findmore('group')"
             v-if="isMore"
           >
-            发现周围
+            发现周围团队
+            <v-icon right dark >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -171,6 +183,8 @@
               <v-list-item-action>
                 <v-btn
                   small
+                  rounded
+                  color="brown lighten-5"
                   @click="newApplyG(j + num * (pageG - 1))"
                   :disabled="subItem.show"
                 >

@@ -1,7 +1,7 @@
 <template>
   <v-row  class="fill-height" style="">
     <v-col>
-      <v-sheet height="64">
+      <v-sheet height="64" dark>
         <v-toolbar
             flat
         >
@@ -52,7 +52,7 @@
                 </v-icon>
               </v-btn>
             </template>
-            <v-list>
+            <v-list color="blue-grey lighten-4">
               <v-list-item @click="type = 'day'">
                 <v-list-item-title>Day</v-list-item-title>
               </v-list-item>
@@ -69,7 +69,7 @@
           </v-menu>
         </v-toolbar>
       </v-sheet>
-      <v-sheet  height="600">
+      <v-sheet  height="600" color="blue-grey lighten-3">
         <v-calendar
             ref="calendar"
             v-model="focus"
@@ -116,7 +116,7 @@
             <v-card-actions>
               <v-btn
                   text
-                  color="secondary"
+                  color="white"
                   @click="selectedOpen = false"
               >
                 Cancel
