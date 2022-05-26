@@ -203,6 +203,7 @@ public class ChatController {
                                              @RequestParam("first") Integer first) {
         HashMap<String, Object> res = new HashMap<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
         Date date = new Date(System.currentTimeMillis());
         try {
             date = simpleDateFormat.parse(lastTime);
