@@ -271,7 +271,6 @@ public class ChatController {
         } else {
             Friends friends = friendsService.queryById(chatId);
             int dstId = Objects.equals(friends.getUserId1(), userId) ? friends.getUserId2() : friends.getUserId1();
-            String srcNickName = Objects.equals(friends.getUserId1(), userId) ? friends.getNickname1() : friends.getNickname2();
             String dstNickName = friends.getUserId1() == dstId ? friends.getNickname1() : friends.getNickname2();
             User userSrc = userService.queryById(userId);
             User userDst = userService.queryById(dstId);
@@ -309,7 +308,7 @@ public class ChatController {
                 messageMap.put("chatId", message.getFriendsId());
                 messageMap.put("msg", message.getMessage());
                 if (Objects.equals(message.getSenderId(), userId)) {
-                    messageMap.put("msgFromName", srcNickName);
+                    messageMap.put("msgFromName", userSrc.getUsername());
                     messageMap.put("msgFromAvatar", userSrc.getPhoto());
                 } else {
                     messageMap.put("msgFromName", dstNickName);
