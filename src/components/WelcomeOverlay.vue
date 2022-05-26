@@ -142,6 +142,7 @@ export default {
 
     applyNum () {
       const that = this
+      that.$store.state.applynum = 0
       getApplyList({
         "type": "friend",
       }).then(res => {
