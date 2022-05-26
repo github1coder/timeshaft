@@ -210,8 +210,9 @@ public class ChatController {
         } catch (Exception e) {
             return new ResponseService();
         }
+        System.out.println(first);
         if (first == 1) {
-            date = new Date(date.getTime() + 20);
+            date = new Date(date.getTime() + 10 * 1000);
         }
         res.put("serverTime", date);
         if (type.equals(GROUP)) {
