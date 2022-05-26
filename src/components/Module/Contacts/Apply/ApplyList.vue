@@ -204,9 +204,17 @@ export default {
   },
 
   mounted () {
+    const that = this
+    that.$store.state.applynum = 0
     getApplyList({
       "type": "friend",
     }).then(res => {
+      if (!res || (res && !res.error)) {
+        that.$store.state.applynum += res.length
+      }
+      else {
+        return
+      }
       this.friendAns = res
       this.allPageF = Math.ceil(this.friendAns.length / this.num)
       console.log(this.friendAns)
@@ -222,6 +230,12 @@ export default {
     getApplyList({
       "type": "group",
     }).then(res => {
+      if (!res || (res && !res.error)) {
+        that.$store.state.applynum += res.length
+      }
+      else {
+        return
+      }
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
       console.log(this.groupAns)

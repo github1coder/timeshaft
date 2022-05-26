@@ -74,7 +74,10 @@
                       color="green"
                       overlap
                     >
-                      <v-avatar size="30" color="blue">
+                      <v-avatar
+                        size="30"
+                        color="blue"
+                      >
                         <v-img
                           v-if="item.type==='friend'"
                           :src="item.chatAvatar"
@@ -170,6 +173,7 @@ import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
 import Search from "@/components/Module/ChatsModule/ChatTools/Search"
 import { getMessagesList, haveRead } from "@/api/message";
+import { getGroupMember } from '@/api/addresslist/index'
 
 export default {
   name: "ChatsModule",
@@ -308,6 +312,24 @@ export default {
         }
 
         //切换会议状态
+        const that = this
+        if (this.$store.state.currentChatType == "group") {
+          getGroupMember({
+            "id": this.$store.state.currentChannelId,
+          }).then(res => {
+            if (!res || (res && !res.error)) {
+              if (res.findIndex(mem => mem.id == that.$store.state.userId && mem.type != "normal") == -1) {
+                that.$refs.timeTool.timetoolShow = false
+              }
+              else {
+                that.$refs.timeTool.timetoolShow = true
+              }
+            }
+          })
+        }
+        else {
+          this.$refs.timeTool.timetoolShow = true
+        }
         if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
           || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
