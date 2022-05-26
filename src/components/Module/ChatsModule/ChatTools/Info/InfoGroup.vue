@@ -309,7 +309,7 @@ export default {
         "info_id": this.id,
         "type": "group"
       }).then(res => {
-        if (!res.error) {
+        if (!res || (res && !res.error)) {
           that.init(
             res.photo,
             res.name,

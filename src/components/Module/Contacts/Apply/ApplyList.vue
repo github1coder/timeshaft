@@ -275,6 +275,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.friendAns[index].show = false
+        this.$store.state.applynum -= 1
         //todo: 用户发一句“你好”给被同意者
       })
     },
@@ -289,6 +290,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.friendAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
 
@@ -302,6 +304,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.groupAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
 
@@ -315,6 +318,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.groupAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
     changeShowText () {

@@ -18,6 +18,7 @@ export default new Vuex.Store({
         infoNick: null,
         master: -1,
         about: -1, //0代表朋友，1代表群聊
+        applynum: 0,
         currentChannelIdx: -1,
         currentChannelId: -1,
         myIcon: "guest.png",
