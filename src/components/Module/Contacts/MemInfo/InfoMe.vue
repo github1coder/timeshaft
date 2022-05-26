@@ -286,7 +286,7 @@ export default {
         this.passwordN = ""
         this.inputCheckCode = ""
         console(res)
-        if (res.error) {
+        if (res && res.error) {
           this.msg = res.error
         }
       })

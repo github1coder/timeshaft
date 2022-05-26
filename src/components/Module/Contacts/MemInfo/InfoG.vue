@@ -37,8 +37,8 @@
             <v-divider>
             </v-divider>
             <v-btn
-                color="blue-grey lighten-4"
-                rounded
+              color="blue-grey lighten-4"
+              rounded
               width="50%"
               style="margin: auto;font-size: 15px; font-weight: bold"
               @click="updateState()"
@@ -316,7 +316,7 @@ export default {
         "state": !that.groups[that.indexG].state ? true : false,
         "notice": this.notice,
       }).then(res => {
-        if (!res || !res.error) {
+        if (!res || (res && !res.error)) {
           that.groups[that.indexG].state = !that.groups[that.indexG].state
         }
       })

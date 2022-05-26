@@ -81,6 +81,7 @@
 
 <script>
 import { login } from '../api/user/index'
+import { getApplyList } from "../api/addresslist/index"
 
 export default {
   data () {
@@ -139,6 +140,24 @@ export default {
       this.type = "password";
     },
 
+    applyNum () {
+      const that = this
+      getApplyList({
+        "type": "friend",
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          that.$store.state.applynum += res.length
+        }
+      })
+      getApplyList({
+        "type": "group",
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          that.$store.state.applynum += res.length
+        }
+      })
+    },
+
     login () {
       this.$refs.welcomeform.validate();
       if (this.valid) {
@@ -156,6 +175,7 @@ export default {
             this.$store.commit("setEmail", res.email)
             this.$store.commit("setLogin", true)
             this.$store.state.accessToken = res.ACCESS_TOKEN
+            this.applyNum()
             this.$router.push({
               path: '/home',
             })
