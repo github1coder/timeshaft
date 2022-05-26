@@ -57,7 +57,7 @@
     <update id="update">
         update timeshaft.group_message_state
         <set>
-            <if test="message_id != null">
+            <if test="messageId != null">
                 message_id = #{messageId},
             </if>
             <if test="userId != null">
