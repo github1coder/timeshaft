@@ -184,7 +184,7 @@ export default {
         this.loading = true;
         register(param).then(response => {
           console.log(response)
-          if (response && !response.error) {
+          if (!response || (response && !response.error)) {
             login(param).then(res => {
               if (res.id) {
                 this.$store.commit("setUserId", res.id)
