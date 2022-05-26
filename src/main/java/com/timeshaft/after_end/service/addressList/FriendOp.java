@@ -99,7 +99,7 @@ public class FriendOp {
     public List<Map<String, String>> searchByNick(String name, String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
         if(groupType.equals(type)) {
-            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, 0));
+            List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, null));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
                 GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null);
@@ -117,8 +117,8 @@ public class FriendOp {
                 ans.add(map);
             }
         } else {
-            List<User> users = userService.queryAll(new User(null, null, name, null, 0));
-            List<User> tmp = userService.queryAll(new User(name, null, null, null, 0));
+            List<User> users = userService.queryAll(new User(null, null, name, null, null));
+            List<User> tmp = userService.queryAll(new User(name, null, null, null, null));
             for(User user : tmp) {
                 if(!users.contains(user)) {
                     users.add(user);
@@ -364,7 +364,7 @@ public class FriendOp {
                 map.put("id", group.getId().toString());
                 map.put("name", group.getName());
                 map.put("photo", group.getPhoto());
-                map.put("master", group.getMasterId().toString());
+                map.put("master", userService.queryById(group.getMasterId()).getUsername());
                 ans.add(map);
             }
         } else {
