@@ -65,15 +65,16 @@
                   :id="'message-'+item.id.toString()"
                   :key="i"
                 >
-                  <v-list-item-avatar v-if="item.isMeeting">
+                  <v-list-item-avatar>
                     <v-badge
                       avatar
                       dot
                       bottom
+                      :value="item.isMeeting"
                       color="green"
                       overlap
                     >
-                      <v-avatar size="30">
+                      <v-avatar size="30" color="blue">
                         <v-img
                           v-if="item.type==='friend'"
                           :src="item.chatAvatar"
@@ -84,18 +85,6 @@
                         >{{ item.chatName[0] }}</span>
                       </v-avatar>
                     </v-badge>
-                  </v-list-item-avatar>
-                  <v-list-item-avatar v-else>
-                    <v-avatar size="30">
-                      <v-img
-                        v-if="item.type==='friend'"
-                        :src="item.chatAvatar"
-                      ></v-img>
-                      <span
-                        v-else-if="item.type==='group'"
-                        class="white--text text-h5"
-                      >{{ item.chatName[0] }}</span>
-                    </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title
@@ -244,7 +233,6 @@ export default {
 
         if (this.$store.state.currentChannelId !== payload.chatId && this.$store.state.currentChatType === payload.type) {
           this.messages[idx].number += 1
-          this.$store.state.unreadNum += 1
         }
 
         if (this.$store.state.currentChannelId === payload.chatId && this.$store.state.currentChatType === payload.type) {

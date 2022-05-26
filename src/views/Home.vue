@@ -139,7 +139,12 @@ export default {
                 if (res[listener].type === 0) {
                   console.log("即时通信服务收到消息")
                   setTimeout(() => {
-                    this.$refs.chatModule.receiveMessage(json)
+                    if (this.$store.state.currentChannelId !== json.chatId && this.$store.state.currentChatType === json.type) {
+                      this.$store.state.unreadNum += 1
+                    }
+                    if (this.$refs.chatModule.receiveMessage !== undefined) {
+                      this.$refs.chatModule.receiveMessage(json)
+                    }
                   }, 100)
                 } else if (res[listener].type === 1) {
                   console.log("添加好友服务收到消息")
