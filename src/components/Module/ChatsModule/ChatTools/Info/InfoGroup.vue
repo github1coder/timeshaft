@@ -14,7 +14,6 @@
         <v-navigation-drawer
           permanent
           style="width: 100%;"
-          dark
         >
           <!-- <v-system-bar></v-system-bar> -->
           <!-- <v-list-item>
@@ -34,10 +33,11 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-          <v-card style="font-size: 50px;">
+          <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
             {{this.nameG}}
           </v-card>
           <v-textarea
+              background-color="grey lighten-3"
             :disabled="iShow"
             filled
             auto-grow

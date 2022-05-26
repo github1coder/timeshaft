@@ -14,6 +14,7 @@
   "dependencies": {
     "@mdi/font": "^6.7.96",
     "axios": "^0.26.1",
+    "compression-webpack-plugin": "^4.0.0",
     "core-js": "^3.6.4",
     "element-ui": "^2.15.8",
     "process": "^0.11.10",

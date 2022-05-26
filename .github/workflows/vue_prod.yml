@@ -1,9 +1,6 @@
 name: Vue_prod
 
 on:
-  push:
-    # 分支
-    branches: [ front_master ]
   pull_request:
     branches: [ front_master ]
 
