@@ -43,7 +43,7 @@
         id, friends_id, sender_id, message, sendtime, state from timeshaft.personal_message
         where friends_id = #{friendsId} and sender_id = #{senderId} and sendtime &lt; #{time}
         order by id desc
-        limit 0, 20
+        limit 0, 25
     </select>
 
     <!--查询包含关键词的消息-->

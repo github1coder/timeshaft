@@ -50,7 +50,7 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="messageId" useGeneratedKeys="true">
         insert into timeshaft.group_message_state(message_id, user_id, state)
-        values (#{message_id}, #{userId}, #{state})
+        values (#{messageId}, #{userId}, #{state})
     </insert>
 
     <!--通过主键修改数据-->
@@ -58,7 +58,7 @@
         update timeshaft.group_message_state
         <set>
             <if test="message_id != null">
-                message_id = #{message_id},
+                message_id = #{messageId},
             </if>
             <if test="userId != null">
                 user_id = #{userId},

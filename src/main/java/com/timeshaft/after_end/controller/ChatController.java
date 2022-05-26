@@ -203,6 +203,7 @@ public class ChatController {
                                              @RequestParam("first") Integer first) {
         HashMap<String, Object> res = new HashMap<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         Date date = new Date(System.currentTimeMillis());
         try {
             date = simpleDateFormat.parse(lastTime);
@@ -212,6 +213,7 @@ public class ChatController {
         if (first == 1) {
             date = new Date(date.getTime() + 1);
         }
+        res.put("serverTime", date);
         if (type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
             //还要同时拉取所有相同时间的消息
@@ -271,7 +273,6 @@ public class ChatController {
         } else {
             Friends friends = friendsService.queryById(chatId);
             int dstId = Objects.equals(friends.getUserId1(), userId) ? friends.getUserId2() : friends.getUserId1();
-            String srcNickName = Objects.equals(friends.getUserId1(), userId) ? friends.getNickname1() : friends.getNickname2();
             String dstNickName = friends.getUserId1() == dstId ? friends.getNickname1() : friends.getNickname2();
             User userSrc = userService.queryById(userId);
             User userDst = userService.queryById(dstId);
@@ -309,7 +310,7 @@ public class ChatController {
                 messageMap.put("chatId", message.getFriendsId());
                 messageMap.put("msg", message.getMessage());
                 if (Objects.equals(message.getSenderId(), userId)) {
-                    messageMap.put("msgFromName", srcNickName);
+                    messageMap.put("msgFromName", userSrc.getUsername());
                     messageMap.put("msgFromAvatar", userSrc.getPhoto());
                 } else {
                     messageMap.put("msgFromName", dstNickName);
