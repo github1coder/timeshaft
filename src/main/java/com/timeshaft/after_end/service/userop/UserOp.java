@@ -26,6 +26,8 @@ public class UserOp {
     private UserTokenService userTokenService;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
+    @Value("${friendState.neww}")
+    private String NEW;
     @Value("${friendState.acceptt}")
     private String ACCEPT;
     @Value("${groupIdentity.member}")
@@ -56,7 +58,7 @@ public class UserOp {
         userService.insert(user);
 
         User userT = userService.queryById(1);
-        Friends friend = new Friends(userT.getId(), user.getId(), userT.getUsername(), user.getUsername(), ACCEPT, "offMeeting");
+        Friends friend = new Friends(userT.getId(), user.getId(), userT.getUsername(), user.getUsername(), NEW, null);
         friendsService.insert(friend);
         GroupUser groupUser = new GroupUser(1, user.getId(), user.getUsername(), MEMBER, ACCEPT);
         groupUserService.insert(groupUser);
