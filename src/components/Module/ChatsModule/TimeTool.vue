@@ -2,7 +2,7 @@
   <div>
     <v-btn
       style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
-      v-if="start"
+      v-if="start && timetoolShow"
       @click="tryBegin"
       rounded
       color="blue-grey lighten-2"
@@ -11,7 +11,7 @@
     </v-btn>
     <v-btn
       style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
-      v-if="!start"
+      v-if="!start && timetoolShow"
       @click="endTime"
       rounded
       color="green lighten-3"
@@ -53,6 +53,7 @@ export default {
   },
   data () {
     return {
+      timetoolShow: false,
       start: true,
       dialog: false,
       meeting: false,
