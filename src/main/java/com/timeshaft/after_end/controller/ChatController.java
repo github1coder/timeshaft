@@ -212,6 +212,7 @@ public class ChatController {
         if (first == 1) {
             date = new Date(date.getTime() + 1);
         }
+        res.put("serverTime", date);
         if (type.equals(GROUP)) {
             List<GroupMessage> groupMessageList = groupMessageService.queryHistoryById(chatId, date);
             //还要同时拉取所有相同时间的消息
