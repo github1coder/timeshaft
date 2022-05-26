@@ -140,7 +140,6 @@
                   <v-menu right>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        dark
                         icon
                         v-bind="attrs"
                         v-on="on"
