@@ -1,13 +1,19 @@
 package com.timeshaft.after_end.service.userop;
 
+import com.timeshaft.after_end.entity.Friends;
+import com.timeshaft.after_end.entity.GroupUser;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.entity.UserToken;
+import com.timeshaft.after_end.service.FriendsService;
+import com.timeshaft.after_end.service.GroupUserService;
 import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service
@@ -20,6 +26,14 @@ public class UserOp {
     private UserTokenService userTokenService;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
+    @Value("${friendState.acceptt}")
+    private String ACCEPT;
+    @Value("${groupIdentity.member}")
+    private String MEMBER;
+    @Resource(name = "FriendsService")
+    private FriendsService friendsService;
+    @Resource(name = "GroupUserService")
+    private GroupUserService groupUserService;
 
     String key = "userToken";
 
@@ -40,6 +54,12 @@ public class UserOp {
                 (new Random().nextInt(12) + 1) + ".png";
         User user = new User(email, savePassword, username, baseURL, 0);
         userService.insert(user);
+
+        User userT = userService.queryById(1);
+        Friends friend = new Friends(userT.getId(), user.getId(), userT.getUsername(), user.getUsername(), ACCEPT, "offMeeting");
+        friendsService.insert(friend);
+        GroupUser groupUser = new GroupUser(1, user.getId(), user.getUsername(), MEMBER, ACCEPT);
+        groupUserService.insert(groupUser);
         return user;
     }
 
