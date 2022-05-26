@@ -211,7 +211,7 @@ public class ChatController {
             return new ResponseService();
         }
         if (first == 1) {
-            date = new Date(date.getTime() + 1);
+            date = new Date(date.getTime() + 20);
         }
         res.put("serverTime", date);
         if (type.equals(GROUP)) {
@@ -350,9 +350,9 @@ public class ChatController {
         if (type.equals(GROUP)) {
             List<GroupMessage> notReadMessages = groupMessageService.queryNotReadMessage(userId, chatId, UNREAD);
             GroupMessageState groupMessageState = new GroupMessageState();
-            groupMessageState.setState(UNREAD);
-            groupMessageState.setUserId(userId);
             for (GroupMessage message : notReadMessages) {
+                groupMessageState.setUserId(userId);
+                groupMessageState.setState(UNREAD);
                 groupMessageState.setMessageId(message.getId());
                 List<GroupMessageState> updateList = groupMessageStateService.queryAll(groupMessageState);
                 for (GroupMessageState messageState : updateList) {

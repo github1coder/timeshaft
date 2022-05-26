@@ -48,8 +48,7 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-
-    //    @PermissionAnnotation(level=12)
+    @PermissionAnnotation(level=38)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type,
                 0, -1, -1, randomKey());
@@ -64,7 +63,7 @@ public class TimeShaftOp {
         return timeshaft.getId();
     }
 
-    //    @PermissionAnnotation(level=3)
+    @PermissionAnnotation(level=31)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
                 null, null, null, null);
