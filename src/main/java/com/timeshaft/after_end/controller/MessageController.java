@@ -125,7 +125,6 @@ public class MessageController {
         groupUser.setGroupId(groupId);
         List<GroupUser> userInGroup = groupUserService.queryAll(groupUser);
         GroupMessageState groupMessageState = new GroupMessageState();
-        groupMessageState.setMessageId(messageId);
         payload.put("msgId", insertMessage.getId());
         if (groupMessage.getMessage().startsWith("#")) {
             payload.put("msgType", TIMESHAFT);
@@ -133,6 +132,7 @@ public class MessageController {
             payload.put("msgType", TEXT);
         }
         for (GroupUser user : userInGroup) {
+            groupMessageState.setMessageId(messageId);
             if (user.getUserId().equals(groupMessage.getSenderId())) {
                 groupMessageState.setState(READ);
             } else {
