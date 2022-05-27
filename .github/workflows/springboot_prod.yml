@@ -1,9 +1,6 @@
 name: SpringBoot_master
 
 on:
-  push:
-    # 分支
-    branches: [ after_master ]
   pull_request:
     branches: [ after_master ]
 

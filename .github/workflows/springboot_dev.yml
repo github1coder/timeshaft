@@ -4,8 +4,6 @@ on:
   push:
     # 分支
     branches: [ after_dev ]
-  pull_request:
-    branches: [ after_dev ]
 
 jobs:
   compile:
