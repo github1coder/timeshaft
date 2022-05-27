@@ -71,6 +71,11 @@ public class PermissionAOP {
                     Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
                     String type = (String) simpleResolver(joinPoint, "type");
                     timeshaftPermission_8(user_id, group_id, type);
+                } else if (permissionAnnotation.level() == 39) {
+                    Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
+                    Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
+                    String type = (String) simpleResolver(joinPoint, "type");
+                    timeshaftPermission_9(user_id, group_id, type);
                 }
             }
         }
@@ -135,6 +140,22 @@ public class PermissionAOP {
         } else if (GROUP.equals(type)) {
             List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, MANAGER, null));
             groupUsers.addAll(groupUserService.queryAll(new GroupUser(group_id, user_id, null, MASTER, null)));
+            if (groupUsers.isEmpty()) {
+                throw new Exception();
+            }
+        } else {
+            throw new Exception("type参数错误");
+        }
+    }
+
+    private void timeshaftPermission_9(Integer user_id, Integer group_id, String type) throws Exception {
+        if (FRIEND.equals(type)) {
+            Friends friend = friendsService.queryById(group_id);
+            if(!user_id.equals(friend.getUserId1()) && !user_id.equals(friend.getUserId2())) {
+                throw new Exception();
+            }
+        } else if (GROUP.equals(type)) {
+            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, null, null));
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }

@@ -10,6 +10,7 @@ public @interface PermissionAnnotation {
     // 11 群主
     // 12 群主或群管理员
     // 13 群主或群管理员或群成员
-    // 31 拥有好友关系或者是群用户
+    // 31 拥有好友关系或者是群用户（有timeshaft_id）
     // 32 38 拥有好友关系或者群主或者管理员
+    // 39 拥有好友关系或者是群用户（无timeshaft_id）
 }
