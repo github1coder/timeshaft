@@ -106,6 +106,7 @@
                     style="text-align: left"
                   ></v-list-item-title>
                   <v-text-field
+                    style="background-color: activecaption; border-radius: 5%;"
                     v-show="subItem.show"
                     v-model="name"
                     @keydown.esc="showTextField(j + num * (pageF - 1))"
@@ -450,7 +451,7 @@ export default {
     changeName (index) {
       changeGroupNickname({
         "nickname": this.name,
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
       }).then(res => {
         console.log(res)
         this.friends[index].name = this.name
