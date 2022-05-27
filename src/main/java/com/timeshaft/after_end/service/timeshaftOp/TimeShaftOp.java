@@ -63,7 +63,7 @@ public class TimeShaftOp {
         return timeshaft.getId();
     }
 
-    @PermissionAnnotation(level=31)
+    @PermissionAnnotation(level=39)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
         Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
                 null, null, null, null);
