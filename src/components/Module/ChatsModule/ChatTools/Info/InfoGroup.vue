@@ -1,5 +1,8 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div
+    style="width: 100%; height: 100%"
+    class="mem-info"
+  >
     <v-card
       style="width: 100%; height: 100%;"
       flat
@@ -37,7 +40,7 @@
             {{this.nameG}}
           </v-card>
           <v-textarea
-              background-color="grey lighten-3"
+            background-color="grey lighten-3"
             :disabled="iShow"
             filled
             auto-grow
