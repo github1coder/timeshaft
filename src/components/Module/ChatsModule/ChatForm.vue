@@ -70,7 +70,7 @@
             class="mr-8 ml-12"
         >
           <v-icon color="white" size="24px">
-            mdi-delete
+            mdi-dots-horizontal
           </v-icon>
         </v-btn>
       </div>
