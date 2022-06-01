@@ -185,6 +185,7 @@ public class TimeShaftOp {
                     out.put("end", timeshaft.getEndTime());
                 }
                 out.put("timed", "false");
+                out.put("id", timeshaft.getId().toString());
                 res.add(out);
             }
         }
