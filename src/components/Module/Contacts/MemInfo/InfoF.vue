@@ -73,7 +73,8 @@ export default {
         console.log(document.getElementById('nav-' + 0))
         document.getElementById('nav-' + 0).click()
         console.log("切换到聊天栏")
-      }, 500)
+      }, 300)
+
       // 模拟点击事件
       //todo 尚未模拟聊天频道点击或聊天频道点击失效
       const id = this.$parent.$parent.id.toString()
@@ -82,7 +83,9 @@ export default {
         console.log(document.getElementById('message-' + id))
         document.getElementById('message-' + id).click()
         console.log("切换到聊天框")
-      }, 500)
+      }, 1200)
+
+
 
     },
   }

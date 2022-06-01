@@ -400,6 +400,14 @@ export default {
     getMethod: function (methodName, index) {
       this[methodName](index);
     },
+
+    initBtns () {
+      if (this.friendsIndex != -1) {
+        this.friends[this.friendsIndex].show = false;
+        this.friends[this.friendsIndex].quit = false;
+      }
+    },
+
     downPageF () {
       this.initBtns()
       if (this.pageF != 1 && this.pageF != 0) {
