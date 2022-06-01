@@ -3,15 +3,46 @@
     <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
       <v-divider></v-divider>
       <div class="text-left">
-          <v-btn
-              icon
-              left
-              class="text-left mr-8"
-          >
-            <v-icon class="ml-12" color="white" left size="24px">
-              mdi-home
-            </v-icon>
-          </v-btn>
+        <v-menu max-width="480" top v-model="emojiModel" offset-overflow :close-on-content-click="false" offset-y>
+          <v-tabs v-model="tab">
+            <v-tab v-for="(emojiGroup, category) in emoji" :key="category">
+              {{category}}
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item
+              v-for="(emojiGroup, category) in emoji"
+              :key="category">
+              <v-container>
+                <v-row>
+                  <v-col
+                      class="pa-0"
+                      v-for="(emoji, emojiName) in emojiGroup"
+                      :key="emojiName"
+                  >
+                    <span @click="insert(emoji)" :title="emojiName">{{emoji}}</span>
+                  </v-col>
+                </v-row>
+
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                icon
+                left
+                class="text-left mr-8"
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-icon class="ml-12" color="white" left size="24px">
+                mdi-emoticon
+              </v-icon>
+            </v-btn>
+          </template>
+
+        </v-menu>
+
         <v-btn
             icon
             left
@@ -43,20 +74,21 @@
           </v-icon>
         </v-btn>
       </div>
-      <v-textarea
-          label="这边输入消息捏~"
-          light
-          solo
-          height="50px"
+      <textarea
+          class="tarea"
+          ref="tarea"
           v-model="inputMsg"
+          @blur="getBlur"
           @keyup.enter="sendChat(inputMsg)"
       >
-      </v-textarea>
+      </textarea>
     </div>
   </div>
 </template>
 
 <script>
+import emoji from "../../../../public/emoji";
+
 export default {
   name: "ChatForm",
   props: ['draw'],
@@ -72,9 +104,44 @@ export default {
       ],
       padless: false,
       variant: 'default',
+      emojiModel: false,
+      emoji: emoji,
+      tab: null,
+      cursorPos: 0,
     }
   },
   methods: {
+    insert (emoji) { // 添加表情
+      let textDom = this.$refs.tarea
+      var startPos = textDom.selectionStart
+      var endPos = textDom.selectionEnd
+      var scrollTop = textDom.scrollTop
+      this.inputMsg = this.inputMsg.substring(0, startPos) + emoji + this.inputMsg.substring(endPos, this.inputMsg.length)
+      setTimeout(() => {
+        textDom.focus()
+        textDom.selectionStart = this.cursorPos + 2 // 光标起始选择区域
+        textDom.selectionEnd = this.cursorPos + 2 // 光标结尾选择区域
+        textDom.scrollTop = scrollTop // 光标行高度
+      }, 50)
+      this.emojiModel = false
+    },
+    getBlur () { // 文本框失焦
+      var element = this.$refs.tarea
+      let cursorPos = 0
+      console.log("1 " + cursorPos)
+      console.log(document.selection)
+      console.log(element)
+      console.log(element.selectionStart)
+      if (document.selection) {
+        var selectRange = document.selection.createRange()
+        selectRange.moveStart('character', -element.value.length)
+        cursorPos = selectRange.text.length
+      } else if (element.selectionStart || element.selectionStart === '0') {
+        cursorPos = element.selectionStart
+      }
+      console.log("2 " + cursorPos)
+      this.cursorPos = cursorPos
+    },
     isSpace(message) {
       let flag = true
        for (let i in message) {
@@ -135,5 +202,15 @@ export default {
 </script>
 
 <style scoped>
-
+.tarea::-webkit-scrollbar {
+  display: none;
+}
+textarea {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #E0E0E0;
+}
 </style>
