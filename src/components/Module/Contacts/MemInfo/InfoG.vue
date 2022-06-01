@@ -37,8 +37,8 @@
             <v-divider>
             </v-divider>
             <v-btn
-                color="blue-grey lighten-4"
-                rounded
+              color="blue-grey lighten-4"
+              rounded
               width="50%"
               style="margin: auto;font-size: 15px; font-weight: bold"
               @click="updateState()"
@@ -119,6 +119,7 @@
                     style="text-align: left"
                   ></v-list-item-title>
                   <v-text-field
+                    style="background-color: activecaption; border-radius: 5%;"
                     v-show="subItem.show"
                     v-model="name"
                     @keydown.esc="showTextField(j + num * (pageF - 1))"
@@ -156,7 +157,6 @@
                   <v-menu right>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        dark
                         icon
                         v-bind="attrs"
                         v-on="on"
@@ -164,10 +164,7 @@
                         <v-icon>mdi-dots-vertical</v-icon>
                       </v-btn>
                     </template>
-                    <v-list
-                      hover
-                      dark
-                    >
+                    <v-list hover>
                       <!-- <v-list-item
                       v-for="(btnn, i) in friendsBtns"
                       :key="i"
@@ -316,7 +313,7 @@ export default {
         "state": !that.groups[that.indexG].state ? true : false,
         "notice": this.notice,
       }).then(res => {
-        if (!res || !res.error) {
+        if (!res || (res && !res.error)) {
           that.groups[that.indexG].state = !that.groups[that.indexG].state
         }
       })
@@ -469,7 +466,7 @@ export default {
     changeName (index) {
       changeGroupNickname({
         "nickname": this.name,
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
       }).then(res => {
         console.log(res)
         this.friends[index].name = this.name

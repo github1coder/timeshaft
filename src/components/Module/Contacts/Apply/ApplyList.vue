@@ -204,9 +204,17 @@ export default {
   },
 
   mounted () {
+    const that = this
+    that.$store.state.applynum = 0
     getApplyList({
       "type": "friend",
     }).then(res => {
+      if (!res || (res && !res.error)) {
+        that.$store.state.applynum += res.length
+      }
+      else {
+        return
+      }
       this.friendAns = res
       this.allPageF = Math.ceil(this.friendAns.length / this.num)
       console.log(this.friendAns)
@@ -222,6 +230,12 @@ export default {
     getApplyList({
       "type": "group",
     }).then(res => {
+      if (!res || (res && !res.error)) {
+        that.$store.state.applynum += res.length
+      }
+      else {
+        return
+      }
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
       console.log(this.groupAns)
@@ -275,6 +289,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.friendAns[index].show = false
+        this.$store.state.applynum -= 1
         //todo: 用户发一句“你好”给被同意者
       })
     },
@@ -289,6 +304,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.friendAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
 
@@ -302,6 +318,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.groupAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
 
@@ -315,6 +332,7 @@ export default {
       ).then(res => {
         console.log(res)
         this.groupAns[index].show = false
+        this.$store.state.applynum -= 1
       })
     },
     changeShowText () {

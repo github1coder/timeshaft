@@ -1,5 +1,8 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div
+    style="width: 100%; height: 100%"
+    class="mem-info"
+  >
     <v-card
       style="width: 100%; height: 100%;"
       flat
@@ -37,7 +40,7 @@
             {{this.nameG}}
           </v-card>
           <v-textarea
-              background-color="grey lighten-3"
+            background-color="grey lighten-3"
             :disabled="iShow"
             filled
             auto-grow
@@ -103,6 +106,7 @@
                     style="text-align: left"
                   ></v-list-item-title>
                   <v-text-field
+                    style="background-color: activecaption; border-radius: 5%;"
                     v-show="subItem.show"
                     v-model="name"
                     @keydown.esc="showTextField(j + num * (pageF - 1))"
@@ -140,7 +144,6 @@
                   <v-menu right>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        dark
                         icon
                         v-bind="attrs"
                         v-on="on"
@@ -310,7 +313,7 @@ export default {
         "info_id": this.id,
         "type": "group"
       }).then(res => {
-        if (!res.error) {
+        if (!res || (res && !res.error)) {
           that.init(
             res.photo,
             res.name,
@@ -448,7 +451,7 @@ export default {
     changeName (index) {
       changeGroupNickname({
         "nickname": this.name,
-        "group_id": this.$store.getters.infoId,
+        "group_id": this.$parent.$parent.id,
       }).then(res => {
         console.log(res)
         this.friends[index].name = this.name

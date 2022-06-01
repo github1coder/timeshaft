@@ -75,7 +75,6 @@
               <v-menu right>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                    dark
                     icon
                     v-bind="attrs"
                     v-on="on"
@@ -85,7 +84,6 @@
                 </template>
                 <v-list
                   hover
-                  dark
                 >
                   <v-list-item
                     v-if="isMaster(j + num * (pageG - 1))"
@@ -187,7 +185,6 @@
               <v-menu right>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                    dark
                     icon
                     v-bind="attrs"
                     v-on="on"
@@ -197,7 +194,6 @@
                 </template>
                 <v-list
                   hover
-                  dark
                 >
                   <v-list-item
                     v-for="(btnn, i) in friendsBtns"

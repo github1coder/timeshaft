@@ -43,7 +43,7 @@
           <v-text-field
             class="text-field"
             v-model="password"
-            label="密码"
+            label="密码(只允许字母和数字)"
             required
             :counter="16"
             :rules="rules.password"
@@ -184,25 +184,28 @@ export default {
         this.loading = true;
         register(param).then(response => {
           console.log(response)
-          login(param).then(res => {
-            if (res.id) {
-              this.$store.commit("setUserId", res.id)
-              console.log(res)
-              this.$store.commit("setMyIcon", res.photo)
-              this.$store.commit("setMyNick", res.username)
-              this.$store.commit("setEmail", res.email)
-              this.$store.commit("setLogin", true)
-              this.$store.state.accessToken = res.ACCESS_TOKEN
-              this.$router.push({
-                path: '/home',
-              })
-            }
-            else {
-              this.error = res
-              this.show = true
-              this.loading = false
-            }
-          })
+          if (!response || (response && !response.error)) {
+            login(param).then(res => {
+              if (res.id) {
+                this.$store.commit("setUserId", res.id)
+                console.log(res)
+                this.$store.commit("setMyIcon", res.photo)
+                this.$store.commit("setMyNick", res.username)
+                this.$store.commit("setEmail", res.email)
+                this.$store.commit("setLogin", true)
+                this.$store.state.accessToken = res.ACCESS_TOKEN
+                this.$router.push({
+                  path: '/home',
+                })
+              }
+              else {
+                this.error = res
+                this.show = true
+                this.loading = false
+              }
+            })
+          }
+
         })
       }
     },

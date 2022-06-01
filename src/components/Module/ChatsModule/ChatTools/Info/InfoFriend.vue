@@ -1,7 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%">
     <v-card
-
       flat
       tile
       style="width: 100%; height: 100%;"
@@ -73,7 +72,7 @@ export default {
         "info_id": this.id,
         "type": "friend"
       }).then(res => {
-        if (!res.error) {
+        if (!res || (res && !res.error)) {
           that.init(
             res.photo,
             res.name,

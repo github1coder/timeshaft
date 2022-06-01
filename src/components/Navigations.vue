@@ -77,12 +77,15 @@
           >
             <v-list-item-icon>
               <v-badge
-                  color="red"
-                  :value="$store.state.unreadNum !== 0 && i === 0"
-                  :content="$store.state.unreadNum"
-                >
-                  <v-icon v-text="item.icon"></v-icon>
-                  <v-list-item-title v-text="item.text" style="font-size: 5px"></v-list-item-title>
+                color="red"
+                :value="($store.state.unreadNum !== 0 && i === 0) || ($store.state.applynum !== 0 && i === 1)"
+                :content="i === 0 ? $store.state.unreadNum : $store.state.applynum"
+              >
+                <v-icon v-text="item.icon"></v-icon>
+                <v-list-item-title
+                  v-text="item.text"
+                  style="font-size: 5px"
+                ></v-list-item-title>
               </v-badge>
             </v-list-item-icon>
 

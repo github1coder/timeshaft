@@ -178,7 +178,7 @@ export default {
       valid: true,
       type: "password",
       msg: "",
-      state: "公开个人信息",
+      state: "可被其他用户发现",
       isState: false,
       rules: {
         password: [
@@ -198,7 +198,7 @@ export default {
   },
 
   mounted () {
-    this.state = this.$store.state.state ? "公开个人信息" : "未公开个人信息"
+    this.state = this.$store.state.state ? "可被其他用户发现" : "不可被其他用户发现"
   },
 
   methods: {
@@ -222,7 +222,7 @@ export default {
             this.isState = false
             clearInterval(this.timer)
             this.timer = null
-            this.state = this.$store.state.state ? "公开个人信息" : "未公开个人信息"
+            this.state = this.$store.state.state ? "可被其他用户发现" : "不可被其他用户发现"
           }
         }, 1000)
       }
@@ -286,7 +286,7 @@ export default {
         this.passwordN = ""
         this.inputCheckCode = ""
         console(res)
-        if (res.error) {
+        if (res && res.error) {
           this.msg = res.error
         }
       })
