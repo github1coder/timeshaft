@@ -187,7 +187,7 @@ export default {
   props: ['draw'],
   data() {
     return {
-      refreshed: true,
+      refreshed: false,
       cache: 0,
       messages: [], //
       selected: [], // messageId that had been selected
