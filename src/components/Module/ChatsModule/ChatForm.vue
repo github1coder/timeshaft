@@ -31,11 +31,11 @@
             <v-btn
                 icon
                 left
-                class="text-left mr-8"
+                class="mr-8 ml-12"
                 v-bind="attrs"
                 v-on="on"
             >
-              <v-icon class="ml-12" color="white" left size="24px">
+              <v-icon color="white" size="24px">
                 mdi-emoticon
               </v-icon>
             </v-btn>
@@ -46,30 +46,30 @@
         <v-btn
             icon
             left
-            class="text-left mr-8"
+            class="mr-8 ml-12"
         >
-          <v-icon class="ml-12" color="white" left size="24px">
+          <v-icon color="white" size="24px">
             mdi-email
           </v-icon>
         </v-btn>
         <v-btn
             icon
             left
-            class="text-left mr-8"
+            class="mr-8 ml-12"
             @click="() => {
               this.$emit('selectStatusChange')
             }"
         >
-          <v-icon class="ml-12" color="white" left size="24px">
+          <v-icon color="white" size="24px">
             mdi-calendar
           </v-icon>
         </v-btn>
         <v-btn
             icon
             left
-            class="text-left mr-8"
+            class="mr-8 ml-12"
         >
-          <v-icon class="ml-12" color="white" left size="24px">
+          <v-icon color="white" size="24px">
             mdi-delete
           </v-icon>
         </v-btn>
