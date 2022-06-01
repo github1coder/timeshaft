@@ -76,7 +76,7 @@ public class GroupHeat implements Serializable {
     }
 
     public void changeGroupHeat() {
-        this.groupHeat = this.groupHeat / 2 + this.messageCount;
+        this.groupHeat = this.groupHeat / 2 + this.messageCount / 300;
         this.messageCount = 0;
     }
 }

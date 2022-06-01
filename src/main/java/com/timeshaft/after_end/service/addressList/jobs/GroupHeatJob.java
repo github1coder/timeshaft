@@ -16,7 +16,7 @@ public class GroupHeatJob {
     @Autowired
     private GroupHeatService groupHeatService;
 
-    @Scheduled(fixedRate = 10*60*1000)
+    @Scheduled(fixedRate = 5*60*1000)
     public void changeGroupHeat() {
         log.info("群热度相关服务开始");
         List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(null, null, null, null));

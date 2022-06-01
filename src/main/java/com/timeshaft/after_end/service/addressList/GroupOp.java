@@ -153,4 +153,17 @@ public class GroupOp {
         }
     }
 
+    @PermissionAnnotation(level=39)
+    public Integer getHeat(int group_id, String type, int user_id) throws Exception {
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(group_id, null, null, type));
+        if (groupHeats.size() <= 0) {
+            throw new Exception("抱歉，该群不存在");
+        }
+        Integer groupHeat = groupHeats.get(0).getGroupHeat();
+        if (groupHeat<=5) return 0;
+        else if (groupHeat<=20) return 1;
+        else if (groupHeat<=40) return 2;
+        else if (groupHeat<=80) return 3;
+        else return 4;
+    }
 }

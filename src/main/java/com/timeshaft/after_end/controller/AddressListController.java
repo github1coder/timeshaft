@@ -212,4 +212,12 @@ public class AddressListController {
         return new ResponseService(res);
     }
 
+    @RequestMapping(value = "/getHeat")
+    public ResponseService getHeat(@RequestParam(value = "type") String type, @RequestParam("group_id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
+        Map<String, Integer> res = new HashMap<>();
+        Integer heat = groupOp.getHeat(group_id, type, user_id);
+        res.put("heat",heat);
+        return new ResponseService(res);
+    }
+
 }
