@@ -82,48 +82,10 @@
             @click:date="viewDay"
             @change="updateRange"
         ></v-calendar>
-        <v-menu
-            dark
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-        >
-          <v-card
-              dark
-              min-width="350px"
-              flat
-          >
-            <v-toolbar
-                :color="selectedEvent.color"
-                dark
-            >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                  text
-                  color="white"
-                  @click="selectedOpen = false"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+        <TimeNode
+          :id="selectedEvent.id"
+          v-if="selectedOpen"
+          @closeT="closeT"></TimeNode>
       </v-sheet>
     </v-col>
   </v-row>
@@ -132,8 +94,10 @@
 
 <script>
 import {getTimeShaftData} from "@/api/timeShaft";
+import TimeNode from "@/components/Module/ChatsModule/ChatTools/Msg/TimeNode";
 
 export default {
+  components: {TimeNode},
   data: () => ({
     focus: '',
     type: 'month',
@@ -154,6 +118,9 @@ export default {
     this.$refs.calendar.checkChange()
   },
   methods: {
+    closeT(flag) {
+      this.selectedOpen = flag
+    },
     viewDay ({ date }) {
       this.focus = date
       this.type = 'day'
