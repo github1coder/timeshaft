@@ -83,7 +83,7 @@
             @change="updateRange"
         ></v-calendar>
         <TimeNode
-          :id="selectedEvent.id"
+          :id="parseInt(selectedEvent.id)"
           v-if="selectedOpen"
           @closeT="closeT"></TimeNode>
       </v-sheet>
