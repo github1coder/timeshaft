@@ -49,7 +49,7 @@
             class="mr-8 ml-12"
         >
           <v-icon color="white" size="24px">
-            mdi-email
+            mdi-at
           </v-icon>
         </v-btn>
         <v-btn
@@ -61,7 +61,7 @@
             }"
         >
           <v-icon color="white" size="24px">
-            mdi-calendar
+            {{ $parent.selecting ? "mdi-close-circle-outline" : "mdi-timer-outline" }}
           </v-icon>
         </v-btn>
         <v-btn
