@@ -3,7 +3,7 @@
     <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
       <v-divider></v-divider>
       <div class="text-left">
-        <v-menu max-width="480" top v-model="emojiModel" offset-overflow :close-on-content-click="false" offset-y>
+        <v-menu max-width="480" :nudge-top="300" v-model="emojiModel" :close-on-content-click="false"  transition="scale-transition">
           <v-tabs v-model="tab">
             <v-tab v-for="(emojiGroup, category) in emoji" :key="category">
               {{category}}
