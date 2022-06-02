@@ -79,6 +79,7 @@
           ref="tarea"
           v-model="inputMsg"
           @blur="getBlur"
+          placeholder="按 Enter 发送"
           @keyup.enter="sendChat(inputMsg)"
       >
       </textarea>
