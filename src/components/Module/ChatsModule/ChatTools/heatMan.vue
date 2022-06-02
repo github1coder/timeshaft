@@ -24,16 +24,12 @@ export default {
   },
   methods: {
     getMan () {
-      console.log("the group id is")
-      console.log(this.chatId)
       let para = {
         group_id: this.chatId,
         type: this.type === "group" ? "group" : "friend",
       }
       getHeat(para).then(res => {
         this.heat = res.heat
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa")
-        console.log(res)
       })
     },
   },
@@ -41,7 +37,7 @@ export default {
     this.getMan()
   },
   mounted() {
-    this.timer = setInterval(this.getMan, 300000);
+    this.timer = setInterval(this.getMan, 150000);
     console.log(this.timer)
   },
   beforeDestroy() {
