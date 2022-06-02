@@ -111,9 +111,9 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/delTimeshaft")
-    public ResponseService delTimeshaft(@RequestBody Map<String, Object> requestMap) {
+    public ResponseService delTimeshaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
         Integer id = (Integer) requestMap.get("id");
-        timeShaftOp.delTimeshaft(id);
+        timeShaftOp.delTimeshaft(id, user_id);
         return new ResponseService();
     }
 
@@ -126,12 +126,12 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/updateTimeNode")
-    public ResponseService updateTimeNode(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseService updateTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         Integer id = (Integer) requestMap.get("id");
         ArrayList<String> tags = (ArrayList<String>) requestMap.get("tags");
         String type = (String) requestMap.get("type");
         String conclude = (String) requestMap.get("conclude");
-        timeShaftOp.updateTimeNode(id, type, tags, conclude);
+        timeShaftOp.updateTimeNode(id, type, tags, conclude, user_id);
         return new ResponseService();
     }
 

@@ -356,7 +356,7 @@ public class TimeShaftOp {
     }
 
     @PermissionAnnotation(level = 32)
-    public void delTimeshaft(Integer timeshaft_id) {
+    public void delTimeshaft(Integer timeshaft_id, Integer user_id) {
         List<Tag> tags = tagService.queryAll(new Tag(timeshaft_id, null));
         for(Tag tag: tags) {
             tagService.deleteById(tag.getId());
@@ -368,6 +368,7 @@ public class TimeShaftOp {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
                 null, null, null, type, null, null, null, null));
         ArrayList<String> res = new ArrayList<>();
+        res.add("所有时间轴");
         for(Timeshaft timeshaft: timeshafts) {
             List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
             for(Tag tag: tags) {
@@ -380,16 +381,20 @@ public class TimeShaftOp {
     }
 
     @PermissionAnnotation(level = 32)
-    public void updateTimeNode(Integer timeshaft_id, String type, ArrayList<String> tags, String conclude) throws Exception {
+    public void updateTimeNode(Integer timeshaft_id, String type, ArrayList<String> tags, String conclude, Integer user_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
         if(type.equals("tags")) {
             List<Tag> tags_1 = tagService.queryAll(new Tag(timeshaft_id, null));
             for(int i = 0; i < tags.size(); i++) {
                 if(i + 1 > tags_1.size()) {
-                    tagService.insert(new Tag(timeshaft_id, tags.get(i)));
+                    if (!tags.get(i).equals("")) {
+                        tagService.insert(new Tag(timeshaft_id, tags.get(i)));
+                    }
                 } else {
-                    tags_1.get(i).setName(tags.get(i));
-                    tagService.update(tags_1.get(i));
+                    if (!tags.get(i).equals("")) {
+                        tags_1.get(i).setName(tags.get(i));
+                        tagService.update(tags_1.get(i));
+                    }
                 }
             }
         } else if (type.equals("conclude")) {
