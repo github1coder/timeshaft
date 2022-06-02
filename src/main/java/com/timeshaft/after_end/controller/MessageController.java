@@ -90,6 +90,13 @@ public class MessageController {
         }
         messagingTemplate.convertAndSend("/user/chat/" + targetId, payload);
         messagingTemplate.convertAndSend("/user/chat/" + senderId, payload);
+
+        //群热度
+        List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(friends.getId(), null, null, FRIEND));
+        for(GroupHeat groupHeat : groupHeats) {
+            groupHeat.upMessageCount();
+            groupHeatService.update(groupHeat);
+        }
     }
 
     /**

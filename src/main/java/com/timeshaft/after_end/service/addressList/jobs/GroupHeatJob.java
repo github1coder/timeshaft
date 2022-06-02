@@ -22,18 +22,9 @@ public class GroupHeatJob {
         List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(null, null, null, null));
         for (GroupHeat groupHeat : groupHeats) {
             groupHeat.changeGroupHeat();
-            Integer groupHeatPercent = getGroupHeatPercent(groupHeat.getGroupHeat());
-            log.info(String.valueOf(groupHeatPercent));
+            groupHeatService.update(groupHeat);
+            log.info(String.valueOf(groupHeat.getGroupHeat()));
         }
         log.info("群热度相关服务结束");
-    }
-
-    private Integer getGroupHeatPercent(Integer groupHeat) {
-        if (groupHeat > 100) {
-            return 100;
-        }
-        else {
-            return groupHeat / 100;
-        }
     }
 }
