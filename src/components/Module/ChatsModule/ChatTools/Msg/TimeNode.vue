@@ -288,6 +288,9 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateConclude = false
+        if (this.$parent.$parent) {
+          this.$parent.$parent.getShaft()
+        }
       }
     },
     close () {
