@@ -109,4 +109,42 @@ public class TimeShaftController {
         timeShaftOp.sendNotification(type, chatId, operation);
         return new ResponseService();
     }
+
+    @RequestMapping("/delTimeshaft")
+    public ResponseService delTimeshaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
+        Integer id = (Integer) requestMap.get("id");
+        timeShaftOp.delTimeshaft(id, user_id);
+        return new ResponseService();
+    }
+
+    @RequestMapping("/getTimeTags")
+    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap) {
+        Integer id = (Integer) requestMap.get("chatId");
+        String type = (String) requestMap.get("type");
+        ArrayList<String> res = timeShaftOp.getTimeTags(id, type);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping("/updateTimeNode")
+    public ResponseService updateTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+        Integer id = (Integer) requestMap.get("id");
+        ArrayList<String> tags = (ArrayList<String>) requestMap.get("tags");
+        String type = (String) requestMap.get("type");
+        String conclude = (String) requestMap.get("conclude");
+        timeShaftOp.updateTimeNode(id, type, tags, conclude, user_id);
+        return new ResponseService();
+    }
+
+    @RequestMapping("/searchTimeByTag")
+    public ResponseService searchTimeByTag(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+        log.info("获取时间轴开始");
+        Integer id = (Integer) requestMap.get("chatId");
+        String tag = (String) requestMap.get("tag");
+        String type = (String) requestMap.get("type");
+        List<Map<String, Object>> timeshaftsRes = timeShaftOp.searchTimeByTag(id, type, user_id, tag);
+        log.info("获取时间轴成功");
+        Map<String, Object> res = new HashMap<>();
+        res.put("items", timeshaftsRes);
+        return new ResponseService(res);
+    }
 }
