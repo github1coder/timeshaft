@@ -1,5 +1,4 @@
 name: Vue_prod
-
 on:
   pull_request:
     branches: [ front_master ]
