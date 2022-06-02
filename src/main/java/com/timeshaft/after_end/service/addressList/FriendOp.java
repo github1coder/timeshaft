@@ -78,6 +78,10 @@ public class FriendOp {
         friends.addAll(friendsService.queryAll(friend_2));
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
+            List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(tmp.getId(), null, null, FRIEND));
+            for(GroupHeat groupHeat : groupHeats) {
+                groupHeatService.deleteById(groupHeat.getId());
+            }
         }
     }
 
