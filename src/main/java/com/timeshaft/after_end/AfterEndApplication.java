@@ -16,7 +16,7 @@ import java.util.HashMap;
 @MapperScan("com.timeshaft.after_end.mapper")
 @RestController
 @CrossOrigin
-@EnableScheduling  //开启定时任务
+//@EnableScheduling  //开启定时任务
 public class AfterEndApplication {
 
     public static void main(String[] args) {

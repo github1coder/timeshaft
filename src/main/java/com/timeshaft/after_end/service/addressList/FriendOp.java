@@ -1,10 +1,7 @@
 package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.entity.*;
-import com.timeshaft.after_end.service.FriendsService;
-import com.timeshaft.after_end.service.GroupService;
-import com.timeshaft.after_end.service.GroupUserService;
-import com.timeshaft.after_end.service.UserService;
+import com.timeshaft.after_end.service.*;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +27,8 @@ public class FriendOp {
 
     @Resource(name = "UserService")
     private UserService userService;
+    @Autowired
+    private GroupHeatService groupHeatService;
 
     @Value("${type.friendType}")
     private String friendType;
@@ -51,6 +50,8 @@ public class FriendOp {
     private String TEXT;
     @Value("${type.timeShaftType}")
     private String TIMESHAFT;
+    @Value("${type.friendType}")
+    private String FRIEND;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -77,6 +78,10 @@ public class FriendOp {
         friends.addAll(friendsService.queryAll(friend_2));
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
+            List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(tmp.getId(), null, null, FRIEND));
+            for(GroupHeat groupHeat : groupHeats) {
+                groupHeatService.deleteById(groupHeat.getId());
+            }
         }
     }
 
@@ -191,6 +196,7 @@ public class FriendOp {
                 friends.get(0).setState(action);
                 friends.get(0).setStatus("offMeeting");
                 friendsService.update(friends.get(0));
+                groupHeatService.insert(new GroupHeat(friends.get(0).getId(), 0, 0, FRIEND));
             } else {
                 friend1.setState(NEW);
                 friend2.setState(NEW);
