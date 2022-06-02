@@ -24,6 +24,14 @@ export function getHistoryMessage(param) {
     })
 }
 
+export function getHeat(param) {
+    return request({
+        url: '/addresslist/getHeat',
+        method: 'get',
+        params: param
+    })
+}
+
 // export function chatUrl(param) {
 //     return request({
 //         url: '/message/chatUrl',

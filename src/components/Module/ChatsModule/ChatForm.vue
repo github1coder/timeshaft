@@ -130,6 +130,9 @@ export default {
     clearMsg () {
       this.inputMsg = ""
     },
+  },
+  created() {
+    console.log("this is chat")
   }
 }
 </script>
