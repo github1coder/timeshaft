@@ -124,16 +124,24 @@
           ref="chatMessage"
           :draw="toolsDrawer"
         ></ChatMessages>
+        <heat-man
+            ref="heatMan"
+            :chatId="this.$store.state.currentChannelId"
+            :type="this.$store.state.currentChatType"
+            v-if="this.heatShow"
+        ></heat-man>
         <div
           class="moveBand"
           v-show="toolsDrawer"
         >
+
           <TimeShaft
             v-if="tools[0].show"
             ref="timeShaft"
             :chatId="this.$store.state.currentChannelId"
             :type="this.$store.state.currentChatType"
           ></TimeShaft>
+
           <InfoPage
             v-else-if="tools[1].show"
             ref="infoPage"
@@ -172,15 +180,17 @@ import ChatMessages from "@/components/Module/ChatsModule/ChatMessages";
 import TimeShaft from "@/components/Module/ChatsModule/ChatTools/TimeShaft";
 import InfoPage from "@/components/Module/ChatsModule/ChatTools/InfoPage"
 import Search from "@/components/Module/ChatsModule/ChatTools/Search"
+import heatMan from "@/components/Module/ChatsModule/ChatTools/heatMan"
 import { getMessagesList, haveRead } from "@/api/message";
 import { getGroupMember } from '@/api/addresslist/index'
 
 export default {
   name: "ChatsModule",
-  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool },
+  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool, heatMan},
   data () {
     return {
       toolsDrawer: false, // 用于控制工具栏打开与否
+      heatShow: false,
       tools: [{
         icon: 'mdi-timeline',
         text: '',
@@ -282,6 +292,11 @@ export default {
     selectChannel (id, idx, item) {
       //关闭工具栏
       this.toolsDrawer = false
+      this.heatShow = false
+      this.$nextTick(() => {
+        // 在 DOM 中添加 my-component 组件
+        this.heatShow = true;
+      });
       this.tools[0].show = false
       this.tools[1].show = false
       this.tools[2].show = false
@@ -313,12 +328,12 @@ export default {
 
         //切换会议状态
         const that = this
-        if (this.$store.state.currentChatType == "group") {
+        if (this.$store.state.currentChatType === "group") {
           getGroupMember({
             "id": this.$store.state.currentChannelId,
           }).then(res => {
             if (!res || (res && !res.error)) {
-              if (res.findIndex(mem => mem.id == that.$store.state.userId && mem.type != "normal") == -1) {
+              if (res.findIndex(mem => mem.id === that.$store.state.userId && mem.type !== "normal") === -1) {
                 that.$refs.timeTool.timetoolShow = false
               }
               else {
@@ -330,7 +345,7 @@ export default {
         else {
           this.$refs.timeTool.timetoolShow = true
         }
-        if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
+        if (this.messages[this.$store.state.currentChannelIdx].isMeeting === false
           || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
           console.log("会议状态：开始=>关闭")
