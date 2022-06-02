@@ -115,6 +115,7 @@
                     ref="tag0"
                     counter=5
                     requried
+                    label="添加至少一个标签"
                     v-model="data.tags[0]"
                     :items="allTags"
                   ></v-combobox>
