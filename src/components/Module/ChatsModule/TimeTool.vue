@@ -20,7 +20,7 @@
     </v-btn>
     <v-chip
       color="pink"
-      roun
+      round
       label
       text-color="white"
       style="position: fixed; top: 0.6rem; right:25rem; font-weight: bold"
