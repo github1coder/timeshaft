@@ -42,7 +42,7 @@
               width="50%"
               style="margin: auto;font-size: 15px; font-weight: bold"
               @click="updateState()"
-              :disabled="isState"
+              :loading="isState"
               v-show="isMaster()"
             >
               {{stateText}}
@@ -318,10 +318,10 @@ export default {
         }
       })
       if (!this.timer) {
-        this.count = 3
+        this.count = 1
         this.isState = true
         this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= 3) {
+          if (this.count > 0 && this.count <= 1) {
             this.count--
             here.stateText = this.count
           } else {

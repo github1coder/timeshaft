@@ -57,8 +57,42 @@ export function queryTimeShaftId(param) {
 }
 
 export function meetingChange(param) {
-    return request( {
+    return request({
         url: 'timeshaft/meetingChange',
+        method: 'post',
+        data: param
+    })
+}
+
+
+export function delTimeshaft(param) {
+    return request({
+        url: 'timeshaft/delTimeshaft',
+        method: 'post',
+        data: param
+    })
+}
+
+
+export function getTimeTags(param) {
+    return request({
+        url: 'timeshaft/getTimeTags',
+        method: 'post',
+        data: param
+    })
+}
+
+export function searchTimeByTag(param) {
+    return request({
+        url: 'timeshaft/searchTimeByTag',
+        method: 'post',
+        data: param
+    })
+}
+
+export function updateTimeNode(param) {
+    return request({
+        url: 'timeshaft/updateTimeNode',
         method: 'post',
         data: param
     })

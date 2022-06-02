@@ -33,6 +33,8 @@
             :rules="rules.email"
           ></v-text-field>
           <v-text-field
+            :append-icon="eye"
+            @click:append="changeShowText"
             class="text-field"
             v-model="password"
             label="密码"
@@ -40,8 +42,6 @@
             :counter="16"
             :rules="rules.password"
             :type="type"
-            @mouseover="changeShowText"
-            @mouseleave="changeShowPassword"
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -86,6 +86,7 @@ import { getApplyList } from "../api/addresslist/index"
 export default {
   data () {
     return {
+      eye: "mdi-eye-off-outline",
       overlay: true,
       valid: true,
       email: "",
@@ -132,8 +133,16 @@ export default {
   },
 
   methods: {
+
     changeShowText () {
-      this.type = "text";
+      if (this.eye == "mdi-eye-off-outline") {
+        this.eye = "mdi-eye-outline"
+        this.type = "text";
+      }
+      else {
+        this.eye = "mdi-eye-off-outline"
+        this.type = "password";
+      }
     },
 
     changeShowPassword () {
