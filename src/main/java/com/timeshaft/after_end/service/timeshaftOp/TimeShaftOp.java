@@ -372,7 +372,7 @@ public class TimeShaftOp {
         for(Timeshaft timeshaft: timeshafts) {
             List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
             for(Tag tag: tags) {
-                if(!res.contains(tag.getName())) {
+                if(!tag.getName().equals("") && !res.contains(tag.getName())) {
                     res.add(tag.getName());
                 }
             }
