@@ -106,7 +106,8 @@ export default new Vuex.Store({
             store.currentChatType = data.type;
             store.currentChatTime = data.time;
             store.currentChatFirst = 1;
-            console.log("time: " + store.currentChatTime)
+            console.log("当前聊天类型：" + store.currentChatType)
+            // console.log("time: " + store.currentChatTime)
                 // console.log(store.currentChannelId + " " + store.currentChannelIdx);
         },
         updateAvatar(store, url) {

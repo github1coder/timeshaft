@@ -23,7 +23,6 @@
                     <span @click="insert(emoji)" :title="emojiName">{{emoji}}</span>
                   </v-col>
                 </v-row>
-
               </v-container>
             </v-tab-item>
           </v-tabs-items>
@@ -43,15 +42,34 @@
 
         </v-menu>
 
-        <v-btn
-            icon
-            left
-            class="mr-8 ml-12"
-        >
-          <v-icon color="white" size="24px">
-            mdi-at
-          </v-icon>
-        </v-btn>
+        <v-menu :nudge-top="180" v-model="atModel" v-scroll >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                icon
+                left
+                class="mr-8 ml-12"
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-icon color="white" size="24px">
+                mdi-at
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(friend, idx) in friends"
+              :key="idx"
+              @click="at(friend.id)"
+            >
+              <v-list-item-avatar size="30">
+                <v-img :src="friend.photo"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-title style="text-align: left; font-size: 5px" @click="at(friend.id)">{{friend.name}}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
         <v-btn
             icon
             left
@@ -89,6 +107,7 @@
 
 <script>
 import emoji from "../../../../public/emoji";
+import {getGroupMember} from "@/api/addresslist";
 
 export default {
   name: "ChatForm",
@@ -109,9 +128,17 @@ export default {
       emoji: emoji,
       tab: null,
       cursorPos: 0,
+      friends: [],
+      atModel: null,
+      atList: [],
     }
   },
   methods: {
+    at(id) {
+      console.log("At:" + id)
+      this.atList.push(id)
+      this.atModel = false
+    },
     insert (emoji) { // 添加表情
       let textDom = this.$refs.tarea
       var startPos = textDom.selectionStart
@@ -201,6 +228,25 @@ export default {
   },
   created() {
     console.log("this is chat")
+  },
+  watch: {
+    atModel(newVal, oldVal) {
+      if (newVal && !oldVal) {
+        getGroupMember({
+          id: this.$store.state.currentChannelId
+        }).then(res => {
+          console.log("收到群成员名单")
+          console.log(res)
+          this.friends = res
+          // this.friends.unshift( {
+          //   photo:  "",
+          //   id: -1,
+          //   name: "所有人",
+          // })
+          console.log(this.friends)
+        })
+      }
+    }
   }
 }
 </script>
