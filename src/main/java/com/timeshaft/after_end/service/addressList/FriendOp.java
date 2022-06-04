@@ -151,10 +151,11 @@ public class FriendOp {
         return ans;
     }
 
-    public void apply(Integer self_id, String type, String action, Integer id, Integer memId) {
+    public void apply(Integer self_id, String type, String action, Integer id, Integer memId, Integer invite) {
         if(groupType.equals(type)) {
             GroupUser groupUser = new GroupUser(id, self_id, null, null, null, null);
             if(action.equals(NEW)) {
+                groupUser.setInvite(invite);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
