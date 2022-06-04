@@ -5,6 +5,8 @@
   >
     <TimeNode
       :id="timeNodeId"
+      :isManager="isManager()"
+      :allTags="allTags.slice(1)"
       v-if="this.detail"
       @closeT="closeT"
     ></TimeNode>
@@ -188,6 +190,28 @@
         </v-container>
       </v-img>
     </v-card>
+    <v-row
+      dense
+      style="width: 100%; height: 80px; margin: auto;"
+    >
+      <v-select
+        v-model="tag"
+        style="width: 70%; margin: auto;"
+        requried
+        :items="allTags"
+      ></v-select>
+      <v-btn
+        style="width: 15%; height: 64%; margin: 12px 0px auto;"
+        rounded
+        color="brown lighten-5"
+        @click="search"
+      >
+        <!-- <v-icon style="width: 100%; height: 100%;">
+          mdi-magnify
+        </v-icon> -->
+        搜索
+      </v-btn>
+    </v-row>
     <h1
       style="
       color: #4d4d4d;
@@ -251,7 +275,8 @@
 </template>
 <script>
 // import { getTimeLine} from '../../../../api/timeShaft/index'
-import { beginTimeShaftSingle, getTimeshaft } from "../../../../api/timeShaft";
+import { beginTimeShaftSingle, getTimeshaft, getTimeTags, searchTimeByTag } from "../../../../api/timeShaft";
+import { getGroupMember } from "../../../../api/addresslist";
 import TimeNode from "./Msg/TimeNode"
 
 export default {
@@ -283,11 +308,13 @@ export default {
       timeshaft_id: -1,
       items: [],
       detail: false,
+      allTags: [],
+      tag: "",
     }
   },
   mounted () {
     this.dateShow();
-
+    this.updateTags();
   },
   created () {
     this.dateFormat();
@@ -300,6 +327,39 @@ export default {
   computed: {
   },
   methods: {
+    updateTags () {
+      getTimeTags({
+        chatId: this.chatId,
+        type: this.type,
+      }).then(res => {
+        this.allTags = res
+      })
+    },
+
+    search () {
+      if (this.tag == "") {
+        return
+      }
+      else if (this.tag == "所有时间轴") {
+        this.getShaft()
+      }
+      else {
+        searchTimeByTag({
+          chatId: this.chatId,
+          type: this.type,
+          tag: this.tag
+        }).then(res => {
+          if (!res || (res && !res.error)) {
+            //正常返回
+            this.items = res.items
+          }
+          else {
+            //错误信息展示
+          }
+        })
+      }
+    },
+
     getShaft () {
       let para = {
         group_id: this.chatId,
@@ -373,6 +433,28 @@ export default {
 
     closeT (flag) {
       this.detail = flag
+    },
+
+    isManager () {
+      const that = this
+      if (this.$store.state.currentChatType == "group") {
+        getGroupMember({
+          "id": this.$store.state.currentChannelId,
+        }).then(res => {
+          if (!res || (res && !res.error)) {
+            if (res.findIndex(mem => mem.id == that.$store.state.userId && mem.type != "normal") == -1) {
+              return false
+            }
+            else {
+              return true
+            }
+          }
+        })
+      }
+      else {
+        return true
+      }
+      return false
     },
   },
 

@@ -41,6 +41,8 @@
             :rules="rules.email"
           ></v-text-field>
           <v-text-field
+            :append-icon="eye"
+            @click:append="changeShowText"
             class="text-field"
             v-model="password"
             label="密码(只允许字母和数字)"
@@ -48,10 +50,10 @@
             :counter="16"
             :rules="rules.password"
             :type="type"
-            @mouseover="changeShowText"
-            @mouseleave="changeShowPassword"
           ></v-text-field>
           <v-text-field
+            :append-icon="eye"
+            @click:append="changeShowText"
             class="text-field"
             v-model="rePassword"
             label="重复密码"
@@ -59,8 +61,6 @@
             :counter="16"
             :rules="rules.rePassword"
             :type="type"
-            @mouseover="changeShowText"
-            @mouseleave="changeShowPassword"
           ></v-text-field>
           <v-text-field
             class="text-field"
@@ -115,6 +115,7 @@ import { getCheckCode, register, login } from '../api/user/index'
 export default {
   data () {
     return {
+      eye: "mdi-eye-off-outline",
       overlay: true,
       valid: true,
       loadingCheckCode: false,
@@ -158,7 +159,14 @@ export default {
 
   methods: {
     changeShowText () {
-      this.type = "text";
+      if (this.eye == "mdi-eye-off-outline") {
+        this.eye = "mdi-eye-outline"
+        this.type = "text";
+      }
+      else {
+        this.eye = "mdi-eye-off-outline"
+        this.type = "password";
+      }
     },
 
     changeShowPassword () {
@@ -211,11 +219,11 @@ export default {
     },
 
     async sendCheckCode () {
-      if (this.email === '') {
-        this.$message.error('请先输入邮箱再点击获取验证码')
+      if (this.email === '' || this.email.length > 30) {
+        return
       } else {
         if (!(this.email && (/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(this.email))) {
-          this.$message({ showClose: true, message: '请输入格式正确有效的邮箱号!', type: 'error' })
+          return
         } else {
           getCheckCode({
             'email': this.email

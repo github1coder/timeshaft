@@ -350,6 +350,9 @@ export default {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
           console.log("会议状态：开始=>关闭")
           this.$refs.timeTool.endOk(false)
+          if (this.$refs.timeShaft) {
+            this.$refs.timeShaft.getShaft()
+          }
         } else {
           console.log("会议状态：关闭=>开始")
           this.$refs.timeTool.tryOk(false)

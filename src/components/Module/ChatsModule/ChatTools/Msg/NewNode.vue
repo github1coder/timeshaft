@@ -27,34 +27,37 @@
               sm="6"
               md="2"
             >
-              <v-text-field
+              <v-combobox
                 label="添加至少一个标签"
                 counter=5
                 required
                 v-model="lable[0]"
-              ></v-text-field>
+                :items="allTags"
+              ></v-combobox>
             </v-col>
             <v-col
               cols="12"
               sm="6"
               md="2"
             >
-              <v-text-field
-                label="标签2"
+              <v-combobox
                 counter=5
+                required
                 v-model="lable[1]"
-              ></v-text-field>
+                :items="allTags"
+              ></v-combobox>
             </v-col>
             <v-col
               cols="12"
               sm="6"
               md="2"
             >
-              <v-text-field
-                label="标签3"
+              <v-combobox
                 counter=5
+                required
                 v-model="lable[2]"
-              ></v-text-field>
+                :items="allTags"
+              ></v-combobox>
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -96,7 +99,7 @@
   </v-dialog>
 </template>
 <script>
-import { beginTimeShaftSingle } from "../../../../../api/timeShaft";
+import { beginTimeShaftSingle, getTimeTags } from "../../../../../api/timeShaft";
 // import { meetingChange } from "../../../../../api/timeShaft";
 
 export default {
@@ -110,7 +113,16 @@ export default {
       lable: ["", "", ""],
       description: '',
       timeshaft_id: "",
+      allTags: [],
     }
+  },
+  mounted () {
+    getTimeTags({
+      chatId: this.chatId,
+      type: this.type,
+    }).then(res => {
+      this.allTags = res.slice(1)
+    })
   },
   methods: {
     setTimeline () {

@@ -1,7 +1,5 @@
 <template>
-  <v-card
-    height="100%"
-  >
+  <v-card height="100%">
     <v-card
       height="100%"
       flat
@@ -12,7 +10,7 @@
         style="width: 50%; height: 100%; float: left;"
       >
         <!-- <v-system-bar></v-system-bar> -->
-        <v-list >
+        <v-list>
           <v-list-item>
             <v-list-item-icon style="margin: 0px auto 0px;">
               <v-img
@@ -29,7 +27,7 @@
               rounded
               style="margin: auto; font-size: 15px; font-weight: bold"
               @click="updateMyState"
-              :disabled="isState"
+              :loading="isState"
             >
               {{state}}
             </v-btn>
@@ -103,16 +101,24 @@
                 :disabled="loadingCheckCode"
               >
                 {{hint}}
-                <v-icon right dark small>mdi-send</v-icon>
+                <v-icon
+                  right
+                  dark
+                  small
+                >mdi-send</v-icon>
               </v-btn>
               <v-btn
-                  class="ma-2 white--text"
-                  color="blue-grey"
+                class="ma-2 white--text"
+                color="blue-grey"
                 width="40%"
                 @click="changePassword"
               >
                 确定
-                <v-icon right dark small>mdi-account-arrow-up-outline</v-icon>
+                <v-icon
+                  right
+                  dark
+                  small
+                >mdi-account-arrow-up-outline</v-icon>
               </v-btn>
             </div>
             <span>{{msg}}</span>
@@ -143,13 +149,17 @@
                 autocomplete="off"
                 style="width: 70%; margin: auto;"
               ></v-text-field>
-              <v-btn class="ma-2 white--text"
+              <v-btn
+                class="ma-2 white--text"
                 style="width: 15%; height: 64%; margin: 12px 0.25px auto;"
                 color="blue-grey"
                 @click="newGroup"
               >
                 创建
-                <v-icon right dark>mdi-account-group-outline</v-icon>
+                <v-icon
+                  right
+                  dark
+                >mdi-account-group-outline</v-icon>
               </v-btn>
             </v-row>
           </v-list-item>
@@ -212,10 +222,10 @@ export default {
         "state": this.$store.state.state
       })
       if (!this.timer) {
-        this.count = 3
+        this.count = 1
         this.isState = true
         this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= 3) {
+          if (this.count > 0 && this.count <= 1) {
             this.count--
             this.state = this.count
           } else {

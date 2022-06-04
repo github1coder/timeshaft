@@ -157,3 +157,18 @@ export function finding(param) {
         params: param
     })
 }
+export function getFNotInG(param) {
+    return request({
+        url: '/addresslist/getFNotInG',
+        method: 'get',
+        params: param
+    })
+}
+
+export function getInviteList(param) {
+    return request({
+        url: '/addresslist/getInviteList',
+        method: 'get',
+        params: param
+    })
+}
