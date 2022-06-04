@@ -8,6 +8,7 @@
         v-model="tab"
       >
         <v-tab>好友申请</v-tab>
+        <v-tab>团队申请</v-tab>
         <v-tab>团队邀请</v-tab>
       </v-tabs>
 
@@ -114,7 +115,7 @@
                 style="margin: auto;"
                 v-show="showG"
               >
-                暂无团队邀请
+                暂无团队申请
               </v-card-title>
             </v-row>
             <v-divider style="margin-top: 10px;"></v-divider>
@@ -181,12 +182,96 @@
             </v-row>
           </v-card>
         </v-tab-item>
+        <v-tab-item
+          height="100%"
+          dark
+          style="overflow: auto; overflow-x: hidden"
+        >
+          <v-card
+            height="50%"
+            style="overflow: auto; overflow-x: hidden"
+          >
+            <v-row
+              dense
+              style="width: 100%; height: 64px; margin: auto;"
+            >
+              <v-card-title
+                style="margin: auto;"
+                v-show="showI"
+              >
+                暂无团队邀请
+              </v-card-title>
+            </v-row>
+            <v-divider style="margin-top: 10px;"></v-divider>
+            <v-list>
+              <v-list-item
+                v-for="(subItem, j) in inviteAns.slice(num * (pageI - 1), num * pageI)"
+                :key="j + num * (pageI - 1)"
+                @click="method1"
+                v-show="subItem.show"
+                two_line
+              >
+                <v-list-item-avatar>
+                  <v-img :src="subItem.photo"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-text="subItem.name"
+                    style="text-align: left"
+                  ></v-list-item-title>
+                  <v-list-item-subtitle style="text-align: left">{{subItem.inviteName}}邀请你加入{{subItem.name}}</v-list-item-subtitle>
+                </v-list-item-content>
+                <!-- 后面的省略号 -->
+                <v-list-item-action>
+                  <v-row style="width: 10%;">
+                    <v-btn
+                      small
+                      rounded
+                      color="green lighten-3"
+                      @click="acG(j + num * (pageI - 1))"
+                    >
+                      <v-icon>mdi-check-bold</v-icon>
+                    </v-btn>
+                    <v-btn
+                      small
+                      rounded
+                      color="red lighten-3"
+                      @click="reG(j + num * (pageI - 1))"
+                    >
+                      <v-icon>mdi-close-thick</v-icon>
+                    </v-btn>
+                  </v-row>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+            <v-row style="padding-bottom: 0;">
+              <v-btn
+                width="33%"
+                @click="downPageI"
+              >
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-btn
+                width="33%"
+                disabled
+              >
+                {{pageI}}/{{allPageI}}
+              </v-btn>
+              <v-btn
+                width="33%"
+                @click="upPageI"
+              >
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+            </v-row>
+          </v-card>
+        </v-tab-item>
       </v-tabs-items>
     </v-card>
   </v-card>
 </template>
 <script>
-import { apply, getApplyList } from "../../../../api/addresslist/index"
+import { apply, getApplyList, getInviteList } from "../../../../api/addresslist/index"
 export default {
   data () {
     return {
@@ -196,10 +281,14 @@ export default {
       allPageF: 2,
       pageG: 1,
       allPageG: 2,
+      pageI: 1,
+      allPageI: 2,
       friendAns: [],
       groupAns: [],
+      inviteAns: [],
       showF: true,
       showG: true,
+      showI: true,
     };
   },
 
@@ -248,6 +337,29 @@ export default {
         this.pageG = 1
       }
     })
+    getInviteList().then(res => {
+      if (!res || (res && !res.error)) {
+        that.$store.state.applynum += res.length
+      }
+      else {
+        return
+      }
+      this.inviteAns = res
+      this.inviteAns.forEach(function (item) {
+        item["show"] = true;
+      });
+      this.inviteAns = JSON.parse(JSON.stringify(this.inviteAns))
+      this.allPageI = Math.ceil(this.inviteAns.length / this.num)
+      console.log(this.inviteAns)
+      if (this.allPageI == 0) {
+        this.pageI = 0;
+        this.showI = true
+      }
+      else {
+        this.showI = false
+        this.pageI = 1
+      }
+    })
   },
 
   methods: {
@@ -279,12 +391,25 @@ export default {
       }
     },
 
+    downPageI () {
+      if (this.pageI != 1 && this.pageI != 0) {
+        this.pageI -= 1
+      }
+    },
+
+    upPageI () {
+      if (this.pageI != this.allPageI) {
+        this.pageI += 1
+      }
+    },
+
     acF (index) {
       apply({
         "type": "friend",
         "action": "accept",
         "id": this.friendAns[index].id,
-        "memId": -1
+        "memId": -1,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)
@@ -299,7 +424,8 @@ export default {
         "type": "friend",
         "action": "refuse",
         "id": this.friendAns[index].id,
-        "memId": -1
+        "memId": -1,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)
@@ -314,6 +440,7 @@ export default {
         "action": "accept",
         "id": this.groupAns[index].group_id,
         "memId": this.groupAns[index].id,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)
@@ -328,6 +455,7 @@ export default {
         "action": "refuse",
         "id": this.groupAns[index].group_id,
         "memId": this.groupAns[index].id,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)
