@@ -156,6 +156,9 @@ public class FriendOp {
             GroupUser groupUser = new GroupUser(id, self_id, null, null, null, null);
             if(action.equals(NEW)) {
                 groupUser.setInvite(invite);
+                if(invite != 0) {
+                    groupUser.setUserId(memId);
+                }
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
@@ -223,15 +226,17 @@ public class FriendOp {
                 GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW, null);
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
-                    HashMap<String, String> map = new HashMap<>();
-                    User user = userService.queryById(g.getUserId());
-                    map.put("group_id", g.getGroupId().toString());
-                    map.put("group_name", group.getName());
-                    map.put("id", user.getId().toString());
-                    map.put("name", user.getUsername());
-                    map.put("photo", user.getPhoto());
-                    map.put("show", "true");
-                    ans.add(map);
+                    if(g.getInvite() == null || g.getInvite() == 0) {
+                        HashMap<String, String> map = new HashMap<>();
+                        User user = userService.queryById(g.getUserId());
+                        map.put("group_id", g.getGroupId().toString());
+                        map.put("group_name", group.getName());
+                        map.put("id", user.getId().toString());
+                        map.put("name", user.getUsername());
+                        map.put("photo", user.getPhoto());
+                        map.put("show", "true");
+                        ans.add(map);
+                    }
                 }
             }
         } else {
