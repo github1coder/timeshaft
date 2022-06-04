@@ -140,7 +140,7 @@
                   </div>
                 </v-list-item-content>
                 <!-- 后面的省略号 -->
-                <v-list-item-action v-show="isSelf(j + num * (pageF - 1)) || isMaster()">
+                <v-list-item-action v-show="isSelf(j + num * (pageF - 1)) || isMaster() || notFriend(j + num * (pageF - 1))">
                   <v-menu right>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -179,6 +179,12 @@
                         @click="getMethod(friendsBtns[2].method, j + num * (pageF - 1))"
                       >
                         <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item
+                        v-show="!isSelf(j + num * (pageF - 1)) && notFriend(j + num * (pageF - 1))"
+                        @click="getMethod(friendsBtns[3].method, j + num * (pageF - 1))"
+                      >
+                        <v-list-item-title>{{ friendsBtns[3].title }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
                   </v-menu>
@@ -259,7 +265,7 @@
 
 <script>
 import { getInfoMsg } from "../../../../../api/addresslist/index"
-import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../../api/addresslist/index'
+import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup, apply } from '../../../../../api/addresslist/index'
 export default {
   props: ["id"],
   data () {
@@ -287,7 +293,10 @@ export default {
       }, {
         title: '取消管理员',
         method: 'subSubMaster'
-      },],
+      }, {
+        title: '添加好友',
+        method: 'addFriend'
+      }],
     };
   },
 
@@ -298,6 +307,17 @@ export default {
   methods: {
     method1 () {
 
+    },
+
+    addFriend (index) {
+      apply({
+        "type": "friend",
+        "action": "new",
+        "id": this.friends[index].id,
+        "memId": -1
+      }).then(res => {
+        console.log(res)
+      })
     },
 
     init (photo, nameG, master, notice) {
@@ -432,6 +452,10 @@ export default {
       }
       this.friendsIndex = j;
       this.name = "";
+    },
+
+    notFriend (index) {
+      return this.friends[index].chat_id == -1
     },
 
     isMaster () {

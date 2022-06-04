@@ -190,6 +190,12 @@
                       >
                         <v-list-item-title>{{ friendsBtns[2].title }}</v-list-item-title>
                       </v-list-item>
+                      <v-list-item
+                        v-show="!isSelf(j + num * (pageF - 1)) && notFriend(j + num * (pageF - 1))"
+                        @click="getMethod(friendsBtns[3].method, j + num * (pageF - 1))"
+                      >
+                        <v-list-item-title>{{ friendsBtns[3].title }}</v-list-item-title>
+                      </v-list-item>
                     </v-list>
                   </v-menu>
                 </v-list-item-action>
@@ -261,7 +267,7 @@
 </template>
 
 <script>
-import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../api/addresslist/index'
+import { apply, getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup } from '../../../../api/addresslist/index'
 export default {
   data () {
     return {
@@ -288,7 +294,10 @@ export default {
       }, {
         title: '取消管理员',
         method: 'subSubMaster'
-      },],
+      }, {
+        title: '添加好友',
+        method: 'addFriend'
+      }],
 
       stateText: "公开团队信息",
       isState: false,
@@ -302,6 +311,18 @@ export default {
     method1 () {
 
     },
+
+    addFriend (index) {
+      apply({
+        "type": "friend",
+        "action": "new",
+        "id": this.friends[index].id,
+        "memId": -1
+      }).then(res => {
+        console.log(res)
+      })
+    },
+
 
     updateState () {
       const that = this.$parent.$parent.$parent.$refs.memberList
@@ -447,6 +468,10 @@ export default {
       }
       this.friendsIndex = j;
       this.name = "";
+    },
+
+    notFriend (index) {
+      return this.friends[index].chat_id == -1
     },
 
     isMaster () {

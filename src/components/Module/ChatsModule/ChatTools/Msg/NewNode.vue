@@ -113,7 +113,7 @@ export default {
       lable: ["", "", ""],
       description: '',
       timeshaft_id: "",
-      allTags: "",
+      allTags: [],
     }
   },
   mounted () {
@@ -121,7 +121,7 @@ export default {
       chatId: this.chatId,
       type: this.type,
     }).then(res => {
-      this.allTags = res
+      this.allTags = res.slice(1)
     })
   },
   methods: {

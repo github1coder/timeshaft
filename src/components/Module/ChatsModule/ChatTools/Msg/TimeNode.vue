@@ -115,6 +115,7 @@
                     ref="tag0"
                     counter=5
                     requried
+                    label="添加至少一个标签"
                     v-model="data.tags[0]"
                     :items="allTags"
                   ></v-combobox>
@@ -243,7 +244,19 @@ export default {
       dialog: false,
       updateTags: false,
       updateConclude: false,
-      selects: [false, false, false]
+      selects: [false, false, false],
+      flashT: false,
+      flashC: false,
+    }
+  },
+
+  beforeDestroy () {
+    if (this.flashT) {
+      this.$parent.$parent.updateTags()
+      this.$parent.$parent.getShaft()
+    }
+    else if (this.flashC) {
+      this.$parent.$parent.getShaft()
     }
   },
   methods: {
@@ -269,9 +282,7 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateTags = false
-        if (this.$parent.$parent) {
-          this.$parent.$parent.updateTags()
-        }
+        this.flashT = true
       }
     },
 
@@ -287,6 +298,7 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateConclude = false
+        this.flashC = true
       }
     },
     close () {
