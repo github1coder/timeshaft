@@ -180,14 +180,14 @@ public class AddressListController {
             ans.put("photo", user.getPhoto());
             ans.put("nick", users.get(user));
             ans.put("mail", user.getEmail());
-            List<GroupUser> groupUser = groupUserService.queryAll(new GroupUser(id, user.getId(), null, null, null));
+            List<GroupUser> groupUser = groupUserService.queryAll(new GroupUser(id, user.getId(), null, null, null, null));
             if(groupUser.get(0).getIdentity().equals("manager") || groupUser.get(0).getIdentity().equals("master")) {
                 ans.put("type", "manager");
             } else {
                 ans.put("type", "normal");
             }
-            Friends friend1 = new Friends(id, user.getId(), null, null, null, "accept");
-            Friends friend2 = new Friends(user.getId(), id, null, null, null, "accept");
+            Friends friend1 = new Friends(id, user.getId(), null, null, "accept", null);
+            Friends friend2 = new Friends(user.getId(), id, null, null, "accept", null);
             List<Friends> friends = friendsService.queryAll(friend1);
             friends.addAll(friendsService.queryAll(friend2));
             if(friends.size() != 0) {
@@ -220,4 +220,15 @@ public class AddressListController {
         return new ResponseService(res);
     }
 
+    @RequestMapping(value = "/getHeat")
+    public ResponseService getFNotInG(@RequestParam("id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
+        ArrayList<Map<String, String>> res = groupOp.getFNotInG(group_id, user_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/getInviteList")
+    public ResponseService getInviteList(@RequestHeader("user_id") Integer user_id) throws Exception {
+        ArrayList<Map<String, String>> res = groupOp.getInviteList(user_id);
+        return new ResponseService(res);
+    }
 }

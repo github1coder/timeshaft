@@ -107,7 +107,7 @@ public class FriendOp {
             List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, null));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
-                GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null);
+                GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null, null);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if(groupUsers.size() == 0) {
                     res.add(group);
@@ -153,7 +153,7 @@ public class FriendOp {
 
     public void apply(Integer self_id, String type, String action, Integer id, Integer memId) {
         if(groupType.equals(type)) {
-            GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
+            GroupUser groupUser = new GroupUser(id, self_id, null, null, null, null);
             if(action.equals(NEW)) {
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
@@ -210,7 +210,7 @@ public class FriendOp {
     public List<Map<String, String>> getApplyList(String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
         if(groupType.equals(type)) {
-            GroupUser groupUser = new GroupUser(null, id, null, "master", null);
+            GroupUser groupUser = new GroupUser(null, id, null, "master", null, null);
             List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
             groupUser.setIdentity(MANAGER);
             groupUsers.addAll(groupUserService.queryAll(groupUser));
@@ -219,7 +219,7 @@ public class FriendOp {
                 groups.add(groupService.queryById(g.getGroupId()));
             }
             for(Group group: groups) {
-                GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW);
+                GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW, null);
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
                     HashMap<String, String> map = new HashMap<>();
@@ -250,7 +250,7 @@ public class FriendOp {
     }
 
     public Map<User, String> getGroupMember(int id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, ACCEPT));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, ACCEPT, null));
         Map<User, String> users = new HashMap<>();
         for (GroupUser groupUser : groupUsers) {
             User user = userService.queryById(groupUser.getUserId());
@@ -360,7 +360,7 @@ public class FriendOp {
             while (groups.size() > 0 && res.size() < 5) {
                 int random = new Random().nextInt(groups.size());
                 Group randomGroup = groups.remove(random);
-                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(randomGroup.getId(), user_id, null, null, null));
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(randomGroup.getId(), user_id, null, null, null, null));
                 if (groupUsers.size() <= 0) {
                     res.add(randomGroup);
                 }
