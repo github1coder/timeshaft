@@ -159,7 +159,7 @@ public class AddressListController {
     @RequestMapping(value = "/apply")
     public ResponseService apply(@RequestParam(value = "memId") Integer memId, @RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
         friendOp.apply(user_id, type, action, id, memId);
-        friendOp.sendNotification(type, action, id, user_id);
+        friendOp.sendNotification(type, action, id, memId, user_id);
         return new ResponseService();
     }
 
@@ -170,7 +170,7 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getGroupMember")
-    public ResponseService getGroupMember(@RequestParam("id") Integer id) {
+    public ResponseService getGroupMember(@RequestParam("id") Integer id, @RequestHeader("user_id") Integer user_id) {
         Map<User, String> users = friendOp.getGroupMember(id);
         List<Map<String, String>> res = new ArrayList<>();
         for(User user : users.keySet()) {
@@ -186,8 +186,8 @@ public class AddressListController {
             } else {
                 ans.put("type", "normal");
             }
-            Friends friend1 = new Friends(id, user.getId(), null, null, "accept", null);
-            Friends friend2 = new Friends(user.getId(), id, null, null, "accept", null);
+            Friends friend1 = new Friends(user_id, user.getId(), null, null, "accept", null);
+            Friends friend2 = new Friends(user.getId(), user_id, null, null, "accept", null);
             List<Friends> friends = friendsService.queryAll(friend1);
             friends.addAll(friendsService.queryAll(friend2));
             if(friends.size() != 0) {

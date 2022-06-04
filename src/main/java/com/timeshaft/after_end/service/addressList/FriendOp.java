@@ -259,12 +259,13 @@ public class FriendOp {
         return users;
     }
 
-    public void sendNotification(String type, String action,  Integer id, Integer user_id) {
+    //type为friend时, id为好友的id, type为group时，id为groupId
+    public void sendNotification(String type, String action, Integer id, Integer senderId, Integer acceptorId) {
         if (type.equals(friendType) && action.equals(ACCEPT)) {
-            User acceptor = userService.queryById(user_id);
-            User sender = userService.queryById(id);
-            Friends friend1 = new Friends(user_id, id, null, null, null, null);
-            Friends friend2 = new Friends(id, user_id, null, null, null, null);
+            User acceptor = userService.queryById(senderId);
+            User sender = userService.queryById(acceptorId);
+            Friends friend1 = new Friends(senderId, acceptorId, null, null, null, null);
+            Friends friend2 = new Friends(acceptorId, senderId, null, null, null, null);
             List<Friends> friends = friendsService.queryAll(friend1);
             friends.addAll(friendsService.queryAll(friend2));
             Friends friendsRelation = friends.get(0);
@@ -316,7 +317,7 @@ public class FriendOp {
             lastMessage.put("msg", null);
             lastMessage.put("time", null);
             res.put("lastMessage", lastMessage);
-            messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
+            messagingTemplate.convertAndSend("/user/contact/" + senderId, res);
         }
     }
 
