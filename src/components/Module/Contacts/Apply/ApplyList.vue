@@ -144,7 +144,7 @@
                       small
                       rounded
                       color="green lighten-3"
-                      @click="acG(j + num * (pageG - 1))"
+                      @click="acG(j + num * (pageG - 1), 'apply')"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
@@ -152,7 +152,7 @@
                       small
                       rounded
                       color="red lighten-3"
-                      @click="reG(j + num * (pageG - 1))"
+                      @click="reG(j + num * (pageG - 1), 'apply')"
                     >
                       <v-icon>mdi-close-thick</v-icon>
                     </v-btn>
@@ -228,7 +228,7 @@
                       small
                       rounded
                       color="green lighten-3"
-                      @click="acG(j + num * (pageI - 1))"
+                      @click="acG(j + num * (pageI - 1), 'invite')"
                     >
                       <v-icon>mdi-check-bold</v-icon>
                     </v-btn>
@@ -236,7 +236,7 @@
                       small
                       rounded
                       color="red lighten-3"
-                      @click="reG(j + num * (pageI - 1))"
+                      @click="reG(j + num * (pageI - 1), 'invite')"
                     >
                       <v-icon>mdi-close-thick</v-icon>
                     </v-btn>
@@ -434,32 +434,42 @@ export default {
       })
     },
 
-    acG (index) {
+    acG (index, type) {
       apply({
         "type": "group",
         "action": "accept",
-        "id": this.groupAns[index].group_id,
-        "memId": this.groupAns[index].id,
+        "id": type == "invite" ? this.inviteAns[index].id : this.groupAns[index].group_id,
+        "memId": type == "invite" ? this.$store.state.userId : this.groupAns[index].id,
         "invite": 0,
       }
       ).then(res => {
         console.log(res)
-        this.groupAns[index].show = false
+        if (type == "invite") {
+          this.inviteAns[index].show = false
+        }
+        else {
+          this.groupAns[index].show = false
+        }
         this.$store.state.applynum -= 1
       })
     },
 
-    reG (index) {
+    reG (index, type) {
       apply({
         "type": "group",
         "action": "refuse",
-        "id": this.groupAns[index].group_id,
-        "memId": this.groupAns[index].id,
+        "id": type == "invite" ? this.inviteAns[index].id : this.groupAns[index].group_id,
+        "memId": type == "invite" ? this.$store.state.userId : this.groupAns[index].id,
         "invite": 0,
       }
       ).then(res => {
         console.log(res)
-        this.groupAns[index].show = false
+        if (type == "invite") {
+          this.inviteAns[index].show = false
+        }
+        else {
+          this.groupAns[index].show = false
+        }
         this.$store.state.applynum -= 1
       })
     },
