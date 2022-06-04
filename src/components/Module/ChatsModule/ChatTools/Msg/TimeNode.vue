@@ -244,7 +244,19 @@ export default {
       dialog: false,
       updateTags: false,
       updateConclude: false,
-      selects: [false, false, false]
+      selects: [false, false, false],
+      flashT: false,
+      flashC: false,
+    }
+  },
+
+  beforeDestroy () {
+    if (this.flashT) {
+      this.$parent.$parent.updateTags()
+      this.$parent.$parent.getShaft()
+    }
+    else if (this.flashC) {
+      this.$parent.$parent.getShaft()
     }
   },
   methods: {
@@ -270,9 +282,7 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateTags = false
-        if (this.$parent.$parent) {
-          this.$parent.$parent.updateTags()
-        }
+        this.flashT = true
       }
     },
 
@@ -288,9 +298,7 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateConclude = false
-        if (this.$parent.$parent) {
-          this.$parent.$parent.getShaft()
-        }
+        this.flashC = true
       }
     },
     close () {

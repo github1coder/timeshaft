@@ -81,7 +81,7 @@
 
 <script>
 import { login } from '../api/user/index'
-import { getApplyList } from "../api/addresslist/index"
+import { getApplyList, getInviteList } from "../api/addresslist/index"
 
 export default {
   data () {
@@ -162,6 +162,11 @@ export default {
       getApplyList({
         "type": "group",
       }).then(res => {
+        if (!res || (res && !res.error)) {
+          that.$store.state.applynum += res.length
+        }
+      })
+      getInviteList().then(res => {
         if (!res || (res && !res.error)) {
           that.$store.state.applynum += res.length
         }
