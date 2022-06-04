@@ -157,8 +157,8 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/apply")
-    public ResponseService apply(@RequestParam(value = "memId") Integer memId, @RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
-        friendOp.apply(user_id, type, action, id, memId);
+    public ResponseService apply(@RequestParam(value = "invite") Integer invite, @RequestParam(value = "memId") Integer memId, @RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
+        friendOp.apply(user_id, type, action, id, memId, invite);
         friendOp.sendNotification(type, action, id, memId, user_id);
         return new ResponseService();
     }
@@ -180,7 +180,7 @@ public class AddressListController {
             ans.put("photo", user.getPhoto());
             ans.put("nick", users.get(user));
             ans.put("mail", user.getEmail());
-            List<GroupUser> groupUser = groupUserService.queryAll(new GroupUser(id, user.getId(), null, null, null));
+            List<GroupUser> groupUser = groupUserService.queryAll(new GroupUser(id, user.getId(), null, null, null, null));
             if(groupUser.get(0).getIdentity().equals("manager") || groupUser.get(0).getIdentity().equals("master")) {
                 ans.put("type", "manager");
             } else {
@@ -220,4 +220,15 @@ public class AddressListController {
         return new ResponseService(res);
     }
 
+    @RequestMapping(value = "/getFNotInG")
+    public ResponseService getFNotInG(@RequestParam("id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
+        ArrayList<Map<String, String>> res = groupOp.getFNotInG(group_id, user_id);
+        return new ResponseService(res);
+    }
+
+    @RequestMapping(value = "/getInviteList")
+    public ResponseService getInviteList(@RequestHeader("user_id") Integer user_id) throws Exception {
+        ArrayList<Map<String, String>> res = groupOp.getInviteList(user_id);
+        return new ResponseService(res);
+    }
 }

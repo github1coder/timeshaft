@@ -23,15 +23,18 @@ public class GroupUser implements Serializable {
 
     private String state;
 
+    private Integer invite;
+
     public GroupUser() {
     }
 
-    public GroupUser(Integer groupId, Integer userId, String userNickname, String identity, String state) {
+    public GroupUser(Integer groupId, Integer userId, String userNickname, String identity, String state, Integer invite) {
         this.groupId = groupId;
         this.userId = userId;
         this.userNickname = userNickname;
         this.identity = identity;
         this.state = state;
+        this.invite = invite;
     }
 
     public Integer getId() {
@@ -80,5 +83,13 @@ public class GroupUser implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Integer getInvite() {
+        return invite;
+    }
+
+    public void setInvite(Integer invite) {
+        this.invite = invite;
     }
 }

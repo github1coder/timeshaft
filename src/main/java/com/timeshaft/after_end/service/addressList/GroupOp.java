@@ -2,6 +2,7 @@ package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.annotation.PermissionAnnotation;
 import com.timeshaft.after_end.entity.*;
+import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.GroupHeatService;
 import com.timeshaft.after_end.service.GroupService;
 import com.timeshaft.after_end.service.GroupUserService;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -32,6 +35,8 @@ public class GroupOp {
     private GroupMessageServiceImpl groupMessageService;
     @Autowired
     private GroupMessageStateServiceImpl groupMessageStateService;
+    @Autowired
+    private FriendsService friendsService;
 
     @Value("${groupIdentity.manager}")
     private String MANAGER;
@@ -53,7 +58,7 @@ public class GroupOp {
         Group group = new Group(name, master_id, notice, photo, new Date(), "offMeeting", 0);
         group = groupService.insert(group);
         User user = userService.queryById(master_id);
-        GroupUser groupUser = new GroupUser(group.getId(), master_id, user.getUsername(), "master", ACCEPT);
+        GroupUser groupUser = new GroupUser(group.getId(), master_id, user.getUsername(), "master", ACCEPT, null);
         groupUserService.insert(groupUser);
         Date date = new Date(System.currentTimeMillis());
         GroupMessage helloMessage = new GroupMessage();
@@ -72,7 +77,7 @@ public class GroupOp {
 
     @PermissionAnnotation(level=11)
     public void deleteGroup(int user_id, int group_id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, null, null, null, null));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, null, null, null, null, null));
         for(GroupUser groupUser : groupUsers) {
             groupUserService.deleteById(groupUser.getId());
         }
@@ -98,7 +103,7 @@ public class GroupOp {
     }
 
     public List<Group> getGroup(int user_id) {
-        GroupUser groupUser = new GroupUser(null, user_id, null, null, ACCEPT);
+        GroupUser groupUser = new GroupUser(null, user_id, null, null, ACCEPT, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         List<Group> groups = new ArrayList<>();
         for(GroupUser tmp : groupUsers) {
@@ -110,13 +115,13 @@ public class GroupOp {
     @PermissionAnnotation(level=13)
     public void joinGroup(int user_id, int group_id, int join_user_id) {
         User user = userService.queryById(user_id);
-        GroupUser groupUser = new GroupUser(group_id, join_user_id, user.getUsername(), MEMBER, ACCEPT);
+        GroupUser groupUser = new GroupUser(group_id, join_user_id, user.getUsername(), MEMBER, ACCEPT, null);
         groupUserService.insert(groupUser);
     }
 
     @PermissionAnnotation(level=13)
     public void quitGroup(int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             groupUserService.deleteById(tmp.getId());
@@ -125,7 +130,7 @@ public class GroupOp {
 
     @PermissionAnnotation(level=11)
     public void addManager(int id, int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, id, null, null, null);
+        GroupUser groupUser = new GroupUser(group_id, id, null, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for(GroupUser tmp : groupUsers) {
             tmp.setIdentity(MANAGER);
@@ -135,7 +140,7 @@ public class GroupOp {
 
     @PermissionAnnotation(level=11)
     public void delManager(int id, int group_id, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, id, null, MANAGER, null);
+        GroupUser groupUser = new GroupUser(group_id, id, null, MANAGER, null,null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setIdentity(MEMBER);
@@ -145,7 +150,7 @@ public class GroupOp {
 
     @PermissionAnnotation(level=13)
     public void changeNickname(int group_id, String name, int user_id) {
-        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null);
+        GroupUser groupUser = new GroupUser(group_id, user_id, null, null, null, null);
         List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
         for (GroupUser tmp : groupUsers) {
             tmp.setUserNickname(name);
@@ -165,5 +170,48 @@ public class GroupOp {
         else if (groupHeat<=40) return 2;
         else if (groupHeat<=80) return 3;
         else return 4;
+    }
+
+    @PermissionAnnotation(level=13)
+    public ArrayList<Map<String, String>> getFNotInG(int group_id, int user_id) {
+        ArrayList<Map<String, String>> res = new ArrayList<>();
+        List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, ACCEPT, null));
+        friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, ACCEPT, null)));
+        for(Friends friend : friends) {
+            int id;
+            if(friend.getUserId1() == user_id) {
+                id = friend.getUserId2();
+            } else {
+                id = friend.getUserId1();
+            }
+            if(groupUserService.queryAll(new GroupUser(group_id, id, null, null, null, null)).isEmpty()) {
+                User user = userService.queryById(id);
+                HashMap<String, String> out = new HashMap<>();
+                out.put("friend_id", user.getId().toString());
+                out.put("friend_name", user.getUsername());
+                out.put("friend_photo", user.getPhoto());
+                out.put("mail", user.getEmail());
+                out.put("chat_id", friend.getId().toString());
+                res.add(out);
+            }
+        }
+        return res;
+    }
+
+    public ArrayList<Map<String, String>> getInviteList(int user_id) {
+        ArrayList<Map<String, String>> res = new ArrayList<>();
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, NEW, null));
+        for(GroupUser groupUser : groupUsers) {
+            if(groupUser.getInvite() != null && groupUser.getInvite() != 0) {
+                HashMap<String, String> out = new HashMap<>();
+                out.put("id", groupUser.getGroupId().toString());
+                Group group = groupService.queryById(groupUser.getGroupId());
+                out.put("name", group.getName());
+                User user = userService.queryById(groupUser.getInvite());
+                out.put("inviteName", user.getUsername());
+                res.add(out);
+            }
+        }
+        return res;
     }
 }
