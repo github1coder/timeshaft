@@ -32,7 +32,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          id, group_id, user_id, user_nickname, identity, state
+          id, group_id, user_id, user_nickname, identity, state, invite
         from timeshaft.group_user
         <where>
             <if test="id != null">

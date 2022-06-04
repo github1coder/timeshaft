@@ -220,7 +220,7 @@ public class AddressListController {
         return new ResponseService(res);
     }
 
-    @RequestMapping(value = "/getHeat")
+    @RequestMapping(value = "/getFNotInG")
     public ResponseService getFNotInG(@RequestParam("id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
         ArrayList<Map<String, String>> res = groupOp.getFNotInG(group_id, user_id);
         return new ResponseService(res);
