@@ -320,11 +320,16 @@ export default {
     delNode () {
       delTimeshaft({
         id: this.id,
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          //正常返回
+          this.close()
+          if (this.$parent.$parent) {
+            this.$parent.$parent.getShaft()
+          }
+        }
       })
-      this.close()
-      if (this.$parent.$parent) {
-        this.$parent.$parent.getShaft()
-      }
+
     },
   }
 }

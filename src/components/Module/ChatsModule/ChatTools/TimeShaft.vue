@@ -194,12 +194,12 @@
       dense
       style="width: 100%; height: 80px; margin: auto;"
     >
-      <v-select
+      <v-combobox
         v-model="tag"
         style="width: 70%; margin: auto;"
         requried
         :items="allTags"
-      ></v-select>
+      ></v-combobox>
       <v-btn
         style="width: 15%; height: 64%; margin: 12px 0px auto;"
         rounded

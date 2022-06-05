@@ -508,6 +508,7 @@ export default {
       )
       //用来设置切换初始化
       that.$refs.infoG.memberShow = false
+      that.$refs.infoG.friendShow = false
       that.$refs.infoG.iShowTrue()
     },
 
