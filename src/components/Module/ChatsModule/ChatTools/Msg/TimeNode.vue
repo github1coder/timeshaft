@@ -47,11 +47,18 @@
         </v-card>
       </v-dialog>
       <v-card style="width: 100%;height: 100%;">
-        <div style="height: 100%; width: 50%; float: left; border-right: 1px skyblue solid;">
+        <div style="height: 100%; width: 50%; float: left;">
           <div style="width: 80%; height: 90%; margin: auto;">
-            <v-card-title style=" font-size: 40px; font-weight: bold; ">
+            <v-card-title style=" font-size: 40px; font-weight: bold; width: 80%; line-height: 50px; text-align: left;">
               主题：{{data.title}}
             </v-card-title>
+            <div style="position: fixed; top: 0.5rem; left: 40%;">
+              <v-switch
+                :success="state"
+                :label="stateText"
+                @click="changeState"
+              ></v-switch>
+            </div>
             <v-divider></v-divider>
             <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
@@ -233,6 +240,8 @@ export default {
     }).then(res => {
       console.log(res)
       this.data = res
+      this.stateText = res.state ? "仅当前团队/好友可见" : "公开"
+      this.state = res.state
     })
   },
 
@@ -247,6 +256,8 @@ export default {
       selects: [false, false, false],
       flashT: false,
       flashC: false,
+      stateText: "仅当前团队/好友可见",
+      state: false,
     }
   },
 
@@ -260,6 +271,10 @@ export default {
     }
   },
   methods: {
+
+    changeState () {
+      console.log("修改时间轴状态")
+    },
 
     select (index) {
       this.selects[index] = true

@@ -1,21 +1,21 @@
 .moveBand {
-  height: calc(100% );
-  width: 35%;
+    height: calc(100%);
+    width: 25%;
 }
 
 .overflow-y-auto {
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #FBE9E7;
-    border: none;
-    border-radius: 10px;
-    box-shadow: inset 0 0 2px #CFD8DC;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgb(90, 90, 90);
-    border-radius: 10px;
-    box-shadow: none;
-  }
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        background: #FBE9E7;
+        border: none;
+        border-radius: 10px;
+        box-shadow: inset 0 0 2px #CFD8DC;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgb(90, 90, 90);
+        border-radius: 10px;
+        box-shadow: none;
+    }
 }

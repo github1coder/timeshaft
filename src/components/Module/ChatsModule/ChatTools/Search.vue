@@ -1,7 +1,5 @@
 <template>
-  <v-card
-    style="height: 100%; width: 100%"
-  >
+  <div style="height: 100%; width: 100%;">
     <v-row
       dense
       style="width: 100%; height: 64px; margin: auto;"
@@ -18,7 +16,7 @@
         style="width: 70%; margin: auto;"
       ></v-text-field>
       <v-btn
-        style="width: 15%; height: 64%; margin: 12px 0px auto;"
+        style="width: 30%; height: 64%; margin: 12px 0px auto;"
         rounded
         color="brown lighten-5"
         @click="search"
@@ -33,15 +31,11 @@
       v-text="feedback"
       v-if="!show"
     ></h1>
-    <div style="height: 100%; width: 100%;">
-      <History
-        v-if="this.show"
-        :messages="this.messages"
-      >
-      </History>
-    </div>
-
-  </v-card>
+    <History
+      v-show="this.show"
+      :messages="this.messages"
+    ></History>
+  </div>
 </template>
 
 <script>

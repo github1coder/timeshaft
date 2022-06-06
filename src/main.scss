@@ -90,7 +90,6 @@ body {
     flex-direction: column;
     position: absolute;
     overflow: hidden;
-
     top: 0;
     left: 82px;
     right: 0;
@@ -347,6 +346,26 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     border-top: 1px solid #363636 !important;
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        background: rgb(75, 75, 75);
+        border: none;
+        border-radius: 10px;
+        box-shadow: inset 0 0 2px #777;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #CFD8DC;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+}
+
+.history {
+    height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
     &::-webkit-scrollbar {
         width: 10px;
     }
