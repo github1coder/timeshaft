@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -251,6 +252,11 @@ public class TimeShaftOp {
         }
         ans.put("tags", tagNames);
         ans.put("conclude", timeshaft.getConclude());
+        if(timeshaft.getPrivate1() == 1) {
+            ans.put("state", false);
+        } else {
+            ans.put("state", true);
+        }
         ArrayList<Map<String, Object>> msg = new ArrayList<>();
         if (timeshaft.getType().equals(groupType)) {
             ans.put("groupName", groupService.queryById(timeshaft.getGroupId()).getName());
@@ -443,5 +449,15 @@ public class TimeShaftOp {
         timeshaftRes.put("conclude", timeshaft.getConclude());
         timeshaftRes.put("host", user.getUsername());
         return timeshaftRes;
+    }
+
+    @PermissionAnnotation(level = 32)
+    public void updateTimeState(Integer timeshaft_id, Boolean state, Integer user_id) {
+        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(state) {
+            timeshaft.setPrivate1(0);
+        } else {
+            timeshaft.setPrivate1(1);
+        }
     }
 }
