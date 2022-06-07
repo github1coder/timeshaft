@@ -253,9 +253,9 @@ public class TimeShaftOp {
         ans.put("tags", tagNames);
         ans.put("conclude", timeshaft.getConclude());
         if(timeshaft.getPrivate1() == 1) {
-            ans.put("state", false);
-        } else {
             ans.put("state", true);
+        } else {
+            ans.put("state", false);
         }
         ArrayList<Map<String, Object>> msg = new ArrayList<>();
         if (timeshaft.getType().equals(groupType)) {
