@@ -238,9 +238,12 @@ public class TimeShaftOp {
     }
 
     @PermissionAnnotation(level = 31)
-    public Map<String, Object> getSingleTimeshaft(int user_id, int timeshaft_id) {
+    public Map<String, Object> getSingleTimeshaft(int user_id, int timeshaft_id) throws Exception {
         Map<String, Object> ans = new HashMap<>();
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            throw new Exception("该时间轴不存在或者已被删除");
+        }
         ans.put("name", userService.queryById(timeshaft.getCreatorId()).getUsername());
         ans.put("startTime", timeshaft.getBeginTime());
         ans.put("endTime", timeshaft.getEndTime());
@@ -389,6 +392,9 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 32)
     public void updateTimeNode(Integer timeshaft_id, String type, ArrayList<String> tags, String conclude, Integer user_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            throw new Exception("该时间轴不存在或者已被删除");
+        }
         if(type.equals("tags")) {
             List<Tag> tags_1 = tagService.queryAll(new Tag(timeshaft_id, null));
             for(int i = 0; i < tags.size(); i++) {
@@ -452,12 +458,16 @@ public class TimeShaftOp {
     }
 
     @PermissionAnnotation(level = 32)
-    public void updateTimeState(Integer timeshaft_id, Boolean state, Integer user_id) {
+    public void updateTimeState(Integer timeshaft_id, Boolean state, Integer user_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            throw new Exception("该时间轴不存在或者已被删除");
+        }
         if(state) {
             timeshaft.setPrivate1(0);
         } else {
             timeshaft.setPrivate1(1);
         }
+        timeshaftService.update(timeshaft);
     }
 }
