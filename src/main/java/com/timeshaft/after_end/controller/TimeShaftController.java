@@ -147,4 +147,12 @@ public class TimeShaftController {
         res.put("items", timeshaftsRes);
         return new ResponseService(res);
     }
+
+    @RequestMapping("/updateTimeState")
+    public ResponseService updateTimeState(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+        Integer id = (Integer) requestMap.get("id");
+        Boolean state = (Boolean) requestMap.get("state");
+        timeShaftOp.updateTimeState(id, state, user_id);
+        return new ResponseService();
+    }
 }
