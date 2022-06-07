@@ -400,6 +400,9 @@ export default {
           });
           this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
           that.allPageF = Math.ceil(that.friendAns.length / that.num);
+          if (this.allPageF == 0) {
+            this.pageF = 0
+          }
           that.friendShow = !that.friendShow
         })
       }

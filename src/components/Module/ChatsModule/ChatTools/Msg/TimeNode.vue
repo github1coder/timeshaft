@@ -245,7 +245,7 @@ export default {
     }).then(res => {
       console.log(res)
       this.data = res
-      this.stateText = res.state ? "本团队/好友可见" : "公开"
+      this.stateText = res.state ? "公开" : "本团队/好友可见"
       this.state = res.state
     })
   },
@@ -295,7 +295,7 @@ export default {
             this.changing = false
             clearInterval(this.timer)
             this.timer = null
-            this.stateText = this.state ? "本团队/好友可见" : "公开"
+            this.stateText = this.state ? "公开" : "本团队/好友可见"
           }
         }, 1000)
       }
