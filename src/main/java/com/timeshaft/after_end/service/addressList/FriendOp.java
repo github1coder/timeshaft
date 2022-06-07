@@ -1,10 +1,7 @@
 package com.timeshaft.after_end.service.addressList;
 
 import com.timeshaft.after_end.entity.*;
-import com.timeshaft.after_end.service.FriendsService;
-import com.timeshaft.after_end.service.GroupService;
-import com.timeshaft.after_end.service.GroupUserService;
-import com.timeshaft.after_end.service.UserService;
+import com.timeshaft.after_end.service.*;
 import com.timeshaft.after_end.service.impl.PersonalMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +27,8 @@ public class FriendOp {
 
     @Resource(name = "UserService")
     private UserService userService;
+    @Autowired
+    private GroupHeatService groupHeatService;
 
     @Value("${type.friendType}")
     private String friendType;
@@ -51,6 +50,8 @@ public class FriendOp {
     private String TEXT;
     @Value("${type.timeShaftType}")
     private String TIMESHAFT;
+    @Value("${type.friendType}")
+    private String FRIEND;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -77,6 +78,10 @@ public class FriendOp {
         friends.addAll(friendsService.queryAll(friend_2));
         for(Friends tmp : friends){
             friendsService.deleteById(tmp.getId());
+            List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(tmp.getId(), null, null, FRIEND));
+            for(GroupHeat groupHeat : groupHeats) {
+                groupHeatService.deleteById(groupHeat.getId());
+            }
         }
     }
 
@@ -102,7 +107,7 @@ public class FriendOp {
             List<Group> groups = groupService.queryAll(new Group(name, null, null, null, null, null, null));
             List<Group> res = new ArrayList<>();
             for(Group group : groups) {
-                GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null);
+                GroupUser groupUser = new GroupUser(group.getId(), id, null, null, null, null);
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if(groupUsers.size() == 0) {
                     res.add(group);
@@ -146,10 +151,14 @@ public class FriendOp {
         return ans;
     }
 
-    public void apply(Integer self_id, String type, String action, Integer id, Integer memId) {
+    public void apply(Integer self_id, String type, String action, Integer id, Integer memId, Integer invite) {
         if(groupType.equals(type)) {
-            GroupUser groupUser = new GroupUser(id, self_id, null, null, null);
+            GroupUser groupUser = new GroupUser(id, self_id, null, null, null, null);
             if(action.equals(NEW)) {
+                groupUser.setInvite(invite);
+                if(invite != 0) {
+                    groupUser.setUserId(memId);
+                }
                 List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
                 if (groupUsers.size() == 0) {
                     groupUser.setState(action);
@@ -191,6 +200,7 @@ public class FriendOp {
                 friends.get(0).setState(action);
                 friends.get(0).setStatus("offMeeting");
                 friendsService.update(friends.get(0));
+                groupHeatService.insert(new GroupHeat(friends.get(0).getId(), 0, 0, FRIEND));
             } else {
                 friend1.setState(NEW);
                 friend2.setState(NEW);
@@ -204,7 +214,7 @@ public class FriendOp {
     public List<Map<String, String>> getApplyList(String type, Integer id) {
         List<Map<String, String>> ans = new ArrayList<>();
         if(groupType.equals(type)) {
-            GroupUser groupUser = new GroupUser(null, id, null, "master", null);
+            GroupUser groupUser = new GroupUser(null, id, null, "master", null, null);
             List<GroupUser> groupUsers = groupUserService.queryAll(groupUser);
             groupUser.setIdentity(MANAGER);
             groupUsers.addAll(groupUserService.queryAll(groupUser));
@@ -213,18 +223,20 @@ public class FriendOp {
                 groups.add(groupService.queryById(g.getGroupId()));
             }
             for(Group group: groups) {
-                GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW);
+                GroupUser tmp = new GroupUser(group.getId(), null, null, null, NEW, null);
                 List<GroupUser> apply = groupUserService.queryAll(tmp);
                 for(GroupUser g : apply) {
-                    HashMap<String, String> map = new HashMap<>();
-                    User user = userService.queryById(g.getUserId());
-                    map.put("group_id", g.getGroupId().toString());
-                    map.put("group_name", group.getName());
-                    map.put("id", user.getId().toString());
-                    map.put("name", user.getUsername());
-                    map.put("photo", user.getPhoto());
-                    map.put("show", "true");
-                    ans.add(map);
+                    if(g.getInvite() == null || g.getInvite() == 0) {
+                        HashMap<String, String> map = new HashMap<>();
+                        User user = userService.queryById(g.getUserId());
+                        map.put("group_id", g.getGroupId().toString());
+                        map.put("group_name", group.getName());
+                        map.put("id", user.getId().toString());
+                        map.put("name", user.getUsername());
+                        map.put("photo", user.getPhoto());
+                        map.put("show", "true");
+                        ans.add(map);
+                    }
                 }
             }
         } else {
@@ -244,7 +256,7 @@ public class FriendOp {
     }
 
     public Map<User, String> getGroupMember(int id) {
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, ACCEPT));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(id, null, null, null, ACCEPT, null));
         Map<User, String> users = new HashMap<>();
         for (GroupUser groupUser : groupUsers) {
             User user = userService.queryById(groupUser.getUserId());
@@ -253,12 +265,13 @@ public class FriendOp {
         return users;
     }
 
-    public void sendNotification(String type, String action,  Integer id, Integer user_id) {
+    //type为friend时, id为好友的id, type为group时，id为groupId
+    public void sendNotification(String type, String action, Integer id, Integer senderId, Integer acceptorId) {
         if (type.equals(friendType) && action.equals(ACCEPT)) {
-            User acceptor = userService.queryById(user_id);
-            User sender = userService.queryById(id);
-            Friends friend1 = new Friends(user_id, id, null, null, null, null);
-            Friends friend2 = new Friends(id, user_id, null, null, null, null);
+            User acceptor = userService.queryById(senderId);
+            User sender = userService.queryById(acceptorId);
+            Friends friend1 = new Friends(senderId, acceptorId, null, null, null, null);
+            Friends friend2 = new Friends(acceptorId, senderId, null, null, null, null);
             List<Friends> friends = friendsService.queryAll(friend1);
             friends.addAll(friendsService.queryAll(friend2));
             Friends friendsRelation = friends.get(0);
@@ -310,7 +323,7 @@ public class FriendOp {
             lastMessage.put("msg", null);
             lastMessage.put("time", null);
             res.put("lastMessage", lastMessage);
-            messagingTemplate.convertAndSend("/user/contact/" + user_id, res);
+            messagingTemplate.convertAndSend("/user/contact/" + senderId, res);
         }
     }
 
@@ -354,7 +367,7 @@ public class FriendOp {
             while (groups.size() > 0 && res.size() < 5) {
                 int random = new Random().nextInt(groups.size());
                 Group randomGroup = groups.remove(random);
-                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(randomGroup.getId(), user_id, null, null, null));
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(randomGroup.getId(), user_id, null, null, null, null));
                 if (groupUsers.size() <= 0) {
                     res.add(randomGroup);
                 }

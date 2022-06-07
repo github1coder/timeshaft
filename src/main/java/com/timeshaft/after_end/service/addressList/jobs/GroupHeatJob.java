@@ -16,24 +16,15 @@ public class GroupHeatJob {
     @Autowired
     private GroupHeatService groupHeatService;
 
-    @Scheduled(fixedRate = 10*60*1000)
+    @Scheduled(fixedRate = 5*60*1000)
     public void changeGroupHeat() {
         log.info("群热度相关服务开始");
         List<GroupHeat> groupHeats = groupHeatService.queryAll(new GroupHeat(null, null, null, null));
         for (GroupHeat groupHeat : groupHeats) {
             groupHeat.changeGroupHeat();
-            Integer groupHeatPercent = getGroupHeatPercent(groupHeat.getGroupHeat());
-            log.info(String.valueOf(groupHeatPercent));
+            groupHeatService.update(groupHeat);
+            log.info(String.valueOf(groupHeat.getGroupHeat()));
         }
         log.info("群热度相关服务结束");
-    }
-
-    private Integer getGroupHeatPercent(Integer groupHeat) {
-        if (groupHeat > 100) {
-            return 100;
-        }
-        else {
-            return groupHeat / 100;
-        }
     }
 }

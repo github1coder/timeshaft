@@ -53,7 +53,7 @@ public class PermissionAOP {
         if (permissionAnnotation.level() > 10 && permissionAnnotation.level() < 20) { //zzy
             Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
             Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-            groupUserService.hasPower(new GroupUser(group_id, user_id, null, null, null), permissionAnnotation.level());
+            groupUserService.hasPower(new GroupUser(group_id, user_id, null, null, null, null), permissionAnnotation.level());
         } else if (permissionAnnotation.level() > 20 && permissionAnnotation.level() < 30) { //dxt
 
         } else if (permissionAnnotation.level() > 30 && permissionAnnotation.level() < 40) {  //czr
@@ -66,15 +66,12 @@ public class PermissionAOP {
                     timeshaftPermission_2(user_id, timeshaft_id);
                 }
             } else {
+                Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
+                Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
+                String type = (String) simpleResolver(joinPoint, "type");
                 if (permissionAnnotation.level() == 38) {
-                    Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
-                    Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-                    String type = (String) simpleResolver(joinPoint, "type");
                     timeshaftPermission_8(user_id, group_id, type);
-                } else if (permissionAnnotation.level() == 39) {
-                    Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
-                    Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-                    String type = (String) simpleResolver(joinPoint, "type");
+                } else {
                     timeshaftPermission_9(user_id, group_id, type);
                 }
             }
@@ -103,7 +100,7 @@ public class PermissionAOP {
                     throw new Exception();
                 }
             } else if (timeshaft.getType().equals(GROUP)) {
-                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, null, "accept"));
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, null, "accept", null));
                 if (groupUsers.isEmpty()) {
                     throw new Exception();
                 }
@@ -121,8 +118,8 @@ public class PermissionAOP {
                 throw new Exception();
             }
         } else if (timeshaft.getType().equals(GROUP)) {
-            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, MANAGER, null));
-            groupUsers.addAll(groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, MASTER, null)));
+            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, MANAGER, null, null));
+            groupUsers.addAll(groupUserService.queryAll(new GroupUser(timeshaft.getGroupId(), user_id, null, MASTER, null, null)));
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }
@@ -138,8 +135,8 @@ public class PermissionAOP {
                 throw new Exception();
             }
         } else if (GROUP.equals(type)) {
-            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, MANAGER, null));
-            groupUsers.addAll(groupUserService.queryAll(new GroupUser(group_id, user_id, null, MASTER, null)));
+            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, MANAGER, null, null));
+            groupUsers.addAll(groupUserService.queryAll(new GroupUser(group_id, user_id, null, MASTER, null, null)));
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }
@@ -155,7 +152,7 @@ public class PermissionAOP {
                 throw new Exception();
             }
         } else if (GROUP.equals(type)) {
-            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, null, null));
+            List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(group_id, user_id, null, null, null, null));
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }
