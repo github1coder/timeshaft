@@ -93,6 +93,9 @@ public class PermissionAOP {
 
     private void timeshaftPermission_1(Integer user_id, Integer timeshaft_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            return;
+        }
         if (timeshaft.getPrivate1() == 1) {
             if (timeshaft.getType().equals(FRIEND)) {
                 Friends friend = friendsService.queryById(timeshaft.getGroupId());
@@ -112,6 +115,9 @@ public class PermissionAOP {
 
     private void timeshaftPermission_2(Integer user_id, Integer timeshaft_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            return;
+        }
         if (timeshaft.getType().equals(FRIEND)) {
             Friends friend = friendsService.queryById(timeshaft.getGroupId());
             if(!user_id.equals(friend.getUserId1()) && !user_id.equals(friend.getUserId2())) {
