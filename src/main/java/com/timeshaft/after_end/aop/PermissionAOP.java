@@ -66,15 +66,12 @@ public class PermissionAOP {
                     timeshaftPermission_2(user_id, timeshaft_id);
                 }
             } else {
+                Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
+                Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
+                String type = (String) simpleResolver(joinPoint, "type");
                 if (permissionAnnotation.level() == 38) {
-                    Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
-                    Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-                    String type = (String) simpleResolver(joinPoint, "type");
                     timeshaftPermission_8(user_id, group_id, type);
-                } else if (permissionAnnotation.level() == 39) {
-                    Integer user_id = (Integer) simpleResolver(joinPoint, "user_id");
-                    Integer group_id = (Integer) simpleResolver(joinPoint, "group_id");
-                    String type = (String) simpleResolver(joinPoint, "type");
+                } else {
                     timeshaftPermission_9(user_id, group_id, type);
                 }
             }
