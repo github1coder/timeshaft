@@ -97,3 +97,11 @@ export function updateTimeNode(param) {
         data: param
     })
 }
+
+export function updateTimeState(param) {
+    return request({
+        url: 'timeshaft/updateTimeState',
+        method: 'post',
+        data: param
+    })
+}

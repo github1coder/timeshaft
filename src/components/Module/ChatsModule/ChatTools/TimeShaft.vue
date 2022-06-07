@@ -220,6 +220,7 @@
       class="overflow-x-hidden overflow-y-auto"
       height="77%"
       v-if="items.length !== 0"
+      max-height="700px"
     >
 
       <v-timeline

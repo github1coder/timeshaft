@@ -52,12 +52,16 @@
             <v-card-title style=" font-size: 40px; font-weight: bold; width: 80%; line-height: 50px; text-align: left;">
               主题：{{data.title}}
             </v-card-title>
-            <div style="position: fixed; top: 0.5rem; left: 40%;">
-              <v-switch
-                :success="state"
-                :label="stateText"
+            <div style="position: fixed; top: 1rem; left: 40%;">
+              <v-btn
+                color="blue-grey lighten-4"
+                rounded
+                :loading="changing"
                 @click="changeState"
-              ></v-switch>
+                width="150px"
+              >
+                {{stateText}}
+              </v-btn>
             </div>
             <v-divider></v-divider>
             <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
@@ -228,6 +232,7 @@
 <script>
 import History from "./History.vue"
 import { getSingleTimeshaft, delTimeshaft, updateTimeNode } from "@/api/timeShaft"
+import { updateTimeState } from '../../../../../api/timeShaft'
 
 export default {
   components: { History },
@@ -240,7 +245,7 @@ export default {
     }).then(res => {
       console.log(res)
       this.data = res
-      this.stateText = res.state ? "仅当前团队/好友可见" : "公开"
+      this.stateText = res.state ? "本团队/好友可见" : "公开"
       this.state = res.state
     })
   },
@@ -256,8 +261,9 @@ export default {
       selects: [false, false, false],
       flashT: false,
       flashC: false,
-      stateText: "仅当前团队/好友可见",
+      stateText: "本团队/好友可见",
       state: false,
+      changing: false,
     }
   },
 
@@ -274,6 +280,25 @@ export default {
 
     changeState () {
       console.log("修改时间轴状态")
+      this.state = !this.state
+      updateTimeState({
+        "id": this.id,
+        "state": this.state
+      })
+      if (!this.timer) {
+        this.count = 1
+        this.changing = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 1) {
+            this.count--
+          } else {
+            this.changing = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.stateText = this.state ? "本团队/好友可见" : "公开"
+          }
+        }, 1000)
+      }
     },
 
     select (index) {
