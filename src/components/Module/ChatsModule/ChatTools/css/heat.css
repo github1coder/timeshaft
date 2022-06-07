@@ -1,0 +1,71 @@
+.charector-wrap{position: relative;width: 50px;height: 300px;left: 50%;margin-left: -90px;}
+.charector{
+    position: absolute;
+    width: 180px;
+    height:300px;
+    background: url("../../../../../../public/man.png") 0 0 no-repeat;
+    -webkit-animation-iteration-count: infinite;/* 动画无限播放 */
+    -webkit-animation-timing-function:step-start;/* 马上跳到动画每一结束桢的状态 */
+}
+/* 跑步动画名称 */
+@-webkit-keyframes person-xfast{/* 超快 */
+    0% {background-position: 0 0;}
+    14.3% {background-position: -180px 0;}
+    28.6% {background-position: -360px 0;}
+    42.9% {background-position: -540px 0;}
+    57.2% {background-position: -720px 0;}
+    71.5% {background-position: -900px 0;}
+    85.8% {background-position: -1080px 0;}
+    100% {background-position: 0 0;}
+}
+@-webkit-keyframes person-fast{/* 快 */
+    0% {background-position: 0 0;}
+    14.3% {background-position: -180px 0;}
+    28.6% {background-position: -360px 0;}
+    42.9% {background-position: -540px 0;}
+    57.2% {background-position: -720px 0;}
+    71.5% {background-position: -900px 0;}
+    85.8% {background-position: -1080px 0;}
+    100% {background-position: 0 0;}
+}
+@-webkit-keyframes person-normal{/* 正常 */
+    0% {background-position: 0 0;}
+    14.3% {background-position: -180px 0;}
+    28.6% {background-position: -360px 0;}
+    42.9% {background-position: -540px 0;}
+    57.2% {background-position: -720px 0;}
+    71.5% {background-position: -900px 0;}
+    85.8% {background-position: -1080px 0;}
+    100% {background-position: 0 0;}
+}
+@-webkit-keyframes person-slow{/* 慢 */
+    0% {background-position: 0 0;}
+    14.3% {background-position: -180px 0;}
+    28.6% {background-position: -360px 0;}
+    42.9% {background-position: -540px 0;}
+    57.2% {background-position: -720px 0;}
+    71.5% {background-position: -900px 0;}
+    85.8% {background-position: -1080px 0;}
+    100% {background-position: 0 0;}
+}
+/* 跑步动作频率控制 */
+.xfast .charector{/* 超快 */
+    -webkit-animation-name: person-xfast;
+    -webkit-animation-duration: 500ms;
+}
+.fast .charector{/* 快 */
+    -webkit-animation-name: person-fast;
+    -webkit-animation-duration: 650ms;
+}
+.normal .charector{/* 正常 */
+    -webkit-animation-name: person-normal;
+    -webkit-animation-duration: 800ms;
+}
+.slow .charector{/* 慢 */
+    -webkit-animation-name: person-slow;
+    -webkit-animation-duration: 950ms;
+}
+/* 暂停动画 */
+.paused .charector{
+    -webkit-animation-play-state:paused;
+}

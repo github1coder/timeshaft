@@ -1,6 +1,6 @@
 <template>
   <div class="dc-container">
-    <Navigations ></Navigations>
+    <Navigations></Navigations>
     <div class="base">
       <ChatsModule
         ref="chatModule"
@@ -81,7 +81,7 @@ export default {
     socketInit () {
       console.log("初始化socket")
       if (this.$store.state.serviceClient == null || !this.$store.state.serviceClient.connected) {
-        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : process.env.VUE_APP_baseURL+'/websocket'
+        this.socketUrl = this.$store.state.DEBUG ? 'http://localhost:8080/websocket' : process.env.VUE_APP_baseURL + '/websocket'
         if (this.$store.state.serviceClient != null && this.$store.state.serviceSocket.readyState === SockJS.OPEN) {
           this.$store.state.serviceClient.disconnect(() => {
             this.socketConnect()
@@ -163,6 +163,9 @@ export default {
                         if (json.isMeeting === false) {
                           console.log("会议状态：开始=>关闭")
                           this.$refs.chatModule.$refs.timeTool.endOk(true)
+                          if (this.$refs.chatModule.$refs.timeShaft) {
+                            this.$refs.chatModule.$refs.timeShaft.getShaft()
+                          }
                         }
                         else {
                           console.log("会议状态：关闭=>开始")

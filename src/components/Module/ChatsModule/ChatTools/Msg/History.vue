@@ -1,9 +1,9 @@
 <template>
-  <div
-    class="mem-info"
-    style="height: 90%; weight: 100%;"
-  >
-    <v-list three-line>
+  <div class="history">
+    <v-list
+      three-line
+      max-height="800px"
+    >
       <v-list-item
         :key="i"
         v-for="(message, i) in messages"

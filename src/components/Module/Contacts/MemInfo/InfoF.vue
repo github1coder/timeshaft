@@ -84,9 +84,6 @@ export default {
         document.getElementById('message-' + id).click()
         console.log("切换到聊天框")
       }, 1200)
-
-
-
     },
   }
 }

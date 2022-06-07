@@ -3,60 +3,112 @@
     <div :class="draw ? 'chat-form-open' : 'chat-form-close'">
       <v-divider></v-divider>
       <div class="text-left">
-          <v-btn
-              icon
-              left
-              class="text-left mr-8"
-          >
-            <v-icon class="ml-12" color="white" left size="24px">
-              mdi-home
-            </v-icon>
-          </v-btn>
+        <v-menu max-width="480" :nudge-top="300" v-model="emojiModel" :close-on-content-click="false"  transition="scale-transition">
+          <v-tabs v-model="tab">
+            <v-tab v-for="(emojiGroup, category) in emoji" :key="category">
+              {{category}}
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item
+              v-for="(emojiGroup, category) in emoji"
+              :key="category">
+              <v-container>
+                <v-row>
+                  <v-col
+                      class="pa-0"
+                      v-for="(emoji, emojiName) in emojiGroup"
+                      :key="emojiName"
+                  >
+                    <span @click="insert(emoji)" :title="emojiName">{{emoji}}</span>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                icon
+                left
+                class="mr-8 ml-12"
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-icon color="white" size="24px">
+                mdi-emoticon
+              </v-icon>
+            </v-btn>
+          </template>
+
+        </v-menu>
+
+        <v-menu :nudge-top="180" v-model="atModel" v-scroll >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                icon
+                left
+                class="mr-8 ml-12"
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-icon color="white" size="24px">
+                mdi-at
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(friend, idx) in friends"
+              :key="idx"
+              @click="at(friend.id)"
+            >
+              <v-list-item-avatar size="30">
+                <v-img :src="friend.photo"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-title style="text-align: left; font-size: 5px" @click="at(friend.id)">{{friend.name}}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
         <v-btn
             icon
             left
-            class="text-left mr-8"
-        >
-          <v-icon class="ml-12" color="white" left size="24px">
-            mdi-email
-          </v-icon>
-        </v-btn>
-        <v-btn
-            icon
-            left
-            class="text-left mr-8"
+            class="mr-8 ml-12"
             @click="() => {
               this.$emit('selectStatusChange')
             }"
         >
-          <v-icon class="ml-12" color="white" left size="24px">
-            mdi-calendar
+          <v-icon color="white" size="24px">
+            {{ $parent.selecting ? "mdi-close-circle-outline" : "mdi-timer-outline" }}
           </v-icon>
         </v-btn>
         <v-btn
             icon
             left
-            class="text-left mr-8"
+            class="mr-8 ml-12"
         >
-          <v-icon class="ml-12" color="white" left size="24px">
-            mdi-delete
+          <v-icon color="white" size="24px">
+            mdi-dots-horizontal
           </v-icon>
         </v-btn>
       </div>
-      <v-textarea
-          label="这边输入消息捏~"
-          light
-          solo
-          height="50px"
+      <textarea
+          class="tarea"
+          ref="tarea"
           v-model="inputMsg"
+          @blur="getBlur"
+          placeholder="按 Enter 发送"
           @keyup.enter="sendChat(inputMsg)"
       >
-      </v-textarea>
+      </textarea>
     </div>
   </div>
 </template>
 
 <script>
+import emoji from "../../../../public/emoji";
+import {getGroupMember} from "@/api/addresslist";
+
 export default {
   name: "ChatForm",
   props: ['draw'],
@@ -72,9 +124,52 @@ export default {
       ],
       padless: false,
       variant: 'default',
+      emojiModel: false,
+      emoji: emoji,
+      tab: null,
+      cursorPos: 0,
+      friends: [],
+      atModel: null,
+      atList: [],
     }
   },
   methods: {
+    at(id) {
+      console.log("At:" + id)
+      this.atList.push(id)
+      this.atModel = false
+    },
+    insert (emoji) { // 添加表情
+      let textDom = this.$refs.tarea
+      var startPos = textDom.selectionStart
+      var endPos = textDom.selectionEnd
+      var scrollTop = textDom.scrollTop
+      this.inputMsg = this.inputMsg.substring(0, startPos) + emoji + this.inputMsg.substring(endPos, this.inputMsg.length)
+      setTimeout(() => {
+        textDom.focus()
+        textDom.selectionStart = this.cursorPos + 2 // 光标起始选择区域
+        textDom.selectionEnd = this.cursorPos + 2 // 光标结尾选择区域
+        textDom.scrollTop = scrollTop // 光标行高度
+      }, 50)
+      this.emojiModel = false
+    },
+    getBlur () { // 文本框失焦
+      var element = this.$refs.tarea
+      let cursorPos = 0
+      console.log("1 " + cursorPos)
+      console.log(document.selection)
+      console.log(element)
+      console.log(element.selectionStart)
+      if (document.selection) {
+        var selectRange = document.selection.createRange()
+        selectRange.moveStart('character', -element.value.length)
+        cursorPos = selectRange.text.length
+      } else if (element.selectionStart || element.selectionStart === '0') {
+        cursorPos = element.selectionStart
+      }
+      console.log("2 " + cursorPos)
+      this.cursorPos = cursorPos
+    },
     isSpace(message) {
       let flag = true
        for (let i in message) {
@@ -130,10 +225,42 @@ export default {
     clearMsg () {
       this.inputMsg = ""
     },
+  },
+  created() {
+    console.log("this is chat")
+  },
+  watch: {
+    atModel(newVal, oldVal) {
+      if (newVal && !oldVal) {
+        getGroupMember({
+          id: this.$store.state.currentChannelId
+        }).then(res => {
+          console.log("收到群成员名单")
+          console.log(res)
+          this.friends = res
+          // this.friends.unshift( {
+          //   photo:  "",
+          //   id: -1,
+          //   name: "所有人",
+          // })
+          console.log(this.friends)
+        })
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-
+.tarea::-webkit-scrollbar {
+  display: none;
+}
+textarea {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #E0E0E0;
+}
 </style>

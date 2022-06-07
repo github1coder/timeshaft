@@ -2,24 +2,26 @@
   <div class="chat-content">
     <TimeNode
       :id="shaftId"
+      :isManager="false"
+      :allTags="[]"
       v-if="detail"
       @closeT="closeT"
     ></TimeNode>
     <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="800px"
+      v-model="dialog"
+      persistent
+      max-width="800px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-            absolute
-            bottom
-            color="blue-grey darken-4"
-            right
-            fab
-            v-bind="attrs"
-            v-on="on"
-            v-if="snackbar === false"
+          absolute
+          bottom
+          color="blue-grey darken-4"
+          right
+          fab
+          v-bind="attrs"
+          v-on="on"
+          v-if="snackbar === false"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -33,57 +35,57 @@
           <v-container>
             <v-row>
               <v-col
-                  cols="12"
-                  sm="6"
-                  md="4"
+                cols="12"
+                sm="6"
+                md="4"
               >
                 <v-text-field
-                    label="事件主题"
-                    v-model="title"
-                    required
+                  label="事件主题"
+                  v-model="title"
+                  required
                 ></v-text-field>
               </v-col>
               <v-col
-                  cols="12"
-                  sm="6"
-                  md="2"
+                cols="12"
+                sm="6"
+                md="2"
               >
                 <v-text-field
-                    label="添加至少一个标签"
-                    counter=5
-                    required
-                    v-model="label[0]"
+                  label="添加至少一个标签"
+                  counter=5
+                  required
+                  v-model="label[0]"
                 ></v-text-field>
               </v-col>
               <v-col
-                  cols="12"
-                  sm="6"
-                  md="2"
+                cols="12"
+                sm="6"
+                md="2"
               >
                 <v-text-field
-                    label="标签2"
-                    counter=5
-                    v-model="label[1]"
+                  label="标签2"
+                  counter=5
+                  v-model="label[1]"
                 ></v-text-field>
               </v-col>
               <v-col
-                  cols="12"
-                  sm="6"
-                  md="2"
+                cols="12"
+                sm="6"
+                md="2"
               >
                 <v-text-field
-                    label="标签3"
-                    counter=5
-                    v-model="label[2]"
+                  label="标签3"
+                  counter=5
+                  v-model="label[2]"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-textarea
-                    label="事件描述"
-                    dense
-                    auto-grow
-                    required
-                    v-model="description"
+                  label="事件描述"
+                  dense
+                  auto-grow
+                  required
+                  v-model="description"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -91,24 +93,24 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-              color="gray darken-1"
-              text
-              style="
+            color="gray darken-1"
+            text
+            style="
               font-size: 20px;
               margin-left: 10%;
 "
-              @click="dialog = false"
+            @click="dialog = false"
           >
             关闭
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
-              color="gray darken-1"
-              text
-              style="
+            color="gray darken-1"
+            text
+            style="
               margin-right: 10%;
               font-size: 20px;"
-              @click="commitTimeline"
+            @click="commitTimeline"
           >
             添加
           </v-btn>
@@ -116,25 +118,42 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <div class="messages" id="scroll-target">
+    <div
+      class="messages"
+      id="scroll-target"
+    >
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
         <!--        {{selected}}-->
-        <v-list three-line v-scroll:#scroll-target="onScroll">
-          <template v-for="(message, i) in messages" class="chat-list">
-            <v-list-item :key="i" class="chat-list-item">
-              <v-list-item-avatar v-if="selecting" class="mx-0">
+        <v-list
+          three-line
+          v-scroll:#scroll-target="onScroll"
+        >
+          <template
+            v-for="(message, i) in messages"
+            class="chat-list"
+          >
+            <v-list-item
+              :key="i"
+              class="chat-list-item"
+            >
+              <v-list-item-avatar
+                v-if="selecting"
+                class="mx-0"
+              >
                 <v-checkbox
-                    v-model="selected"
-                    label=""
-                    :value="message.msgId"
+                  v-model="selected"
+                  label=""
+                  :value="message.msgId"
                 ></v-checkbox>
               </v-list-item-avatar>
-              <v-list-item-avatar v-if="message.isMeeting" class="mx-3">
+              <v-list-item-avatar
+                v-if="message.isMeeting"
+                class="mx-3"
+              >
                 <v-btn
-                    color="success"
-                    fab
-                    x-small
-
+                  color="success"
+                  fab
+                  x-small
                 >
                   <v-icon>mdi-domain</v-icon>
                 </v-btn>
@@ -146,14 +165,12 @@
               <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-                <v-list-item-subtitle
-                    v-if="message.msgType === 'text'"
-                >{{ message.msg }}
+                <v-list-item-subtitle v-if="message.msgType === 'text'">{{ message.msg }}
                 </v-list-item-subtitle>
                 <v-list-item-subtitle
-                    v-else-if="message.msgType === 'timeShaft'"
-                    @click="queryTimeShaft(message.msg)"
-                    style="color: #2196F3"
+                  v-else-if="message.msgType === 'timeShaft'"
+                  @click="queryTimeShaft(message.msg)"
+                  style="color: #2196F3"
                 >
                   {{message.msg}}
                 </v-list-item-subtitle>
@@ -172,20 +189,24 @@
         </v-list>
       </div>
     </div>
-    <ChatForm :draw="draw" @selectStatusChange="selecting = !selecting" @send="socketSend"></ChatForm>
+    <ChatForm
+      :draw="draw"
+      @selectStatusChange="selecting = !selecting"
+      @send="socketSend"
+    ></ChatForm>
   </div>
 </template>
 
 <script>
-import {getHistoryMessage} from "@/api/message";
+import { getHistoryMessage } from "@/api/message";
 import ChatForm from "@/components/Module/ChatsModule/ChatForm";
-import {genTimeShaftFromMessages, queryTimeShaftId} from "@/api/timeShaft";
+import { genTimeShaftFromMessages, queryTimeShaftId } from "@/api/timeShaft";
 import TimeNode from "@/components/Module/ChatsModule/ChatTools/Msg/TimeNode";
 export default {
   name: "ChatMessages",
-  components: {TimeNode, ChatForm},
+  components: { TimeNode, ChatForm },
   props: ['draw'],
-  data() {
+  data () {
     return {
       refreshed: false,
       cache: 0,
@@ -206,9 +227,9 @@ export default {
     closeT (flag) {
       this.detail = flag
     },
-    queryTimeShaft(msg) {
+    queryTimeShaft (msg) {
       queryTimeShaftId({
-          msg: msg
+        msg: msg
       }).then(res => {
         console.log(res)
         if (res.timeShaftId !== -1) {
@@ -219,7 +240,7 @@ export default {
         }
       })
     },
-    onScroll() {
+    onScroll () {
       console.log("It's scrolling")
       if (!this.refreshed && document.documentElement.scrollTop || document.querySelector('.messages').scrollTop === 0) {
         this.refreshed = true
@@ -229,7 +250,7 @@ export default {
       console.log(this.refreshed)
     },
 
-    scrollToBottom() {
+    scrollToBottom () {
       this.$nextTick(() => {
         const list = this.$el.querySelector(".messages");
         console.log("list is:")
@@ -238,7 +259,7 @@ export default {
       })
 
     },
-    socketSend(payload) {
+    socketSend (payload) {
       // TODO 改成传参
       console.log(this.$store.state.serviceClient)
       console.log(payload)
@@ -249,10 +270,10 @@ export default {
       this.$emit("send", payload.data)
     },
 
-    clearMessages() {
+    clearMessages () {
       this.messages = []
     },
-    init() {
+    init () {
       this.clearMessages()
       setTimeout(() => {
         console.log(this.$store.state.currentChatTime)
@@ -281,7 +302,7 @@ export default {
 
       }, 100)
     },
-    commitTimeline() {
+    commitTimeline () {
       genTimeShaftFromMessages({
         chatId: this.$store.state.currentChannelId,
         userId: this.$store.state.userId,
@@ -298,7 +319,7 @@ export default {
   },
   computed: {},
   watch: {
-    refreshed(newVal, oldVal) {
+    refreshed (newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
         console.log("more: " + this.$store.state.currentChatMore)
@@ -327,7 +348,7 @@ export default {
         }
       }
     },
-    selecting(newVal, oldVal) {
+    selecting (newVal, oldVal) {
       if (!newVal && oldVal && this.selected.length !== 0) {
         console.log("填写timeShaft信息")
         this.dialog = true
@@ -337,12 +358,11 @@ export default {
 
   },
 
-  created() {
+  created () {
 
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

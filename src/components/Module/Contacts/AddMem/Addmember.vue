@@ -47,15 +47,18 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
-              class="white--text"
-              rounded
+            class="white--text"
+            rounded
             style="width: 100%; margin-top: 20px;"
             color="blue-grey"
             @click="findmore('friend')"
             v-if="isMore"
           >
             发现周围用户
-            <v-icon right dark >mdi-access-point</v-icon>
+            <v-icon
+              right
+              dark
+            >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -147,15 +150,18 @@
           </v-row>
           <v-divider style="margin-top: 10px;"></v-divider>
           <v-btn
-              class="white--text"
-              rounded
+            class="white--text"
+            rounded
             style="width: 100%; margin-top: 20px;"
             color="blue-grey"
             @click="findmore('group')"
             v-if="isMore"
           >
             发现周围团队
-            <v-icon right dark >mdi-access-point</v-icon>
+            <v-icon
+              right
+              dark
+            >mdi-access-point</v-icon>
           </v-btn>
           <v-card-title
             style="margin: auto;"
@@ -372,7 +378,8 @@ export default {
         "type": "friend",
         "action": "new",
         "id": this.friendAns[index].id,
-        "memId": -1
+        "memId": -1,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)
@@ -384,7 +391,8 @@ export default {
         "type": "group",
         "action": "new",
         "id": this.groupAns[index].id,
-        "memId": this.$store.state.userId
+        "memId": this.$store.state.userId,
+        "invite": 0,
       }
       ).then(res => {
         console.log(res)

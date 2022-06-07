@@ -72,7 +72,10 @@
             </v-list-item-content>
             <!-- 后面的省略号 -->
             <v-list-item-action>
-              <v-menu right>
+              <v-menu
+                right
+                v-if="isMaster(j + num * (pageG - 1))"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     icon
@@ -82,13 +85,8 @@
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
-                <v-list
-                  hover
-                >
-                  <v-list-item
-                    v-if="isMaster(j + num * (pageG - 1))"
-                    @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))"
-                  >
+                <v-list hover>
+                  <v-list-item @click="getMethod(groupsBtns[0].method, j + num * (pageG - 1))">
                     <v-list-item-title>{{ groupsBtns[0].title }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -192,9 +190,7 @@
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
-                <v-list
-                  hover
-                >
+                <v-list hover>
                   <v-list-item
                     v-for="(btnn, i) in friendsBtns"
                     :key="i"
@@ -512,6 +508,7 @@ export default {
       )
       //用来设置切换初始化
       that.$refs.infoG.memberShow = false
+      that.$refs.infoG.friendShow = false
       that.$refs.infoG.iShowTrue()
     },
 
