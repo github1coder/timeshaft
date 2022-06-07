@@ -3,23 +3,13 @@
     style="width: 100%; height: 100%"
     class="mem-info"
   >
-    <v-card
-      style="width: 100%; height: 100%;"
-      flat
-      tile
+    <!-- <v-row style="width: 100%; height: 100%;"> -->
+    <v-navigation-drawer
+      permanent
+      style="width: 100%;"
     >
-      <v-card
-        tile
-        style="width: 100%; overflow: auto; overflow-x: hidden"
-        class="mem-info"
-      >
-        <!-- <v-row style="width: 100%; height: 100%;"> -->
-        <v-navigation-drawer
-          permanent
-          style="width: 100%;"
-        >
-          <!-- <v-system-bar></v-system-bar> -->
-          <!-- <v-list-item>
+      <!-- <v-system-bar></v-system-bar> -->
+      <!-- <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
@@ -36,21 +26,21 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-          <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
-            {{this.nameG}}
-          </v-card>
-          <v-textarea
-            background-color="grey lighten-3"
-            :disabled="iShow"
-            filled
-            auto-grow
-            rows="4"
-            black
-            v-model="notice"
-            row-height="40"
-            style="margin: 20px 20px 0px 20px;"
-          ></v-textarea>
-          <!-- <v-btn
+      <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
+        {{this.nameG}}
+      </v-card>
+      <v-textarea
+        background-color="grey lighten-3"
+        :disabled="iShow"
+        filled
+        auto-grow
+        rows="4"
+        black
+        v-model="notice"
+        row-height="40"
+        style="margin: 20px 20px 0px 20px;"
+      ></v-textarea>
+      <!-- <v-btn
             color="blue"
             class="mx-2"
             v-show="iShow && this.$store.getters.userId == this.master"
@@ -58,220 +48,223 @@
           >
             修改群公告
           </v-btn> -->
-          <v-btn
-            v-show="!iShow"
-            class="mx-2"
-            rounded
-            color="green lighten-3"
-            width="40%"
-            @click="changeNotice"
+      <v-btn
+        v-show="!iShow"
+        class="mx-2"
+        rounded
+        color="green lighten-3"
+        width="40%"
+        @click="changeNotice"
+      >
+        确认
+      </v-btn>
+      <v-btn
+        v-show="!iShow"
+        class="mx-2"
+        rounded
+        color="red lighten-3"
+        width="40%"
+        @click="iShowTrue"
+      >
+        取消
+      </v-btn>
+    </v-navigation-drawer>
+    <div style="width: 100%;">
+      <v-list
+        style="width: 100%;"
+        max-height="600px"
+      >
+        <v-list-group
+          prepend-icon="mdi-account-supervisor-circle"
+          @click="getMember"
+          :value="memberShow"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>群成员</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="(subItem, j) in mems.slice(num * (pageMem - 1), num * pageMem)"
+            :key="j + num * (pageMem - 1)"
+            @click="method1"
           >
-            确认
-          </v-btn>
-          <v-btn
-            v-show="!iShow"
-            class="mx-2"
-            rounded
-            color="red lighten-3"
-            width="40%"
-            @click="iShowTrue"
-          >
-            取消
-          </v-btn>
-        </v-navigation-drawer>
-        <v-col style="width: 100%;">
-          <v-list style="width: 100%;">
-            <v-list-group
-              prepend-icon="mdi-account-supervisor-circle"
-              @click="getMember"
-              :value="memberShow"
-            >
-              <template v-slot:activator>
-                <v-list-item-content>
-                  <v-list-item-title>群成员</v-list-item-title>
-                </v-list-item-content>
-              </template>
-              <v-list-item
-                v-for="(subItem, j) in mems.slice(num * (pageMem - 1), num * pageMem)"
-                :key="j + num * (pageMem - 1)"
-                @click="method1"
+            <v-list-item-avatar>
+              <v-img :src="subItem.photo"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                v-show="!subItem.show && !subItem.quit"
+                v-text="subItem.name"
+                style="text-align: left"
+              ></v-list-item-title>
+              <v-text-field
+                style="background-color: activecaption; border-radius: 5%;"
+                v-show="subItem.show"
+                v-model="name"
+                @keydown.esc="showTextField(j + num * (pageMem - 1))"
+                @keydown.enter="changeName(j + num * (pageMem - 1))"
+                clearable
               >
-                <v-list-item-avatar>
-                  <v-img :src="subItem.photo"></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-show="!subItem.show && !subItem.quit"
-                    v-text="subItem.name"
-                    style="text-align: left"
-                  ></v-list-item-title>
-                  <v-text-field
-                    style="background-color: activecaption; border-radius: 5%;"
-                    v-show="subItem.show"
-                    v-model="name"
-                    @keydown.esc="showTextField(j + num * (pageMem - 1))"
-                    @keydown.enter="changeName(j + num * (pageMem - 1))"
-                    clearable
+                <!-- 确定删除好友 -->
+              </v-text-field>
+              <div
+                class="text-center"
+                v-show="subItem.quit"
+              >
+                <v-btn
+                  class="mx-2"
+                  color="error"
+                  fab
+                  x-small
+                  @click="addSubMaster(j + num * (pageMem - 1))"
+                >
+                  确定
+                </v-btn>
+                <v-btn
+                  class="mx-2"
+                  color="success"
+                  fab
+                  x-small
+                  @click="showQuitField(j + num * (pageMem - 1))"
+                >
+                  取消
+                </v-btn>
+              </div>
+            </v-list-item-content>
+            <!-- 后面的省略号 -->
+            <v-list-item-action v-show="isSelf(j + num * (pageMem - 1)) || isMaster() || notFriend(j + num * (pageMem - 1))">
+              <v-menu right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
                   >
-                    <!-- 确定删除好友 -->
-                  </v-text-field>
-                  <div
-                    class="text-center"
-                    v-show="subItem.quit"
-                  >
-                    <v-btn
-                      class="mx-2"
-                      color="error"
-                      fab
-                      x-small
-                      @click="addSubMaster(j + num * (pageMem - 1))"
-                    >
-                      确定
-                    </v-btn>
-                    <v-btn
-                      class="mx-2"
-                      color="success"
-                      fab
-                      x-small
-                      @click="showQuitField(j + num * (pageMem - 1))"
-                    >
-                      取消
-                    </v-btn>
-                  </div>
-                </v-list-item-content>
-                <!-- 后面的省略号 -->
-                <v-list-item-action v-show="isSelf(j + num * (pageMem - 1)) || isMaster() || notFriend(j + num * (pageMem - 1))">
-                  <v-menu right>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        <v-icon>mdi-dots-vertical</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-list
-                      hover
-                      dark
-                    >
-                      <!-- <v-list-item
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list
+                  hover
+                  dark
+                >
+                  <!-- <v-list-item
                       v-for="(btnn, i) in memsBtns"
                       :key="i"
                       @click="getMethod(btnn.method, j + num * (pageMem - 1))"
                     >
                       <v-list-item-title>{{ btnn.title }}</v-list-item-title>
                     </v-list-item> -->
-                      <v-list-item
-                        v-show="isSelf(j + num * (pageMem - 1))"
-                        @click="getMethod(memsBtns[0].method, j + num * (pageMem - 1))"
-                      >
-                        <v-list-item-title>{{ memsBtns[0].title }}</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item
-                        v-show="!isSelf(j + num * (pageMem - 1)) && isMaster() && !isManager(j + num * (pageMem - 1))"
-                        @click="getMethod(memsBtns[1].method, j + num * (pageMem - 1))"
-                      >
-                        <v-list-item-title>{{ memsBtns[1].title }}</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item
-                        v-show="!isSelf(j + num * (pageMem - 1)) && isMaster() && isManager(j + num * (pageMem - 1))"
-                        @click="getMethod(memsBtns[2].method, j + num * (pageMem - 1))"
-                      >
-                        <v-list-item-title>{{ memsBtns[2].title }}</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item
-                        v-show="!isSelf(j + num * (pageMem - 1)) && notFriend(j + num * (pageMem - 1))"
-                        @click="getMethod(memsBtns[3].method, j + num * (pageMem - 1))"
-                      >
-                        <v-list-item-title>{{ memsBtns[3].title }}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-list-item-action>
-              </v-list-item>
-              <v-card style="width: 100%; height: 100%;">
-                <v-btn
-                  width="33%"
-                  @click="downPageMem"
-                >
-                  <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
-                <v-btn
-                  width="33%"
-                  disabled
-                >
-                  {{pageMem}}/{{allPageMem}}
-                </v-btn>
-                <v-btn
-                  width="33%"
-                  @click="upPageMem"
-                >
-                  <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
-              </v-card>
-            </v-list-group>
-            <v-list-group
-              prepend-icon="mdi-account-multiple-plus"
-              @click="getFriend"
-              :value="friendShow"
-            >
-              <template v-slot:activator>
-                <v-list-item-content>
-                  <v-list-item-title>邀请好友</v-list-item-title>
-                </v-list-item-content>
-              </template>
-              <v-list-item
-                v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
-                :key="j + num * (pageF - 1)"
-                @click="method1"
-                two-line
-              >
-                <v-list-item-avatar>
-                  <v-img :src="subItem.friend_photo"></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-text="subItem.friend_name"
-                    style="text-align: left"
-                  ></v-list-item-title>
-                </v-list-item-content>
-                <!-- 后面的省略号 -->
-                <v-list-item-action>
-                  <v-btn
-                    small
-                    rounded
-                    color="brown lighten-5"
-                    @click="newApplyI(j + num * (pageF - 1))"
-                    :disabled="subItem.show"
+                  <v-list-item
+                    v-show="isSelf(j + num * (pageMem - 1))"
+                    @click="getMethod(memsBtns[0].method, j + num * (pageMem - 1))"
                   >
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </v-list-item>
-              <v-card style="width: 100%; height: 100%;">
-                <v-btn
-                  width="33%"
-                  @click="downPageF"
-                >
-                  <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
-                <v-btn
-                  width="33%"
-                  disabled
-                >
-                  {{pageF}}/{{allPageF}}
-                </v-btn>
-                <v-btn
-                  width="33%"
-                  @click="upPageF"
-                >
-                  <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
-              </v-card>
-            </v-list-group>
-          </v-list>
-          <!-- <div
+                    <v-list-item-title>{{ memsBtns[0].title }}</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    v-show="!isSelf(j + num * (pageMem - 1)) && isMaster() && !isManager(j + num * (pageMem - 1))"
+                    @click="getMethod(memsBtns[1].method, j + num * (pageMem - 1))"
+                  >
+                    <v-list-item-title>{{ memsBtns[1].title }}</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    v-show="!isSelf(j + num * (pageMem - 1)) && isMaster() && isManager(j + num * (pageMem - 1))"
+                    @click="getMethod(memsBtns[2].method, j + num * (pageMem - 1))"
+                  >
+                    <v-list-item-title>{{ memsBtns[2].title }}</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    v-show="!isSelf(j + num * (pageMem - 1)) && notFriend(j + num * (pageMem - 1))"
+                    @click="getMethod(memsBtns[3].method, j + num * (pageMem - 1))"
+                  >
+                    <v-list-item-title>{{ memsBtns[3].title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-list-item-action>
+          </v-list-item>
+          <v-card style="width: 100%; height: 100%;">
+            <v-btn
+              width="33%"
+              @click="downPageMem"
+            >
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn
+              width="33%"
+              disabled
+            >
+              {{pageMem}}/{{allPageMem}}
+            </v-btn>
+            <v-btn
+              width="33%"
+              @click="upPageMem"
+            >
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+          </v-card>
+        </v-list-group>
+        <v-list-group
+          prepend-icon="mdi-account-multiple-plus"
+          @click="getFriend"
+          :value="friendShow"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>邀请好友</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="(subItem, j) in friendAns.slice(num * (pageF - 1), num * pageF)"
+            :key="j + num * (pageF - 1)"
+            @click="method1"
+            two-line
+          >
+            <v-list-item-avatar>
+              <v-img :src="subItem.friend_photo"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                v-text="subItem.friend_name"
+                style="text-align: left"
+              ></v-list-item-title>
+            </v-list-item-content>
+            <!-- 后面的省略号 -->
+            <v-list-item-action>
+              <v-btn
+                small
+                rounded
+                color="brown lighten-5"
+                @click="newApplyI(j + num * (pageF - 1))"
+                :disabled="subItem.show"
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+          <v-card style="width: 100%; height: 100%;">
+            <v-btn
+              width="33%"
+              @click="downPageF"
+            >
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn
+              width="33%"
+              disabled
+            >
+              {{pageF}}/{{allPageF}}
+            </v-btn>
+            <v-btn
+              width="33%"
+              @click="upPageF"
+            >
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+          </v-card>
+        </v-list-group>
+      </v-list>
+      <!-- <div
             v-for="(item, j) in mems"
             :key=j
             style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
@@ -284,7 +277,7 @@
               <span>{{item.name.slice(0,5)}}</span>
             </div>
           </div> -->
-          <!-- <v-card style="width: 100%; height:10%;">
+      <!-- <v-card style="width: 100%; height:10%;">
             <v-btn
               v-show="isMaster() && !this.kill"
               @click="showKill"
@@ -314,10 +307,8 @@
               </v-btn>
             </div>
           </v-card> -->
-        </v-col>
-        <!-- </v-row> -->
-      </v-card>
-    </v-card>
+    </div>
+    <!-- </v-row> -->
   </div>
 
 </template>
@@ -394,6 +385,9 @@ export default {
           });
           this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
           that.allPageF = Math.ceil(that.friendAns.length / that.num);
+          if (this.allPageF == 0) {
+            this.pageF = 0
+          }
           that.friendShow = !that.friendShow
         })
       }
