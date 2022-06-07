@@ -459,5 +459,6 @@ public class TimeShaftOp {
         } else {
             timeshaft.setPrivate1(1);
         }
+        timeshaftService.update(timeshaft);
     }
 }
