@@ -125,23 +125,27 @@
           :draw="toolsDrawer"
         ></ChatMessages>
         <heat-man
-            ref="heatMan"
-            :chatId="this.$store.state.currentChannelId"
-            :type="this.$store.state.currentChatType"
-            v-if="this.heatShow"
+          ref="heatMan"
+          :chatId="this.$store.state.currentChannelId"
+          :type="this.$store.state.currentChatType"
+          v-if="this.heatShow"
         ></heat-man>
-        <div
-          class="moveBand"
-          v-show="toolsDrawer"
-        >
-
+      </div>
+    </div>
+    <v-card
+      class="moveBand"
+      v-show="toolsDrawer"
+    >
+      <div style="height: 100%; width: 100%;">
+        <div style="height: 48px; background: #000;">
+        </div>
+        <div style="calc(100% - 48px)">
           <TimeShaft
             v-if="tools[0].show"
             ref="timeShaft"
             :chatId="this.$store.state.currentChannelId"
             :type="this.$store.state.currentChatType"
           ></TimeShaft>
-
           <InfoPage
             v-else-if="tools[1].show"
             ref="infoPage"
@@ -156,7 +160,7 @@
           ></Search>
         </div>
       </div>
-    </div>
+    </v-card>
     <ChatTools
       :draw="toolsDrawer"
       :tools="tools"
@@ -186,7 +190,7 @@ import { getGroupMember } from '@/api/addresslist/index'
 
 export default {
   name: "ChatsModule",
-  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool, heatMan},
+  components: { ChatMessages, ChatHeader, ChatTools, TimeShaft, InfoPage, Search, TimeTool, heatMan },
   data () {
     return {
       toolsDrawer: false, // 用于控制工具栏打开与否

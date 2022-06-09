@@ -9,13 +9,13 @@
         tile
         style="width: 100%; height: 100%;overflow: auto; overflow-x: hidden"
       >
-        <!-- <v-row style="width: 100%; height: 100%;"> -->
-        <v-navigation-drawer
-          permanent
-          style="width: 50%; height:100%; float: left;"
-        >
-          <!-- <v-system-bar></v-system-bar> -->
-          <!-- <v-list-item>
+        <v-card style="width: 50%; height: 100%; float: left;">
+          <v-navigation-drawer
+            permanent
+            style="width: 100%; height:90%;"
+          >
+            <!-- <v-system-bar></v-system-bar> -->
+            <!-- <v-list-item>
               <v-list-item-icon style="margin: 0px auto 20px;">
                 <v-img
                   style="border-radius: 50%; width: 150px;"
@@ -32,10 +32,9 @@
                 修改头像
               </v-btn>
             </v-list-item> -->
-          <div style="font-size: 50px; height: 20%;">
-            {{this.nameG}}
-            <v-divider>
-            </v-divider>
+            <div style="font-size: 50px;">
+              {{this.nameG}}
+            </div>
             <v-btn
               color="blue-grey lighten-4"
               rounded
@@ -47,53 +46,93 @@
             >
               {{stateText}}
             </v-btn>
-          </div>
-          <v-textarea
-            :disabled="iShow"
-            filled
-            auto-grow
-            rows="4"
-            black
-            v-model="notice"
-            row-height="40"
-            style="margin: 20px 20px 0px 20px;"
-          ></v-textarea>
-          <v-btn
-            class="mx-2"
-            color="deep-orange lighten-4"
-            rounded
-            style="font-size: 15px; font-weight: bold;"
-            v-show="iShow && this.$store.getters.userId == this.master"
-            @click="iShowFalse"
-          >
-            修改群公告
-          </v-btn>
-          <v-btn
-            v-show="!iShow"
-            class="mx-2"
-            rounded
-            color="green lighten-3"
-            width="40%"
-            style="font-size: 15px; font-weight: bold;"
-            @click="changeNotice"
-          >
-            确认
-          </v-btn>
-          <v-btn
-            v-show="!iShow"
-            class="mx-2"
-            rounded
-            color="red lighten-3"
-            width="40%"
-            style="font-size: 15px; font-weight: bold;"
-            @click="iShowTrue"
-          >
-            取消
-          </v-btn>
+            <v-divider style="margin-top: 5%;"></v-divider>
+            <div style="font-size: 25px; margin-top: 5%;">
+              群公告
+            </div>
+            <v-textarea
+              :disabled="iShow"
+              filled
+              auto-grow
+              rows="4"
+              black
+              v-model="notice"
+              row-height="40"
+              style="margin: 20px 20px 0px 20px;"
+            ></v-textarea>
+            <v-btn
+              class="mx-2"
+              color="deep-orange lighten-4"
+              rounded
+              style="font-size: 15px; font-weight: bold;"
+              v-show="iShow && this.$store.getters.userId == this.master"
+              @click="iShowFalse"
+            >
+              修改群公告
+            </v-btn>
+            <v-btn
+              v-show="!iShow"
+              class="mx-2"
+              rounded
+              color="green lighten-3"
+              width="40%"
+              style="font-size: 15px; font-weight: bold;"
+              @click="changeNotice"
+            >
+              确认
+            </v-btn>
+            <v-btn
+              v-show="!iShow"
+              class="mx-2"
+              rounded
+              color="red lighten-3"
+              width="40%"
+              style="font-size: 15px; font-weight: bold;"
+              @click="iShowTrue"
+            >
+              取消
+            </v-btn>
+          </v-navigation-drawer>
+          <v-card style="width: 100%; height:10%;">
+            <v-btn
+              v-show="isMaster() && !this.kill"
+              @click="showKill"
+              rounded
+              style="margin-top: 20px;font-weight: bold"
+              color="error"
+            >
+              解散群聊
+            </v-btn>
+            <div
+              style="width: 100%;"
+              v-show="kill"
+            >
+              <v-btn
+                class="mx-2 white--text"
+                color="red lighten-3"
+                rounded
+                width="40%"
+                style="margin-top: 20px;font-weight: bold;"
+                @click="subGroup"
+              >
+                确认解散
+              </v-btn>
+              <v-btn
+                class="mx-2 white--text"
+                color="blue"
+                rounded
+                width="40%"
+                style="margin-top: 20px;font-weight: bold"
+                @click="showKill"
+              >
+                取消
+              </v-btn>
+            </div>
+          </v-card>
+        </v-card>
 
-        </v-navigation-drawer>
-        <v-col style="width: 50%; height:100%; float: right">
-          <v-list style="width: 100%; height:90%;">
+        <v-card style="width: 50%; height:100%; float: right;">
+          <v-list style="width: 100%; height:100%; overflow: auto; overflow-x: hidden;">
             <v-list-group
               prepend-icon="mdi-account-supervisor-circle"
               @click="getMember"
@@ -281,43 +320,7 @@
               </v-card>
             </v-list-group>
           </v-list>
-          <v-card style="width: 100%; height:10%;">
-            <v-btn
-              v-show="isMaster() && !this.kill"
-              @click="showKill"
-              rounded
-              style="margin-top: 20px;font-weight: bold"
-              color="error"
-            >
-              解散群聊
-            </v-btn>
-            <div
-              style="width: 100%;"
-              v-show="kill"
-            >
-              <v-btn
-                class="mx-2 white--text"
-                color="red lighten-3"
-                rounded
-                width="40%"
-                style="margin-top: 20px;font-weight: bold;"
-                @click="subGroup"
-              >
-                确认解散
-              </v-btn>
-              <v-btn
-                class="mx-2 white--text"
-                color="blue"
-                rounded
-                width="40%"
-                style="margin-top: 20px;font-weight: bold"
-                @click="showKill"
-              >
-                取消
-              </v-btn>
-            </div>
-          </v-card>
-        </v-col>
+        </v-card>
         <!-- </v-row> -->
       </v-card>
     </v-card>
@@ -397,6 +400,9 @@ export default {
           });
           this.friendAns = JSON.parse(JSON.stringify(this.friendAns))
           that.allPageF = Math.ceil(that.friendAns.length / that.num);
+          if (this.allPageF == 0) {
+            this.pageF = 0
+          }
           that.friendShow = !that.friendShow
         })
       }

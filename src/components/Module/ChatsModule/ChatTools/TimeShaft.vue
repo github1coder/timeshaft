@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="mx-auto"
-    height="100%"
-  >
+  <v-card style="height: 100%; width: 100%">
     <TimeNode
       :id="timeNodeId"
       :isManager="isManager()"
@@ -164,29 +161,17 @@
         height="150px"
       >
         <v-container class="fill-height">
-          <v-row align="center">
-            <v-row justify="end">
-              <h1 style="
+          <div style="
                       color: white;
-                      text-transform: uppercase;
-                      position: absolute;
-                      top: 65%;
-                      left: 20%;
-                      transform: translateY(-50%);
-                      margin: 0;
-                      padding: 0;
+                      margin: auto;
                       font-size: 30px;
+                      width: 100%;
                     ">
-                事件·Time Shaft
-              </h1>
-              <div
-                class="text-uppercase font-weight-light"
-                style="font-size: 15px; margin-top: 0"
-              >
-                {{$data.time}}
-              </div>
-            </v-row>
-          </v-row>
+            事件·Time Shaft
+          </div>
+          <div style="font-size: 15px; margin: auto;">
+            {{$data.time}}
+          </div>
         </v-container>
       </v-img>
     </v-card>
@@ -194,12 +179,12 @@
       dense
       style="width: 100%; height: 80px; margin: auto;"
     >
-      <v-select
+      <v-combobox
         v-model="tag"
         style="width: 70%; margin: auto;"
         requried
         :items="allTags"
-      ></v-select>
+      ></v-combobox>
       <v-btn
         style="width: 15%; height: 64%; margin: 12px 0px auto;"
         rounded
@@ -235,6 +220,7 @@
       class="overflow-x-hidden overflow-y-auto"
       height="77%"
       v-if="items.length !== 0"
+      max-height="700px"
     >
 
       <v-timeline
@@ -247,26 +233,18 @@
           :key="i"
           :color="timecolor[i % 10]"
         >
-          <v-row class="pt-1">
-            <v-col
-              cols="3"
-              style="width: 40px"
-            >
-              <strong style="margin-left: 0; font-size: 5px; padding-left: 0">{{item.begin_date}} ~ {{item.end_date}}</strong>
-            </v-col>
-            <v-col style="a:hover{color: blue;}">
-              <a><strong @click="showDetail(item.id)">事件主题：{{item.title}}</strong></a>
-              <div class="text-caption">
-                事件摘要：{{ item.conclude }}
-              </div>
-              <v-row>
-                <v-avatar>
-                  <v-img :src="item.img"></v-img>
-                </v-avatar>
-                <a style="color: #78909C; margin-top: 5%">事件发起者：{{item.host}}</a>
-              </v-row>
-            </v-col>
-          </v-row>
+          <!-- <v-row class="pt-1"> -->
+          <div style="font-size: 5px; text-align: left;">{{item.begin_date}} ~ {{item.end_date}}</div>
+          <div style="a:hover{color: blue;}; text-align: left; width: 90%;">
+            <div style="color: #78909C;">
+              事件发起者：{{item.host}}
+            </div>
+            <a><strong @click="showDetail(item.id)">事件主题：{{item.title}}</strong></a>
+            <div class="text-caption">
+              事件摘要：{{ item.conclude }}
+            </div>
+          </div>
+          <!-- </v-row> -->
         </v-timeline-item>
 
       </v-timeline>

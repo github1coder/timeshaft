@@ -47,11 +47,22 @@
         </v-card>
       </v-dialog>
       <v-card style="width: 100%;height: 100%;">
-        <div style="height: 100%; width: 50%; float: left; border-right: 1px skyblue solid;">
+        <div style="height: 100%; width: 50%; float: left;">
           <div style="width: 80%; height: 90%; margin: auto;">
-            <v-card-title style=" font-size: 40px; font-weight: bold; ">
+            <v-card-title style=" font-size: 40px; font-weight: bold; width: 80%; line-height: 50px; text-align: left;">
               主题：{{data.title}}
             </v-card-title>
+            <div style="position: fixed; top: 1rem; left: 40%;">
+              <v-btn
+                color="blue-grey lighten-4"
+                rounded
+                :loading="changing"
+                @click="changeState"
+                width="150px"
+              >
+                {{stateText}}
+              </v-btn>
+            </div>
             <v-divider></v-divider>
             <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
@@ -221,6 +232,7 @@
 <script>
 import History from "./History.vue"
 import { getSingleTimeshaft, delTimeshaft, updateTimeNode } from "@/api/timeShaft"
+import { updateTimeState } from '../../../../../api/timeShaft'
 
 export default {
   components: { History },
@@ -233,6 +245,8 @@ export default {
     }).then(res => {
       console.log(res)
       this.data = res
+      this.stateText = res.state ? "公开" : "本团队/好友可见"
+      this.state = res.state
     })
   },
 
@@ -247,6 +261,9 @@ export default {
       selects: [false, false, false],
       flashT: false,
       flashC: false,
+      stateText: "本团队/好友可见",
+      state: false,
+      changing: false,
     }
   },
 
@@ -260,6 +277,29 @@ export default {
     }
   },
   methods: {
+
+    changeState () {
+      console.log("修改时间轴状态")
+      this.state = !this.state
+      updateTimeState({
+        "id": this.id,
+        "state": this.state
+      })
+      if (!this.timer) {
+        this.count = 1
+        this.changing = true
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= 1) {
+            this.count--
+          } else {
+            this.changing = false
+            clearInterval(this.timer)
+            this.timer = null
+            this.stateText = this.state ? "公开" : "本团队/好友可见"
+          }
+        }, 1000)
+      }
+    },
 
     select (index) {
       this.selects[index] = true
@@ -320,11 +360,16 @@ export default {
     delNode () {
       delTimeshaft({
         id: this.id,
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          //正常返回
+          this.close()
+          if (this.$parent.$parent) {
+            this.$parent.$parent.getShaft()
+          }
+        }
       })
-      this.close()
-      if (this.$parent.$parent) {
-        this.$parent.$parent.getShaft()
-      }
+
     },
   }
 }
