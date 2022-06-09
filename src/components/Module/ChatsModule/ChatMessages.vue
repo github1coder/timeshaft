@@ -162,28 +162,19 @@
                 <!--TODO-- 等待对接后改成图片>-->
                 <v-img :src="message.msgFromAvatar"></v-img>
               </v-list-item-avatar>
-              <!--        TODO 聊天样式调整 & 一左一右 & 不同特效 & 发送状态-->
               <v-list-item-content>
                 <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>
-                <v-list-item-subtitle v-if="message.msgType === 'text'">{{ message.msg }}
-                </v-list-item-subtitle>
-                <v-list-item-subtitle
+                <v-list-item-content v-if="message.msgType === 'text'" >
+                  <span style="word-wrap: break-word;max-width: 400px">{{message.msg}}</span>
+                </v-list-item-content>
+                <v-list-item-content
                   v-else-if="message.msgType === 'timeShaft'"
                   @click="queryTimeShaft(message.msg)"
                   style="color: #2196F3"
                 >
-                  {{message.msg}}
-                </v-list-item-subtitle>
+                  <span style="word-wrap: break-word;max-width: 400px">{{message.msg}}</span>
+                </v-list-item-content>
               </v-list-item-content>
-              <!--              <v-list-item-content-->
-              <!--                  v-else-if="message.userId !== $store.state.userId" class="touser"-->
-              <!--              >-->
-              <!--                <v-list-item-title>{{ message.msgFromName }}</v-list-item-title>-->
-              <!--                <v-list-item-content-->
-              <!--                    class="tobubble"-->
-              <!--                >{{ message.msg }}-->
-              <!--                </v-list-item-content>-->
-              <!--              </v-list-item-content>-->
             </v-list-item>
           </template>
         </v-list>
