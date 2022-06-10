@@ -3,6 +3,8 @@ name: SpringBoot_master
 on:
   pull_request:
     branches: [ after_master ]
+  push:
+    branches: [ after_master ]
 
 jobs:
   compile:
