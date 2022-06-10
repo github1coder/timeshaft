@@ -2,6 +2,7 @@ package com.timeshaft.after_end.controller;
 
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.GroupHeatService;
+import com.timeshaft.after_end.service.RequestInfoService;
 import com.timeshaft.after_end.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class MessageController {
     private FriendsServiceImpl friendsService;
     @Autowired
     private GroupHeatService groupHeatService;
+    @Autowired
+    private RequestInfoService requestInfoService;
+
     @Value("${type.groupType}")
     private String GROUP;
     @Value("${type.friendType}")
@@ -61,6 +65,8 @@ public class MessageController {
      */
     @MessageMapping("/personalMessage")
     public void receivePersonalMessage(@Payload Map<String, Object> payload) {
+        Long startTime = System.currentTimeMillis();
+
         payload.put("type", FRIEND);
         Date date = new Date(System.currentTimeMillis());
         PersonalMessage personalMessage = new PersonalMessage();
@@ -97,6 +103,8 @@ public class MessageController {
             groupHeat.upMessageCount();
             groupHeatService.update(groupHeat);
         }
+
+        saveRequset(senderId, 0, startTime);
     }
 
     /**
@@ -106,6 +114,7 @@ public class MessageController {
      */
     @MessageMapping("/groupMessage")
     public void receiveGroupMessage(@Payload Map<String, Object> payload) {
+        Long startTime = System.currentTimeMillis();
         payload.put("type", GROUP);
         Date date = new Date(System.currentTimeMillis());
         GroupMessage groupMessage = new GroupMessage();
@@ -157,6 +166,14 @@ public class MessageController {
             groupHeatService.update(groupHeat);
         }
 
+        saveRequset(insertMessage.getSenderId(), 1, startTime);
+    }
+
+
+    private void saveRequset(int senderId, int urlCode, long startTime) {
+        String url = urlCode == 0 ? "/personalMessage" : "/groupMessage";
+        RequestInfo requestInfo = new RequestInfo(senderId, url, new Date(startTime), System.currentTimeMillis()-startTime, 0);
+        requestInfoService.insert(requestInfo);
     }
 
 }

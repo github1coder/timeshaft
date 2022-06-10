@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.controller;
 
+import com.timeshaft.after_end.annotation.RequestLog;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.userop.MailService;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/user")  //映射URL
 @CrossOrigin
 @Slf4j
+@RequestLog
 public class UserController {
     @Autowired
     private UserOp userOp;
@@ -32,6 +34,7 @@ public class UserController {
     RedisTemplate<String,Object> redisTemplate;
 
     @RequestMapping("/getCheckCode")
+    @RequestLog
     public ResponseService getCheckCode(@RequestParam(value = "email") String email){
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         String message = "您的注册验证码为："+checkCode;
@@ -41,6 +44,7 @@ public class UserController {
     }
 
     @RequestMapping("/register")
+    @RequestLog
     public ResponseService register(@RequestBody Map<String, String> requestMap) throws Exception {
         log.info("注册开始");
         String email = requestMap.get("email");
@@ -53,6 +57,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/loginn")
+    @RequestLog
     public ResponseService login(@RequestBody Map<String, String> map) throws Exception {
         log.info("开始登录");
         Map<String, Object> userRes = userOp.login(map.get("email"), map.get("password"));
@@ -61,18 +66,21 @@ public class UserController {
     }
 
     @RequestMapping("/logout")
+    @RequestLog
     public ResponseService logout(@RequestHeader("user_id") Integer user_id, @RequestHeader("ACCESS_TOKEN") String token) {
         userOp.logout(user_id, token);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changePwd")
+    @RequestLog
     public ResponseService changePwd(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) throws Exception {
         userOp.changePwd(user_id, map.get("oldPassword"), map.get("newPassword"), map.get("checkCode"));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/updateSelf")
+    @RequestLog
     public ResponseService updateSelf(@RequestBody Map<String, Object> map, @RequestHeader("user_id") Integer user_id) throws Exception {
         boolean visibility = (boolean) map.get("state");
         userOp.updateSelf(user_id, visibility);
