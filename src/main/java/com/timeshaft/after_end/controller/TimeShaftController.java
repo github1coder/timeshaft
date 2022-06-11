@@ -118,10 +118,10 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeTags")
-    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap) {
+    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
         Integer id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
-        ArrayList<String> res = timeShaftOp.getTimeTags(id, type);
+        ArrayList<String> res = timeShaftOp.getTimeTags(id, type, user_id);
         return new ResponseService(res);
     }
 
