@@ -7,6 +7,30 @@
       v-if="this.detail"
       @closeT="closeT"
     ></TimeNode>
+    <v-card
+      dark
+      flat
+    >
+      <v-img
+        src="https://cdn.vuetifyjs.com/images/cards/forest.jpg"
+        gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
+        height="150px"
+      >
+        <v-container class="fill-height">
+          <div style="
+                      color: white;
+                      margin: auto;
+                      font-size: 30px;
+                      width: 100%;
+                    ">
+            事件·Time Shaft
+          </div>
+          <div style="font-size: 15px; margin: auto;">
+            {{$data.time}}
+          </div>
+        </v-container>
+      </v-img>
+    </v-card>
     <v-row
       dense
       style="width: 100%; height: 80px; margin: auto;"
@@ -30,7 +54,20 @@
       </v-btn>
     </v-row>
     <h1
-      style="font-size: 20px;"
+      style="
+      color: #4d4d4d;
+      text-transform: uppercase;
+      position: absolute;
+      top: 60%;
+      left: 15%;
+      transform: translateY(-50%);
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      text-align: center;
+      /*text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);*/
+      mix-blend-mode: overlay;
+    "
       v-if="items.length === 0"
     >
       您还没有和该好友添加事件呢~
@@ -39,7 +76,7 @@
       class="overflow-x-hidden overflow-y-auto"
       height="77%"
       v-if="items.length !== 0"
-      max-height="700px"
+      :max-height="maxHeight"
     >
 
       <v-timeline
@@ -71,9 +108,10 @@
   </v-card>
 </template>
 <script>
-import { beginTimeShaftSingle, getTimeshaft, getTimeTags, searchTimeByTag } from "../../../../../api/timeShaft";
-import { getGroupMember } from "../../../../../api/addresslist";
-import TimeNode from "./TimeNode"
+// import { getTimeLine} from '../../../../api/timeShaft/index'
+import { beginTimeShaftSingle, getTimeshaft, getTimeTags, searchTimeByTag } from "../../../../api/timeShaft";
+import { getGroupMember } from "../../../../api/addresslist";
+import TimeNode from "./Msg/TimeNode"
 
 export default {
   name: "TimeShaft",
@@ -106,13 +144,19 @@ export default {
       detail: false,
       allTags: [],
       tag: "",
+      maxHeight: 700,
     }
   },
   mounted () {
+    this.dateShow();
     this.updateTags();
   },
   created () {
+    this.dateFormat();
     this.getShaft()
+  },
+  beforeDestroy () {
+    this.dataDestroy();
   },
   computed: {
   },
@@ -160,6 +204,14 @@ export default {
       })
     },
 
+    // overTimeShaft () {
+    //   endTimeShaft({
+    //     group_id: this.chatId,
+    //     type: this.type
+    //   })
+    //   // this.$router.go(0)
+    // },
+
     setTimeline () {
       if (this.title === '' || this.lable === '' || this.time === '') {
         alert("请先补充完信息哦~");
@@ -188,6 +240,29 @@ export default {
       console.log("时间轴结点id：" + id)
       this.timeNodeId = id
       this.detail = true
+    },
+
+    dataDestroy () {
+      if (this.timer) {
+        clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+      }
+
+    },
+    dateShow () {
+      this.timer = setInterval(() => {
+        this.dateFormat()
+      }, 1000)
+
+    },
+    dateFormat () {
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+      let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+      let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+      let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      this.time = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
 
     closeT (flag) {
