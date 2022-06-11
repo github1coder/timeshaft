@@ -38,6 +38,8 @@ public class TimeShaftOp {
     private SimpMessageSendingOperations messagingTemplate;
     @Autowired
     private GroupUserServiceImpl groupUserService;
+    @Autowired
+    private StarService starService;
 
     @Value("${meeting.on}")
     private String OnMeeting;
@@ -469,5 +471,18 @@ public class TimeShaftOp {
             timeshaft.setPrivate1(1);
         }
         timeshaftService.update(timeshaft);
+    }
+
+    @PermissionAnnotation(level = 31)
+    public void starTimeNode(Integer timeshaft_id, Integer user_id) throws Exception {
+        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        if(timeshaft == null) {
+            throw new Exception("该时间轴不存在或者已被删除");
+        }
+        Star star = new Star(timeshaft_id, null, user_id);
+        List<Star> stars = starService.queryAll(star);
+        if(stars.isEmpty()) {
+            starService.insert(star);
+        }
     }
 }

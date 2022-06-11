@@ -155,4 +155,11 @@ public class TimeShaftController {
         timeShaftOp.updateTimeState(id, state, user_id);
         return new ResponseService();
     }
+
+    @RequestMapping("/starTimeNode")
+    public ResponseService starTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+        Integer id = (Integer) requestMap.get("id");
+        timeShaftOp.starTimeNode(id, user_id);
+        return new ResponseService();
+    }
 }
