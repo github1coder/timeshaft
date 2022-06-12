@@ -425,7 +425,7 @@ public class TimeShaftOp {
 
     public ArrayList<String> getTimeTags(Integer group_id, String type, Integer user_id) {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
-                null, null, null, type, null, null, null, null));
+                null, null, null, null, null, null, null, null));
         ArrayList<String> res = new ArrayList<>();
         if (group_id == 0) {
             res.add("收藏时间轴");
@@ -482,9 +482,21 @@ public class TimeShaftOp {
     }
 
     public List<Map<String, Object>> searchTimeByTag(Integer group_id, String type, Integer user_id, String name) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
+        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, null,
                 null, null, null, null);
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
+        List<Timeshaft> timeshafts = new ArrayList<>();
+        if(group_id == 0) {
+            Star star = new Star(null, null, user_id);
+            List<Star> stars = starService.queryAll(star);
+            for (Star tmp : stars) {
+                Timeshaft timeshaft = timeshaftService.queryById(tmp.getTimeshaftId());
+                if(timeshaft != null) {
+                    timeshafts.add(timeshaft);
+                }
+            }
+        } else {
+            timeshafts = timeshaftService.queryAll(timeshaftTemp);
+        }
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
             if (timeshaft.getEndTime() != null) {
@@ -547,5 +559,35 @@ public class TimeShaftOp {
             star.setTitle(timeshaft.getName());
             starService.insert(star);
         }
+    }
+
+
+    public List<Map<String, Object>> getAllChannel(Integer user_id) throws Exception {
+        ArrayList<Map<String, Object>> res = new ArrayList<>();
+        List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
+        friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
+        for(Friends friend : friends) {
+            Map<String, Object> out = new HashMap<>();
+            User user;
+            if(friend.getUserId1().equals(user_id)) {
+                user = userService.queryById(friend.getUserId2());
+            } else {
+                user = userService.queryById(friend.getUserId1());
+            }
+            out.put("chatId", friend.getId());
+            out.put("name", user.getUsername());
+            out.put("type", "friend");
+            res.add(out);
+        }
+        for(GroupUser groupUser: groupUsers) {
+            Map<String, Object> out = new HashMap<>();
+            Group group = groupService.queryById(groupUser.getGroupId());
+            out.put("chatId", groupUser.getId());
+            out.put("name", group.getName());
+            out.put("type", "group");
+            res.add(out);
+        }
+        return res;
     }
 }
