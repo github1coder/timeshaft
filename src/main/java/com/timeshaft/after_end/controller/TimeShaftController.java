@@ -159,7 +159,8 @@ public class TimeShaftController {
     @RequestMapping("/starTimeNode")
     public ResponseService starTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         Integer id = (Integer) requestMap.get("id");
-        timeShaftOp.starTimeNode(id, user_id);
+        boolean star = (boolean) requestMap.get("star");
+        timeShaftOp.starTimeNode(id, user_id, star);
         return new ResponseService();
     }
 
