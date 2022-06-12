@@ -226,12 +226,30 @@ public class TimeShaftOp {
         }
     }
 
-    public List<Map<String, Object>> getTimeShaftData(String start, String end) throws ParseException {
+    public List<Map<String, Object>> getTimeShaftData(String start, String end, Integer user_id) throws ParseException {
         ArrayList<Map<String, Object>> res = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start_time = sdf.parse(start);
         Date end_time = sdf.parse(end);
-        List<Timeshaft> timeshafts = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Timeshaft> timeshaftsTemp1 = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Timeshaft> timeshaftsTemp2 = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
+        friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
+        for(Friends friend : friends) {
+            timeshaftsTemp2.addAll(timeshaftService.queryAll(new Timeshaft(friend.getId(), null, null, null, null, null, "friend",
+                    null, null, null, null)));
+        }
+        for(GroupUser groupUser : groupUsers) {
+            timeshaftsTemp2.addAll(timeshaftService.queryAll(new Timeshaft(groupUser.getGroupId(), null, null, null, null, null, "group",
+                    null, null, null, null)));
+        }
+        List<Timeshaft> timeshafts = new ArrayList<>();
+        for(Timeshaft timeshaft : timeshaftsTemp1) {
+            if(timeshaftsTemp2.contains(timeshaft)) {
+                timeshafts.add(timeshaft);
+            }
+        }
         for (Timeshaft timeshaft : timeshafts) {
             if (timeshaft.getEndTime() != null && timeshaft.getBeginTime() != null) {
                 Map<String, Object> out = new HashMap<>();

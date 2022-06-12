@@ -72,8 +72,8 @@ public class TimeShaftController {
 
     @RequestMapping("/getTimeShaftData")
     @RequestLog
-    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws Exception {
-        List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
+    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time, @RequestHeader("user_id") Integer user_id) throws Exception {
+        List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time, user_id);
         return new ResponseService(res);
     }
 
