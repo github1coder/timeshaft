@@ -129,10 +129,10 @@ public class TimeShaftController {
 
     @RequestMapping("/getTimeTags")
     @RequestLog
-    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap) {
+    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
         Integer id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
-        ArrayList<String> res = timeShaftOp.getTimeTags(id, type);
+        ArrayList<String> res = timeShaftOp.getTimeTags(id, type, user_id);
         return new ResponseService(res);
     }
 
@@ -173,7 +173,8 @@ public class TimeShaftController {
     @RequestMapping("/starTimeNode")
     public ResponseService starTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         Integer id = (Integer) requestMap.get("id");
-        timeShaftOp.starTimeNode(id, user_id);
+        boolean star = (boolean) requestMap.get("star");
+        timeShaftOp.starTimeNode(id, user_id, star);
         return new ResponseService();
     }
 }
