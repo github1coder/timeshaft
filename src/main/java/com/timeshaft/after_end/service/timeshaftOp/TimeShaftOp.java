@@ -69,7 +69,7 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 39)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
-        List<Timeshaft> timeshafts = new ArrayList<>();
+        List<Timeshaft> timeshafts;
         if (type != null && type.equals("self")) {
             Star star = new Star(null, null, user_id);
             List<Star> stars = starService.queryAll(star);
@@ -109,8 +109,17 @@ public class TimeShaftOp {
                 }
             }
         } else {
-            Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
-                    null, null, null, null);
+            Timeshaft timeshaftTemp;
+            if(type == null) {
+                return timeshaftsRes;
+            }
+            if(type.equals("all")) {
+                timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, null,
+                        null, null, null, null);
+            } else {
+                timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
+                        null, null, null, null);
+            }
             timeshafts = timeshaftService.queryAll(timeshaftTemp);
             for (Timeshaft timeshaft : timeshafts) {
                 if (timeshaft.getEndTime() != null) {
@@ -424,23 +433,38 @@ public class TimeShaftOp {
     }
 
     public ArrayList<String> getTimeTags(Integer group_id, String type, Integer user_id) {
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
-                null, null, null, null, null, null, null, null));
+        List<Timeshaft> timeshafts;
         ArrayList<String> res = new ArrayList<>();
         if (group_id == 0) {
-            res.add("收藏时间轴");
-            Star star = new Star(null, null, user_id);
-            List<Star> stars = starService.queryAll(star);
-            for (Star tmp : stars) {
-                List<Tag> tags = tagService.queryAll(new Tag(tmp.getTimeshaftId(), null));
-                for (Tag tag : tags) {
-                    if (!tag.getName().equals("") && !res.contains(tag.getName())) {
-                        res.add(tag.getName());
+            if(type == null) {
+                return res;
+            }
+            if(type.equals("all")) {
+                timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
+                        null, null, null, null, null, null, null, null));
+                for (Timeshaft timeshaft : timeshafts) {
+                    List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                    for (Tag tag : tags) {
+                        if (!tag.getName().equals("") && !res.contains(tag.getName())) {
+                            res.add(tag.getName());
+                        }
+                    }
+                }
+            } else if(type.equals("self")) {
+                Star star = new Star(null, null, user_id);
+                List<Star> stars = starService.queryAll(star);
+                for (Star tmp : stars) {
+                    List<Tag> tags = tagService.queryAll(new Tag(tmp.getTimeshaftId(), null));
+                    for (Tag tag : tags) {
+                        if (!tag.getName().equals("") && !res.contains(tag.getName())) {
+                            res.add(tag.getName());
+                        }
                     }
                 }
             }
         } else {
-            res.add("所有时间轴");
+            timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
+                    null, null, null, type, null, null, null, null));
             for (Timeshaft timeshaft : timeshafts) {
                 List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
                 for (Tag tag : tags) {

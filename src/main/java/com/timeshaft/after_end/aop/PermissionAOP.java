@@ -146,6 +146,8 @@ public class PermissionAOP {
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }
+        } else if (type.equals("self") || type.equals("all")){
+
         } else {
             throw new Exception("type参数错误");
         }
@@ -162,6 +164,8 @@ public class PermissionAOP {
             if (groupUsers.isEmpty()) {
                 throw new Exception();
             }
+        } else if (type.equals("self") || type.equals("all")){
+
         } else {
             throw new Exception("type参数错误");
         }
