@@ -145,8 +145,8 @@ export default {
     search () {
       //如果在收藏夹页面
       if (this.$parent.$refs.allBody) {
-        this.$parent.flash().
-          this.updateTags()
+        this.$parent.flash()
+        this.updateTags()
       }
 
       const input = document.getElementById(this.type).value
