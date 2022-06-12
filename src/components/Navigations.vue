@@ -112,7 +112,7 @@ export default {
         text: '通讯录',
       }, {
         icon: 'mdi-file-document-multiple-outline',
-        text: '文件夹',
+        text: '收藏夹',
       }, {
         icon: 'mdi-calendar-check',
         text: '日历表',

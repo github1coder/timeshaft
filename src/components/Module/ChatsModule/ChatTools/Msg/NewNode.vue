@@ -126,8 +126,13 @@ export default {
   },
   methods: {
     setTimeline () {
-      if (this.title === '' || this.lable === ["", "", ""] || this.time === '') {
+      if (this.title === '' || this.lable === ["", "", ""]) {
         alert("请先补充完信息哦~");
+      }
+      else if (this.lable[0].length == 0 || this.lable[0].length > 5
+        || (this.lable[1] && this.lable[1].length > 5)
+        || (this.lable[2] && this.lable[2].length > 5)) {
+        return
       }
       else {
         const that = this
@@ -137,7 +142,7 @@ export default {
           title: this.title,
           tags: this.lable,
           conclude: this.description,
-          type: this.type === "group" ? "group" : "friend",
+          type: this.type,
         }).then(res => {
           that.timeshaft_id = res.timeshaft_id
           that.dialog = false

@@ -172,3 +172,11 @@ export function getInviteList(param) {
         params: param
     })
 }
+
+export function getAllChannel(param) {
+    return request({
+        url: '/addresslist/getAllChannel',
+        method: 'get',
+        params: param
+    })
+}

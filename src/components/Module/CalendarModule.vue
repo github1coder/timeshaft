@@ -1,32 +1,36 @@
 <template>
-  <v-row  class="fill-height" style="">
+  <v-row
+    class="fill-height"
+    style=""
+  >
     <v-col>
-      <v-sheet height="64" dark>
-        <v-toolbar
-            flat
-        >
+      <v-sheet
+        height="64"
+        dark
+      >
+        <v-toolbar flat>
           <v-btn
-              outlined
-              class="mr-4"
-              @click="setToday"
+            outlined
+            class="mr-4"
+            @click="setToday"
           >
             Today
           </v-btn>
           <v-btn
-              fab
-              text
-              small
-              @click="prev"
+            fab
+            text
+            small
+            @click="prev"
           >
             <v-icon small>
               mdi-chevron-left
             </v-icon>
           </v-btn>
           <v-btn
-              fab
-              text
-              small
-              @click="next"
+            fab
+            text
+            small
+            @click="next"
           >
             <v-icon small>
               mdi-chevron-right
@@ -37,14 +41,14 @@
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
-              bottom
-              right
+            bottom
+            right
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                  outlined
-                  v-bind="attrs"
-                  v-on="on"
+                outlined
+                v-bind="attrs"
+                v-on="on"
               >
                 <span>{{ typeToLabel[type] }}</span>
                 <v-icon right>
@@ -69,23 +73,31 @@
           </v-menu>
         </v-toolbar>
       </v-sheet>
-      <v-sheet  height="600" color="blue-grey lighten-3">
+      <v-sheet
+        height="600"
+        color="blue-grey lighten-3"
+      >
         <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="viewDay"
-            @change="updateRange"
+          ref="calendar"
+          v-model="focus"
+          color="primary"
+          :events="events"
+          :event-color="getEventColor"
+          :type="type"
+          @click:event="showEvent"
+          @click:more="viewDay"
+          @click:date="viewDay"
+          @change="updateRange"
         ></v-calendar>
         <TimeNode
           :id="parseInt(selectedEvent.id)"
+          :isManager="false"
+          :allTags="[]"
+          :stared="false"
+          :self="false"
           v-if="selectedOpen"
-          @closeT="closeT"></TimeNode>
+          @closeT="closeT"
+        ></TimeNode>
       </v-sheet>
     </v-col>
   </v-row>
@@ -93,11 +105,11 @@
 
 
 <script>
-import {getTimeShaftData} from "@/api/timeShaft";
+import { getTimeShaftData } from "@/api/timeShaft";
 import TimeNode from "@/components/Module/ChatsModule/ChatTools/Msg/TimeNode";
 
 export default {
-  components: {TimeNode},
+  components: { TimeNode },
   data: () => ({
     focus: '',
     type: 'month',
@@ -118,7 +130,7 @@ export default {
     this.$refs.calendar.checkChange()
   },
   methods: {
-    closeT(flag) {
+    closeT (flag) {
       this.selectedOpen = flag
     },
     viewDay ({ date }) {
@@ -154,15 +166,15 @@ export default {
       nativeEvent.stopPropagation()
     },
 
-    timestampToTime(timestamp){
+    timestampToTime (timestamp) {
       var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
       var Y = date.getFullYear() + '-';
-      var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
       var D = date.getDate() + ' ';
-      var h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':' ;
-      var m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()) + ':' ;
-      var s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
-      return Y+M+D+h+m+s;
+      var h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+      var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+      var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+      return Y + M + D + h + m + s;
     },
 
     updateRange ({ start, end }) {
@@ -174,7 +186,7 @@ export default {
       }).then(res => {
         console.log("----")
         console.log(res)
-        for(let i in res) {
+        for (let i in res) {
           res[i].color = this.colors[this.rnd(0, this.colors.length - 1)]
           res[i].timed = true
         }

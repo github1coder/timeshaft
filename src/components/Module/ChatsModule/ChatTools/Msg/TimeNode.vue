@@ -123,7 +123,7 @@
                   style="margin-left: 10px;"
                 >
                   <v-combobox
-                    ref="tag0"
+                    id="tag0"
                     counter=5
                     requried
                     label="添加至少一个标签"
@@ -137,7 +137,7 @@
                   style="margin-left: 10px;"
                 >
                   <v-combobox
-                    ref="tag1"
+                    id="tag1"
                     counter=5
                     v-model="data.tags[1]"
                     :items="allTags"
@@ -149,18 +149,18 @@
                   style="margin-left: 10px;"
                 >
                   <v-combobox
-                    ref="tag2"
+                    id="tag2"
                     counter=5
                     v-model="data.tags[2]"
                     :items="allTags"
                   ></v-combobox>
                 </v-flex>
-                <v-btn
-                  @dblclick="isupdateTags"
+                <v-icon
+                  @click="isupdateTags"
                   style="margin: auto"
                 >
-                  双击确定
-                </v-btn>
+                  mdi-check-bold
+                </v-icon>
               </v-layout>
             </v-card-text>
             <v-divider></v-divider>
@@ -195,6 +195,25 @@
           </div>
           <div style="height: 5%;">
             <v-btn
+              v-if="!self"
+              color="gray darken-1"
+              text
+              style="font-size: 20px; margin-left: 10%; width: 20%; background-color: green; margin-top: auto; font-weight: bold"
+              @click="starThis"
+              :disabled="data.star"
+            >
+              {{starHint}}
+            </v-btn>
+            <v-btn
+              v-if="self"
+              color="gray darken-1"
+              text
+              style="font-size: 20px; margin-left: 10%; width: 20%; background-color: green; margin-top: auto; font-weight: bold"
+              @click="notStarThis"
+            >
+              取消收藏
+            </v-btn>
+            <v-btn
               color="gray darken-1"
               text
               style="font-size: 20px; margin-left: 10%; width: 20%; background-color: pink; margin-top: auto; font-weight: bold"
@@ -205,7 +224,7 @@
             <v-btn
               color="gray darken-1"
               text
-              style="font-size: 20px; margin-left: 10%; width: 20%; background-color: pink; margin-top: auto; font-weight: bold"
+              style="font-size: 20px; margin-left: 10%; width: 20%; background-color: red; margin-top: auto; font-weight: bold"
               @click="dialog = true"
               v-if="isManager"
             >
@@ -231,13 +250,12 @@
 
 <script>
 import History from "./History.vue"
-import { getSingleTimeshaft, delTimeshaft, updateTimeNode } from "@/api/timeShaft"
-import { updateTimeState } from '../../../../../api/timeShaft'
+import { getSingleTimeshaft, delTimeshaft, updateTimeNode, updateTimeState, starTimeNode } from "@/api/timeShaft"
 
 export default {
   components: { History },
 
-  props: ["id", "isManager", "allTags"],
+  props: ["id", "isManager", "allTags", "stared", "self"],
 
   mounted () {
     getSingleTimeshaft({
@@ -247,6 +265,7 @@ export default {
       this.data = res
       this.stateText = res.state ? "公开" : "本团队/好友可见"
       this.state = res.state
+      this.starHint = res.star ? "已收藏" : "收藏"
     })
   },
 
@@ -260,23 +279,51 @@ export default {
       updateConclude: false,
       selects: [false, false, false],
       flashT: false,
-      flashC: false,
       stateText: "本团队/好友可见",
       state: false,
       changing: false,
+      starHint: "收藏",
+      starId: -1,
     }
   },
 
   beforeDestroy () {
-    if (this.flashT) {
-      this.$parent.$parent.updateTags()
-      this.$parent.$parent.getShaft()
-    }
-    else if (this.flashC) {
-      this.$parent.$parent.getShaft()
-    }
   },
   methods: {
+    starThis () {
+      const that = this
+      starTimeNode({
+        "id": this.id,
+        "star": true
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          //正常返回
+          that.data.star = true
+          that.starHint = "已收藏"
+          that.starId = that.id
+        }
+        else {
+          //错误信息展示
+        }
+      })
+    },
+
+    notStarThis () {
+      const that = this
+      starTimeNode({
+        "id": this.id,
+        "star": false
+      }).then(res => {
+        if (!res || (res && !res.error)) {
+          //正常返回
+          that.starId = that.id
+          that.close()
+        }
+        else {
+          //错误信息展示
+        }
+      })
+    },
 
     changeState () {
       console.log("修改时间轴状态")
@@ -310,19 +357,31 @@ export default {
         this.updateTags = true
       }
       else {
-        if (this.data.tags[0].length == 0 || this.data.tags[0].length > 5
-          || (this.data.tags[1] && this.data.tags[1].length > 5)
-          || (this.data.tags[2] && this.data.tags[2].length > 5)) {
+        const tag0 = document.getElementById("tag0").value
+        const tag1 = document.getElementById("tag1").value
+        const tag2 = document.getElementById("tag2").value
+        const that = this
+        if (tag0.length == 0 || tag0.length > 5
+          || (tag1 && tag1.length > 5)
+          || (tag2 && tag2.length > 5)) {
           return
         }
         updateTimeNode({
           id: this.id,
           type: "tags",
-          tags: this.data.tags,
+          tags: [tag0, tag1, tag2],
           conclude: this.data.conclude,
+        }).then(res => {
+          if (!res || (res && !res.error)) {
+            //正常返回
+            that.updateTags = false
+            that.flashT = true
+            that.data.tags = [tag0, tag1, tag2]
+          }
+          else {
+            //错误信息展示
+          }
         })
-        this.updateTags = false
-        this.flashT = true
       }
     },
 
@@ -338,12 +397,11 @@ export default {
           conclude: this.data.conclude,
         })
         this.updateConclude = false
-        this.flashC = true
       }
     },
     close () {
       this.show = false
-      this.$emit("closeT", this.show)
+      this.$emit("closeT", this.show, this.flashT, this.starId)
     },
 
     copyClicked () {

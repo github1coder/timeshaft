@@ -3,8 +3,11 @@
     <ShaftTitle>
     </ShaftTitle>
     <ShaftBody
+      ref="shaftBody"
       :chatId="chatId"
       :type="type"
+      :self="false"
+      :maxHeight="700"
     >
     </ShaftBody>
   </div>

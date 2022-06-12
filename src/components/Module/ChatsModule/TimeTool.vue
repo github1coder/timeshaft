@@ -133,7 +133,7 @@ export default {
       endTimeShaft({
         group_id: this.chatId,
         chatId: this.chatId,
-        type: this.type === "group" ? "group" : "friend",
+        type: this.type,
       }).then(res => {
         if (!res || (res && !res.error)) {
           //正常返回

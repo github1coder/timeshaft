@@ -4,6 +4,8 @@
       :id="shaftId"
       :isManager="false"
       :allTags="[]"
+      :stared="false"
+      :self="false"
       v-if="detail"
       @closeT="closeT"
     ></TimeNode>
@@ -168,7 +170,7 @@
                 <v-list-item-subtitle>
                   {{message.time}}
                 </v-list-item-subtitle>
-                <v-list-item-content v-if="message.msgType === 'text'" >
+                <v-list-item-content v-if="message.msgType === 'text'">
                   <span style="word-wrap: break-word;max-width: 400px">{{message.msg}}</span>
                 </v-list-item-content>
                 <v-list-item-content
