@@ -163,10 +163,4 @@ public class TimeShaftController {
         timeShaftOp.starTimeNode(id, user_id, star);
         return new ResponseService();
     }
-
-    @RequestMapping("/getAllChannel")
-    public ResponseService getAllChannel(@RequestHeader("user_id") Integer user_id) throws Exception {
-        List<Map<String, Object>> res = timeShaftOp.getAllChannel(user_id);
-        return new ResponseService(res);
-    }
 }

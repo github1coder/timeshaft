@@ -460,6 +460,7 @@ public class TimeShaftOp {
                     timeshafts.addAll(timeshaftService.queryAll(new Timeshaft(groupUser.getGroupId(), null, null, null, null, null, "group",
                             null, null, null, null)));
                 }
+                res.add("所有时间轴");
                 for (Timeshaft timeshaft : timeshafts) {
                     List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
                     for (Tag tag : tags) {
@@ -469,6 +470,7 @@ public class TimeShaftOp {
                     }
                 }
             } else if(type.equals("self")) {
+                res.add("所有时间轴");
                 Star star = new Star(null, null, user_id);
                 List<Star> stars = starService.queryAll(star);
                 for (Star tmp : stars) {
@@ -481,6 +483,7 @@ public class TimeShaftOp {
                 }
             }
         } else {
+            res.add("所有时间轴");
             timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
                     null, null, null, type, null, null, null, null));
             for (Timeshaft timeshaft : timeshafts) {
@@ -608,32 +611,5 @@ public class TimeShaftOp {
     }
 
 
-    public List<Map<String, Object>> getAllChannel(Integer user_id) throws Exception {
-        ArrayList<Map<String, Object>> res = new ArrayList<>();
-        List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
-        friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
-        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
-        for(Friends friend : friends) {
-            Map<String, Object> out = new HashMap<>();
-            User user;
-            if(friend.getUserId1().equals(user_id)) {
-                user = userService.queryById(friend.getUserId2());
-            } else {
-                user = userService.queryById(friend.getUserId1());
-            }
-            out.put("chatId", friend.getId());
-            out.put("name", user.getUsername());
-            out.put("type", "friend");
-            res.add(out);
-        }
-        for(GroupUser groupUser: groupUsers) {
-            Map<String, Object> out = new HashMap<>();
-            Group group = groupService.queryById(groupUser.getGroupId());
-            out.put("chatId", groupUser.getId());
-            out.put("name", group.getName());
-            out.put("type", "group");
-            res.add(out);
-        }
-        return res;
-    }
+
 }

@@ -231,4 +231,10 @@ public class AddressListController {
         ArrayList<Map<String, String>> res = groupOp.getInviteList(user_id);
         return new ResponseService(res);
     }
+
+    @RequestMapping("/getAllChannel")
+    public ResponseService getAllChannel(@RequestHeader("user_id") Integer user_id) throws Exception {
+        List<Map<String, Object>> res = groupOp.getAllChannel(user_id);
+        return new ResponseService(res);
+    }
 }
