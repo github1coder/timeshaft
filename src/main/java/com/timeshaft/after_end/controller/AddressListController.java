@@ -1,6 +1,7 @@
 package com.timeshaft.after_end.controller;
 
 
+import com.timeshaft.after_end.annotation.RequestLog;
 import com.timeshaft.after_end.entity.*;
 import com.timeshaft.after_end.service.FriendsService;
 import com.timeshaft.after_end.service.GroupService;
@@ -34,6 +35,7 @@ public class AddressListController {
     private GroupService groupService;
 
     @RequestMapping(value = "/getFriends")
+    @RequestLog
     public ResponseService getFriends(@RequestHeader("user_id") Integer user_id) {
         List<Friends> friends = friendOp.getFriends(user_id);
         List<Map<String, String>> res = new ArrayList<>();
@@ -60,24 +62,28 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/addFriend")
+    @RequestLog
     public ResponseService addFriend(@RequestHeader("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.addFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/delFriend")
+    @RequestLog
     public ResponseService delFriend(@RequestHeader("user_id") Integer user_id, @RequestParam(value = "friend_id") Integer friend_id) {
         friendOp.delFriend(user_id, friend_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changeNickname")
+    @RequestLog
     public ResponseService changeNickname(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         friendOp.changeNickname(user_id, Integer.parseInt(map.get("friend_id")), map.get("friend_nickname"));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/getGroups")
+    @RequestLog
     public ResponseService getGroups(@RequestHeader("user_id") Integer user_id) {
         List<Group> groups = groupOp.getGroup(user_id);
         List<Map<String, Object>> res = new ArrayList<>();
@@ -99,12 +105,14 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/addGroup")
+    @RequestLog
     public ResponseService addGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.createGroup(map.get("name"), map.get("static/photo"), map.get("notice"), Integer.parseInt(map.get("master_id")));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/updateGroup")
+    @RequestLog
     public ResponseService updateGroup(@RequestBody Map<String, Object> map, @RequestHeader("user_id") Integer user_id) {
         boolean visibility = (boolean) map.get("state");
         int group_id = (int) map.get("id");
@@ -115,48 +123,56 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/joinGroup")
+    @RequestLog
     public ResponseService joinGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.joinGroup(user_id, Integer.parseInt(map.get("group_id")), Integer.parseInt(map.get("join_user_id")));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/quitGroup")
+    @RequestLog
     public ResponseService quitGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.quitGroup(Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/delGroup")
+    @RequestLog
     public ResponseService delGroup(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.deleteGroup(user_id, Integer.parseInt(map.get("group_id")));
         return new ResponseService();
     }
 
     @RequestMapping(value = "/delGroupManager")
+    @RequestLog
     public ResponseService delGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.delManager(Integer.parseInt(map.get("id")), Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/addGroupManager")
+    @RequestLog
     public ResponseService addGroupManager(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.addManager(Integer.parseInt(map.get("id")), Integer.parseInt(map.get("group_id")), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/changeGroupNickname")
+    @RequestLog
     public ResponseService changeGroupNickname(@RequestBody Map<String, String> map, @RequestHeader("user_id") Integer user_id) {
         groupOp.changeNickname(Integer.parseInt(map.get("group_id")), map.get("nickname"), user_id);
         return new ResponseService();
     }
 
     @RequestMapping(value = "/searchByNick")
+    @RequestLog
     public ResponseService searchByNick(@RequestParam(value = "name") String name, @RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
         List<Map<String, String>> res = friendOp.searchByNick(name, type, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/apply")
+    @RequestLog
     public ResponseService apply(@RequestParam(value = "invite") Integer invite, @RequestParam(value = "memId") Integer memId, @RequestParam(value = "type") String type, @RequestParam(value = "action") String action, @RequestParam(value = "id") Integer id, @RequestHeader("user_id") Integer user_id) throws Exception {
         friendOp.apply(user_id, type, action, id, memId, invite);
         friendOp.sendNotification(type, action, id, memId, user_id);
@@ -164,12 +180,14 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getApplyList")
+    @RequestLog
     public ResponseService getApplyList(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
         List<Map<String, String>> res = friendOp.getApplyList(type, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/getGroupMember")
+    @RequestLog
     public ResponseService getGroupMember(@RequestParam("id") Integer id, @RequestHeader("user_id") Integer user_id) {
         Map<User, String> users = friendOp.getGroupMember(id);
         List<Map<String, String>> res = new ArrayList<>();
@@ -201,18 +219,21 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getInfoMsg")
+    @RequestLog
     public ResponseService getInfoMsg(@RequestParam(value = "type") String type, @RequestParam("info_id") Integer info_id, @RequestHeader("user_id") Integer user_id) throws Exception {
         Map<String, String> res = friendOp.getInfoMsg(type, info_id, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/finding")
+    @RequestLog
     public ResponseService finding(@RequestParam(value = "type") String type, @RequestHeader("user_id") Integer user_id) throws Exception {
         List<Map<String, String>> res = friendOp.finding(user_id, type);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/getHeat")
+    @RequestLog
     public ResponseService getHeat(@RequestParam(value = "type") String type, @RequestParam("group_id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
         Map<String, Integer> res = new HashMap<>();
         Integer heat = groupOp.getHeat(group_id, type, user_id);
@@ -221,12 +242,14 @@ public class AddressListController {
     }
 
     @RequestMapping(value = "/getFNotInG")
+    @RequestLog
     public ResponseService getFNotInG(@RequestParam("id") Integer group_id, @RequestHeader("user_id") Integer user_id) throws Exception {
         ArrayList<Map<String, String>> res = groupOp.getFNotInG(group_id, user_id);
         return new ResponseService(res);
     }
 
     @RequestMapping(value = "/getInviteList")
+    @RequestLog
     public ResponseService getInviteList(@RequestHeader("user_id") Integer user_id) throws Exception {
         ArrayList<Map<String, String>> res = groupOp.getInviteList(user_id);
         return new ResponseService(res);

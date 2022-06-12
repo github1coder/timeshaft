@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.controller;
 
+import com.timeshaft.after_end.annotation.RequestLog;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.timeshaftOp.TimeShaftOp;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class TimeShaftController {
     private String offMeeting;
 
     @RequestMapping("/beginTimeShaftSingle")
+    @RequestLog
     public ResponseService beginTimeShaftSingle(@RequestBody Map<String, Object> requestMap) throws Exception {
         log.info("创建时间轴开始");
         String title = (String) requestMap.get("title");
@@ -45,6 +47,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeshaft")
+    @RequestLog
     public ResponseService getTimeshafts(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("获取时间轴开始");
         Integer group_id = (Integer) requestMap.get("group_id");
@@ -57,6 +60,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/endTimeShaft")
+    @RequestLog
     public ResponseService endTimeShaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("结束时间轴开始");
         Integer group_id = (Integer) requestMap.get("chatId");
@@ -67,12 +71,14 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeShaftData")
+    @RequestLog
     public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws Exception {
         List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
         return new ResponseService(res);
     }
 
     @RequestMapping("/genTimeShaftFromMessages")
+    @RequestLog
     public ResponseService genTimeShaftFromMessages(@RequestBody Map<String, Object> requestMap) throws Exception {
         Integer chat_id = (Integer)requestMap.get("chatId");
         Integer user_id = (Integer)requestMap.get("userId");
@@ -87,6 +93,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getSingleTimeshaft")
+    @RequestLog
     public ResponseService getSingleTimeshaft(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws Exception {
         Integer timeshaft_id = (Integer) requestMap.get("timeshaft_id");
         Map<String, Object> res = timeShaftOp.getSingleTimeshaft(user_id, timeshaft_id);
@@ -94,6 +101,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/queryTimeShaftId")
+    @RequestLog
     public ResponseService queryTimeShaftId(@RequestHeader("user_id") Integer user_id, @RequestBody Map<String, Object> requestMap) throws Exception {
         String msg = (String) requestMap.get("msg");
         Map<String, Object> res = timeShaftOp.getIdByKey(msg);
@@ -101,6 +109,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/meetingChange")
+    @RequestLog
     public ResponseService meetingChange(@RequestBody Map<String, Object> requestMap) {
         String type = (String) requestMap.get("type");
         Integer chatId = (Integer) requestMap.get("chatId");
@@ -111,6 +120,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/delTimeshaft")
+    @RequestLog
     public ResponseService delTimeshaft(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
         Integer id = (Integer) requestMap.get("id");
         timeShaftOp.delTimeshaft(id, user_id);
@@ -118,6 +128,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/getTimeTags")
+    @RequestLog
     public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap) {
         Integer id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
@@ -126,6 +137,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/updateTimeNode")
+    @RequestLog
     public ResponseService updateTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         Integer id = (Integer) requestMap.get("id");
         ArrayList<String> tags = (ArrayList<String>) requestMap.get("tags");
@@ -136,6 +148,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/searchTimeByTag")
+    @RequestLog
     public ResponseService searchTimeByTag(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         log.info("获取时间轴开始");
         Integer id = (Integer) requestMap.get("chatId");
@@ -149,6 +162,7 @@ public class TimeShaftController {
     }
 
     @RequestMapping("/updateTimeState")
+    @RequestLog
     public ResponseService updateTimeState(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
         Integer id = (Integer) requestMap.get("id");
         Boolean state = (Boolean) requestMap.get("state");

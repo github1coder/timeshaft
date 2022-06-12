@@ -1,5 +1,6 @@
 package com.timeshaft.after_end.controller;
 
+import com.timeshaft.after_end.annotation.RequestLog;
 import com.timeshaft.after_end.service.ResponseService;
 import com.timeshaft.after_end.service.addressList.FriendOp;
 import com.timeshaft.after_end.service.addressList.GroupOp;
@@ -66,6 +67,7 @@ public class ChatController {
     private String offMeeting;
 
     @RequestMapping(value = "/getMessagesList")
+    @RequestLog
     public ResponseService getMessagesList(@RequestHeader("user_id") Integer userId) {
         List<HashMap<String, Object>> res = new ArrayList<>();
         res.addAll(initChatOp.getFriendMessageList(userId));
@@ -74,6 +76,7 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/getListenerList")
+    @RequestLog
     public ResponseService getListenerList(@RequestHeader("user_id") Integer user_id) {
         //消息url
         String chatUrl = "/user/chat/" + user_id;
@@ -99,6 +102,7 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/getHistoryMessage")
+    @RequestLog
     public ResponseService getHistoryMessage(@RequestParam("userId") Integer userId,
                                              @RequestParam("lastTime") String lastTime,
                                              @RequestParam("chatId") Integer chatId,
@@ -114,6 +118,7 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/haveRead")
+    @RequestLog
     public ResponseService markMessages(@RequestBody Map<String, Object> requestMap) {
         int userId = (Integer) requestMap.get("userId");
         int chatId = (Integer) requestMap.get("chatId"); //需要type字段表示群聊还是私聊
@@ -127,6 +132,7 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/searchHistory")
+    @RequestLog
     public ResponseService searchMessageByKeyword(@RequestParam("chatId") Integer chatId,
                                                   @RequestParam("type") String type,
                                                   @RequestParam("text") String text) {
