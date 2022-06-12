@@ -232,7 +232,7 @@ public class TimeShaftOp {
         Date start_time = sdf.parse(start);
         Date end_time = sdf.parse(end);
         List<Timeshaft> timeshaftsTemp1 = timeshaftService.queryTimeshaftByTime(start_time, end_time);
-        List<Timeshaft> timeshaftsTemp2 = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Timeshaft> timeshaftsTemp2 = new ArrayList<>();
         List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
         friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
         List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
@@ -246,8 +246,12 @@ public class TimeShaftOp {
         }
         List<Timeshaft> timeshafts = new ArrayList<>();
         for(Timeshaft timeshaft : timeshaftsTemp1) {
-            if(timeshaftsTemp2.contains(timeshaft)) {
-                timeshafts.add(timeshaft);
+            for(Timeshaft t : timeshaftsTemp2) {
+                if(t.getId().equals(timeshaft.getId())) {
+                    timeshafts.add(timeshaft);
+                    timeshaftsTemp2.remove(t);
+                    break;
+                }
             }
         }
         for (Timeshaft timeshaft : timeshafts) {
