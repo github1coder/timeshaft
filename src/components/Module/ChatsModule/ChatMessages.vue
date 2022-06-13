@@ -129,7 +129,6 @@
           three-line
           v-scroll:#scroll-target="onScroll"
         >
-          <span>{{selected}}</span>
           <template
             v-for="(message, i) in content"
             class="chat-list"
@@ -142,7 +141,12 @@
                 v-if="selecting && messages.length > 0"
                 class="mx-0"
               >
-                <input type="checkbox" :id="'check-'+(messages.length-1-i)" @click="check(messages.length-1-i)" :value="message.msgId"/>
+                <v-checkbox
+                  v-model="selected"
+                  :value="message.msgId"
+                  label=""
+                >
+                </v-checkbox>
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-if="message.isMeeting"
@@ -217,25 +221,6 @@ export default {
     }
   },
   methods: {
-    check(id) {
-      var el = document.getElementById("check-"+id)
-      var el1 = document.getElementById("check-0")
-      console.log("得到check元素：")
-      console.log(el)
-      console.log(el1)
-      console.log(el.checked)
-      console.log("value:" + el.value)
-      if (el.checked) {
-        console.log("加入selected")
-        this.selected.push(el.value)
-      } else {
-        console.log("从selected移除")
-        var idx = this.selected.findIndex(value => value === el.value)
-        if (idx > -1) {
-          this.selected.splice(idx, 1)
-        }
-      }
-    },
     closeT (flag) {
       this.detail = flag
     },
@@ -305,7 +290,7 @@ export default {
             this.$store.state.currentChatTime = res.lastTime
             console.log(this.messages)
             for (let i = res.data.length - 1; i >= 0; i--) {
-              this.messages.push(res.data[i])
+              this.messages.unshift(res.data[i])
             }
             this.$store.state.currentChatHaveRead += res.data.length
             console.log(this.messages)
@@ -332,7 +317,7 @@ export default {
   },
   computed: {
     content() {
-      return [...this.messages].reverse()
+      return [...this.messages]
     }
   },
   watch: {
@@ -356,29 +341,11 @@ export default {
               this.$store.state.currentChatTime = res.lastTime
               console.log(this.messages)
               for (let i = res.data.length - 1; i >= 0; i--) {
-                this.messages.push(res.data[i])
+                this.messages.unshift(res.data[i])
               }
               this.$store.state.currentChatHaveRead += res.data.length
               console.log(this.messages)
-              var el = null
-              console.log("123")
-              for (let i = 0; i < this.messages.length; i++) {
-                el = document.getElementById("check-" + i)
-                var el1 = window.document.getElementById('check-0')
-                console.log(el1)
-                console.log(i)
-                console.log(el)
-                el.checked = false
-              }
-              console.log("123")
-              for (let i in this.selected) {
-                var idx = this.messages.findIndex(message => message.msgId === this.selected[i])
-                console.log(idx)
-                el = document.getElementById("check-" + idx)
-                el.checked = true
-              }
             }
-
           })
         }
       }
@@ -389,7 +356,6 @@ export default {
         this.dialog = true
         this.selected = []
       }
-
     },
   },
 
