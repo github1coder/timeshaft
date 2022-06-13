@@ -10,7 +10,7 @@
         v-else-if="$store.state.siderState === 1"
         ref="contractsModule"
       ></ContractsModule>
-      <Empty v-else-if="$store.state.siderState === 2"></Empty>
+      <StarModule v-else-if="$store.state.siderState === 2"></StarModule>
       <CalendarModule v-else-if="$store.state.siderState === 3"></CalendarModule>
 
       <!-- <About v-else-if="$store.state.siderState === 4"></About> -->
@@ -25,7 +25,7 @@ import ContractsModule from "@/components/Module/ContactsModule";
 import Navigations from "@/components/Navigations";
 import ChatsModule from "@/components/Module/ChatsModule";
 import CalendarModule from "@/components/Module/CalendarModule";
-import Empty from "@/components/Module/empty";
+import StarModule from "@/components/Module/StarModule";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { getListenerList } from "@/api/message";
@@ -38,7 +38,7 @@ export default {
     ChatsModule,
     Navigations,
     ContractsModule,
-    Empty,
+    StarModule,
   },
   data () {
     return {

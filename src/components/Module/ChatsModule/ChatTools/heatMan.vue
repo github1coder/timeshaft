@@ -26,7 +26,7 @@ export default {
     getMan () {
       let para = {
         group_id: this.chatId,
-        type: this.type === "group" ? "group" : "friend",
+        type: this.type,
       }
       getHeat(para).then(res => {
         this.heat = res.heat
