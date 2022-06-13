@@ -337,7 +337,7 @@ export default {
             "id": this.$store.state.currentChannelId,
           }).then(res => {
             if (!res || (res && !res.error)) {
-              if (res.findIndex(mem => mem.id === that.$store.state.userId && mem.type !== "normal") === -1) {
+              if (res.findIndex(mem => mem.id == that.$store.state.userId && mem.type !== "normal") == -1) {
                 that.$refs.timeTool.timetoolShow = false
               }
               else {
@@ -349,13 +349,14 @@ export default {
         else {
           this.$refs.timeTool.timetoolShow = true
         }
-        if (this.messages[this.$store.state.currentChannelIdx].isMeeting === false
+        if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
           || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
           console.log("会议状态：开始=>关闭")
           this.$refs.timeTool.endOk(false)
-          if (this.$refs.timeShaft.$refs.shaftBody) {
-            this.$refs.timeShaft.$refs.shaftBody.getShaft()
+          if (this.$refs.timeShaft) {
+            if (this.$refs.timeShaft.$refs.shaftBody)
+              this.$refs.timeShaft.$refs.shaftBody.getShaft()
           }
         } else {
           console.log("会议状态：关闭=>开始")
