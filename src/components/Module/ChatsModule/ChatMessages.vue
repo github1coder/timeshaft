@@ -219,14 +219,10 @@ export default {
   methods: {
     check(id) {
       var el = document.getElementById("check-"+id)
+      var el1 = document.getElementById("check-0")
       console.log("得到check元素：")
       console.log(el)
-      // console.log(el.checked)
-      // if (el.checked === undefined) {
-      //   el.checked = true
-      // } else {
-      //   el.checked = !el.checked
-      // }
+      console.log(el1)
       console.log(el.checked)
       console.log("value:" + el.value)
       if (el.checked) {
@@ -278,6 +274,7 @@ export default {
     socketSend (payload) {
       // TODO 改成传参
       console.log(this.$store.state.serviceClient)
+      console.log(payload)
       console.log(payload)
       this.scrollToBottom()
       // this.messages.push(payload.data)
@@ -335,8 +332,7 @@ export default {
   },
   computed: {
     content() {
-      var msg = this.messages
-      return msg.reverse()
+      return [...this.messages].reverse()
     }
   },
   watch: {
@@ -364,7 +360,25 @@ export default {
               }
               this.$store.state.currentChatHaveRead += res.data.length
               console.log(this.messages)
+              var el = null
+              console.log("123")
+              for (let i = 0; i < this.messages.length; i++) {
+                el = document.getElementById("check-" + i)
+                var el1 = window.document.getElementById('check-0')
+                console.log(el1)
+                console.log(i)
+                console.log(el)
+                el.checked = false
+              }
+              console.log("123")
+              for (let i in this.selected) {
+                var idx = this.messages.findIndex(message => message.msgId === this.selected[i])
+                console.log(idx)
+                el = document.getElementById("check-" + idx)
+                el.checked = true
+              }
             }
+
           })
         }
       }
@@ -377,17 +391,6 @@ export default {
       }
 
     },
-    // messages (newVal, oldVal) {
-    //   const len = oldVal.length - newVal.length
-    //   if (len > 0) {
-    //     for (let i in this.selected) {
-    //       var idx = this.messages.findIndex(message => message.msgId === this.selected[i])
-    //       var el = document.getElementById("check-" + (messages.length-1-idx))
-    //
-    //     }
-    //   }
-    //
-    // }
   },
 
   created () {
