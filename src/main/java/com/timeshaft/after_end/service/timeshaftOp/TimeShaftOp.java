@@ -360,11 +360,12 @@ public class TimeShaftOp {
         } else {
             User user = userService.queryById(user_id);
             Friends friend = friendsService.queryById(timeshaft.getGroupId());
-            if (userService.queryById(friend.getUserId1()).getUsername().equals(user.getUsername())) {
-                ans.put("groupName", userService.queryById(friend.getUserId2()).getUsername());
-            } else {
-                ans.put("groupName", userService.queryById(friend.getUserId1()).getUsername());
-            }
+//            if (userService.queryById(friend.getUserId1()).getUsername().equals(user.getUsername())) {
+//                ans.put("groupName", userService.queryById(friend.getUserId2()).getUsername());
+//            } else {
+//                ans.put("groupName", userService.queryById(friend.getUserId1()).getUsername());
+//            }
+            ans.put("groupName", "");
             if (timeshaft.getStartMsgId() != -1) {
                 List<PersonalMessage> personalMessages = personalMessageService.queryBeginEndMsg(timeshaft.getGroupId(), timeshaft.getStartMsgId(), timeshaft.getEndMsgId());
                 for (PersonalMessage personalMessage : personalMessages) {
