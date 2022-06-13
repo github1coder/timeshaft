@@ -236,7 +236,7 @@ public class GroupOp {
         for(GroupUser groupUser: groupUsers) {
             Map<String, Object> out = new HashMap<>();
             Group group = groupService.queryById(groupUser.getGroupId());
-            out.put("chatId", groupUser.getId());
+            out.put("chatId", group.getId());
             out.put("name", group.getName());
             out.put("type", "group");
             res.add(out);
