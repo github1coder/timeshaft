@@ -64,7 +64,7 @@
               </v-btn>
             </div>
             <v-divider></v-divider>
-            <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
+            <small style="align: left; text-align: left; font-size: 10px">{{groupName}}{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
             <small style="text-align: left;">时间轴链接：{{data.key}}</small>
             <v-divider></v-divider>
@@ -266,6 +266,7 @@ export default {
       this.stateText = res.state ? "公开" : "本团队/好友可见"
       this.state = res.state
       this.starHint = res.star ? "已收藏" : "收藏"
+      this.groupName = res.groupName == "" ? "" : res.groupName + "团队："
     })
   },
 
@@ -284,6 +285,7 @@ export default {
       changing: false,
       starHint: "收藏",
       starId: -1,
+      groupName: "",
     }
   },
 
