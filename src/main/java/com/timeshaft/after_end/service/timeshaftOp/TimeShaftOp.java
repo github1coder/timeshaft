@@ -38,6 +38,8 @@ public class TimeShaftOp {
     private SimpMessageSendingOperations messagingTemplate;
     @Autowired
     private GroupUserServiceImpl groupUserService;
+    @Autowired
+    private StarService starService;
 
     @Value("${meeting.on}")
     private String OnMeeting;
@@ -49,7 +51,7 @@ public class TimeShaftOp {
     @Value("${type.groupType}")
     private String groupType;
 
-    @PermissionAnnotation(level=38)
+    @PermissionAnnotation(level = 38)
     public Integer beginTimeShaftSingle(String title, String conclude, Integer user_id, Integer group_id, String type, ArrayList<String> tags) throws Exception {
         Timeshaft timeshaft = new Timeshaft(group_id, user_id, title, new Date(), null, conclude, type,
                 0, -1, -1, randomKey());
@@ -64,31 +66,90 @@ public class TimeShaftOp {
         return timeshaft.getId();
     }
 
-    @PermissionAnnotation(level=39)
+    @PermissionAnnotation(level = 39)
     public List<Map<String, Object>> getTimeshafts(Integer group_id, String type, Integer user_id) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
-                null, null, null, null);
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
-        for (Timeshaft timeshaft : timeshafts) {
-            if (timeshaft.getEndTime() != null) {
-                Map<String, Object> timeshaftRes = new HashMap<>();
-                User user = userService.queryById(timeshaft.getCreatorId());
-                timeshaftRes.put("title", timeshaft.getName());
-                timeshaftRes.put("img", user.getPhoto());
-                timeshaftRes.put("begin_date", timeshaft.getBeginTime());
-                timeshaftRes.put("end_date", timeshaft.getBeginTime());
-                timeshaftRes.put("conclude", timeshaft.getConclude());
-                timeshaftRes.put("host", user.getUsername());
+        List<Timeshaft> timeshafts = new ArrayList<>();
+        if (type != null && type.equals("self")) {
+            Star star = new Star(null, null, user_id);
+            List<Star> stars = starService.queryAll(star);
+            for (Star tmp : stars) {
+                Timeshaft timeshaft = timeshaftService.queryById(tmp.getTimeshaftId());
+                if (timeshaft != null) {
+                    if (timeshaft.getEndTime() != null) {
+                        Map<String, Object> timeshaftRes = new HashMap<>();
+                        User user = userService.queryById(timeshaft.getCreatorId());
+                        timeshaftRes.put("title", timeshaft.getName());
+                        timeshaftRes.put("img", user.getPhoto());
+                        timeshaftRes.put("begin_date", timeshaft.getBeginTime());
+                        timeshaftRes.put("end_date", timeshaft.getBeginTime());
+                        timeshaftRes.put("conclude", timeshaft.getConclude());
+                        timeshaftRes.put("host", user.getUsername());
 
-                List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
-                List<String> tagsRes = new ArrayList<>();
-                for (Tag tag : tags) {
-                    tagsRes.add(tag.getName());
+                        List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                        List<String> tagsRes = new ArrayList<>();
+                        for (Tag tag : tags) {
+                            tagsRes.add(tag.getName());
+                        }
+                        timeshaftRes.put("tags", tagsRes);
+                        timeshaftRes.put("id", timeshaft.getId());
+                        timeshaftsRes.add(timeshaftRes);
+                    }
+                } else {
+                    Map<String, Object> timeshaftRes = new HashMap<>();
+                    timeshaftRes.put("title", tmp.getTitle());
+                    timeshaftRes.put("img", "");
+                    timeshaftRes.put("begin_date", "");
+                    timeshaftRes.put("end_date", "");
+                    timeshaftRes.put("conclude", "");
+                    timeshaftRes.put("host", "");
+                    timeshaftRes.put("tags", "");
+                    timeshaftRes.put("id", "");
+                    timeshaftsRes.add(timeshaftRes);
                 }
-                timeshaftRes.put("tags", tagsRes);
-                timeshaftRes.put("id", timeshaft.getId());
-                timeshaftsRes.add(timeshaftRes);
+            }
+        } else {
+            Timeshaft timeshaftTemp;
+            if(type == null) {
+                return timeshaftsRes;
+            }
+            if(type.equals("all")) {
+                List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
+                friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
+                for(Friends friend : friends) {
+                    timeshafts.addAll(timeshaftService.queryAll(new Timeshaft(friend.getId(), null, null, null, null, null, "friend",
+                            null, null, null, null)));
+                }
+                for(GroupUser groupUser : groupUsers) {
+                    timeshafts.addAll(timeshaftService.queryAll(new Timeshaft(groupUser.getGroupId(), null, null, null, null, null, "group",
+                            null, null, null, null)));
+                }
+            } else {
+                timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
+                        null, null, null, null);
+                timeshafts = timeshaftService.queryAll(timeshaftTemp);
+            }
+            for (Timeshaft timeshaft : timeshafts) {
+                if (timeshaft.getEndTime() != null) {
+                    Map<String, Object> timeshaftRes = new HashMap<>();
+                    User user = userService.queryById(timeshaft.getCreatorId());
+                    timeshaftRes.put("title", timeshaft.getName());
+                    timeshaftRes.put("img", user.getPhoto());
+                    timeshaftRes.put("begin_date", timeshaft.getBeginTime());
+                    timeshaftRes.put("end_date", timeshaft.getBeginTime());
+                    timeshaftRes.put("conclude", timeshaft.getConclude());
+                    timeshaftRes.put("host", user.getUsername());
+
+                    List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                    List<String> tagsRes = new ArrayList<>();
+                    for (Tag tag : tags) {
+                        tagsRes.add(tag.getName());
+                    }
+                    timeshaftRes.put("tags", tagsRes);
+                    timeshaftRes.put("id", timeshaft.getId());
+                    timeshaftsRes.add(timeshaftRes);
+                }
             }
         }
         return timeshaftsRes;
@@ -99,7 +160,7 @@ public class TimeShaftOp {
         List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null, null, null, null, type,
                 null, null, null, null));
         for (Timeshaft timeshaft : timeshafts) {
-            if (timeshaft.getEndTime() == null){
+            if (timeshaft.getEndTime() == null) {
                 Date end_time = new Date();
                 timeshaft.setEndTime(end_time);
                 if (groupType.equals(type)) {
@@ -165,14 +226,36 @@ public class TimeShaftOp {
         }
     }
 
-    public List<Map<String, Object>> getTimeShaftData(String start, String end) throws ParseException {
+    public List<Map<String, Object>> getTimeShaftData(String start, String end, Integer user_id) throws ParseException {
         ArrayList<Map<String, Object>> res = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start_time = sdf.parse(start);
         Date end_time = sdf.parse(end);
-        List<Timeshaft> timeshafts = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Timeshaft> timeshaftsTemp1 = timeshaftService.queryTimeshaftByTime(start_time, end_time);
+        List<Timeshaft> timeshaftsTemp2 = new ArrayList<>();
+        List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
+        friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
+        List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
+        for(Friends friend : friends) {
+            timeshaftsTemp2.addAll(timeshaftService.queryAll(new Timeshaft(friend.getId(), null, null, null, null, null, "friend",
+                    null, null, null, null)));
+        }
+        for(GroupUser groupUser : groupUsers) {
+            timeshaftsTemp2.addAll(timeshaftService.queryAll(new Timeshaft(groupUser.getGroupId(), null, null, null, null, null, "group",
+                    null, null, null, null)));
+        }
+        List<Timeshaft> timeshafts = new ArrayList<>();
+        for(Timeshaft timeshaft : timeshaftsTemp1) {
+            for(Timeshaft t : timeshaftsTemp2) {
+                if(t.getId().equals(timeshaft.getId())) {
+                    timeshafts.add(timeshaft);
+                    timeshaftsTemp2.remove(t);
+                    break;
+                }
+            }
+        }
         for (Timeshaft timeshaft : timeshafts) {
-            if(timeshaft.getEndTime() != null && timeshaft.getBeginTime() != null) {
+            if (timeshaft.getEndTime() != null && timeshaft.getBeginTime() != null) {
                 Map<String, Object> out = new HashMap<>();
                 out.put("name", timeshaft.getName());
                 if (timeshaft.getBeginTime().compareTo(start_time) < 0) {
@@ -241,7 +324,7 @@ public class TimeShaftOp {
     public Map<String, Object> getSingleTimeshaft(int user_id, int timeshaft_id) throws Exception {
         Map<String, Object> ans = new HashMap<>();
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
-        if(timeshaft == null) {
+        if (timeshaft == null) {
             throw new Exception("该时间轴不存在或者已被删除");
         }
         ans.put("name", userService.queryById(timeshaft.getCreatorId()).getUsername());
@@ -255,7 +338,7 @@ public class TimeShaftOp {
         }
         ans.put("tags", tagNames);
         ans.put("conclude", timeshaft.getConclude());
-        if(timeshaft.getPrivate1() == 1) {
+        if (timeshaft.getPrivate1() == 1) {
             ans.put("state", false);
         } else {
             ans.put("state", true);
@@ -277,7 +360,7 @@ public class TimeShaftOp {
         } else {
             User user = userService.queryById(user_id);
             Friends friend = friendsService.queryById(timeshaft.getGroupId());
-            if(userService.queryById(friend.getUserId1()).getUsername().equals(user.getUsername())) {
+            if (userService.queryById(friend.getUserId1()).getUsername().equals(user.getUsername())) {
                 ans.put("groupName", userService.queryById(friend.getUserId2()).getUsername());
             } else {
                 ans.put("groupName", userService.queryById(friend.getUserId1()).getUsername());
@@ -296,7 +379,14 @@ public class TimeShaftOp {
         }
         ans.put("message", msg);
         ans.put("id", timeshaft.getId().toString());
-        ans.put("key", "#"+timeshaft.getKey()+"-"+timeshaft.getName());
+        ans.put("key", "#" + timeshaft.getKey() + "-" + timeshaft.getName());
+        Star star = new Star(timeshaft_id, null, user_id);
+        List<Star> stars = starService.queryAll(star);
+        if (stars.isEmpty()) {
+            ans.put("star", false);
+        } else {
+            ans.put("star", true);
+        }
         return ans;
     }
 
@@ -331,8 +421,8 @@ public class TimeShaftOp {
                 //循环加到6为
                 result += oneChar;
             }
-            if(timeshaftService.queryAll(new Timeshaft(null, null, null, null,
-                    null, null ,null, null, null, null, result)).isEmpty()) {
+            if (timeshaftService.queryAll(new Timeshaft(null, null, null, null,
+                    null, null, null, null, null, null, result)).isEmpty()) {
                 break;
             } else {
                 result = "";
@@ -367,22 +457,63 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 32)
     public void delTimeshaft(Integer timeshaft_id, Integer user_id) {
         List<Tag> tags = tagService.queryAll(new Tag(timeshaft_id, null));
-        for(Tag tag: tags) {
+        for (Tag tag : tags) {
             tagService.deleteById(tag.getId());
         }
         timeshaftService.deleteById(timeshaft_id);
     }
 
-    public ArrayList<String> getTimeTags(Integer group_id, String type) {
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
-                null, null, null, type, null, null, null, null));
+    public ArrayList<String> getTimeTags(Integer group_id, String type, Integer user_id) {
+        List<Timeshaft> timeshafts = new ArrayList<>();
         ArrayList<String> res = new ArrayList<>();
-        res.add("所有时间轴");
-        for(Timeshaft timeshaft: timeshafts) {
-            List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
-            for(Tag tag: tags) {
-                if(!tag.getName().equals("") && !res.contains(tag.getName())) {
-                    res.add(tag.getName());
+        if (group_id == 0) {
+            if(type == null) {
+                return res;
+            }
+            if(type.equals("all")) {
+                List<Friends> friends = friendsService.queryAll(new Friends(user_id, null, null, null, "accept", null));
+                friends.addAll(friendsService.queryAll(new Friends(null, user_id, null, null, "accept", null)));
+                List<GroupUser> groupUsers = groupUserService.queryAll(new GroupUser(null, user_id, null, null, "accept", null));
+                for(Friends friend : friends) {
+                    timeshafts.addAll(timeshaftService.queryAll(new Timeshaft(friend.getId(), null, null, null, null, null, "friend",
+                            null, null, null, null)));
+                }
+                for(GroupUser groupUser : groupUsers) {
+                    timeshafts.addAll(timeshaftService.queryAll(new Timeshaft(groupUser.getGroupId(), null, null, null, null, null, "group",
+                            null, null, null, null)));
+                }
+                res.add("所有时间轴");
+                for (Timeshaft timeshaft : timeshafts) {
+                    List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                    for (Tag tag : tags) {
+                        if (!tag.getName().equals("") && !res.contains(tag.getName())) {
+                            res.add(tag.getName());
+                        }
+                    }
+                }
+            } else if(type.equals("self")) {
+                res.add("所有时间轴");
+                Star star = new Star(null, null, user_id);
+                List<Star> stars = starService.queryAll(star);
+                for (Star tmp : stars) {
+                    List<Tag> tags = tagService.queryAll(new Tag(tmp.getTimeshaftId(), null));
+                    for (Tag tag : tags) {
+                        if (!tag.getName().equals("") && !res.contains(tag.getName())) {
+                            res.add(tag.getName());
+                        }
+                    }
+                }
+            }
+        } else {
+            res.add("所有时间轴");
+            timeshafts = timeshaftService.queryAll(new Timeshaft(group_id, null, null,
+                    null, null, null, type, null, null, null, null));
+            for (Timeshaft timeshaft : timeshafts) {
+                List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
+                for (Tag tag : tags) {
+                    if (!tag.getName().equals("") && !res.contains(tag.getName())) {
+                        res.add(tag.getName());
+                    }
                 }
             }
         }
@@ -392,13 +523,13 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 32)
     public void updateTimeNode(Integer timeshaft_id, String type, ArrayList<String> tags, String conclude, Integer user_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
-        if(timeshaft == null) {
+        if (timeshaft == null) {
             throw new Exception("该时间轴不存在或者已被删除");
         }
-        if(type.equals("tags")) {
+        if (type.equals("tags")) {
             List<Tag> tags_1 = tagService.queryAll(new Tag(timeshaft_id, null));
-            for(int i = 0; i < tags.size(); i++) {
-                if(i + 1 > tags_1.size()) {
+            for (int i = 0; i < tags.size(); i++) {
+                if (i + 1 > tags_1.size()) {
                     if (!tags.get(i).equals("")) {
                         tagService.insert(new Tag(timeshaft_id, tags.get(i)));
                     }
@@ -418,18 +549,30 @@ public class TimeShaftOp {
     }
 
     public List<Map<String, Object>> searchTimeByTag(Integer group_id, String type, Integer user_id, String name) {
-        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, type,
+        Timeshaft timeshaftTemp = new Timeshaft(group_id, null, null, null, null, null, null,
                 null, null, null, null);
-        List<Timeshaft> timeshafts = timeshaftService.queryAll(timeshaftTemp);
+        List<Timeshaft> timeshafts = new ArrayList<>();
+        if(group_id == 0) {
+            Star star = new Star(null, null, user_id);
+            List<Star> stars = starService.queryAll(star);
+            for (Star tmp : stars) {
+                Timeshaft timeshaft = timeshaftService.queryById(tmp.getTimeshaftId());
+                if(timeshaft != null) {
+                    timeshafts.add(timeshaft);
+                }
+            }
+        } else {
+            timeshafts = timeshaftService.queryAll(timeshaftTemp);
+        }
         List<Map<String, Object>> timeshaftsRes = new ArrayList<>();
         for (Timeshaft timeshaft : timeshafts) {
             if (timeshaft.getEndTime() != null) {
                 List<Tag> tags = tagService.queryAll(new Tag(timeshaft.getId(), null));
                 ArrayList<String> tag_tmp = new ArrayList<>();
-                for(Tag tag: tags) {
+                for (Tag tag : tags) {
                     tag_tmp.add(tag.getName());
                 }
-                if(!tag_tmp.contains(name)) {
+                if (!tag_tmp.contains(name)) {
                     continue;
                 }
                 Map<String, Object> timeshaftRes = addInfo(timeshaft);
@@ -460,14 +603,33 @@ public class TimeShaftOp {
     @PermissionAnnotation(level = 32)
     public void updateTimeState(Integer timeshaft_id, Boolean state, Integer user_id) throws Exception {
         Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
-        if(timeshaft == null) {
+        if (timeshaft == null) {
             throw new Exception("该时间轴不存在或者已被删除");
         }
-        if(state) {
+        if (state) {
             timeshaft.setPrivate1(0);
         } else {
             timeshaft.setPrivate1(1);
         }
         timeshaftService.update(timeshaft);
     }
+
+    @PermissionAnnotation(level = 31)
+    public void starTimeNode(Integer timeshaft_id, Integer user_id, boolean favor) throws Exception {
+        Timeshaft timeshaft = timeshaftService.queryById(timeshaft_id);
+        Star star = new Star(timeshaft_id, null, user_id);
+        List<Star> stars = starService.queryAll(star);
+        if(favor) {
+            if (timeshaft == null) {
+                throw new Exception("该时间轴不存在或者已被删除");
+            }
+            if (stars.isEmpty()) {
+                star.setTitle(timeshaft.getName());
+                starService.insert(star);
+            }
+        } else {
+            starService.deleteById(stars.get(0).getId());
+        }
+    }
+
 }

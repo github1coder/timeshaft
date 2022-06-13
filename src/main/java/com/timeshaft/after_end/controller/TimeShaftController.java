@@ -72,8 +72,8 @@ public class TimeShaftController {
 
     @RequestMapping("/getTimeShaftData")
     @RequestLog
-    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time) throws Exception {
-        List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time);
+    public ResponseService getTimeShaftData(@RequestParam("start") String start_time, @RequestParam("end") String end_time, @RequestHeader("user_id") Integer user_id) throws Exception {
+        List<Map<String, Object>> res = timeShaftOp.getTimeShaftData(start_time, end_time, user_id);
         return new ResponseService(res);
     }
 
@@ -129,10 +129,10 @@ public class TimeShaftController {
 
     @RequestMapping("/getTimeTags")
     @RequestLog
-    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap) {
+    public ResponseService getTimeTags(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) {
         Integer id = (Integer) requestMap.get("chatId");
         String type = (String) requestMap.get("type");
-        ArrayList<String> res = timeShaftOp.getTimeTags(id, type);
+        ArrayList<String> res = timeShaftOp.getTimeTags(id, type, user_id);
         return new ResponseService(res);
     }
 
@@ -167,6 +167,14 @@ public class TimeShaftController {
         Integer id = (Integer) requestMap.get("id");
         Boolean state = (Boolean) requestMap.get("state");
         timeShaftOp.updateTimeState(id, state, user_id);
+        return new ResponseService();
+    }
+
+    @RequestMapping("/starTimeNode")
+    public ResponseService starTimeNode(@RequestBody Map<String, Object> requestMap, @RequestHeader("user_id") Integer user_id) throws Exception {
+        Integer id = (Integer) requestMap.get("id");
+        boolean star = (boolean) requestMap.get("star");
+        timeShaftOp.starTimeNode(id, user_id, star);
         return new ResponseService();
     }
 }
