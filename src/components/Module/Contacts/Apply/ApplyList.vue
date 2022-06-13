@@ -440,7 +440,7 @@ export default {
         "action": "accept",
         "id": type == "invite" ? this.inviteAns[index].id : this.groupAns[index].group_id,
         "memId": type == "invite" ? this.$store.state.userId : this.groupAns[index].id,
-        "invite": 0,
+        "invite": type == "invite" ? this.inviteAns[index].id : 0,
       }
       ).then(res => {
         console.log(res)
@@ -460,7 +460,7 @@ export default {
         "action": "refuse",
         "id": type == "invite" ? this.inviteAns[index].id : this.groupAns[index].group_id,
         "memId": type == "invite" ? this.$store.state.userId : this.groupAns[index].id,
-        "invite": 0,
+        "invite": type == "invite" ? this.inviteAns[index].id : 0,
       }
       ).then(res => {
         console.log(res)
