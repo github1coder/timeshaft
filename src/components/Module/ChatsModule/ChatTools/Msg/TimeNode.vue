@@ -64,13 +64,13 @@
               </v-btn>
             </div>
             <v-divider></v-divider>
-            <small style="align: left; text-align: left; font-size: 10px">{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
+            <small style="align: left; text-align: left; font-size: 10px">{{groupName}}{{data.name}}创建于{{data.startTime}}~{{data.endTime}}</small>
             <v-divider></v-divider>
             <small style="text-align: left;">时间轴链接：{{data.key}}</small>
             <v-divider></v-divider>
             <v-card-text
               style="text-align: left; font-size: 20px; font-weight: bold"
-              v-if="!updateTags && isManager"
+              v-if="!updateTags"
             >
               标签:
               <v-chip
@@ -103,7 +103,10 @@
                 <v-icon left>mdi-label</v-icon>
                 {{data.tags[2]}}
               </v-chip>
-              <v-icon @click="isupdateTags">
+              <v-icon
+                v-if="!updateTags && isManager"
+                @click="isupdateTags"
+              >
                 mdi-pencil-outline
               </v-icon>
             </v-card-text>
@@ -266,6 +269,7 @@ export default {
       this.stateText = res.state ? "公开" : "本团队/好友可见"
       this.state = res.state
       this.starHint = res.star ? "已收藏" : "收藏"
+      this.groupName = res.groupName == "" ? "" : res.groupName + "团队："
     })
   },
 
@@ -284,6 +288,7 @@ export default {
       changing: false,
       starHint: "收藏",
       starId: -1,
+      groupName: "",
     }
   },
 

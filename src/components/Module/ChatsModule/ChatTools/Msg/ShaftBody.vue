@@ -2,7 +2,7 @@
   <div style="height: 100%; width: 100%">
     <TimeNode
       :id="timeNodeId"
-      :isManager="isManager()"
+      :isManager="manager"
       :allTags="allTags.slice(1)"
       :stared="false"
       :self="self"
@@ -112,6 +112,7 @@ export default {
       detail: false,
       allTags: [],
       tag: "所有时间轴",
+      manager: false,
     }
   },
   mounted () {
@@ -125,25 +126,28 @@ export default {
   methods: {
     //由starModule调用
     flashTags (chatId, type) {
+      const that = this
       getTimeTags({
         chatId: chatId,
         type: type,
       }).then(res => {
-        this.allTags = res
+        that.allTags = res
       })
     },
 
     updateTags () {
+      const that = this
       getTimeTags({
         chatId: this.chatId,
         type: this.type,
       }).then(res => {
-        this.allTags = res
+        that.allTags = res
       })
     },
 
     search () {
       //如果在收藏夹页面
+      const that = this
       if (this.$parent.$refs.allBody) {
         this.$parent.flash()
         this.updateTags()
@@ -165,7 +169,7 @@ export default {
         }).then(res => {
           if (!res || (res && !res.error)) {
             //正常返回
-            this.items = res.items
+            that.items = res.items
           }
           else {
             //错误信息展示
@@ -175,13 +179,18 @@ export default {
     },
 
     getShaft () {
+      const that = this
       let para = {
         group_id: this.chatId,
         type: this.type,
       }
       getTimeshaft(para).then(res => {
-        this.items = res.items
+        that.items = res.items
+        if (!that.manager) {
+          that.isManager()
+        }
       })
+      console.log(this.manager)
     },
 
     setTimeline () {
@@ -245,18 +254,17 @@ export default {
         }).then(res => {
           if (!res || (res && !res.error)) {
             if (res.findIndex(mem => mem.id == that.$store.state.userId && mem.type != "normal") == -1) {
-              return false
+              that.manager = false
             }
             else {
-              return true
+              that.manager = true
             }
           }
         })
       }
       else {
-        return true
+        that.manager = true
       }
-      return false
     },
   },
 
