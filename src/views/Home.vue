@@ -139,13 +139,13 @@ export default {
                 if (res[listener].type === 0) {
                   console.log("即时通信服务收到消息")
                   setTimeout(() => {
-                    if (this.$store.state.currentChannelId !== json.chatId && this.$store.state.currentChatType === json.type) {
+                    if (this.$store.state.currentChannelId !== json.chatId && this.$store.state.currentChatType === json.type || this.$store.state.siderState !== 0) {
                       this.$store.state.unreadNum += 1
                     }
-                    if (this.$refs.chatModule.receiveMessage !== undefined) {
+                    if ('chatModule' in this.$refs && 'receiveMessage' in this.$refs.chatModule) {
                       this.$refs.chatModule.receiveMessage(json)
                     }
-                  }, 100)
+                  }, 1000)
                 } else if (res[listener].type === 1) {
                   console.log("添加好友服务收到消息")
                   setTimeout(() => {
