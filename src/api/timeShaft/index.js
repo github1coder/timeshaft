@@ -105,3 +105,11 @@ export function updateTimeState(param) {
         data: param
     })
 }
+
+export function starTimeNode(param) {
+    return request({
+        url: 'timeshaft/starTimeNode',
+        method: 'post',
+        data: param
+    })
+}
