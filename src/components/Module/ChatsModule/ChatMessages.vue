@@ -118,7 +118,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <span style="color: #2c3e50">{{selected}}</span>>
     <div
       class="messages"
       id="scroll-target"
@@ -128,8 +127,9 @@
           three-line
           v-scroll:#scroll-target="onScroll"
         >
+          <span>{{selected}}</span>
           <template
-            v-for="(message, i) in messages"
+            v-for="(message, i) in content"
             class="chat-list"
           >
             <v-list-item
@@ -137,14 +137,10 @@
               class="chat-list-item"
             >
               <v-list-item-avatar
-                v-if="selecting"
+                v-if="selecting && messages.length > 0"
                 class="mx-0"
               >
-                <v-checkbox
-                  v-model="selected"
-                  label=""
-                  :value="message.msgId"
-                ></v-checkbox>
+                <input type="checkbox" :id="'check-'+(messages.length-1-i)" @click="check(messages.length-1-i)" :value="message.msgId"/>
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-if="message.isMeeting"
@@ -219,6 +215,29 @@ export default {
     }
   },
   methods: {
+    check(id) {
+      var el = document.getElementById("check-"+id)
+      console.log("得到check元素：")
+      console.log(el)
+      // console.log(el.checked)
+      // if (el.checked === undefined) {
+      //   el.checked = true
+      // } else {
+      //   el.checked = !el.checked
+      // }
+      console.log(el.checked)
+      console.log("value:" + el.value)
+      if (el.checked) {
+        console.log("加入selected")
+        this.selected.push(el.value)
+      } else {
+        console.log("从selected移除")
+        var idx = this.selected.findIndex(value => value === el.value)
+        if (idx > -1) {
+          this.selected.splice(idx, 1)
+        }
+      }
+    },
     closeT (flag) {
       this.detail = flag
     },
@@ -287,7 +306,7 @@ export default {
             this.$store.state.currentChatTime = res.lastTime
             console.log(this.messages)
             for (let i = res.data.length - 1; i >= 0; i--) {
-              this.messages.unshift(res.data[i])
+              this.messages.push(res.data[i])
             }
             this.$store.state.currentChatHaveRead += res.data.length
             console.log(this.messages)
@@ -312,7 +331,12 @@ export default {
       this.dialog = false
     },
   },
-  computed: {},
+  computed: {
+    content() {
+      var msg = this.messages
+      return msg.reverse()
+    }
+  },
   watch: {
     refreshed (newVal, oldVal) {
       if (newVal && !oldVal) {
@@ -334,7 +358,7 @@ export default {
               this.$store.state.currentChatTime = res.lastTime
               console.log(this.messages)
               for (let i = res.data.length - 1; i >= 0; i--) {
-                this.messages.unshift(res.data[i])
+                this.messages.push(res.data[i])
               }
               this.$store.state.currentChatHaveRead += res.data.length
               console.log(this.messages)
@@ -347,9 +371,21 @@ export default {
       if (!newVal && oldVal && this.selected.length !== 0) {
         console.log("填写timeShaft信息")
         this.dialog = true
+        this.selected = []
       }
-    },
 
+    },
+    // messages (newVal, oldVal) {
+    //   const len = oldVal.length - newVal.length
+    //   if (len > 0) {
+    //     for (let i in this.selected) {
+    //       var idx = this.messages.findIndex(message => message.msgId === this.selected[i])
+    //       var el = document.getElementById("check-" + (messages.length-1-idx))
+    //
+    //     }
+    //   }
+    //
+    // }
   },
 
   created () {
