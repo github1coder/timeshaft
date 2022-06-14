@@ -121,6 +121,9 @@ export default {
     this.$store.commit("setMaster", -1)
     this.$store.commit("changeSiderState", 0)
     this.$store.commit("setAbout", -1)
+    sessionStorage.setItem("login", "no")
+    this.$store.state.userId = -1
+    this.$store.state.accessToken = null
     this.$store.state.chatClient = null
     this.$store.state.contactClient = null
     this.$store.state.chatSocket = null
@@ -191,6 +194,7 @@ export default {
             this.$store.commit("setLogin", true)
             this.$store.state.accessToken = res.ACCESS_TOKEN
             this.applyNum()
+            sessionStorage.setItem("login", "yes")
             this.$router.push({
               path: '/home',
             })
