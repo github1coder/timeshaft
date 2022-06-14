@@ -324,7 +324,7 @@ export default {
     refreshed (newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
-        console.log("more: " + this.$store.state.currentChatMore)
+        //console.log("more: " + this.$store.state.currentChatMore)
         if (this.$store.state.currentChatMore) {
           getHistoryMessage({
             lastTime: this.$store.state.currentChatTime,
@@ -333,18 +333,16 @@ export default {
             chatId: this.$store.state.currentChannelId,
             first: this.$store.state.currentChatFirst,
           }).then(res => {
-            console.log("拉取 " + res.data.length + " 条历史消息")
-            console.log(res)
+            //console.log("拉取 " + res.data.length + " 条历史消息")
+            res
             this.$store.state.currentChatFirst = 0
             this.$store.state.currentChatMore = res.more
             if (this.$store.state.currentChannelIdx !== -1) {
               this.$store.state.currentChatTime = res.lastTime
-              console.log(this.messages)
               for (let i = res.data.length - 1; i >= 0; i--) {
                 this.messages.unshift(res.data[i])
               }
               this.$store.state.currentChatHaveRead += res.data.length
-              console.log(this.messages)
             }
           })
         }
@@ -352,7 +350,7 @@ export default {
     },
     selecting (newVal, oldVal) {
       if (!newVal && oldVal && this.selected.length !== 0) {
-        console.log("填写timeShaft信息")
+        //console.log("填写timeShaft信息")
         this.dialog = true
         this.selected = []
       }

@@ -382,7 +382,7 @@ export default {
         "invite": this.$store.state.userId,
       }
       ).then(res => {
-        console.log(res)
+        res
         this.friendAns[index].show = true
       })
     },
@@ -426,7 +426,7 @@ export default {
         "memId": -1,
         "invite": 0,
       }).then(res => {
-        console.log(res)
+        res
       })
     },
 
@@ -473,15 +473,15 @@ export default {
 
     changeNotice () {
       const here = this
-      console.log(this.notice)
+      //console.log(this.notice)
       updateGroup({
         "id": parseInt(this.$parent.$parent.id),
         "name": this.nameG,
         "state": this.stateText == "公开团队信息" ? true : false,
         "notice": this.notice
       }).then(res => {
-        console.log("修改群公告成功")
-        console.log(res)
+        //console.log("修改群公告成功")
+        //console.log(res)
         if (!res) {
           const that = here.$parent.$parent.$parent.$refs.memberList
           // for (this.i = 0; this.i < that.length; this.i++) {
@@ -610,7 +610,7 @@ export default {
         "nickname": this.name,
         "group_id": this.$parent.$parent.id,
       }).then(res => {
-        console.log(res)
+        res
         this.mems[index].name = this.name
         this.mems[this.memsIndex].show = false;
       })
@@ -622,7 +622,7 @@ export default {
         "group_id": this.$parent.$parent.id,
         "id": that.mems[index].id
       }).then(res => {
-        console.log(res)
+        res
         this.showQuitField(index)
         if (!res) {
           that.mems[index].name = that.mems[index].name + "（管理员）"
@@ -637,7 +637,7 @@ export default {
         "group_id": this.$parent.$parent.id,
         "id": that.mems[index].id
       }).then(res => {
-        console.log(res)
+        res
         if (!res) {
           that.mems[index].name = that.mems[index].nick
           that.mems[index].type = "normal"

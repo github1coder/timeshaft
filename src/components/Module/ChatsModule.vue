@@ -13,37 +13,7 @@
             tile
             class="server-title"
           >
-            <div v-on:keyup.enter="search">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    clearable
-                    outlined
-                    dense
-                    hide-details
-                    label="请输入关键词"
-                    v-model="text"
-                    class="input-search mt-3"
-                    autocomplete="off"
-                    v-on="on"
-                    ref="search"
-                  ></v-text-field>
-                </template>
-                <v-list
-                  v-if="searchResult.length > 0"
-                  class="border-list"
-                  dense
-                >
-                  <v-list-item
-                    v-for="(item, index) in searchResult"
-                    :key="index"
-                    @click="itemClick(item)"
-                  >
-                    <v-list-item-title>{{ item.name }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </div>
+            TimeShaft
           </v-card>
           <v-card
             tile
@@ -221,21 +191,17 @@ export default {
   methods: {
     sendMessage (payload) {
       payload.type = this.$store.state.currentChatType
-      console.log(this.messages)
-      console.log(payload)
       const idx = this.messages.findIndex(message => {
         return message.id === payload.chatId && message.type === payload.type
       })
-      console.log("idx: " + idx)
       if (idx !== -1) {
-        console.log("out" + payload.time)
         this.messages[idx].lastTime = payload.time
         this.messages[idx].lastMessage = {
           msg: payload.msg,
           time: payload.time
         }
       } else {
-        console.log("没有对应的聊天框" + payload.id + " " + payload.type)
+        //console.log("没有对应的聊天框" + payload.id + " " + payload.type)
       }
     }
     ,
@@ -244,9 +210,7 @@ export default {
       const idx = this.messages.findIndex(message => {
         return message.id === payload.chatId && message.type === payload.type
       })
-      console.log("idx: " + idx)
       if (idx !== -1) {
-        console.log("in" + payload.time)
         this.messages[idx].lastTime = payload.time
 
         if (this.$store.state.currentChannelId !== payload.chatId && this.$store.state.currentChatType === payload.type) {
@@ -261,7 +225,7 @@ export default {
             type: payload.type
           }).then(res => {
             res
-            console.log("have read this msg")
+            //console.log("have read this msg")
           })
         }
         this.messages[idx].lastMessage = {
@@ -275,7 +239,7 @@ export default {
         }
 
       } else {
-        console.log("没有对应的聊天框" + payload.id + " " + payload.type)
+        //console.log("没有对应的聊天框" + payload.id + " " + payload.type)
       }
     },
     callback (flag) {
@@ -288,7 +252,6 @@ export default {
     },
     search () {
       this.$refs.search.blur()
-      console.log(this.text)
     },
     toggleAC () {
       this.$store.commit("toggleAC");
@@ -304,13 +267,11 @@ export default {
       this.tools[0].show = false
       this.tools[1].show = false
       this.tools[2].show = false
-      console.log(id)
-      console.log(item)
+
       if (idx !== this.$store.state.currentChannelIdx) {
         this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
         // 等画面完全渲染
         setTimeout(() => {
-          console.log(this.$refs)
           this.$refs.chatMessage.init()
         }, 100)
         if (item.number !== 0) {
@@ -321,10 +282,10 @@ export default {
             time: item.time,
           }).then(res => {
             res
-            console.log(this.$store.state.unreadNum)
+            //console.log(this.$store.state.unreadNum)
             this.$store.state.unreadNum -= item.number
-            console.log(this.$store.state.unreadNum)
-            console.log("have read this msg")
+            //console.log(this.$store.state.unreadNum)
+            //console.log("have read this msg")
             item.number = 0
           })
 
@@ -352,14 +313,14 @@ export default {
         if (this.messages[this.$store.state.currentChannelIdx].isMeeting == false
           || !this.messages[this.$store.state.currentChannelIdx].isMeeting) {
           this.messages[this.$store.state.currentChannelIdx].isMeeting = false
-          console.log("会议状态：开始=>关闭")
+          //console.log("会议状态：开始=>关闭")
           this.$refs.timeTool.endOk(false)
           if (this.$refs.timeShaft) {
             if (this.$refs.timeShaft.$refs.shaftBody)
               this.$refs.timeShaft.$refs.shaftBody.getShaft()
           }
         } else {
-          console.log("会议状态：关闭=>开始")
+          //console.log("会议状态：关闭=>开始")
           this.$refs.timeTool.tryOk(false)
         }
       }
@@ -367,7 +328,7 @@ export default {
 
 
     isShowEnd (state) {
-      console.log(state)
+      // console.log(state)
       this.showEnd = state
     },
   },
@@ -379,14 +340,14 @@ export default {
         getMessagesList({
           srcId: this.$store.state.userId,
         }).then(res => {
-          console.log("收到联系人列表")
-          console.log(this.messages)
+          //console.log("收到联系人列表")
+          //console.log(this.messages)
           this.$store.state.unreadNum = 0
           for (let d in res) {
             this.messages.push(res[d])
             this.$store.state.unreadNum += res[d].number
           }
-          console.log(this.messages)
+          //console.log(this.messages)
         })
       }, 100
     )

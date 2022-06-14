@@ -184,8 +184,8 @@ export default {
         start: this.timestampToTime(min.getTime()),
         end: this.timestampToTime(max.getTime())
       }).then(res => {
-        console.log("----")
-        console.log(res)
+        //console.log("----")
+        //console.log(res)
         for (let i in res) {
           res[i].color = this.colors[this.rnd(0, this.colors.length - 1)]
           res[i].timed = true

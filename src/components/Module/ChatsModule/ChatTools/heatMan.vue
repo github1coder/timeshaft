@@ -38,7 +38,7 @@ export default {
   },
   mounted() {
     this.timer = setInterval(this.getMan, 150000);
-    console.log(this.timer)
+    // console.log(this.timer)
   },
   beforeDestroy() {
     clearInterval(this.timer);

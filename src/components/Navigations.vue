@@ -123,7 +123,7 @@ export default {
     disconnect () {
       logout({
       }).then(res => {
-        console.log(res)
+        res
         this.$store.commit("setMyIcon", "guest.png")
         this.$store.commit("setMyNick", "N")
         this.$store.commit("setEmail", null)
