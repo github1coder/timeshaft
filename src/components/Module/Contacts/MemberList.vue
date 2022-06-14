@@ -293,7 +293,7 @@ export default {
     },
 
     method1 () {
-      console.log(1)
+      //console.log(1)
     },
 
     initBtns () {
@@ -479,7 +479,7 @@ export default {
       that.about = 0
       that.id = this.friends[index].chat_id
 
-      console.log("info:" + index.toString())
+      //console.log("info:" + index.toString())
 
       if (this.friends[index].friend_name != this.friends[index].friend_nick) {
         nick = this.friends[index].friend_nick
@@ -537,7 +537,7 @@ export default {
 
   mounted () {
     if (this.$store.getters.userId != -1) {
-      console.log(this.$store.getters.userId)
+      //console.log(this.$store.getters.userId)
       getGroups({
       }).then(res => {
         // this.$store.commit("channels", res)

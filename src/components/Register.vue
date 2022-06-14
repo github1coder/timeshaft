@@ -192,12 +192,12 @@ export default {
         //
         this.loading = true;
         register(param).then(response => {
-          console.log(response)
+          //console.log(response)
           if (!response || (response && !response.error)) {
             login(param).then(res => {
               if (res.id) {
                 this.$store.commit("setUserId", res.id)
-                console.log(res)
+                //console.log(res)
                 this.$store.commit("setMyIcon", res.photo)
                 this.$store.commit("setMyNick", res.username)
                 this.$store.commit("setEmail", res.email)

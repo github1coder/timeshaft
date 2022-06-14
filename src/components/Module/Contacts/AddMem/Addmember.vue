@@ -382,7 +382,7 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         this.friendAns[index].show = true
       })
     },
@@ -395,7 +395,7 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         this.groupAns[index].show = true
       })
     },

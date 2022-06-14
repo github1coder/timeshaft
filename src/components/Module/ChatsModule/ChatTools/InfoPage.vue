@@ -31,8 +31,8 @@ export default {
   methods: {
   },
   created () {
-    console.log(this.type)
-    console.log(this.id)
+    // console.log(this.type)
+    // console.log(this.id)
   }
 }
 

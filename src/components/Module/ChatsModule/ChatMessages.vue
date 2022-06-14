@@ -120,7 +120,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <span style="color: #2c3e50">{{selected}}</span>>
     <div
       class="messages"
       id="scroll-target"
@@ -131,7 +130,7 @@
           v-scroll:#scroll-target="onScroll"
         >
           <template
-            v-for="(message, i) in messages"
+            v-for="(message, i) in content"
             class="chat-list"
           >
             <v-list-item
@@ -139,14 +138,15 @@
               class="chat-list-item"
             >
               <v-list-item-avatar
-                v-if="selecting"
+                v-if="selecting && messages.length > 0"
                 class="mx-0"
               >
                 <v-checkbox
                   v-model="selected"
-                  label=""
                   :value="message.msgId"
-                ></v-checkbox>
+                  label=""
+                >
+                </v-checkbox>
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-if="message.isMeeting"
@@ -260,6 +260,7 @@ export default {
       // TODO 改成传参
       console.log(this.$store.state.serviceClient)
       console.log(payload)
+      console.log(payload)
       this.scrollToBottom()
       // this.messages.push(payload.data)
       this.$store.state.serviceClient.send(payload.url, {}, JSON.stringify(payload.data));
@@ -314,12 +315,16 @@ export default {
       this.dialog = false
     },
   },
-  computed: {},
+  computed: {
+    content() {
+      return [...this.messages]
+    }
+  },
   watch: {
     refreshed (newVal, oldVal) {
       if (newVal && !oldVal) {
         //TODO 补全
-        console.log("more: " + this.$store.state.currentChatMore)
+        //console.log("more: " + this.$store.state.currentChatMore)
         if (this.$store.state.currentChatMore) {
           getHistoryMessage({
             lastTime: this.$store.state.currentChatTime,
@@ -328,18 +333,16 @@ export default {
             chatId: this.$store.state.currentChannelId,
             first: this.$store.state.currentChatFirst,
           }).then(res => {
-            console.log("拉取 " + res.data.length + " 条历史消息")
-            console.log(res)
+            //console.log("拉取 " + res.data.length + " 条历史消息")
+            res
             this.$store.state.currentChatFirst = 0
             this.$store.state.currentChatMore = res.more
             if (this.$store.state.currentChannelIdx !== -1) {
               this.$store.state.currentChatTime = res.lastTime
-              console.log(this.messages)
               for (let i = res.data.length - 1; i >= 0; i--) {
                 this.messages.unshift(res.data[i])
               }
               this.$store.state.currentChatHaveRead += res.data.length
-              console.log(this.messages)
             }
           })
         }
@@ -347,11 +350,11 @@ export default {
     },
     selecting (newVal, oldVal) {
       if (!newVal && oldVal && this.selected.length !== 0) {
-        console.log("填写timeShaft信息")
+        //console.log("填写timeShaft信息")
         this.dialog = true
+        this.selected = []
       }
     },
-
   },
 
   created () {

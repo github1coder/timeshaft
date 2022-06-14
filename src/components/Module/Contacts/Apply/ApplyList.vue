@@ -306,7 +306,6 @@ export default {
       }
       this.friendAns = res
       this.allPageF = Math.ceil(this.friendAns.length / this.num)
-      console.log(this.friendAns)
       if (this.allPageF == 0) {
         this.pageF = 0;
         this.showF = true
@@ -327,7 +326,6 @@ export default {
       }
       this.groupAns = res
       this.allPageG = Math.ceil(this.groupAns.length / this.num)
-      console.log(this.groupAns)
       if (this.allPageG == 0) {
         this.pageG = 0;
         this.showG = true
@@ -350,7 +348,6 @@ export default {
       });
       this.inviteAns = JSON.parse(JSON.stringify(this.inviteAns))
       this.allPageI = Math.ceil(this.inviteAns.length / this.num)
-      console.log(this.inviteAns)
       if (this.allPageI == 0) {
         this.pageI = 0;
         this.showI = true
@@ -412,7 +409,7 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         this.friendAns[index].show = false
         this.$store.state.applynum -= 1
         //todo: 用户发一句“你好”给被同意者
@@ -428,7 +425,7 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         this.friendAns[index].show = false
         this.$store.state.applynum -= 1
       })
@@ -443,7 +440,7 @@ export default {
         "invite": type == "invite" ? this.inviteAns[index].id : 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         if (type == "invite") {
           this.inviteAns[index].show = false
         }
@@ -463,7 +460,7 @@ export default {
         "invite": type == "invite" ? this.inviteAns[index].id : 0,
       }
       ).then(res => {
-        console.log(res)
+        res
         if (type == "invite") {
           this.inviteAns[index].show = false
         }
