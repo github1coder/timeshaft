@@ -58,23 +58,23 @@
           >
             <v-list-item>
               <v-text-field
+                :append-icon="eye"
+                @click:append="changeShowText"
                 label="旧密码"
                 v-model="password"
                 :rules="rules.password"
                 :type="type"
-                @mouseover="changeShowText"
-                @mouseleave="changeShowPassword"
               >
               </v-text-field>
             </v-list-item>
             <v-list-item>
               <v-text-field
+                :append-icon="eye"
+                @click:append="changeShowText"
                 label="新密码"
                 v-model="passwordN"
                 :rules="rules.passwordN"
                 :type="type"
-                @mouseover="changeShowText"
-                @mouseleave="changeShowPassword"
               >
               </v-text-field>
             </v-list-item>
@@ -190,6 +190,7 @@ export default {
       msg: "",
       state: "可被其他用户发现",
       isState: false,
+      eye: "mdi-eye-off-outline",
       rules: {
         password: [
           (password) => !!password || "密码不能为空",
@@ -239,12 +240,19 @@ export default {
     },
 
     changeShowText () {
-      this.type = "text";
+      if (this.eye == "mdi-eye-off-outline") {
+        this.eye = "mdi-eye-outline"
+        this.type = "text";
+      }
+      else {
+        this.eye = "mdi-eye-off-outline"
+        this.type = "password";
+      }
     },
 
-    changeShowPassword () {
-      this.type = "password";
-    },
+    // changeShowPassword () {
+    //   this.type = "password";
+    // },
 
     initPassword () {
       this.checkCode = ""

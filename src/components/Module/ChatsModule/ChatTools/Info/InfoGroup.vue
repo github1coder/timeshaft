@@ -244,16 +244,24 @@
         </v-list-group>
       </v-list>
       <!-- </v-row> -->
+      <feed-back
+        v-if="feedbackShow"
+        :msg="feedbackMsg"
+      ></feed-back>
     </v-card>
   </div>
 
 </template>
 
 <script>
+import FeedBack from "../../../../FeedBack.vue"
 import { getInfoMsg } from "../../../../../api/addresslist/index"
 import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup, apply, getFNotInG } from '../../../../../api/addresslist/index'
 export default {
   props: ["id"],
+  components: {
+    FeedBack
+  },
   data () {
     return {
       photo: "",
@@ -287,6 +295,8 @@ export default {
       pageF: 1,
       allPageF: 1,
       friendShow: false,
+      feedbackMsg: "",
+      feedbackShow: false,
     };
   },
 
@@ -295,7 +305,17 @@ export default {
   },
 
   methods: {
+    showFeedback (msg) {
+      this.feedbackMsg = msg
+      this.feedbackShow = true
+      setTimeout(() => {
+        this.feedbackShow = false
+      }, 1000);
+    },
+
+
     newApplyI (index) {
+      const that = this
       apply({
         "type": "group",
         "action": "new",
@@ -305,7 +325,8 @@ export default {
       }
       ).then(res => {
         console.log(res)
-        this.friendAns[index].show = true
+        that.friendAns[index].show = true
+        that.showFeedback("已发送邀请")
       })
     },
 
