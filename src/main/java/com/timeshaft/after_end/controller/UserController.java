@@ -3,6 +3,7 @@ package com.timeshaft.after_end.controller;
 import com.timeshaft.after_end.annotation.RequestLog;
 import com.timeshaft.after_end.entity.User;
 import com.timeshaft.after_end.service.ResponseService;
+import com.timeshaft.after_end.service.UserService;
 import com.timeshaft.after_end.service.userop.MailService;
 import com.timeshaft.after_end.service.userop.UserOp;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +32,25 @@ public class UserController {
     @Autowired
     private MailService mailService;
     @Autowired
+    private UserService userService;
+    @Autowired
     RedisTemplate<String,Object> redisTemplate;
 
     @RequestMapping("/getCheckCode")
     @RequestLog
-    public ResponseService getCheckCode(@RequestParam(value = "email") String email){
+    public ResponseService getCheckCode(@RequestParam(value = "email") String email, @RequestParam(value="type") String type) throws Exception {
+        User u = new User(email, null, null, null, null);
+        List<User> users = userService.queryAll(u);
+        if ("register".equals(type)) {
+            if (users.size() > 0) {
+                throw new Exception("邮箱已被注册");
+            }
+        }
+        else if ("password".equals(type)) {
+            if (users.size() <= 0) {
+                throw new Exception("邮箱未注册");
+            }
+        }
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         String message = "您的注册验证码为："+checkCode;
         mailService.sendSimpleMail(email, "注册验证码", message);
