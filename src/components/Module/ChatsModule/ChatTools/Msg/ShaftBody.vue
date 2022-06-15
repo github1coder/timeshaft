@@ -40,9 +40,8 @@
       还没有添加事件哦
     </h1>
     <v-card
-      class="overflow-x-hidden overflow-y-auto"
       v-if="items.length !== 0"
-      :max-height="maxHeight"
+      :max-height="0"
     >
 
       <v-timeline

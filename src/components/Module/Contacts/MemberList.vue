@@ -97,6 +97,7 @@
             <v-row>
               <v-btn
                 width="33%"
+                depressed
                 @click="downPageG"
               >
                 <v-icon>mdi-chevron-left</v-icon>
@@ -109,6 +110,7 @@
               </v-btn>
               <v-btn
                 width="33%"
+                depressed
                 @click="upPageG"
               >
                 <v-icon>mdi-chevron-right</v-icon>

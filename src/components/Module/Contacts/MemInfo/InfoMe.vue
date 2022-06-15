@@ -259,7 +259,8 @@ export default {
 
     newCheckCode () {
       getCheckCode({
-        'email': this.$store.getters.email
+        'email': this.$store.getters.email,
+        "type": "password"
       })
       // .then(res => {
       // this.checkCode = res.checkCode

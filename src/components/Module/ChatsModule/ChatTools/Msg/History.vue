@@ -2,7 +2,7 @@
   <div class="history">
     <v-list
       three-line
-      max-height="800px"
+      max-height="400px"
     >
       <v-list-item
         :key="i"

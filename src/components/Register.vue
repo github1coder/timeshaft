@@ -228,7 +228,8 @@ export default {
           return
         } else {
           getCheckCode({
-            'email': this.email
+            'email': this.email,
+            "type": "register"
           })
           // .then(res => {
           // this.checkCode = res.checkCode

@@ -99,6 +99,7 @@
           <v-row>
             <v-btn
               width="33%"
+              depressed
               @click="downPageF"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -111,6 +112,7 @@
             </v-btn>
             <v-btn
               width="33%"
+              depressed
               @click="upPageF"
             >
               <v-icon>mdi-chevron-right</v-icon>
@@ -202,6 +204,7 @@
           <v-row style="padding-bottom: 0;">
             <v-btn
               width="33%"
+              depressed
               @click="downPageG"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -213,6 +216,7 @@
               {{pageG}}/{{allPageG}}
             </v-btn>
             <v-btn
+              depressed
               width="33%"
               @click="upPageG"
             >

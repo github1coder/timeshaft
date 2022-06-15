@@ -12,7 +12,6 @@
         light
         v-model="text"
         autocomplete="off"
-        background-color="grey"
         style="width: 70%; margin: auto;"
       ></v-text-field>
       <v-btn
@@ -59,7 +58,7 @@ export default {
 
   methods: {
     search () {
-      if (this.text == "") {
+      if (this.text == "" && this.text == null) {
         return
       }
       const that = this
