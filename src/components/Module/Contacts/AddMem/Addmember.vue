@@ -99,6 +99,7 @@
           <v-row>
             <v-btn
               width="33%"
+              depressed
               @click="downPageF"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -111,6 +112,7 @@
             </v-btn>
             <v-btn
               width="33%"
+              depressed
               @click="upPageF"
             >
               <v-icon>mdi-chevron-right</v-icon>
@@ -202,6 +204,7 @@
           <v-row style="padding-bottom: 0;">
             <v-btn
               width="33%"
+              depressed
               @click="downPageG"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -213,6 +216,7 @@
               {{pageG}}/{{allPageG}}
             </v-btn>
             <v-btn
+              depressed
               width="33%"
               @click="upPageG"
             >
@@ -222,11 +226,19 @@
         </v-tab-item>
       </v-tabs-items>
     </v-card>
+    <feed-back
+      v-if="feedbackShow"
+      :msg="feedbackMsg"
+    ></feed-back>
   </v-card>
 </template>
 <script>
+import FeedBack from "../../../FeedBack.vue"
 import { apply, finding, search } from "../../../../api/addresslist/index"
 export default {
+  components: {
+    FeedBack
+  },
   data () {
     return {
       tab: null,
@@ -242,6 +254,8 @@ export default {
       showF: false,
       showG: false,
       isMore: true,
+      feedbackMsg: "",
+      feedbackShow: false,
     };
   },
 
@@ -250,6 +264,13 @@ export default {
   },
 
   methods: {
+    showFeedback (msg) {
+      this.feedbackMsg = msg
+      this.feedbackShow = true
+      setTimeout(() => {
+        this.feedbackShow = false
+      }, 1000);
+    },
     method1 () {
 
     },
@@ -374,6 +395,7 @@ export default {
     },
 
     newApplyF (index) {
+      const that = this
       apply({
         "type": "friend",
         "action": "new",
@@ -382,11 +404,13 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
-        this.friendAns[index].show = true
+        res
+        that.friendAns[index].show = true
+        that.showFeedback("已发送申请")
       })
     },
     newApplyG (index) {
+      const that = this
       apply({
         "type": "group",
         "action": "new",
@@ -395,8 +419,9 @@ export default {
         "invite": 0,
       }
       ).then(res => {
-        console.log(res)
-        this.groupAns[index].show = true
+        res
+        that.groupAns[index].show = true
+        that.showFeedback("已发送申请")
       })
     },
   },

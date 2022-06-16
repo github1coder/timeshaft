@@ -242,6 +242,7 @@
                 <v-btn
                   width="33%"
                   @click="downPageMem"
+                  depressed
                 >
                   <v-icon>mdi-chevron-left</v-icon>
                 </v-btn>
@@ -254,6 +255,7 @@
                 <v-btn
                   width="33%"
                   @click="upPageMem"
+                  depressed
                 >
                   <v-icon>mdi-chevron-right</v-icon>
                 </v-btn>
@@ -301,6 +303,7 @@
                 <v-btn
                   width="33%"
                   @click="downPageF"
+                  depressed
                 >
                   <v-icon>mdi-chevron-left</v-icon>
                 </v-btn>
@@ -313,6 +316,7 @@
                 <v-btn
                   width="33%"
                   @click="upPageF"
+                  depressed
                 >
                   <v-icon>mdi-chevron-right</v-icon>
                 </v-btn>
@@ -323,13 +327,21 @@
         <!-- </v-row> -->
       </v-card>
     </v-card>
+    <feed-back
+      v-if="feedbackShow"
+      :msg="feedbackMsg"
+    ></feed-back>
   </div>
 
 </template>
 
 <script>
+import FeedBack from '../../../FeedBack.vue'
 import { apply, getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup, getFNotInG } from '../../../../api/addresslist/index'
 export default {
+  components: {
+    FeedBack
+  },
   data () {
     return {
       photo: "",
@@ -341,6 +353,7 @@ export default {
       iShow: true,
       kill: false,
       notice: "",
+      foreNotice: "",
       num: 10,
       pageMem: 1,
       allPageMem: 1,
@@ -365,6 +378,8 @@ export default {
       pageF: 1,
       allPageF: 1,
       friendShow: false,
+      feedbackMsg: "",
+      feedbackShow: false,
     };
   },
 
@@ -373,7 +388,16 @@ export default {
 
   methods: {
 
+    showFeedback (msg) {
+      this.feedbackMsg = msg
+      this.feedbackShow = true
+      setTimeout(() => {
+        this.feedbackShow = false
+      }, 1000);
+    },
+
     newApplyI (index) {
+      const that = this
       apply({
         "type": "group",
         "action": "new",
@@ -382,8 +406,9 @@ export default {
         "invite": this.$store.state.userId,
       }
       ).then(res => {
-        console.log(res)
-        this.friendAns[index].show = true
+        res
+        that.friendAns[index].show = true
+        that.showFeedback("已发送邀请")
       })
     },
 
@@ -426,7 +451,7 @@ export default {
         "memId": -1,
         "invite": 0,
       }).then(res => {
-        console.log(res)
+        res
       })
     },
 
@@ -473,15 +498,15 @@ export default {
 
     changeNotice () {
       const here = this
-      console.log(this.notice)
+      //console.log(this.notice)
       updateGroup({
         "id": parseInt(this.$parent.$parent.id),
         "name": this.nameG,
         "state": this.stateText == "公开团队信息" ? true : false,
         "notice": this.notice
       }).then(res => {
-        console.log("修改群公告成功")
-        console.log(res)
+        //console.log("修改群公告成功")
+        //console.log(res)
         if (!res) {
           const that = here.$parent.$parent.$parent.$refs.memberList
           // for (this.i = 0; this.i < that.length; this.i++) {
@@ -491,6 +516,7 @@ export default {
           //   }
           // }
           that.groups[that.indexG].notice = here.notice
+          here.foreNotice = here.notice
           here.iShowTrue()
         }
       })
@@ -552,6 +578,7 @@ export default {
     },
     iShowTrue () {
       this.iShow = true
+      this.notice = this.foreNotice
     },
     showTextField (j) {
       if (this.memsIndex != -1) {
@@ -610,7 +637,7 @@ export default {
         "nickname": this.name,
         "group_id": this.$parent.$parent.id,
       }).then(res => {
-        console.log(res)
+        res
         this.mems[index].name = this.name
         this.mems[this.memsIndex].show = false;
       })
@@ -622,7 +649,7 @@ export default {
         "group_id": this.$parent.$parent.id,
         "id": that.mems[index].id
       }).then(res => {
-        console.log(res)
+        res
         this.showQuitField(index)
         if (!res) {
           that.mems[index].name = that.mems[index].name + "（管理员）"
@@ -637,7 +664,7 @@ export default {
         "group_id": this.$parent.$parent.id,
         "id": that.mems[index].id
       }).then(res => {
-        console.log(res)
+        res
         if (!res) {
           that.mems[index].name = that.mems[index].nick
           that.mems[index].type = "normal"
@@ -669,6 +696,7 @@ export default {
 
     iShowFalse () {
       this.iShow = false
+      this.foreNotice = this.notice
     }
   }
 }

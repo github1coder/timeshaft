@@ -12,6 +12,22 @@ Vue.config.productionTip = false
 
 Vue.use(VueContextMenu)
 
+const whiteList = ["/", "/login", "/register"];
+router.beforeEach((to, from, next) => {
+    to
+    from
+    next
+    // to and from are both route objects. must call `next`.
+    if (whiteList.indexOf(to.path) != -1) {
+        next()
+    } else if (!sessionStorage.getItem("login") || sessionStorage.getItem("login") == "no") {
+        next({ name: "login" })
+    } else {
+        next()
+    }
+
+})
+
 new Vue({
     vuetify,
     router,

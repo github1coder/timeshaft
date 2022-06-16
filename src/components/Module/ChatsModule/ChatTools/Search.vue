@@ -12,7 +12,6 @@
         light
         v-model="text"
         autocomplete="off"
-        background-color="grey"
         style="width: 70%; margin: auto;"
       ></v-text-field>
       <v-btn
@@ -59,7 +58,7 @@ export default {
 
   methods: {
     search () {
-      if (this.text == "") {
+      if (this.text == "" && this.text == null) {
         return
       }
       const that = this
@@ -69,7 +68,7 @@ export default {
         "type": this.type,
         "text": this.text,
       }).then(res => {
-        console.log("获得查询结果")
+        //console.log("获得查询结果")
         if (!res[0]) {
           that.feedback = "无相关记录"
           that.show = false
@@ -85,8 +84,8 @@ export default {
   },
 
   created () {
-    console.log(this.type)
-    console.log(this.id)
+    // console.log(this.type)
+    // console.log(this.id)
   }
 }
 

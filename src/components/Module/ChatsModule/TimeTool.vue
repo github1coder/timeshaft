@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
+      style="position: fixed; top: 0.5rem; right:25rem; font-weight: bold"
       v-if="start && timetoolShow"
       @click="tryBegin"
       rounded
@@ -10,7 +10,7 @@
     >{{hint}}
     </v-btn>
     <v-btn
-      style="position: fixed; top: 0.5rem; right:15rem; font-weight: bold"
+      style="position: fixed; top: 0.5rem; right:25rem; font-weight: bold"
       v-if="!start && timetoolShow"
       @click="endTime"
       rounded
@@ -23,7 +23,7 @@
       round
       label
       text-color="white"
-      style="position: fixed; top: 0.6rem; right:25rem; font-weight: bold"
+      style="position: fixed; top: 0.6rem; right:35rem; font-weight: bold"
       v-if="meeting"
     >
       <v-icon left>mdi-label</v-icon>

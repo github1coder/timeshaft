@@ -19,7 +19,7 @@
           class="ma-2"
           color="primary"
           label
-          style="margin: aut0;"
+          style="margin: auto;"
         >
           <v-icon left>mdi-account-circle-outline</v-icon>
           频道
@@ -102,7 +102,9 @@ export default {
 
   watch: {
     'name' (newValue, oldValue) {
-      console.log(newValue, oldValue);
+      newValue
+      oldValue
+      //console.log(newValue, oldValue);
       this.flash(newValue)
     }
   },

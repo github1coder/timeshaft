@@ -123,7 +123,7 @@ export default {
     disconnect () {
       logout({
       }).then(res => {
-        console.log(res)
+        res
         this.$store.commit("setMyIcon", "guest.png")
         this.$store.commit("setMyNick", "N")
         this.$store.commit("setEmail", null)
@@ -135,6 +135,7 @@ export default {
         this.$store.commit("setMaster", -1)
         this.$store.commit("changeSiderState", 0)
         this.$store.commit("setAbout", -1)
+        sessionStorage.setItem("login", "no")
         this.$router.push({
           path: '/',
         })

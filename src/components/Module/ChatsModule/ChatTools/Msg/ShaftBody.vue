@@ -40,9 +40,8 @@
       还没有添加事件哦
     </h1>
     <v-card
-      class="overflow-x-hidden overflow-y-auto"
       v-if="items.length !== 0"
-      :max-height="maxHeight"
+      :max-height="0"
     >
 
       <v-timeline
@@ -57,7 +56,7 @@
         >
           <!-- <v-row class="pt-1"> -->
           <div style="font-size: 5px; text-align: left;">{{item.begin_date}} ~ {{item.end_date}}</div>
-          <div style="a:hover{color: blue;}; text-align: left; width: 90%;">
+          <div style="a:hover;{color: blue;}; text-align: left; width: 90%;">
             <a><strong @click="showDetail(item.id)">事件主题：{{item.title}}</strong></a>
             <div style="color: #78909C;">
               事件发起者：{{item.host}}
@@ -190,7 +189,6 @@ export default {
           that.isManager()
         }
       })
-      console.log(this.manager)
     },
 
     setTimeline () {
@@ -223,7 +221,7 @@ export default {
 
     //展示详细信息
     showDetail (id) {
-      console.log("时间轴结点id：" + id)
+      //console.log("时间轴结点id：" + id)
       this.timeNodeId = id
       this.detail = true
     },
