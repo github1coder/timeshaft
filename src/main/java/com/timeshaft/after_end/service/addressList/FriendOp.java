@@ -268,8 +268,8 @@ public class FriendOp {
     //type为friend时, id为好友的id, type为group时，id为groupId
     public void sendNotification(String type, String action, Integer id, Integer senderId, Integer acceptorId) {
         if (type.equals(friendType) && action.equals(ACCEPT)) {
-            User acceptor = userService.queryById(senderId);
-            User sender = userService.queryById(acceptorId);
+            User acceptor = userService.queryById(acceptorId);
+            User sender = userService.queryById(senderId);
             Friends friend1 = new Friends(senderId, acceptorId, null, null, null, null);
             Friends friend2 = new Friends(acceptorId, senderId, null, null, null, null);
             List<Friends> friends = friendsService.queryAll(friend1);
@@ -312,7 +312,7 @@ public class FriendOp {
             messagingTemplate.convertAndSend("/user/contact/" + sender.getId(), res);
         } else if (type.equals(groupType) && action.equals(ACCEPT)) {
             HashMap<String, Object> res = new HashMap<>();
-            Group group = groupService.queryById(id);
+            Group group = groupService.queryById(senderId);
             res.put("id", id);
             res.put("type", "group");
             res.put("chatName", group.getName());
