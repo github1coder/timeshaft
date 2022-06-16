@@ -312,7 +312,7 @@ public class FriendOp {
             messagingTemplate.convertAndSend("/user/contact/" + sender.getId(), res);
         } else if (type.equals(groupType) && action.equals(ACCEPT)) {
             HashMap<String, Object> res = new HashMap<>();
-            Group group = groupService.queryById(id);
+            Group group = groupService.queryById(senderId);
             res.put("id", id);
             res.put("type", "group");
             res.put("chatName", group.getName());
