@@ -120,11 +120,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <div
       class="messages"
       id="scroll-target"
     >
+
       <div :class="draw ? 'message-container-open' : 'message-container-close'">
+
         <v-list
           three-line
           v-scroll:#scroll-target="onScroll"
@@ -310,6 +313,7 @@ export default {
         msgIds: this.selected,
         type: this.$store.state.currentChatType
       }).then(res => {
+        this.selected = []
         res
       })
       this.dialog = false
@@ -352,7 +356,6 @@ export default {
       if (!newVal && oldVal && this.selected.length !== 0) {
         //console.log("填写timeShaft信息")
         this.dialog = true
-        this.selected = []
       }
     },
   },
