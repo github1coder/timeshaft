@@ -155,6 +155,7 @@ export default {
   },
 
   mounted () {
+    sessionStorage.setItem("login", "no")
   },
 
   methods: {
@@ -202,6 +203,7 @@ export default {
                 this.$store.commit("setEmail", res.email)
                 this.$store.commit("setLogin", true)
                 this.$store.state.accessToken = res.ACCESS_TOKEN
+                sessionStorage.setItem("login", "yes")
                 this.$router.push({
                   path: '/home',
                 })
@@ -226,7 +228,8 @@ export default {
           return
         } else {
           getCheckCode({
-            'email': this.email
+            'email': this.email,
+            "type": "register"
           })
           // .then(res => {
           // this.checkCode = res.checkCode

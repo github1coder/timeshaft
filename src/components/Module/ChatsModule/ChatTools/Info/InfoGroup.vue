@@ -1,46 +1,25 @@
 <template>
-  <div
-    style="width: 100%; height: 100%"
-    class="mem-info"
-  >
-    <!-- <v-row style="width: 100%; height: 100%;"> -->
-    <v-navigation-drawer
-      permanent
-      style="width: 100%;"
-    >
-      <!-- <v-system-bar></v-system-bar> -->
-      <!-- <v-list-item>
-              <v-list-item-icon style="margin: 0px auto 20px;">
-                <v-img
-                  style="border-radius: 50%; width: 150px;"
-                  :src="this.$store.getters.groupPhoto"
-                ></v-img>
-              </v-list-item-icon>
-            </v-list-item>
-            <v-list-item>
-              <v-btn
-                dark
-                width="50%"
-                style="margin: auto;"
-              >
-                修改头像
-              </v-btn>
-            </v-list-item> -->
-      <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
-        {{this.nameG}}
-      </v-card>
-      <v-textarea
-        background-color="grey lighten-3"
-        :disabled="iShow"
-        filled
-        auto-grow
-        rows="4"
-        black
-        v-model="notice"
-        row-height="40"
-        style="margin: 20px 20px 0px 20px;"
-      ></v-textarea>
-      <!-- <v-btn
+  <div>
+    <v-card>
+      <v-navigation-drawer
+        permanent
+        style="width: 100%; height: auto;"
+      >
+        <v-card style="font-size: 50px;background-color: #E0E0E0; font-weight: bold; font-family: 'Andale Mono'">
+          {{this.nameG}}
+        </v-card>
+        <v-textarea
+          background-color="grey lighten-3"
+          :disabled="iShow"
+          filled
+          auto-grow
+          rows="4"
+          black
+          v-model="notice"
+          row-height="40"
+          style="margin: 20px 20px 0px 20px;"
+        ></v-textarea>
+        <!-- <v-btn
             color="blue"
             class="mx-2"
             v-show="iShow && this.$store.getters.userId == this.master"
@@ -48,36 +27,33 @@
           >
             修改群公告
           </v-btn> -->
-      <v-btn
-        v-show="!iShow"
-        class="mx-2"
-        rounded
-        color="green lighten-3"
-        width="40%"
-        @click="changeNotice"
-      >
-        确认
-      </v-btn>
-      <v-btn
-        v-show="!iShow"
-        class="mx-2"
-        rounded
-        color="red lighten-3"
-        width="40%"
-        @click="iShowTrue"
-      >
-        取消
-      </v-btn>
-    </v-navigation-drawer>
-    <div style="width: 100%;">
-      <v-list
-        style="width: 100%;"
-        max-height="600px"
-      >
+        <v-btn
+          v-show="!iShow"
+          class="mx-2"
+          rounded
+          color="green lighten-3"
+          width="40%"
+          @click="changeNotice"
+        >
+          确认
+        </v-btn>
+        <v-btn
+          v-show="!iShow"
+          class="mx-2"
+          rounded
+          color="red lighten-3"
+          width="40%"
+          @click="iShowTrue"
+        >
+          取消
+        </v-btn>
+      </v-navigation-drawer>
+      <v-list max-height="0">
         <v-list-group
           prepend-icon="mdi-account-supervisor-circle"
           @click="getMember"
           :value="memberShow"
+          style="margin-top: 10px"
         >
           <template v-slot:activator>
             <v-list-item-content>
@@ -185,6 +161,7 @@
           <v-card style="width: 100%; height: 100%;">
             <v-btn
               width="33%"
+              depressed
               @click="downPageMem"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -197,6 +174,7 @@
             </v-btn>
             <v-btn
               width="33%"
+              depressed
               @click="upPageMem"
             >
               <v-icon>mdi-chevron-right</v-icon>
@@ -244,6 +222,7 @@
           <v-card style="width: 100%; height: 100%;">
             <v-btn
               width="33%"
+              depressed
               @click="downPageF"
             >
               <v-icon>mdi-chevron-left</v-icon>
@@ -256,6 +235,7 @@
             </v-btn>
             <v-btn
               width="33%"
+              depressed
               @click="upPageF"
             >
               <v-icon>mdi-chevron-right</v-icon>
@@ -263,60 +243,25 @@
           </v-card>
         </v-list-group>
       </v-list>
-      <!-- <div
-            v-for="(item, j) in mems"
-            :key=j
-            style="width:30%; float: left; margin-left: 3%; background-color: green; border-radius: 10%"
-          >
-            <div>
-              <v-img
-                :src="item.photo"
-                style="height: 100%; width: 100%;"
-              ></v-img>
-              <span>{{item.name.slice(0,5)}}</span>
-            </div>
-          </div> -->
-      <!-- <v-card style="width: 100%; height:10%;">
-            <v-btn
-              v-show="isMaster() && !this.kill"
-              @click="showKill"
-              color="error"
-            >
-              解散群聊
-            </v-btn>
-            <div
-              style="width: 100%;"
-              v-show="kill"
-            >
-              <v-btn
-                class="mx-2"
-                color="blue"
-                width="40%"
-                @click="subGroup"
-              >
-                确认解散
-              </v-btn>
-              <v-btn
-                class="mx-2"
-                color="blue"
-                width="40%"
-                @click="showKill"
-              >
-                取消
-              </v-btn>
-            </div>
-          </v-card> -->
-    </div>
-    <!-- </v-row> -->
+      <!-- </v-row> -->
+      <feed-back
+        v-if="feedbackShow"
+        :msg="feedbackMsg"
+      ></feed-back>
+    </v-card>
   </div>
 
 </template>
 
 <script>
+import FeedBack from "../../../../FeedBack.vue"
 import { getInfoMsg } from "../../../../../api/addresslist/index"
 import { getGroupMember, changeGroupNickname, addGroupManager, delGroupManager, delGroup, updateGroup, apply, getFNotInG } from '../../../../../api/addresslist/index'
 export default {
   props: ["id"],
+  components: {
+    FeedBack
+  },
   data () {
     return {
       photo: "",
@@ -350,6 +295,8 @@ export default {
       pageF: 1,
       allPageF: 1,
       friendShow: false,
+      feedbackMsg: "",
+      feedbackShow: false,
     };
   },
 
@@ -358,7 +305,17 @@ export default {
   },
 
   methods: {
+    showFeedback (msg) {
+      this.feedbackMsg = msg
+      this.feedbackShow = true
+      setTimeout(() => {
+        this.feedbackShow = false
+      }, 1000);
+    },
+
+
     newApplyI (index) {
+      const that = this
       apply({
         "type": "group",
         "action": "new",
@@ -368,7 +325,8 @@ export default {
       }
       ).then(res => {
         console.log(res)
-        this.friendAns[index].show = true
+        that.friendAns[index].show = true
+        that.showFeedback("已发送邀请")
       })
     },
 

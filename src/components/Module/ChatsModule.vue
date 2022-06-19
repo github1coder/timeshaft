@@ -107,28 +107,26 @@
       v-show="toolsDrawer"
     >
       <div style="height: 100%; width: 100%;">
-        <div style="height: 48px; background: #000;">
-        </div>
-        <div style="calc(100% - 48px)">
-          <TimeShaft
-            v-if="tools[0].show"
-            ref="timeShaft"
-            :chatId="this.$store.state.currentChannelId"
-            :type="this.$store.state.currentChatType"
-          ></TimeShaft>
-          <InfoPage
-            v-else-if="tools[1].show"
-            ref="infoPage"
-            :id="this.$store.state.currentChannelId"
-            :type="this.$store.state.currentChatType"
-          ></InfoPage>
-          <Search
-            v-else-if="tools[2].show"
-            ref="search"
-            :chatId="this.$store.state.currentChannelId"
-            :type="this.$store.state.currentChatType"
-          ></Search>
-        </div>
+        <!-- <div style="height: 48px; background: #000;"> -->
+        <!-- </div> -->
+        <TimeShaft
+          v-if="tools[0].show"
+          ref="timeShaft"
+          :chatId="this.$store.state.currentChannelId"
+          :type="this.$store.state.currentChatType"
+        ></TimeShaft>
+        <InfoPage
+          v-else-if="tools[1].show"
+          ref="infoPage"
+          :id="this.$store.state.currentChannelId"
+          :type="this.$store.state.currentChatType"
+        ></InfoPage>
+        <Search
+          v-else-if="tools[2].show"
+          ref="search"
+          :chatId="this.$store.state.currentChannelId"
+          :type="this.$store.state.currentChatType"
+        ></Search>
       </div>
     </v-card>
     <ChatTools

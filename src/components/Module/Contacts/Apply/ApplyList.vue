@@ -80,6 +80,7 @@
               <v-btn
                 width="33%"
                 @click="downPageF"
+                depressed
               >
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
@@ -92,6 +93,7 @@
               <v-btn
                 width="33%"
                 @click="upPageF"
+                depressed
               >
                 <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
@@ -164,6 +166,7 @@
               <v-btn
                 width="33%"
                 @click="downPageG"
+                depressed
               >
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
@@ -176,6 +179,7 @@
               <v-btn
                 width="33%"
                 @click="upPageG"
+                depressed
               >
                 <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
@@ -247,6 +251,7 @@
             <v-row style="padding-bottom: 0;">
               <v-btn
                 width="33%"
+                depressed
                 @click="downPageI"
               >
                 <v-icon>mdi-chevron-left</v-icon>
@@ -259,6 +264,7 @@
               </v-btn>
               <v-btn
                 width="33%"
+                depressed
                 @click="upPageI"
               >
                 <v-icon>mdi-chevron-right</v-icon>
