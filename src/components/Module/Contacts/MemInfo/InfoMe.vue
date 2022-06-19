@@ -166,12 +166,20 @@
         </v-list-group>
       </v-list>
     </v-card>
+    <feed-back
+      v-if="feedbackShow"
+      :msg="feedbackMsg"
+    ></feed-back>
   </v-card>
 </template>
 <script>
+import FeedBack from "../../../FeedBack.vue"
 import { addGroup } from '../../../../api/addresslist/index';
 import { getCheckCode, changePwd, updateSelf } from '../../../../api/user/index';
 export default {
+  components: {
+    FeedBack
+  },
   data () {
     return {
       name: this.$store.getters.myNick,
@@ -191,6 +199,8 @@ export default {
       state: "可被其他用户发现",
       isState: false,
       eye: "mdi-eye-off-outline",
+      feedbackMsg: "",
+      feedbackShow: false,
       rules: {
         password: [
           (password) => !!password || "密码不能为空",
@@ -213,6 +223,14 @@ export default {
   },
 
   methods: {
+    showFeedback (msg) {
+      this.feedbackMsg = msg
+      this.feedbackShow = true
+      setTimeout(() => {
+        this.feedbackShow = false
+      }, 2000);
+    },
+
     method1 () {
 
     },
@@ -296,17 +314,20 @@ export default {
       if (!this.valid) {
         return
       }
+      const that = this
       changePwd({
         'oldPassword': this.password,
         'newPassword': this.passwordN,
         'checkCode': this.inputCheckCode,
       }).then(res => {
-        this.password = ""
-        this.passwordN = ""
-        this.inputCheckCode = ""
-        console(res)
-        if (res && res.error) {
-          this.msg = res.error
+        if (!res || (res && !res.error)) {
+          that.password = ""
+          that.passwordN = ""
+          that.inputCheckCode = ""
+          that.showFeedback("修改成功")
+        }
+        else {
+          that.showFeedback("修改失败，请重试")
         }
       })
     },
