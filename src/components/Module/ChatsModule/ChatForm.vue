@@ -70,18 +70,18 @@
 <!--          </v-list>-->
 <!--        </v-menu>-->
 
-<!--        <v-btn-->
-<!--            icon-->
-<!--            left-->
-<!--            class="mr-8 ml-12"-->
-<!--            @click="() => {-->
-<!--              this.$emit('selectStatusChange')-->
-<!--            }"-->
-<!--        >-->
-<!--          <v-icon color="white" size="24px">-->
-<!--            {{ $parent.selecting ? "mdi-close-circle-outline" : "mdi-timer-outline" }}-->
-<!--          </v-icon>-->
-<!--        </v-btn>-->
+        <v-btn
+            icon
+            left
+            class="mr-8 ml-12"
+            @click="() => {
+              this.$emit('selectStatusChange')
+            }"
+        >
+          <v-icon color="white" size="24px">
+            {{ $parent.selecting ? "mdi-close-circle-outline" : "mdi-timer-outline" }}
+          </v-icon>
+        </v-btn>
         <v-btn
             icon
             left

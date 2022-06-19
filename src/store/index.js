@@ -95,9 +95,13 @@ export default new Vuex.Store({
             store.myNick = myNick
         },
         changeSiderState(store, s) {
-            console.log(s)
+            if (s !== 0) {
+                store.currentChatName = ""
+                store.currentChatId = -1
+                store.currentChatIdx = -1
+            }
             store.siderState = s
-            console.log(s)
+
         },
         changeChannel(store, data) {
             store.currentChannelId = data.id;
@@ -106,6 +110,7 @@ export default new Vuex.Store({
             store.currentChatType = data.type;
             store.currentChatTime = data.time;
             store.currentChatFirst = 1;
+            store.currentChatName = data.name;
             console.log("当前聊天类型：" + store.currentChatType)
             // console.log("time: " + store.currentChatTime)
                 // console.log(store.currentChannelId + " " + store.currentChannelIdx);

@@ -267,7 +267,7 @@ export default {
       this.tools[2].show = false
 
       if (idx !== this.$store.state.currentChannelIdx) {
-        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time });
+        this.$store.commit("changeChannel", { id: id, idx: idx, type: item.type, time: item.lastMessage.time, name: item.chatName});
         // 等画面完全渲染
         setTimeout(() => {
           this.$refs.chatMessage.init()
